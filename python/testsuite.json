@@ -1,0 +1,79 @@
+{
+"install": {
+"script": "install.py",
+"control": null,
+"inputdir": null,
+"ecuid":"lh0",
+"ecgid":"spatlh00",
+"gateway":"srvx7.img.univie.ac.at",
+"destination":"leo@genericSftp",
+"local": {"target":"local"},
+"local_flexpart": {"target":"local","flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
+"ecgate": {"target":"ecgate"},
+"cca": {"target":"cca"}
+},
+"default": {
+"script": "submit.py",
+"control": null,
+"inputdir": null,
+"start_date": "20131107",
+"local": {},
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
+"ecgate": {"queue":"ecgate"},
+"cca": {"queue":"cca"}
+},
+"work": {
+"script": "submit.py",
+"control": null,
+"start_date": "20131107",
+"inputdir": "$SCRATCH/work",
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"}
+},
+"fc": {
+"script": "submit.py",
+"control": "CONTROL_FC",
+"inputdir": "$SCRATCH/workfc",
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"}
+},
+"cv": {
+"script": "submit.py",
+"control": "CONTROL_CV",
+"inputdir": "$SCRATCH/workcv",
+"start_date": "20131107",
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"}
+},
+"hires": {
+"script": "submit.py",
+"control": "CONTROL_HIRES",
+"inputdir": "$SCRATCH/workhires",
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
+"ecgate": {"queue":"ecgate"}
+},
+"hiresgauss": {
+"script": "submit.py",
+"control": "CONTROL_HIRESGAUSS",
+"inputdir": "$SCRATCH/workhiresgauss",
+"basetime": "00",
+"local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
+"ecgate": {"queue":"ecgate"},
+"cca": {"queue":"cca"}
+},
+"ops": {
+"script": "submit.py",
+"start_date": "20131108",
+"control": "CONTROL_OPS_V6.0_4V.temp",
+"inputdir": "$SCRATCH/workops2",
+"local_flexpart": {"basetime":"00"},
+"local_flexpart12": {"basetime":"12"},
+"ecgate": {"queue":"ecgate","basetime":"00"}
+},
+"opsfc": {
+"script": "submit.py",
+"start_date": "20131108",
+"control": "CONTROL_OPS_V6.0",
+"inputdir": "$SCRATCH/workopsfc",
+"local_flexpart": {"basetime":"00"},
+"local_flexpart12": {"basetime":"12"},
+"ecgate": {"queue":"ecgate","basetime":"00"}
+}
+}
