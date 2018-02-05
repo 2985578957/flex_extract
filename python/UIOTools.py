@@ -22,16 +22,25 @@
     which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 """
 
+
+# ------------------------------------------------------------------------------
+# MODULES
+# ------------------------------------------------------------------------------
 import os
 import glob
 
+# ------------------------------------------------------------------------------
+# Class
+# ------------------------------------------------------------------------------
 class UIOFiles:
     '''
     Class to manipulate files. At initialisation it has the attribute
     suffix which stores a list of suffixes of the files associated
     with the instance of the class.
     '''
-
+    # --------------------------------------------------------------------------
+    # FUNCTIONS
+    # --------------------------------------------------------------------------
     def __init__(self, suffix):
         '''
         @Description:
