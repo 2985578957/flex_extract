@@ -1,14 +1,3 @@
-#!/usr/bin/env python
-#
-# (C) Copyright 2014 UIO.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# Creation: October 2014 - Anne Fouilloux - University of Oslo
-#
-
-
 #************************************************************************
 # TODO AP
 #
@@ -17,6 +6,21 @@
 # und dann hier implementieren
 # - löschen?
 #************************************************************************
+"""
+@Author: Anne Fouilloux (University of Oslo)
+
+@Date: October 2014
+
+@ChangeHistory:
+   Anne Philipp - February 2018:
+       Added documentation and applied pep8 style guides
+
+@License:
+    (C) Copyright 2014 UIO.
+
+    This software is licensed under the terms of the Apache Licence Version 2.0
+    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+"""
 
 import os
 import glob
