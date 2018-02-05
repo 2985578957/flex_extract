@@ -12,7 +12,7 @@
 @Date: October 2014
 
 @ChangeHistory:
-   Anne Philipp - February 2018:
+   Anne Philipp (University of Vienna) - February 2018:
        Added documentation and applied pep8 style guides
 
 @License:
