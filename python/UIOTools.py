@@ -1,5 +1,5 @@
-#!/usr/bin/env python                                                                                                                                                                      
-#                                                                                                                                                                                          
+#!/usr/bin/env python
+#
 # (C) Copyright 2014 UIO.
 #
 # This software is licensed under the terms of the Apache Licence Version 2.0
@@ -8,42 +8,91 @@
 # Creation: October 2014 - Anne Fouilloux - University of Oslo
 #
 
+
+#************************************************************************
+# TODO AP
+#
+# - File name und Klassenname gleichsetzen?
+# - checken welche regelmässigen methoden auf diese Files noch angewendet werden
+# und dann hier implementieren
+# - löschen?
+#************************************************************************
+
 import os
 import glob
 
 class UIOFiles:
-    'class to manipulate files'
-    def __init__(self,suffix):
-# type of files to manipulate such as ['.grib', 'grb', 'grib1', 'grib2', 'grb1','grb2']
-        self.suffix=suffix
+    '''
+    Class to manipulate files. At initialisation it has the attribute
+    suffix which stores a list of suffixes of the files associated
+    with the instance of the class.
+    '''
 
-    def listFiles(self,pathname,pattern):
-        ''' list files (suffix previously given) within this directory. '''
-    # Get the absolute path of the pathname parameter
+    def __init__(self, suffix):
+        '''
+        @Description:
+            Assignes the suffixes of the files which should be
+            associated with the instance of the class.
+
+        @Input:
+            self: instance of UIOFiles
+                Description see class documentation.
+
+            suffix: list of strings
+                Types of files to manipulate such as
+                ['.grib', 'grb', 'grib1', 'grib2', 'grb1','grb2']
+
+        @Return:
+            <nothing>
+        '''
+        self.suffix = suffix
+        return
+
+    def listFiles(self, pathname, pattern):
+        '''
+        @Description:
+            Lists all files in the directory with the matching
+            regular expression pattern. The suffixes are already stored
+            in a list attribute "suffix".
+
+        @Input:
+            self: instance of UIOFiles
+                Description see class documentation.
+
+            pathname: string
+                Directory where to list the files.
+
+            pattern: string
+                Regular expression pattern. For example:
+                '*OG_acc_SL*.'+c.ppid+'.*'
+
+        @Return:
+            <nothing>
+        '''
+        # Get the absolute path of the pathname parameter
         pathname = os.path.abspath(pathname)
- 
-    # Get a list of files in pathname
-        filesInCurDir0 = glob.glob(pathname+'/'+pattern)
-        filesInCurDir=[]
+
+        # Get a list of files in pathname
+        filesInCurDir0 = glob.glob(pathname + '/' + pattern)
+        filesInCurDir = []
         for f in filesInCurDir0:
             filesInCurDir.append(f.split('/')[-1])
         self.counter = 0
         self.files = []
-    # Traverse through all files
+        # Traverse through all files
         for file in filesInCurDir:
             curFile = os.path.join(pathname, file)
- 
-        # Check if it's a normal file or directory
+
+            # Check if it's a normal file or directory
             if os.path.isfile(curFile):
                 # Get the file extension
-                fileNoExt,curFileExtension = os.path.splitext(curFile)
+                fileNoExt, curFileExtension = os.path.splitext(curFile)
                 # Check if the file has an extension of typical video files
                 if curFileExtension in self.suffix:
                     # We have got a file file! Increment the counter
                     self.counter += 1
                     # add this filename in the list
                     self.files.append(curFile)
-                    
             else:
                 # We got a directory, enter into it for further processing
                 self.listFiles(curFile)
