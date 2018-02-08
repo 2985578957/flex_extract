@@ -1,141 +1,329 @@
-#
-# (C) Copyright 2014 UIO.
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0. 
-# 
-# 
-# Creation: July 2014 - Anne Fouilloux - University of Oslo
-#
-#
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#************************************************************************
+# TODO AP
+#AP
+# - GribTools name möglicherweise etwas verwirrend.
+# - change self.filename in self.filenames!!!
+# -
+#************************************************************************
+"""
+@Author: Anne Fouilloux (University of Oslo)
 
+@Date: July 2014
+
+@ChangeHistory:
+   February 2018 - Anne Philipp (University of Vienna):
+        - applied PEP8 style guide
+        - added documentation
+        - changed some naming
+
+@License:
+    (C) Copyright 2014 UIO.
+
+    This software is licensed under the terms of the Apache Licence Version 2.0
+    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+
+@Requirements:
+    - A standard python 2.6 or 2.7 installation
+    - dateutils
+    - matplotlib (optional, for debugging)
+    - ECMWF specific packages, all available from https://software.ecmwf.int/
+        ECMWF WebMARS, gribAPI with python enabled, emoslib and
+        ecaccess web toolkit
+
+@Description:
+    Further documentation may be obtained from www.flexpart.eu.
+
+    Functionality provided:
+        Prepare input 3D-wind fields in hybrid coordinates +
+        surface fields for FLEXPART runs
+"""
+# ------------------------------------------------------------------------------
+# MODULES
+# ------------------------------------------------------------------------------
 from gribapi import *
 import traceback
-import sys,os
+import sys, os
 
-
-##############################################################
-#  GRIB utilities
-##############################################################
+# ------------------------------------------------------------------------------
+# CLASS
+# ------------------------------------------------------------------------------
 class GribTools:
-    'class for GRIB API with new methods'
-    def __init__(self,filename):
-        self.filename=filename
-    
-# get keyvalues for a given list of keynames
-# a where statment can be given (list of key and list of values)
+    '''
+    Class for GRIB utilities (new methods) based on GRIB API
+    '''
+    # --------------------------------------------------------------------------
+    # FUNCTIONS
+    # --------------------------------------------------------------------------
+    def __init__(self, filenames):
+        '''
+        @Description:
+            Initialise an object of GribTools and assign a list
+            of filenames.
 
-    def getkeys(self,keynames,wherekeynames=[],wherekeyvalues=[]):
-        fileid=open(self.filename,'r')
+        @Input:
+            filenames: list of strings
+                A list of filenames.
 
-        return_list=[]
-        
+        @Return:
+            <nothing>
+        '''
+
+        self.filename = filenames
+
+        return
+
+
+    def getkeys(self, keynames, wherekeynames=[], wherekeyvalues=[]):
+        '''
+        @Description:
+            get keyvalues for a given list of keynames
+            a where statement can be given (list of key and list of values)
+
+        @Input:
+            keynames: list of strings
+                List of keynames.
+
+            wherekeynames: list of ???
+                Default value is an empty list.
+
+            wherekeyvalues: list of ???
+                Default value is an empty list.
+
+        @Return:
+            return_list: list of strings
+                List of keyvalues for given keynames.
+        '''
+
+        fileid = open(self.filename, 'r')
+
+        return_list = []
+
         while 1:
-            gid_in = grib_new_from_file(fileid)  
-            if gid_in is None: break
-            select=True
-            i=0
-            if len(wherekeynames) != len(wherekeyvalues): raise Exception("Give a value for each keyname!")
+            gid_in = grib_new_from_file(fileid)
 
+            if gid_in is None:
+                break
+
+            if len(wherekeynames) != len(wherekeyvalues):
+                raise Exception("Number of key values and key names must be \
+                                 the same. Give a value for each keyname!")
+
+            select = True
+            i = 0
             for wherekey in wherekeynames:
-                if not grib_is_defined(gid_in, wherekey): raise Exception("where Key was not defined")
-                select=select and (str(wherekeyvalues[i])==str(grib_get(gid_in, wherekey)))
-                i=i+1
+                if not grib_is_defined(gid_in, wherekey):
+                    raise Exception("where key was not defined")
+
+                select = (select and (str(wherekeyvalues[i]) ==
+                                      str(grib_get(gid_in, wherekey))))
+                i += 1
+
             if select:
                 llist = []
                 for key in keynames:
                     llist.extend([str(grib_get(gid_in, key))])
                 return_list.append(llist)
-            grib_release(gid_in)
-        fileid.close()
-        return return_list
-      
-# set keyvalues for a given list of keynames
-# a where statment can be given (list of key and list of values)
-# an input file must be given as an input for reading grib messages
-# note that by default all messages are written out
-# if you want to get only those meeting the where statement, use
-# strict=true
-    def setkeys(self,fromfile,keynames,keyvalues, wherekeynames=[],wherekeyvalues=[], strict=False, filemode='w'):
-        fout=open(self.filename,filemode)
-        fin=open(fromfile)
-        
-        while 1:
-            gid_in = grib_new_from_file(fin)  
-            if gid_in is None: break
-            
-            select=True
-            i=0
-            if len(wherekeynames) != len(wherekeyvalues): raise Exception("Give a value for each keyname!")
 
+            grib_release(gid_in)
+
+        fileid.close()
+
+        return return_list
+
+
+    def setkeys(self, fromfile, keynames, keyvalues, wherekeynames=[],
+                wherekeyvalues=[], strict=False, filemode='w'):
+        '''
+        @Description:
+            Opens the file to read the grib messages and then write
+            them to a new output file. By default all messages are
+            written out. Also, the keyvalues of the passed list of
+            keynames are set or only those meeting the where statement.
+            (list of key and list of values).
+
+        @Input:
+            fromfile: string
+                Filename of the input file to read the grib messages from.
+
+            keynames: list of ???
+                List of keynames. Default is an empty list.
+
+            keyvalues: list of ???
+                List of keynames. Default is an empty list.
+
+            wherekeynames: list of ???
+                Default value is an empty list.
+
+            wherekeyvalues: list of ???
+                Default value is an empty list.
+
+            strict: boolean
+                Decides if everything from keynames and keyvalues
+                is written out the grib file (False) or only those
+                meeting the where statement (True). Default is False.
+
+            filemode:
+                Sets the mode for the output file. Default is "w".
+
+        @Return:
+            <nothing>
+
+        '''
+        fout = open(self.filename, filemode)
+        fin = open(fromfile)
+
+        while 1:
+            gid_in = grib_new_from_file(fin)
+
+            if gid_in is None:
+                break
+
+            if len(wherekeynames) != len(wherekeyvalues):
+                raise Exception("Give a value for each keyname!")
+
+            select = True
+            i = 0
             for wherekey in wherekeynames:
-                if not grib_is_defined(gid_in, wherekey): raise Exception("where Key was not defined")
-                select=select and (str(wherekeyvalues[i])==str(grib_get(gid_in, wherekey)))
-                i=i+1
+                if not grib_is_defined(gid_in, wherekey):
+                    raise Exception("where Key was not defined")
+
+                select = (select and (str(wherekeyvalues[i]) ==
+                                      str(grib_get(gid_in, wherekey))))
+                i += 1
+
+#AP is it secured that the order of keynames is equal to keyvalues?
             if select:
-                i=0
+                i = 0
                 for key in keynames:
                     grib_set(gid_in, key, keyvalues[i])
-                    i=i+1
+                    i += 1
+
+#AP this is a redundant code section
+# delete the if/else :
+#
+#           grib_write(gid_in, fout)
+#
             if strict:
                 if select:
-                    grib_write(gid_in,fout)
+                    grib_write(gid_in, fout)
             else:
-                grib_write(gid_in,fout)
+                grib_write(gid_in, fout)
+#AP end
             grib_release(gid_in)
+
         fin.close()
         fout.close()
 
-# Add the content of a grib file but only messages
-# corresponding to keys/values        
-# if selectWhere is False select fields that are different from keynames/keyvalues
-    def copy(self,filename_in, selectWhere=True, keynames=[], keyvalues=[],filemode='w'):
-        fin=open(filename_in)
-        fout=open(self.filename,filemode)
-        
+        return
+
+    def copy(self, filename_in, selectWhere=True,
+             keynames=[], keyvalues=[], filemode='w'):
+        '''
+        Add the content of another input grib file to the objects file but
+        only messages corresponding to keys/values passed to the function.
+        The selectWhere switch decides if to copy the keys equal to (True) or
+        different to (False) the keynames/keyvalues list passed to the function.
+
+        @Input:
+            filename_in: string
+                Filename of the input file to read the grib messages from.
+
+            selectWhere: boolean
+                Decides if to copy the keynames and values equal to (True) or
+                different to (False) the keynames/keyvalues list passed to the
+                function. Default is True.
+
+            keynames: list of ???
+                List of keynames. Default is an empty list.
+
+            keyvalues: list of ???
+                List of keynames. Default is an empty list.
+
+            filemode:
+                Sets the mode for the output file. Default is "w".
+
+        @Return:
+            <nothing>
+        '''
+
+        fin = open(filename_in)
+        fout = open(self.filename, filemode)
+
         while 1:
-            gid_in = grib_new_from_file(fin)  
-            if gid_in is None: break
-            
-            select=True
-            i=0
-            if len(keynames) != len(keyvalues): raise Exception("Give a value for each keyname!")
+            gid_in = grib_new_from_file(fin)
 
+            if gid_in is None:
+                break
+
+            if len(keynames) != len(keyvalues):
+                raise Exception("Give a value for each keyname!")
+
+            select = True
+            i = 0
             for key in keynames:
-                if not grib_is_defined(gid_in, key): raise Exception("Key was not defined")
-                
+                if not grib_is_defined(gid_in, key):
+                    raise Exception("Key was not defined")
+
                 if selectWhere:
-                    select=select and (str(keyvalues[i])==str(grib_get(gid_in, key)))
+                    select = (select and (str(keyvalues[i]) ==
+                                          str(grib_get(gid_in, key))))
                 else:
-                    select=select and (str(keyvalues[i])!=str(grib_get(gid_in, key)))
-                i=i+1
+                    select = (select and (str(keyvalues[i]) !=
+                                          str(grib_get(gid_in, key))))
+                i += 1
+
             if select:
-                grib_write(gid_in,fout)
+                grib_write(gid_in, fout)
+
             grib_release(gid_in)
+
         fin.close()
         fout.close()
 
-# Create index from a list of files if it does not exist or read it
-    def index(self,index_keys=["mars"], index_file = "my.idx"):
-        print "index to be done" 
+        return
+
+    def index(self, index_keys=["mars"], index_file="my.idx"):
+        '''
+        @Description:
+            Create index from a list of files if it does not exist or
+            read an index file.
+
+        @Input:
+            index_keys: list of ???
+                Default is a list with a single entry string "mars".
+
+            index_file: string
+                Filename where the indices are stored.
+                Default is "my.idx".
+
+        @Return:
+            iid: integer
+                Grib index id.
+        '''
+        print("... index will be done")
         self.iid = None
- 
+
         if (os.path.exists(index_file)):
             self.iid = grib_index_read(index_file)
-            print "Use existing index file: %s "%(index_file)
+            print("Use existing index file: %s " % (index_file))
         else:
+#AP does the for loop overwrite the iid all the time?
             for file in self.filename:
-                print "Inputfile: %s "%(file)
-                if self.iid == None:
-                    self.iid = grib_index_new_from_file(file,index_keys)
+                print("Inputfile: %s " % (file))
+                if self.iid is None:
+                    self.iid = grib_index_new_from_file(file, index_keys)
                 else:
-                     grib_index_add_file(self.iid,file)
+                    grib_index_add_file(self.iid, file)
+#AP or does the if has to be in the for loop?
+#AP would make more sense?
+            if self.iid is not None:
+                grib_index_write(self.iid, index_file)
 
-            if self.iid != None:
-              grib_index_write(self.iid,index_file)
-        return self.iid 
+        return self.iid
 
 
-       
 
-        
+
+

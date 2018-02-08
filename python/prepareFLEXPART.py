@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-#             
+#
 # This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0. 
-# 
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
 # Functionality provided: Prepare input 3D-wind fields in hybrid coordinates + surface fields for FLEXPART runs
 #
 # Creation: October  2014 - Anne Fouilloux - University of Oslo
-# Extension November 2015 - Leopold Haimberger - University of Vienna for: 
+# Extension November 2015 - Leopold Haimberger - University of Vienna for:
 # - using the WebAPI also for general MARS retrievals
 # - job submission on ecgate and cca
 # - job templates suitable for twice daily operational dissemination
@@ -14,13 +14,14 @@
 # - retrieve also longer term forecasts, not only analyses and short term forecast data
 # - conversion into GRIB2
 # - conversion into .fp format for faster execution of FLEXPART
-# 
-# Requirements: 
+#
+# Requirements:
 # in addition to a standard python 2.6 or 2.7 installation the following packages need to be installed
-# ECMWF WebMARS, gribAPI with python enabled, emoslib, ecaccess web toolkit, all available from https://software.ecmwf.int/
+# ECMWF WebMARS, gribAPI with python enabled, emoslib, ecaccess web toolkit,
+# all available from https://software.ecmwf.int/
 # dateutils
 # matplotlib (optional, for debugging)
-# 
+#
 import calendar
 import shutil
 import datetime
@@ -35,7 +36,7 @@ if localpythonpath not in sys.path:
 from UIOTools import UIOFiles
 #from string import strip
 from GribTools import GribTools
-from FlexpartTools import EIFlexpart, Control,interpret_args_and_control, cleanup
+from FlexpartTools import EIFlexpart, Control, interpret_args_and_control, cleanup
 
 hostname=socket.gethostname()
 ecapi= 'ecmwf' not in hostname
@@ -44,15 +45,15 @@ try:
     if ecapi:
         import ecmwfapi
 except ImportError:
-    ecapi=False
-    
+    ecapi = False
+
 
 def prepareFLEXPART(args,c):
 
 
 
     namelist='fort.4'
-    
+
     if not args.ppid:
         c.ppid=str(os.getppid())
     else:
@@ -77,8 +78,8 @@ def prepareFLEXPART(args,c):
 
     inputfiles.listFiles(c.inputdir, '*OG_acc_SL*.'+c.ppid+'.*')
     if not os.path.exists(c.outputdir):
-	os.makedirs(c.outputdir)
-	
+    os.makedirs(c.outputdir)
+
     flexpart = EIFlexpart(c,fluxes=True)
     flexpart.create_namelist(c,'fort.4')
     flexpart.deacc_fluxes(inputfiles, c)
@@ -96,12 +97,12 @@ def prepareFLEXPART(args,c):
     flexpart.process_output(c) # process GRIB files - copy/transfer/interpolate them or make them GRIB2
 
     if int(c.debug)!=0:
-	print('Temporary files left intact')
+    print('Temporary files left intact')
     else:
-	cleanup(c)
+    cleanup(c)
 
 if __name__ == "__main__":
-    args,c=interpret_args_and_control()
-    prepareFLEXPART(args,c)
+    args, c = interpret_args_and_control()
+    prepareFLEXPART(args, c)
     cleanup(c)
-    
+

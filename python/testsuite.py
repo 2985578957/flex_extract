@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
 # This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0. 
-# 
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
 # Leopold Haimberger, Dec 2015
 #
 # Functionality provided: This script triggers the ECMWFDATA test suite. Call with
 # testsuite.py [test group]
-# 
+#
 #
 # Further documentation may be obtained from www.flexpart.eu
-# 
+#
 # Test groups are specified in testsuite.json
 # in addition to a standard python 2.6 or 2.7 installation the following packages need to be installed
 # ECMWF WebMARS, gribAPI with python enabled, emoslib, ecaccess web toolkit, all available from https://software.ecmwf.int/
@@ -20,6 +20,7 @@
 import os,sys
 import json
 import subprocess
+
 try:
     taskfile=open('testsuite.json')
 except:
@@ -40,7 +41,7 @@ taskfile.close()
 if not os.path.exists('../test'):
     os.makedirs('../test')
 if len(sys.argv)>1:
-    groups=sys.argv[1:] 
+    groups=sys.argv[1:]
 else:
     groups=['xinstall','default','ops','work','cv','fc']#,'hires']
 jobcounter=0
@@ -52,7 +53,7 @@ for g in groups:
         continue
     garglist=[]
     for ttk,ttv in tv.iteritems():
-        if isinstance(ttv,basestring):    
+        if isinstance(ttv,basestring):
             if ttk!='script':
                 garglist.append('--'+ttk)
                 if '$'==ttv[0]:
@@ -63,10 +64,10 @@ for g in groups:
         if isinstance(ttv,dict):
             arglist=[]
             for tttk,tttv in ttv.iteritems():
-                if isinstance(tttv,basestring):    
+                if isinstance(tttv,basestring):
                         arglist.append('--'+tttk)
                         if '$' in tttv[0]:
-                            arglist.append(os.path.expandvars(tttv))                        
+                            arglist.append(os.path.expandvars(tttv))
                         else:
                             arglist.append(tttv)
             print 'Command: ',' '.join([tv['script']]+garglist+arglist)
@@ -85,5 +86,5 @@ for g in groups:
 print 'Test suite tasks completed'
 print str(jobcounter-jobfailed)+' successful, '+str(jobfailed)+' failed'
 print 'If tasks have been submitted via ECACCESS please check emails'
-                                       
+
 #print tasks

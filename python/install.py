@@ -1,30 +1,58 @@
 #!/usr/bin/env python
-#
-# This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# Functionality provided: Prepare input 3D-wind fields in hybrid coordinates + surface fields for FLEXPART runs
-#
-# Creation: October  2014 - Anne Fouilloux - University of Oslo
-# Extension November 2015 - Leopold Haimberger - University of Vienna for:
-# - using the WebAPI also for general MARS retrievals
-# - job submission on ecgate and cca
-# - job templates suitable for twice daily operational dissemination
-# - dividing retrievals of longer periods into digestable chunks
-# - retrieve also longer term forecasts, not only analyses and short term forecast data
-# - conversion into GRIB2
-# - conversion into .fp format for faster execution of FLEXPART
-#
-#
-# Further documentation may be obtained from www.flexpart.eu
-#
-# Requirements:
-# in addition to a standard python 2.6 or 2.7 installation the following packages need to be installed
-# ECMWF WebMARS, gribAPI with python enabled, emoslib, ecaccess web toolkit, all available from https://software.ecmwf.int/
-# dateutils
-# matplotlib (optional, for debugging)
-#
-#
+# -*- coding: utf-8 -*-
+#************************************************************************
+# TODO AP
+#AP
+# - Functionality Provided is not correct for this file
+# - localpythonpath should not be set in module load section!
+# - create a class Installation and divide installation in 3 subdefs for
+#   ecgate, local and cca seperatly
+# - Change History ist nicht angepasst ans File! Original geben lassen
+#************************************************************************
+"""
+@Author: Anne Fouilloux (University of Oslo)
+
+@Date: October 2014
+
+@ChangeHistory:
+    November 2015 - Leopold Haimberger (University of Vienna):
+        - using the WebAPI also for general MARS retrievals
+        - job submission on ecgate and cca
+        - job templates suitable for twice daily operational dissemination
+        - dividing retrievals of longer periods into digestable chunks
+        - retrieve also longer term forecasts, not only analyses and
+          short term forecast data
+        - conversion into GRIB2
+        - conversion into .fp format for faster execution of FLEXPART
+
+    February 2018 - Anne Philipp (University of Vienna):
+        - applied PEP8 style guide
+        - added documentation
+
+@License:
+    (C) Copyright 2014 UIO.
+
+    This software is licensed under the terms of the Apache Licence Version 2.0
+    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+
+@Requirements:
+    - A standard python 2.6 or 2.7 installation
+    - dateutils
+    - matplotlib (optional, for debugging)
+    - ECMWF specific packages, all available from https://software.ecmwf.int/
+        ECMWF WebMARS, gribAPI with python enabled, emoslib and
+        ecaccess web toolkit
+
+@Description:
+    Further documentation may be obtained from www.flexpart.eu.
+
+    Functionality provided:
+        Prepare input 3D-wind fields in hybrid coordinates +
+        surface fields for FLEXPART runs
+"""
+# ------------------------------------------------------------------------------
+# MODULES
+# ------------------------------------------------------------------------------
 import calendar
 import shutil
 import datetime
@@ -43,16 +71,14 @@ from FlexpartTools import EIFlexpart, Control, install_args_and_control
 from getMARSdata import getMARSdata
 from prepareFLEXPART import prepareFLEXPART
 
-
+# ------------------------------------------------------------------------------
+# FUNCTIONS
+# ------------------------------------------------------------------------------
 def main():
     '''
     '''
-#    calledfromdir = os.getcwd()
     os.chdir(localpythonpath)
     args, c = install_args_and_control()
-#    if c.outputdir[0]!='/':
-#    c.outputdir=os.path.join(calledfromdir,c.outputdir)
-#    c.inputdir=c.outputdir
     if args.install_target is not None:
         install_via_gateway(c, args.install_target)
     else:
@@ -99,7 +125,7 @@ def install_via_gateway(c, target):
 
     if target.lower() != 'local':
         template = ecd + 'python/job.temp.o'
-#AP hier eventuell Zeile für Zeile lesen und dann if Entscheidung
+#AP hier eventuell Zeile fÃ¼r Zeile lesen und dann if Entscheidung
         with open(template) as f:
             fdata = f.read().split('\n')
         f.close()
@@ -229,6 +255,7 @@ def install_via_gateway(c, target):
               c.ec_flexpart_root_scripts + '/ECMWFDATA7.0')
         print('You should get an email with subject flexcompile \
                 within the next few minutes')
+
     else:
         print('ERROR: unknown installation target ', target)
         print('Valid targets: ecgate, cca, local')

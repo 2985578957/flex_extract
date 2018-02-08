@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#
+#AP
 # - File name und Klassenname gleichsetzen?
-# - checken welche regelmässigen methoden auf diese Files noch angewendet werden
+# - checken welche regelmÃ¤ssigen methoden auf diese Files noch angewendet werden
 # und dann hier implementieren
-# - löschen?
+# - lÃ¶schen?
 #************************************************************************
 """
 @Author: Anne Fouilloux (University of Oslo)
@@ -12,17 +14,31 @@
 @Date: October 2014
 
 @ChangeHistory:
-   Anne Philipp (University of Vienna) - February 2018:
-       Added documentation and applied pep8 style guides
+   February 2018 - Anne Philipp (University of Vienna):
+        - applied PEP8 style guide
+        - added documentation
 
 @License:
     (C) Copyright 2014 UIO.
 
     This software is licensed under the terms of the Apache Licence Version 2.0
     which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+
+@Requirements:
+    - A standard python 2.6 or 2.7 installation
+    - dateutils
+    - matplotlib (optional, for debugging)
+    - ECMWF specific packages, all available from https://software.ecmwf.int/
+        ECMWF WebMARS, gribAPI with python enabled, emoslib and
+        ecaccess web toolkit
+
+@Description:
+    Further documentation may be obtained from www.flexpart.eu.
+
+    Functionality provided:
+        Prepare input 3D-wind fields in hybrid coordinates +
+        surface fields for FLEXPART runs
 """
-
-
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -53,7 +69,7 @@ class UIOFiles:
 
             suffix: list of strings
                 Types of files to manipulate such as
-                ['.grib', 'grb', 'grib1', 'grib2', 'grb1','grb2']
+                ['grib', 'grb', 'grib1', 'grib2', 'grb1', 'grb2']
 
         @Return:
             <nothing>
@@ -82,6 +98,8 @@ class UIOFiles:
         @Return:
             <nothing>
         '''
+#AP pathname zu path Ã¤ndern
+#AP is it possible for each possible file extension ? mabye regexx?
         # Get the absolute path of the pathname parameter
         pathname = os.path.abspath(pathname)
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is licensed under the terms of the Apache Licence Version 2.0
-# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0. 
-# 
+# which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
 # Functionality provided: Simple tool for creating maps and time series of retrieved fields.
-# 
-# Requirements: 
+#
+# Requirements:
 # in addition to a standard python 2.6 or 2.7 installation the following packages need to be installed
 # ECMWF WebMARS, gribAPI with python enabled, emoslib, ecaccess web toolkit, all available from https://software.ecmwf.int/
 # dateutils
@@ -18,7 +18,7 @@ import socket
 localpythonpath=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 if localpythonpath not in sys.path:
     sys.path.append(localpythonpath)
-    
+
 from matplotlib.pylab import *
 import matplotlib.patches as mpatches
 from mpl_toolkits.basemap import Basemap,addcyclic
@@ -42,7 +42,7 @@ def plot_retrieved(args,c):
     c.paramIds=asarray(c.paramIds,dtype='int')
     c.levels=asarray(c.levels,dtype='int')
     c.area=asarray(c.area)
-    
+
     index_keys=["date","time","step"]
     indexfile=c.inputdir+"/date_time_stepRange.idx"
     silentremove(indexfile)
@@ -66,7 +66,7 @@ def plot_retrieved(args,c):
         print key_vals
 
         index_vals.append(key_vals)
-    
+
     fdict=dict()
     fmeta=dict()
     fstamp=dict()
@@ -100,7 +100,7 @@ def plot_retrieved(args,c):
                 print key
                 fdatetimestep=fdatetime+datetime.timedelta(hours=step)
                 if len(fstamp)==0:
-                    fstamp[key].append(fdatetimestamp)    
+                    fstamp[key].append(fdatetimestamp)
                     fmeta[key].append((paramId,parameterName,gtype,fdatetime,gtime,step,level))
                     fdict[key].append(flipud(reshape(grib_get_values(gid),[gdict['Nj'],gdict['Ni']])))
                 else:
@@ -117,20 +117,20 @@ def plot_retrieved(args,c):
                         fstamp[key].append(fdatetimestep)
                         fmeta[key].append((paramId,parameterName,gtype,fdatetime,gtime,step,level))
                         fdict[key].append(flipud(reshape(grib_get_values(gid),[gdict['Nj'],gdict['Ni']])))
-                    
+
 
             grib_release(gid)
             gid = grib_new_from_index(iid)
-            
+
     for k in fdict.keys():
         fml=fmeta[k]
         fdl=fdict[k]
-        
+
         for fd,fm in zip(fdl,fml):
             ftitle=fm[1]+' {} '.format(fm[-1])+datetime.datetime.strftime(fm[3],'%Y%m%d%H')+' '+stats(fd)
             pname='_'.join(fm[1].split())+'_{}_'.format(fm[-1])+datetime.datetime.strftime(fm[3],'%Y%m%d%H')+'.{:0>3}'.format(fm[5])
             plotmap(fd, fm,gdict,ftitle,pname+'.eps')
-        
+
     for k in fdict.keys():
         fml=fmeta[k]
         fdl=fdict[k]
@@ -142,8 +142,8 @@ def plot_retrieved(args,c):
             pname='_'.join(fm[1].split())+'_{}_'.format(fm[-1])+datetime.datetime.strftime(fm[3],'%Y%m%d%H')+'.{:0>3}'.format(fm[5])
             lat=-20
             lon=20
-            plottimeseries(fdl,fml,fsl,lat,lon, gdict, ftitle, pname+'.eps')   
-    
+            plottimeseries(fdl,fml,fsl,lat,lon, gdict, ftitle, pname+'.eps')
+
 def plottimeseries(flist,fmetalist,ftimestamps,lat,lon,gdict,ftitle,filename):
     t1=time.time()
     latindex=(lat+90)*180/(gdict['Nj']-1)
@@ -157,17 +157,17 @@ def plottimeseries(flist,fmetalist,ftimestamps,lat,lon,gdict,ftitle,filename):
     print 'created ',c.outputdir+'/'+filename
     plt.close(f)
     print time.time()-t1,'s'
-    
+
 def plotmap(flist,fmetalist,gdict,ftitle,filename):
     t1=time.time()
     f=plt.figure(figsize=(12,6.7))
-    mbaxes = f.add_axes([0.05, 0.15, 0.8, 0.7]) 
+    mbaxes = f.add_axes([0.05, 0.15, 0.8, 0.7])
     m =Basemap(llcrnrlon=-180.,llcrnrlat=-90.,urcrnrlon=180,urcrnrlat=90.)
     #if bw==0 :
         #fill_color=rgb(0.6,0.8,1)
     #else:
         #fill_color=rgb(0.85,0.85,0.85)
-    
+
     lw=0.3
     m.drawmapboundary()
     parallels = arange(-90.,91,90.)
@@ -178,16 +178,16 @@ def plotmap(flist,fmetalist,gdict,ftitle,filename):
     m.drawcoastlines(linewidth=lw)
     xleft=gdict['longitudeOfFirstGridPointInDegrees']
     if xleft>180.0:
-        xleft-=360. 
+        xleft-=360.
     x=linspace(xleft,gdict['longitudeOfLastGridPointInDegrees'],gdict['Ni'])
     y=linspace(gdict['latitudeOfLastGridPointInDegrees'],gdict['latitudeOfFirstGridPointInDegrees'],gdict['Nj'])
     xx, yy = m(*meshgrid(x,y))
 
     s=m.contourf(xx,yy, flist)
     title(ftitle,y=1.1)
-    cbaxes = f.add_axes([0.9, 0.2, 0.04, 0.6]) 
+    cbaxes = f.add_axes([0.9, 0.2, 0.04, 0.6])
     cb=colorbar(cax=cbaxes)
-    
+
     savefig(c.outputdir+'/'+filename)
     print 'created ',c.outputdir+'/'+filename
     plt.close(f)
@@ -199,7 +199,7 @@ def interpret_plotargs(*args,**kwargs):
     parser = ArgumentParser(description='Retrieve FLEXPART input from ECMWF MARS archive',
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
-# the most important arguments	
+# the most important arguments
     parser.add_argument("--start_date", dest="start_date",
                         help="start date YYYYMMDD")
     parser.add_argument( "--end_date", dest="end_date",
@@ -240,8 +240,8 @@ def interpret_plotargs(*args,**kwargs):
             print 'Either it does not exist or its syntax is wrong.'
             print 'Try "'+sys.argv[0].split('/')[-1]+' -h" to print usage information'
             exit(1)
-    
-    if args.levelist:        
+
+    if args.levelist:
         c.levels=args.levelist.split('/')
     else:
         c.levels=[0]
@@ -249,7 +249,7 @@ def interpret_plotargs(*args,**kwargs):
         c.area=args.area.split('/')
     else:
         c.area='[0,0]'
-    
+
     c.paramIds=args.paramIds.split('/')
     if args.start_step:
         c.start_step=int(args.start_step)
@@ -268,10 +268,10 @@ def interpret_plotargs(*args,**kwargs):
         c.outputdir=args.outputdir
     else:
         c.outputdir=c.inputdir
-    
+
         return args,c
 
 if __name__ == "__main__":
-    
+
     args,c=interpret_plotargs()
     plot_retrieved(args,c)
