@@ -49,7 +49,7 @@ localpythonpath=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentf
 if localpythonpath not in sys.path:
     sys.path.append(localpythonpath)
 
-from FlexpartTools import MARSretrieval, EIFlexpart, silentremove, \
+from FlexpartTools import ECFlexpart,  \
                           Control, myerror, normalexit, \
                           interpret_args_and_control
 
@@ -100,7 +100,7 @@ def getMARSdata(args, c):
         day=startm1
         while day<endp1:
                 # we need to retrieve MARS data for this period (maximum one month)
-                flexpart = EIFlexpart(c,fluxes=True)
+                flexpart = ECFlexpart(c,fluxes=True)
                 if day+datechunk-datetime.timedelta(days=1)<endp1:
                     dates= day.strftime("%Y%m%d") + "/to/" + (day+datechunk-datetime.timedelta(days=1)).strftime("%Y%m%d")
                 else:
@@ -117,7 +117,7 @@ def getMARSdata(args, c):
         day=start
         while day<=end:
                 # we need to retrieve MARS data for this period (maximum one month)
-                flexpart = EIFlexpart(c,fluxes=True)
+                flexpart = ECFlexpart(c,fluxes=True)
                 if day+datechunk-datetime.timedelta(days=1)<end:
                     dates= day.strftime("%Y%m%d") + "/to/" + (day+datechunk-datetime.timedelta(days=1)).strftime("%Y%m%d")
                 else:
@@ -137,7 +137,7 @@ def getMARSdata(args, c):
     while day<=end:
 
                # we need to retrieve MARS data for this period (maximum one month)
-            flexpart = EIFlexpart(c)
+            flexpart = ECFlexpart(c)
             if day+datechunk-datetime.timedelta(days=1)<end:
                 dates= day.strftime("%Y%m%d") + "/to/" + (day+datechunk-datetime.timedelta(days=1)).strftime("%Y%m%d")
             else:

@@ -85,10 +85,10 @@ class GribTools:
             keynames: list of strings
                 List of keynames.
 
-            wherekeynames: list of ???
+            wherekeynames: list of ???, optional
                 Default value is an empty list.
 
-            wherekeyvalues: list of ???
+            wherekeyvalues: list of ???, optional
                 Default value is an empty list.
 
         @Return:
@@ -153,18 +153,18 @@ class GribTools:
             keyvalues: list of ???
                 List of keynames. Default is an empty list.
 
-            wherekeynames: list of ???
+            wherekeynames: list of ???, optional
                 Default value is an empty list.
 
-            wherekeyvalues: list of ???
+            wherekeyvalues: list of ???, optional
                 Default value is an empty list.
 
-            strict: boolean
+            strict: boolean, optional
                 Decides if everything from keynames and keyvalues
                 is written out the grib file (False) or only those
                 meeting the where statement (True). Default is False.
 
-            filemode:
+            filemode: string, optional
                 Sets the mode for the output file. Default is "w".
 
         @Return:
@@ -230,18 +230,18 @@ class GribTools:
             filename_in: string
                 Filename of the input file to read the grib messages from.
 
-            selectWhere: boolean
+            selectWhere: boolean, optional
                 Decides if to copy the keynames and values equal to (True) or
                 different to (False) the keynames/keyvalues list passed to the
                 function. Default is True.
 
-            keynames: list of ???
+            keynames: list of ???, optional
                 List of keynames. Default is an empty list.
 
-            keyvalues: list of ???
+            keyvalues: list of ???, optional
                 List of keynames. Default is an empty list.
 
-            filemode:
+            filemode: string, optional
                 Sets the mode for the output file. Default is "w".
 
         @Return:
@@ -287,14 +287,16 @@ class GribTools:
     def index(self, index_keys=["mars"], index_file="my.idx"):
         '''
         @Description:
-            Create index from a list of files if it does not exist or
+            Create index file from a list of files if it does not exist or
             read an index file.
 
         @Input:
-            index_keys: list of ???
+            index_keys: list of strings, optional
+                Contains the list of key parameter names from
+                which the index is to be created.
                 Default is a list with a single entry string "mars".
 
-            index_file: string
+            index_file: string, optional
                 Filename where the indices are stored.
                 Default is "my.idx".
 
@@ -309,17 +311,17 @@ class GribTools:
             self.iid = grib_index_read(index_file)
             print("Use existing index file: %s " % (index_file))
         else:
-#AP does the for loop overwrite the iid all the time?
             for file in self.filename:
                 print("Inputfile: %s " % (file))
                 if self.iid is None:
                     self.iid = grib_index_new_from_file(file, index_keys)
                 else:
                     grib_index_add_file(self.iid, file)
-#AP or does the if has to be in the for loop?
-#AP would make more sense?
+
             if self.iid is not None:
                 grib_index_write(self.iid, index_file)
+
+        print('... index done')
 
         return self.iid
 

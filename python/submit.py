@@ -66,7 +66,7 @@ from UIOTools import UIOFiles
 from string import strip
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from GribTools import GribTools
-from FlexpartTools import EIFlexpart, Control, interpret_args_and_control, normalexit, myerror
+from FlexpartTools import ECFlexpart, Control, interpret_args_and_control, normalexit, myerror
 from getMARSdata import getMARSdata
 from prepareFLEXPART import prepareFLEXPART
 # ------------------------------------------------------------------------------
@@ -114,14 +114,17 @@ def submit(jtemplate, c, queue):
             Default is "job.temp".
 
         c: instance of class Control
-            Contains all necessary information of a control file. The parameters
-            are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
-            RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
-            SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
-            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR
-            For more information about format and content of the parameter see
-            documentation.
+            Contains all the parameters of control files, which are e.g.:
+            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
+            For more information about format and content of the parameter
+            see documentation.
 
         queue: string
             Name of queue for submission to ECMWF (e.g. ecgate or cca )

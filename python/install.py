@@ -67,7 +67,7 @@ from UIOTools import UIOFiles
 from string import strip
 from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
 from GribTools import GribTools
-from FlexpartTools import EIFlexpart, Control, install_args_and_control
+from FlexpartTools import ECFlexpart, Control, install_args_and_control
 from getMARSdata import getMARSdata
 from prepareFLEXPART import prepareFLEXPART
 

@@ -68,16 +68,18 @@ class UIOFiles:
                 Description see class documentation.
 
             suffix: list of strings
-                Types of files to manipulate such as
+                The types of files which should be manipulated such as
                 ['grib', 'grb', 'grib1', 'grib2', 'grb1', 'grb2']
 
         @Return:
             <nothing>
         '''
+
         self.suffix = suffix
+
         return
 
-    def listFiles(self, pathname, pattern):
+    def listFiles(self, path, pattern):
         '''
         @Description:
             Lists all files in the directory with the matching
@@ -88,7 +90,7 @@ class UIOFiles:
             self: instance of UIOFiles
                 Description see class documentation.
 
-            pathname: string
+            path: string
                 Directory where to list the files.
 
             pattern: string
@@ -98,21 +100,21 @@ class UIOFiles:
         @Return:
             <nothing>
         '''
-#AP pathname zu path ändern
-#AP is it possible for each possible file extension ? mabye regexx?
-        # Get the absolute path of the pathname parameter
-        pathname = os.path.abspath(pathname)
+
+        # Get the absolute path
+        path = os.path.abspath(path)
 
         # Get a list of files in pathname
-        filesInCurDir0 = glob.glob(pathname + '/' + pattern)
+        filesInCurDir0 = glob.glob(path + '/' + pattern)
         filesInCurDir = []
         for f in filesInCurDir0:
             filesInCurDir.append(f.split('/')[-1])
+
         self.counter = 0
         self.files = []
         # Traverse through all files
         for file in filesInCurDir:
-            curFile = os.path.join(pathname, file)
+            curFile = os.path.join(path, file)
 
             # Check if it's a normal file or directory
             if os.path.isfile(curFile):

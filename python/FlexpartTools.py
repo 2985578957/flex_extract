@@ -3,14 +3,14 @@
 #************************************************************************
 # TODO AP
 #AP
-# - Functionality Provided is not correct for this file
+# - Functionality Description Provided is not correct for this file
 # - localpythonpath should not be set in module load section!
 # - Change History ist nicht angepasst ans File! Original geben lassen
 # - def myerror muss angepasst werden da derzeit manuelle modifikation notwendig
-# - def --init-- marsretrieval class, remove dataset and expect?!
-# - the EIFlexpart class is jsut for EI ? So we should maybe create classes
-#   for each possible data set so the boundarys of the attributes can be
-#   validated!
+# - the gaussian keyword in mars retrieval should be removed!!! but kept in
+#   control file for the reason of calculation of eta dot from gaussian grid
+# - call of convert in eigene Funktion auslagern
+
 #************************************************************************
 """
 @Author: Anne Fouilloux (University of Oslo)
@@ -95,7 +95,8 @@ def interpret_args_and_control():
             NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
             RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
             SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS,
-            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR
+            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, DEBUG, INPUTDIR,
+            OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
             For more information about format and content of the parameter see
             documentation.
 
@@ -104,7 +105,7 @@ def interpret_args_and_control():
                             ECMWF MARS archive',
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
-# the most important arguments
+    # the most important arguments
     parser.add_argument("--start_date", dest="start_date",
                         help="start date YYYYMMDD")
     parser.add_argument("--end_date", dest="end_date",
@@ -112,7 +113,7 @@ def interpret_args_and_control():
     parser.add_argument("--date_chunk", dest="date_chunk", default=None,
                         help="# of days to be retrieved at once")
 
-# some arguments that override the default in the control file
+    # some arguments that override the default in the control file
     parser.add_argument("--basetime", dest="basetime",
                         help="base such as 00/12 (for half day retrievals)")
     parser.add_argument("--step", dest="step",
@@ -122,7 +123,7 @@ def interpret_args_and_control():
     parser.add_argument("--area", dest="area",
                         help="area defined as north/west/south/east")
 
-# set the working directories
+    # set the working directories
     parser.add_argument("--inputdir", dest="inputdir", default=None,
                         help="root directory for storing intermediate files")
     parser.add_argument("--outputdir", dest="outputdir", default=None,
@@ -132,18 +133,15 @@ def interpret_args_and_control():
                         and COMMAND file)\n\ Normally ECMWFDATA resides in \
                         the scripts directory of the FLEXPART distribution")
 
-# this is only used by prepareFLEXPART.py to rerun a postprocessing step
+    # this is only used by prepareFLEXPART.py to rerun a postprocessing step
     parser.add_argument("--ppid", dest="ppid",
                         help="Specify parent process id for \
                         rerun of prepareFLEXPART")
 
-# arguments for job submission to ECMWF, only needed by submit.py
+    # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
                         default="job.temp",
                         help="job template file for submission to ECMWF")
-    #parser.add_argument("--remote", dest="remote",
-                        #help="target for submission to ECMWF \
-                        #(ecgate or cca etc.)")
     parser.add_argument("--queue", dest="queue",
                         help="queue for submission to ECMWF \
                         (e.g. ecgate or cca )")
@@ -155,6 +153,8 @@ def interpret_args_and_control():
 
     args = parser.parse_args()
 
+    # create instance of Control for specified controlfile
+    # and assign the parameters (and default values if necessary)
     try:
         c = Control(args.controlfile)
     except IOError:
@@ -167,6 +167,7 @@ def interpret_args_and_control():
                   ' -h" to print usage information')
             exit(1)
 
+    # check for having at least a starting date
     if  args.start_date is None and getattr(c, 'start_date') is None:
         print('start_date specified neither in command line nor \
                in control file ' + args.controlfile)
@@ -174,6 +175,9 @@ def interpret_args_and_control():
               ' -h" to print usage information')
         exit(1)
 
+    # save all existing command line parameter to the Control instance
+    # if parameter is not specified through the command line or CONTROL file
+    # set default values
     if args.start_date is not None:
         c.start_date = args.start_date
     if args.end_date is not None:
@@ -213,7 +217,7 @@ def interpret_args_and_control():
                 l[i] = str(int(float(l[i]) * 1000))
         c.upper, c.left, c.lower, c.right = l
 
-# basetime aktiviert den ''operational mode''
+    # NOTE: basetime activates the ''operational mode''
     if args.basetime is not None:
         c.basetime = args.basetime
 
@@ -356,13 +360,15 @@ def cleanup(c):
 
     @Input:
         c: instance of class Control
-            Contains all the parameters of control files, which are:
-            DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-            LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-            ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-            ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-            GRIB2FLEXPART, FLEXPARTDIR
+            Contains all the parameters of control files, which are e.g.:
+            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
             For more information about format and content of the parameter
             see documentation.
 
@@ -387,21 +393,24 @@ def cleanup(c):
 def myerror(c, message='ERROR'):
     '''
     @Description:
-        Print error message.
+        Prints a specified error message which can be passed to the function
+        before exiting the program.
 
     @Input:
         c: instance of class Control
-            Contains all the parameters of control files, which are:
-            DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-            LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-            ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-            ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-            GRIB2FLEXPART, FLEXPARTDIR
+            Contains all the parameters of control files, which are e.g.:
+            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
             For more information about format and content of the parameter
             see documentation.
 
-        message: string
+        message: string, optional
             Error message. Default value is "ERROR".
 
     @Return:
@@ -435,21 +444,23 @@ def myerror(c, message='ERROR'):
 def normalexit(c, message='Done!'):
     '''
     @Description:
-        Print exit message.
+        Prints a specific exit message which can be passed to the function.
 
     @Input:
         c: instance of class Control
-            Contains all the parameters of control files, which are:
-            DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-            LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-            ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-            ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-            GRIB2FLEXPART, FLEXPARTDIR
+            Contains all the parameters of control files, which are e.g.:
+            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
             For more information about format and content of the parameter
             see documentation.
 
-        message: string
+        message: string, optional
             Message for exiting program. Default value is "Done!".
 
     @Return:
@@ -480,14 +491,30 @@ def normalexit(c, message='Done!'):
 def product(*args, **kwds):
     '''
     @Description:
+        This method is taken from an example at the ECMWF wiki website.
+        https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16
+
+        This method combines the single characters of the passed arguments
+        with each other. So that each character of each argument value
+        will be combined with each character of the other arguments as a tuple.
+
+        Example:
+        product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
+        product(range(2), repeat = 3) --> 000 001 010 011 100 101 110 111
 
     @Input:
+        *args: tuple
+            Positional arguments (arbitrary number).
+
+        **kwds: dictionary
+            Contains all the keyword arguments from *args.
 
     @Return:
-
+        prod: tuple
+            Return will be done with "yield". A tuple of combined arguments.
+            See example in description above.
     '''
-    # product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
-    # product(range(2), repeat = 3) --> 000 001 010 011 100 101 110 111
+
     pools = map(tuple, args) * kwds.get('repeat', 1)
     result = [[]]
     for pool in pools:
@@ -526,7 +553,7 @@ def silentremove(filename):
 def init128(fn):
     '''
     @Description:
-        Opens and reads the grib table 128 file.
+        Opens and reads the grib file with table 128 information.
 
     @Input:
         fn: string
@@ -583,34 +610,48 @@ def toparamId(pars, table):
 def dapoly(alist):
     '''
     @Description:
+        Interpolation of deaccumulated fluxes of an ECMWF model FG field
+        using a cubic polynomial solution which conserves the integrals
+        of the fluxes within each timespan.
+        Disaggregation is done for a list of 4 values to generate a new
+        interpolated value which is output at the central point of the 4
+        accumulation timespans.
 
     @Input:
+        alist: list of size 4, float
+            List of 4 flux values.
 
     @Return:
+        nvalue: float
+            New value for the second position of the disaggregated
+            fluxes field.
 
     '''
     pya = (alist[3] - alist[0] + 3. * (alist[1] - alist[2])) / 6.
     pyb = (alist[2] + alist[0]) / 2. - alist[1] - 9. * pya / 2.
     pyc = alist[1] - alist[0] - 7. * pya / 2. - 2. * pyb
     pyd = alist[0] - pya / 4. - pyb / 3. - pyc / 2.
-    sfeld = 8. * pya + 4. * pyb + 2. * pyc + pyd
+    nvalue = 8. * pya + 4. * pyb + 2. * pyc + pyd
 
-    return sfeld
+    return nvalue
 
 
 def darain(alist):
     '''
     @Description:
+        Interpolation of deaccumulated precipitation fiels of the ECMWF fields
+        using a modified linear solution.
         Disaggregate a list of 4 precipitation values to generate a new value
-        for the second position of the 4 value list. This is used for
-        precipitation fields.
+        for the second position of the 4 value list. The interpolated values
+        are output at the central point of the 4 accumulation timespans
+        This is used for precipitation fields.
 
     @Input:
         alist: list of size 4, float
             List of 4 precipitation values.
 
     @Return:
-        sfeld: float
+        nvalue: float
             New value for the second position of the disaggregated
             precipitation field.
     '''
@@ -629,31 +670,35 @@ def darain(alist):
     xbd = 0.5 * xc
     mask = xb + xd > 0.
     xbd[mask] = xb[mask] * xc[mask] / (xb[mask] + xd[mask])
-    sfeld = xac + xbd
+    nvalue = xac + xbd
 
-    return sfeld
+    return nvalue
 
 
 class Control:
     '''
-    Class containing the information of the ECMWFDATA control file
+    Class containing the information of the ECMWFDATA control file.
 
-    Contains all the parameters of control files, which are:
-    DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-    NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-    LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-    ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-    ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-    GRIB2FLEXPART, FLEXPARTDIR
+    Contains all the parameters of control files, which are e.g.:
+    DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+    STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+    LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+    OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+    ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+    MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR,
+    BASETIME, DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
     For more information about format and content of the parameter
     see documentation.
+
     '''
 
     def __init__(self, filename):
         '''
         @Description:
             Initialises the instance of Control class and defines and
-            assign all controlfile variables.
+            assign all controlfile variables. Set default values if
+            parameter was not in CONTROL file.
 
         @Input:
             self: instance of Control class
@@ -665,8 +710,13 @@ class Control:
         @Return:
             <nothing>
         '''
+
+        # read whole CONTROL file
         with open(filename) as f:
             fdata = f.read().split('\n')
+
+        # go through every line and store parameter
+        # as class variable
         for ldata in fdata:
             data = ldata.split()
             if len(data) > 1:
@@ -713,6 +763,8 @@ class Control:
             else:
                 pass
 
+        # check a couple of necessary attributes if they contain values
+        # otherwise set default values
         if not hasattr(self, 'start_date'):
             self.start_date = None
         if not hasattr(self, 'end_date'):
@@ -740,6 +792,7 @@ class Control:
                 self.level = self.levelist.split('/')[-1]
 
         if not hasattr(self, 'maxstep'):
+            # find out maximum step
             self.maxstep = 0
             for s in self.step:
                 if int(s) > self.maxstep:
@@ -755,24 +808,32 @@ class Control:
             self.basetime = None
         if not hasattr(self, 'date_chunk'):
             self.date_chunk = '3'
-
-        self.ecmwfdatadir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/../' # script directory
-#AP wieso nicht abfragen? Wieso immer setzen?
-#        if not hasattr(self,'exedir'):
-        self.exedir = self.ecmwfdatadir + 'src/'
         if not hasattr(self, 'grib2flexpart'):
             self.grib2flexpart = '0'
+
+        # script directory
+        self.ecmwfdatadir = os.path.dirname(os.path.abspath(
+                                            inspect.getfile(
+                                            inspect.currentframe()))) + '/../'
+        # Fortran source directory
+        self.exedir = self.ecmwfdatadir + 'src/'
+
+        # FLEXPART directory
         if not hasattr(self, 'flexpart_root_scripts'):
             self.flexpart_root_scripts = self.ecmwfdatadir
 
         return
 
+
     def __str__(self):
         '''
         @Description:
             Prepares a single string with all the comma seperated Control
-            class attributes including their values. The string has the format
-#AP            ????????????????? anschaun
+            class attributes including their values.
+
+            Example:
+            {'kids': 0, 'name': 'Dog', 'color': 'Spotted',
+             'age': 10, 'legs': 2, 'smell': 'Alot'}
 
         @Input:
             self: instance of Control class
@@ -781,9 +842,9 @@ class Control:
         @Return:
             string of Control class attributes with their values
         '''
+
         attrs = vars(self)
-        # {'kids': 0, 'name': 'Dog', 'color': 'Spotted', 'age': 10, 'legs': 2, 'smell': 'Alot'}
-        # now dump this in some way or another
+
         return ', '.join("%s: %s" % item for item in attrs.items())
 
     def tolist(self):
@@ -828,45 +889,222 @@ class Control:
 
 
 class MARSretrieval:
-    'class for MARS retrievals'
+    '''
+    Class for submitting MARS retrievals.
+
+    A description of MARS keywords/arguments and examples of their
+    values can be found here:
+    https://software.ecmwf.int/wiki/display/UDOC/\
+                   Identification+keywords#Identificationkeywords-class
+
+    '''
 
     def __init__(self, server, marsclass = "ei", type = "", levtype = "",
                  levelist = "", repres = "", date = "", resol = "", stream = "",
                  area = "", time = "", step = "", expver = "1", number = "",
                  accuracy = "", grid = "", gaussian = "", target = "",
-                 param = "", dataset = "", expect = ""):
+                 param = ""):
         '''
         @Description:
+            Initialises the instance of the MARSretrieval class and
+            defines and assigns a set of the necessary retrieval parameters
+            for the FLEXPART input data.
+            A description of MARS keywords/arguments, their dependencies
+            on each other and examples of their values can be found here:
+
+            https://software.ecmwf.int/wiki/display/UDOC/MARS+keywords
 
         @Input:
-            self
-            server
-            marsclass = "ei"
-            type = ""
-            levtype = ""
-            levelist = ""
-            repres = ""
-            date = ""
-            resol = ""
-            stream = ""
-            area = ""
-            time = ""
-            step = ""
-            expver = "1"
-            number = ""
-            accuracy = ""
-            grid = ""
-            gaussian = ""
-            target = ""
-            param = ""
-            dataset = ""
-            expect = ""
+            self: instance of MARSretrieval
+                For description see class documentation.
+
+            server: instance of ECMWFService (from ECMWF Web-API)
+                This is the connection to the ECMWF data servers.
+                It is needed for the pythonic access of ECMWF data.
+
+            marsclass: string, optional
+                Characterisation of dataset. E.g. EI (ERA-Interim),
+                E4 (ERA40), OD (Operational archive), ea (ERA5).
+                Default is the ERA-Interim dataset "ei".
+
+            type: string, optional
+                Determines the type of fields to be retrieved.
+                Selects between observations, images or fields.
+                Examples for fields: Analysis (an), Forecast (fc),
+                Perturbed Forecast (pf), Control Forecast (cf) and so on.
+                Default is an empty string.
+
+            levtype: string, optional
+                Denotes type of level. Has a direct implication on valid
+                levelist values!
+                E.g. model level (ml), pressure level (pl), surface (sfc),
+                potential vorticity (pv), potential temperature (pt)
+                and depth (dp).
+                Default is an empty string.
+
+            levelist: string, optional
+                Specifies the required levels. It has to have a valid
+                correspondence to the selected levtype.
+                Examples: model level: 1/to/137, pressure levels: 500/to/1000
+                Default is an empty string.
+
+            repres: string, optional
+                Selects the representation of the archived data.
+                E.g. sh - spherical harmonics, gg - Gaussian grid,
+                ll - latitude/longitude, ...
+                Default is an empty string.
+
+            date: string, optional
+                Specifies the Analysis date, the Forecast base date or
+                Observations date. Valid formats are:
+                Absolute as YYYY-MM-DD or YYYYMMDD.
+                Default is an empty string.
+
+            resol: string, optional
+                Specifies the desired triangular truncation of retrieved data,
+                before carrying out any other selected post-processing.
+                The default is automatic truncation (auto), by which the lowest
+                resolution compatible with the value specified in grid is
+                automatically selected for the retrieval.
+                Users wanting to perform post-processing from full spectral
+                resolution should specify Archived Value (av).
+                The following are examples of existing resolutions found in
+                the archive: 63, 106, 159, 213, 255, 319, 399, 511, 799 or 1279.
+                This keyword has no meaning/effect if the archived data is
+                not in spherical harmonics representation.
+                The best selection can be found here:
+                https://software.ecmwf.int/wiki/display/UDOC/\
+                      Retrieve#Retrieve-Truncationbeforeinterpolation
+                Default is an empty string.
+
+            stream: string, optional
+                Identifies the forecasting system used to generate the data.
+                E.g. oper (Atmospheric model), enfo (Ensemble forecats), ...
+                Default is an empty string.
+
+            area: string, optional
+                Specifies the desired sub-area of data to be extracted.
+                Areas can be defined to wrap around the globe.
+
+                Latitude values must be given as signed numbers, with:
+                    north latitudes (i.e. north of the equator)
+                        being positive (e.g: 40.5)
+                    south latitutes (i.e. south of the equator)
+                        being negative (e.g: -50.5)
+                Longtitude values must be given as signed numbers, with:
+                    east longitudes (i.e. east of the 0 degree meridian)
+                        being positive (e.g: 35.0)
+                    west longitudes (i.e. west of the 0 degree meridian)
+                        being negative (e.g: -20.5)
+
+                E.g.: North/West/South/East
+                Default is an empty string.
+
+            time: string, optional
+                Specifies the time of the data in hours and minutes.
+                Valid values depend on the type of data: Analysis time,
+                Forecast base time or First guess verification time
+                (all usually at synoptic hours: 00, 06, 12 and 18 ).
+                Observation time (any combination in hours and minutes is valid,
+                subject to data availability in the archive).
+                The syntax is HHMM or HH:MM. If MM is omitted it defaults to 00.
+                Default is an empty string.
+
+            step: string, optional
+                Specifies the forecast time step from forecast base time.
+                Valid values are hours (HH) from forecast base time. It also
+                specifies the length of the forecast which verifies at
+                First Guess time.
+                E.g. 1/3/6-hourly
+                Default is an empty string.
+
+            expver: string, optional
+                The version of the dataset. Each experiment is assigned a
+                unique code (version). Production data is assigned 1 or 2,
+                and experimental data in Operations 11, 12 ,...
+                Research or Member State's experiments have a four letter
+                experiment identifier.
+                Default is "1".
+
+            number: string, optional
+                Selects the member in ensemble forecast run. (Only then it
+                is necessary.) It has a different meaning depending on
+                the type of data.
+                E.g. Perturbed Forecasts: specifies the Ensemble forecast member
+                Default is an empty string.
+
+            accuracy: string, optional
+                Specifies the number of bits per value to be used in the
+                generated GRIB coded fields.
+                A positive integer may be given to specify the preferred number
+                of bits per packed value. This must not be greater than the
+                number of bits normally used for a Fortran integer on the
+                processor handling the request (typically 32 or 64 bit).
+                Within a compute request the accuracy of the original fields
+                can be passed to the result field by specifying accuracy=av.
+                Default is an empty string.
+
+            grid: string, optional
+                Specifies the output grid which can be either a Gaussian grid
+                or a Latitude/Longitude grid. MARS requests specifying
+                grid=av will return the archived model grid.
+
+                Lat/Lon grid: The grid spacing needs to be an integer
+                fraction of 90 degrees e.g. grid = 0.5/0.5
+
+                Gaussian grid: specified by a letter denoting the type of
+                Gaussian grid followed by an integer (the grid number)
+                representing the number of lines between the Pole and Equator,
+                e.g.
+                grid = F160 - full (or regular) Gaussian grid with
+                       160 latitude lines between the pole and equator
+                grid = N320 - ECMWF original reduced Gaussian grid with
+                       320 latitude lines between the pole and equator,
+                       see Reduced Gaussian Grids for grid numbers used at ECMWF
+                grid = O640 - ECMWF octahedral (reduced) Gaussian grid with
+                       640 latitude lines between the pole and equator
+                Default is an empty string.
+
+            gaussian: string, optional
+                This parameter is deprecated and should no longer be used.
+                Specifies the desired type of Gaussian grid for the output.
+                Valid Gaussian grids are quasi-regular (reduced) or regular.
+                Keyword gaussian can only be specified together with
+                keyword grid. Gaussian without grid has no effect.
+                Default is an empty string.
+
+            target: string, optional
+                Specifies a file into which data is to be written after
+                retrieval or manipulation. Path names should always be
+                enclosed in double quotes. The MARS client supports automatic
+                generation of multiple target files using MARS keywords
+                enclosed in square brackets [ ].  If the environment variable
+                MARS_MULTITARGET_STRICT_FORMAT is set to 1 before calling mars,
+                the keyword values will be used in the filename as shown by
+                the ecCodes GRIB tool grib_ls -m, e.g. with
+                MARS_MULTITARGET_STRICT_FORMAT set to 1 the keywords time,
+                expver and param will be formatted as 0600, 0001 and 129.128
+                rather than 600, 1 and 129.
+                Default is an empty string.
+
+            param: string, optional
+                Specifies the meteorological parameter.
+                The list of meteorological parameters in MARS is extensive.
+                Their availability is directly related to their meteorological
+                meaning and, therefore, the rest of directives specified
+                in the MARS request.
+                Meteorological parameters can be specified by their
+                GRIB code (param=130), their mnemonic (param=t) or
+                full name (param=temperature).
+                The list of parameter should be seperated by a "/"-sign.
+                E.g. 130/131/133
+                Default is an empty string.
 
         @Return:
             <nothing>
         '''
 
-#        self.dataset = dataset
+        self.server = server
         self.marsclass = marsclass
         self.type = type
         self.levtype = levtype
@@ -879,29 +1117,33 @@ class MARSretrieval:
         self.time = time
         self.step = step
         self.expver = expver
-        self.target = target
-        self.param = param
         self.number = number
         self.accuracy = accuracy
         self.grid = grid
         self.gaussian = gaussian
-#    self.expect = expect
-        self.server = server
+        self.target = target
+        self.param = param
 
         return
+
 
     def displayInfo(self):
         '''
         @Description:
-            .
+            Prints all class attributes and their values.
 
         @Input:
-            self:
+            self: instance of MARSretrieval
+                For description see class documentation.
 
         @Return:
             <nothing>
         '''
+        # Get all class attributes and their values as a dictionary
         attrs = vars(self)
+
+        # iterate through all attributes and print them
+        # with their corresponding values
         for item in attrs.items():
             if item[0] in ('server'):
                 pass
@@ -913,16 +1155,24 @@ class MARSretrieval:
     def dataRetrieve(self):
         '''
         @Description:
-            .
+            Submits a MARS retrieval. Depending on the existence of
+            ECMWF Web-API it is submitted via Python or a
+            subprocess in the Shell. The parameter for the mars retrieval
+            are taken from the defined class attributes.
 
         @Input:
-            self:
+            self: instance of MARSretrieval
+                For description see class documentation.
 
         @Return:
             <nothing>
         '''
+        # Get all class attributes and their values as a dictionary
         attrs = vars(self)
-    #   self.server.retrieve(dicolist)
+
+        # convert the dictionary of attributes into a comma
+        # seperated list of attributes with their values
+        # needed for the retrieval call
         s = 'ret'
         for k, v in attrs.iteritems():
             if k in ('server'):
@@ -936,20 +1186,23 @@ class MARSretrieval:
             else:
                 s = s + ',' + k + '=' + str(v)
 
-        if self.server !=  False:
+        # MARS request via Python script
+        if self.server is not False:
             try:
-                self.server.execute(s,target)
+                self.server.execute(s, target)
             except:
-                print('MARS Request failed, have you already registered at apps.ecmwf.int?')
+                print('MARS Request failed, \
+                    have you already registered at apps.ecmwf.int?')
                 raise IOError
             if os.stat(target).st_size == 0:
                 print('MARS Request returned no data - please check request')
                 raise IOError
+        # MARS request via extra process in shell
         else:
             s += ',target = "' + target + '"'
             p = subprocess.Popen(['mars'], stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, bufsize = 1)
+                                 stderr=subprocess.PIPE, bufsize=1)
             pout = p.communicate(input=s)[0]
             print(pout.decode())
             if 'Some errors reported' in pout.decode():
@@ -963,31 +1216,32 @@ class MARSretrieval:
         return
 
 
-##############################################################
-##############################################################
-class EIFlexpart:
+
+
+class ECFlexpart:
     '''
-    Class to retrieve Era Interim data for running FLEXPART
+    Class to retrieve ECMWF data specific for running FLEXPART.
     '''
-#AP change class name to ECFlexpart
-    def __init__(self, c, fluxes=False):
+    def __init__(self, c, fluxes=False): #done/ verstehen
         '''
         @Description:
-            Creates an object/instance of EIFlexpart with the
+            Creates an object/instance of ECFlexpart with the
             associated settings of its attributes for the retrieval.
 
         @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
                 The current object of the class.
 
             c: instance of class Control
-                Contains all the parameters of control files, which are:
-                DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-                NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-                LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-                ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-                ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-                GRIB2FLEXPART, FLEXPARTDIR
+                Contains all the parameters of control files, which are e.g.:
+                DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+                STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+                LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+                OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+                ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+                MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+                DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
                 For more information about format and content of the parameter
                 see documentation.
 
@@ -999,8 +1253,8 @@ class EIFlexpart:
         @Return:
             <nothing>
         '''
-        # different mars types for retrieving reanalysis data for flexpart
 
+        # different mars types for retrieving reanalysis data for flexpart
         self.types = dict()
         try:
             if c.maxstep > len(c.type):    # Pure forecast mode
@@ -1115,7 +1369,8 @@ class EIFlexpart:
         self.outputfilelist = []
 
 
-        # Now comes the nasty part that deals with the different scenarios we have:
+        # Now comes the nasty part that deals with the different
+        # scenarios we have:
         # 1) Calculation of etadot on
         #    a) Gaussian grid
         #    b) Output grid
@@ -1173,8 +1428,8 @@ class EIFlexpart:
                     self.params['OG__ML'][0] += '/Z/VO'
                     if '/D' not in self.params['OG__ML'][0]:
                         self.params['OG__ML'][0] += '/D'
-        #            wrf_sfc = 'sp/msl/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/stl1/ /
-        #                       stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4'.upper()
+                    #wrf_sfc = 'sp/msl/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/stl1/ /
+                    #           stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4'.upper()
                     wrf_sfc = '134/235/167/165/166/168/129/172/34/31/141/ \
                                139/170/183/236/39/40/41/42'.upper()
                     lwrt_sfc = wrf_sfc.split('/')
@@ -1192,26 +1447,28 @@ class EIFlexpart:
         return
 
 
-    def create_namelist(self, c, filename):
+    def write_namelist(self, c, filename): #done
         '''
         @Description:
-            Creates a namelist file in the temporary directory.
-            It will contain values for maxl, maxb, mlevel,
+            Creates a namelist file in the temporary directory and writes
+            the following values to it: maxl, maxb, mlevel,
             mlevelist, mnauf, metapar, rlo0, rlo1, rla0, rla1,
             momega, momegadiff, mgauss, msmooth, meta, metadiff, mdpdeta
 
         @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
                 The current object of the class.
 
             c: instance of class Control
-                Contains all the parameters of control files, which are:
-                DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-                NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-                LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-                ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-                ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-                GRIB2FLEXPART, FLEXPARTDIR
+                Contains all the parameters of control files, which are e.g.:
+                DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+                STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+                LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+                OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+                ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+                MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+                DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
                 For more information about format and content of the parameter
                 see documentation.
 
@@ -1221,6 +1478,7 @@ class EIFlexpart:
         @Return:
             <nothing>
         '''
+
         self.inputdir = c.inputdir
         area = asarray(self.area.split('/')).astype(float)
         grid = asarray(self.grid.split('/')).astype(float)
@@ -1231,21 +1489,21 @@ class EIFlexpart:
         maxl = int((area[3] - area[1]) / grid[1]) + 1
         maxb = int((area[0] - area[2]) / grid[0]) + 1
 
-        f = open(self.inputdir + '/' + filename, 'w')
-        f.write('&NAMGEN\n')
-        f.write(',\n  '.join(['maxl = ' + str(maxl), 'maxb = ' + str(maxb),
-                'mlevel = ' + self.level,
-                'mlevelist = ' + '"' + self.levelist + '"',
-                'mnauf = ' + self.resol, 'metapar = ' + '77',
-                'rlo0 = ' + str(area[1]), 'rlo1 = ' + str(area[3]),
-                'rla0 = ' + str(area[2]), 'rla1 = ' + str(area[0]),
-                'momega = ' + c.omega, 'momegadiff = ' + c.omegadiff,
-                'mgauss = ' + c.gauss, 'msmooth = ' + c.smooth,
-                'meta = ' + c.eta, 'metadiff = ' + c.etadiff,
-                'mdpdeta = ' + c.dpdeta]))
+        with open(self.inputdir + '/' + filename, 'w') as f:
+            f.write('&NAMGEN\n')
+            f.write(',\n  '.join(['maxl = ' + str(maxl), 'maxb = ' + str(maxb),
+                    'mlevel = ' + self.level,
+                    'mlevelist = ' + '"' + self.levelist + '"',
+                    'mnauf = ' + self.resol, 'metapar = ' + '77',
+                    'rlo0 = ' + str(area[1]), 'rlo1 = ' + str(area[3]),
+                    'rla0 = ' + str(area[2]), 'rla1 = ' + str(area[0]),
+                    'momega = ' + c.omega, 'momegadiff = ' + c.omegadiff,
+                    'mgauss = ' + c.gauss, 'msmooth = ' + c.smooth,
+                    'meta = ' + c.eta, 'metadiff = ' + c.etadiff,
+                    'mdpdeta = ' + c.dpdeta]))
 
-        f.write('\n/\n')
-        f.close()
+            f.write('\n/\n')
+
         return
 
     def retrieve(self, server, dates, times, inputdir=''):
@@ -1254,7 +1512,7 @@ class EIFlexpart:
 
 
         @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
 
             server: instance of ECMWFService
 
@@ -1262,7 +1520,7 @@ class EIFlexpart:
 
             times:
 
-            inputdir: string
+            inputdir: string, optional
                 Default string is empty ('').
 
         @Return:
@@ -1300,7 +1558,9 @@ class EIFlexpart:
                 mfstep = self.types[ftype]['steps']
                 mfdate = self.dates
                 mfstream = self.stream
-                mftarget = self.inputdir+"/"+ftype+pk+'.'+self.dates.split('/')[0]+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
+                mftarget = self.inputdir + "/" + ftype + pk + '.' + \
+                           self.dates.split('/')[0] + '.' + str(os.getppid()) +\
+                           '.' + str(os.getpid()) + ".grb"
                 if pk == 'OG__SL':
                     pass
                 if pk == 'OG_OROLSM__SL':
@@ -1325,10 +1585,14 @@ class EIFlexpart:
                     gaussian = self.gaussian
 
                 if self.basetime is None:
-                    MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = mfstream,
-                              type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                              accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                              date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                    MR =  MARSretrieval(self.server,
+                            marsclass=self.marsclass, stream=mfstream,
+                            type=mftype, levtype=pv[1], levelist=pv[2],
+                            resol=self.resol, gaussian=gaussian,
+                            accuracy=self.accuracy, grid=pv[3],
+                            target=mftarget, area=area, date=mfdate,
+                            time=mftime, number=self.number, step=mfstep,
+                            expver=self.expver, param=pv[0])
 
                     MR.displayInfo()
                     MR.dataRetrieve()
@@ -1344,10 +1608,14 @@ class EIFlexpart:
                     tm1 = -1
                     if 'by' in mftime:
                         tm1 = 2
-                    maxtime = datetime.datetime.strptime(mfdate.split('/')[-1]+mftime.split('/')[tm1],'%Y%m%d%H')+ \
-                    datetime.timedelta(hours = int(mfstep.split('/')[sm1]))
+                    maxtime = datetime.datetime.strptime(
+                                mfdate.split('/')[-1] + mftime.split('/')[tm1],
+                                '%Y%m%d%H') + datetime.timedelta(
+                                hours=int(mfstep.split('/')[sm1]))
 
-                    elimit = datetime.datetime.strptime(mfdate.split('/')[-1]+self.basetime,'%Y%m%d%H')
+                    elimit = datetime.datetime.strptime(
+                                mfdate.split('/')[-1] +
+                                self.basetime, '%Y%m%d%H')
 
                     if self.basetime == '12':
                         if 'acc' in pk:
@@ -1356,70 +1624,111 @@ class EIFlexpart:
                 # if 12h< = maxtime-elimit<12h reduce time for last date
                 # if maxtime-elimit<12h reduce step for last time
                 # A split of the MARS job into 2 is likely necessary.
-                            maxtime = elimit-datetime.timedelta(hours = 24)
-                            mfdate = '/'.join(('/'.join(mfdate.split('/')[:-1]),datetime.datetime.strftime(maxtime,'%Y%m%d')))
+                            maxtime = elimit-datetime.timedelta(hours=24)
+                            mfdate = '/'.join(('/'.join(mfdate.split('/')[:-1]),
+                                                datetime.datetime.strftime(
+                                                maxtime, '%Y%m%d')))
 
-                            MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = self.stream,
-                                                type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                                                accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                                                date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                            MR = MARSretrieval(self.server,
+                                            marsclass=self.marsclass,
+                                            stream=self.stream, type=mftype,
+                                            levtype=pv[1], levelist=pv[2],
+                                            resol=self.resol, gaussian=gaussian,
+                                            accuracy=self.accuracy, grid=pv[3],
+                                            target=mftarget, area=area,
+                                            date=mfdate, time=mftime,
+                                            number=self.number, step=mfstep,
+                                            expver=self.expver, param=pv[0])
 
                             MR.displayInfo()
                             MR.dataRetrieve()
 
-                            maxtime = elimit-datetime.timedelta(hours = 12)
-                            mfdate = datetime.datetime.strftime(maxtime,'%Y%m%d')
+                            maxtime = elimit - datetime.timedelta(hours=12)
+                            mfdate = datetime.datetime.strftime(maxtime,
+                                                                '%Y%m%d')
                             mftime = '00'
-                            mftarget = self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
+                            mftarget = self.inputdir + "/" + ftype + pk + \
+                                       '.' + mfdate + '.' + str(os.getppid()) +\
+                                       '.' + str(os.getpid()) + ".grb"
 
-                            MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = self.stream,
-                                                type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                                                accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                                                date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                            MR = MARSretrieval(self.server,
+                                            marsclass=self.marsclass,
+                                            stream=self.stream, type=mftype,
+                                            levtype=pv[1], levelist=pv[2],
+                                            resol=self.resol, gaussian=gaussian,
+                                            accuracy=self.accuracy, grid=pv[3],
+                                            target=mftarget, area=area,
+                                            date=mfdate, time=mftime,
+                                            number=self.number, step=mfstep,
+                                            expver=self.expver, param=pv[0])
 
                             MR.displayInfo()
                             MR.dataRetrieve()
                         else:
-                            MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = self.stream,
-                                        type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                                        accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                                        date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                            MR = MARSretrieval(self.server,
+                                            marsclass=self.marsclass,
+                                            stream=self.stream, type=mftype,
+                                            levtype=pv[1], levelist=pv[2],
+                                            resol=self.resol, gaussian=gaussian,
+                                            accuracy=self.accuracy, grid=pv[3],
+                                            target=mftarget, area=area,
+                                            date=mfdate, time=mftime,
+                                            number=self.number, step=mfstep,
+                                            expver=self.expver, param=pv[0])
 
                             MR.displayInfo()
                             MR.dataRetrieve()
                     else:
-                        maxtime = elimit-datetime.timedelta(hours = 24)
+                        maxtime = elimit - datetime.timedelta(hours=24)
                         mfdate = datetime.datetime.strftime(maxtime,'%Y%m%d')
 
                         mftimesave = ''.join(mftime)
 
                         if '/' in mftime:
                             times = mftime.split('/')
-                            while int(times[0])+int(mfstep.split('/')[0])< = 12 and pk! = 'OG_OROLSM__SL' and 'acc' not in pk:
+                            while ((int(times[0]) +
+                                   int(mfstep.split('/')[0]) <= 12) and
+                                  (pk != 'OG_OROLSM__SL') and 'acc' not in pk):
                                 times = times[1:]
-                            if len(times)>1:
+                            if len(times) > 1:
                                 mftime = '/'.join(times)
                             else:
                                 mftime = times[0]
 
-                        MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = self.stream,
-                                  type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                                  accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                                  date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                        MR = MARSretrieval(self.server,
+                                        marsclass=self.marsclass,
+                                        stream=self.stream, type=mftype,
+                                        levtype=pv[1], levelist=pv[2],
+                                        resol=self.resol, gaussian=gaussian,
+                                        accuracy=self.accuracy, grid=pv[3],
+                                        target=mftarget, area=area,
+                                        date=mfdate, time=mftime,
+                                        number=self.number, step=mfstep,
+                                        expver=self.expver, param=pv[0])
 
                         MR.displayInfo()
                         MR.dataRetrieve()
 
-                        if int(mftimesave.split('/')[0]) == 0 and int(mfstep.split('/')[0]) == 0 and pk! = 'OG_OROLSM__SL':
+                        if (int(mftimesave.split('/')[0]) == 0 and
+                            int(mfstep.split('/')[0]) == 0 and
+                            pk != 'OG_OROLSM__SL'):
                             mfdate = datetime.datetime.strftime(elimit,'%Y%m%d')
                             mftime = '00'
                             mfstep = '000'
-                            mftarget = self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
+                            mftarget = self.inputdir + "/" + ftype + pk + \
+                                       '.' + mfdate + '.' + str(os.getppid()) +\
+                                       '.' + str(os.getpid()) + ".grb"
 
-                            MR =  MARSretrieval(self.server, dataset = self.dataset, marsclass = self.marsclass, stream = self.stream,
-                                          type = mftype, levtype = pv[1], levelist = pv[2],resol = self.resol, gaussian = gaussian,
-                                          accuracy = self.accuracy,grid = pv[3],target = mftarget,area = area,
-                                          date = mfdate, time = mftime,number = self.number,step = mfstep, expver = self.expver, param = pv[0])
+                            MR = MARSretrieval(self.server,
+                                        marsclass=self.marsclass,
+                                        stream=self.stream, type=mftype,
+                                        levtype=pv[1], levelist=pv[2],
+                                        resol=self.resol, gaussian=gaussian,
+                                        accuracy=self.accuracy, grid=pv[3],
+                                        target=mftarget, area=area,
+                                        date=mfdate, time=mftime,
+                                        number=self.number, step=mfstep,
+                                        expver=self.expver, param=pv[0])
 
                             MR.displayInfo()
                             MR.dataRetrieve()
@@ -1429,60 +1738,31 @@ class EIFlexpart:
             return
 
 
-    def getFlexpartTime(self, type, step, time):
-#AP remove this function, no longer needed
+    def process_output(self, c): #done
         '''
         @Description:
-            ????
-#AP wozu? wird das überhaupt noch gebraucht? in create auskommentiert
+            The grib files are postprocessed depending on selection in
+            control file. The following modifications might be done if
+            properly switched in control file:
+            GRIB2 - Conversion to GRIB2
+            ECTRANS - Transfer of files to gateway server
+            ECSTORAGE - Storage at ECMWF server
+            GRIB2FLEXPART - Conversion of GRIB files to FLEXPART binary format
 
         @Input:
-            self: instance of EIFlexpart
-                The current object of the class.
-
-            type: string
-                Type of the data field. E.g. FC - forecast or
-                AN - analysis
-
-            step: integer
-                Forecast step in hours.
-
-            time: integer
-                Time in hours.
-
-        @Return:
-            cflextime:
-
-        '''
-        cstep = '{:0>3}'.format(step)
-        ctime = '{:0>2}'.format(int(time / 100))
-        ctype = str(type).upper()
-
-        myinfo = [ctype, ctime, cstep]
-        cflextime = None
-        for t, marsinfo in self.mars.items():
-            if myinfo == marsinfo:
-                cflextime = t
-
-        return cflextime
-
-    def process_output(self, c):
-        '''
-        @Description:
-
-
-        @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
                 The current object of the class.
 
             c: instance of class Control
-                Contains all the parameters of control files, which are:
-                DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-                NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-                LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-                ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-                ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-                GRIB2FLEXPART, FLEXPARTDIR
+                Contains all the parameters of control files, which are e.g.:
+                DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+                STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+                LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+                OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+                ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+                MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+                DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
                 For more information about format and content of the parameter
                 see documentation.
 
@@ -1491,22 +1771,25 @@ class EIFlexpart:
 
         '''
 
-        print 'Postprocessing:\n Format: {}\n'.format(c.format)
+        print('Postprocessing:\n Format: {}\n'.format(c.format))
+
         if c.ecapi is False:
-            print 'ecstorage: {}\n ecfsdir: {}\n'.format(c.ecstorage, c.ecfsdir)
+            print('ecstorage: {}\n ecfsdir: {}\n'.
+                  format(c.ecstorage, c.ecfsdir))
             if not hasattr(c, 'gateway'):
                 c.gateway = os.getenv('GATEWAY')
             if not hasattr(c, 'destination'):
                 c.destination = os.getenv('DESTINATION')
-            print 'ectrans: {}\n gateway: {}\n destination: {}\n '}
-                    .format(c.ectrans, c.gateway, c.destination)
-        print 'Output filelist: \n', self.outputfilelist
+            print('ectrans: {}\n gateway: {}\n destination: {}\n '
+                    .format(c.ectrans, c.gateway, c.destination))
+
+        print('Output filelist: \n', self.outputfilelist)
 
         if c.format.lower() == 'grib2':
             for ofile in self.outputfilelist:
-                p = subprocess.check_call(['grib_set', '-s', 'edition = 2, \
-                                        productDefinitionTemplateNumber = 8',
-                                        ofile, ofile + '_2'])
+                p = subprocess.check_call(['grib_set', '-s', 'edition=2, \
+                                            productDefinitionTemplateNumber=8',
+                                            ofile, ofile + '_2'])
                 p = subprocess.check_call(['mv', ofile + '_2', ofile])
 
         if int(c.ectrans) == 1 and c.ecapi is False:
@@ -1514,21 +1797,26 @@ class EIFlexpart:
                 p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
                                            c.gateway, '-remote', c.destination,
                                            '-source', ofile])
-                print 'ectrans:',p
+                print('ectrans:', p)
+
         if int(c.ecstorage) == 1 and c.ecapi is False:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['ecp', '-o', ofile,
                                            os.path.expandvars(c.ecfsdir)])
 
-#    20131107 000000      EN13110700              ON DISC
         if c.outputdir != c.inputdir:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['mv', ofile, c.outputdir])
 
+        # prepare environment for the grib2flexpart run
+        # to convert grib to flexpart binary
         if c.grib2flexpart == '1':
-            f = open(c.outputdir + '/' + 'AVAILABLE', 'w')
+
+            # generate AVAILABLE file
+            # Example of AVAILABLE file data
+            # 20131107 000000      EN13110700              ON DISC
             clist = []
-            for ofile in self.outputfilelist:  # generate AVAILABLE file
+            for ofile in self.outputfilelist:
                 fname = ofile.split('/')
                 if '.' in fname[-1]:
                     l = fname[-1].split('.')
@@ -1543,38 +1831,51 @@ class EIFlexpart:
                 clist.append(cdate + ' ' + chms + ' '*6 +
                              fname[-1] + ' '*14 + 'ON DISC')
             clist.sort()
-            f.write('\n'.join(clist) + '\n')
-            f.close()
+            with open(c.outputdir + '/' + 'AVAILABLE', 'w') as f:
+                f.write('\n'.join(clist) + '\n')
 
+            # generate pathnames file
             pwd = os.path.abspath(c.outputdir)
-            f = open(pwd + '/pathnames','w')
-            f.write(pwd + '/Options/\n')
-            f.write(pwd + '/\n')
-            f.write(pwd + '/\n')
-            f.write(pwd + '/AVAILABLE\n')
-            f.write(' = == = == = == = == = == ==  = \n')
-            f.close()
+            with open(pwd + '/pathnames','w') as f:
+                f.write(pwd + '/Options/\n')
+                f.write(pwd + '/\n')
+                f.write(pwd + '/\n')
+                f.write(pwd + '/AVAILABLE\n')
+                f.write(' = == = == = == = == = == ==  = \n')
 
+            # create Options dir if necessary
             if not os.path.exists(pwd + '/Options'):
                 os.makedirs(pwd+'/Options')
-            f = open(os.path.expandvars(
+
+            # read template COMMAND file
+            with open(os.path.expandvars(
                      os.path.expanduser(c.flexpart_root_scripts)) +
-                     '/../Options/COMMAND', 'r')
-            lflist = f.read().split('\n')
+                     '/../Options/COMMAND', 'r') as f:
+                lflist = f.read().split('\n')
+
+            # find index of list where to put in the
+            # date and time information
+            # usually after the LDIRECT parameter
             i = 0
             for l in lflist:
                 if 'LDIRECT' in l.upper():
                     break
                 i += 1
 
-            clist.sort()
+#            clist.sort()
+            # insert the date and time information of run star and end
+            # into the list of lines of COMMAND file
             lflist = lflist[:i+1] + \
                      [clist[0][:16], clist[-1][:16]] + \
                      lflist[i+3:]
 
+            # write the new COMMAND file
             with open(pwd + '/Options/COMMAND', 'w') as g:
                 g.write('\n'.join(lflist) + '\n')
 
+            # change to outputdir and start the
+            # grib2flexpart run
+            # afterwards switch back to the working dir
             os.chdir(c.outputdir)
             p = subprocess.check_call([os.path.expandvars(
                         os.path.expanduser(c.flexpart_root_scripts)) +
@@ -1584,26 +1885,37 @@ class EIFlexpart:
 
         return
 
-    def create(self, inputfiles, c):
+    def create(self, inputfiles, c): #done
         '''
         @Description:
-#AP WOZU und ist einrueckung richtig
+            This method is based on the ECMWF example index.py
+            https://software.ecmwf.int/wiki/display/GRIB/index.py
+
+            An index file will be created which depends on the combination
+            of "date", "time" and "stepRange" values. This is used to iterate
+            over all messages in the grib files passed through the parameter
+            "inputfiles" to seperate specific parameters into fort.* files.
+            Afterwards the FORTRAN program Convert2 is called to convert
+            the data fields all to the same grid and put them in one file
+            per day.
 
         @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
                 The current object of the class.
 
-            inputfiles: list of strings
-                A list of filenames.
+            inputfiles: instance of UIOFiles
+                Contains a list of files.
 
             c: instance of class Control
-                Contains all the parameters of control files, which are:
-                DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-                NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-                LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-                ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-                ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-                GRIB2FLEXPART, FLEXPARTDIR
+                Contains all the parameters of control files, which are e.g.:
+                DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+                STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+                LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+                OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+                ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+                MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+                DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
                 For more information about format and content of the parameter
                 see documentation.
 
@@ -1613,50 +1925,50 @@ class EIFlexpart:
 
         table128 = init128(c.ecmwfdatadir +
                            '/grib_templates/ecmwf_grib1_table_128')
-#AP wieso wrf
-        wrfpars = toparamId('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/ \
+        wrfpars = toparamId('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
                             stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
                             table128)
+
         index_keys = ["date", "time", "step"]
         indexfile = c.inputdir + "/date_time_stepRange.idx"
         silentremove(indexfile)
         grib = GribTools(inputfiles.files)
+        # creates new index file
         iid = grib.index(index_keys=index_keys, index_file=indexfile)
-        print 'index done...'
 
-        fdict = {'10':None, '11':None, '12':None, '13':None, '16':None,
-                 '17':None, '19':None, '21':None, '22':None, '20':None}
-        for f in fdict.keys():
-            silentremove(c.inputdir + "/fort." + f)
-
+        # read values of index keys
         index_vals = []
         for key in index_keys:
-            key_vals = grib_index_get(iid, key)
-            print key_vals
-            index_vals.append(key_vals)
+            index_vals.append(grib_index_get(iid, key))
+            print(index_vals[-1])
+            # index_vals looks for example like:
+            # index_vals[0]: ('20171106', '20171107', '20171108') ; date
+            # index_vals[1]: ('0', '1200', '1800', '600') ; time
+            # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
-        # creates index file
+
         for prod in product(*index_vals):
+            # e.g. prod = ('20170505', '0', '12')
+            #             (  date    ,time, step)
+            # per date e.g. time = 0, 600, 1200, 1800
+            # per time e.g. step = 0, 3, 6, 9, 12
             for i in range(len(index_keys)):
-                grib_index_select(iid, index_keys[i],  prod[i])
+                grib_index_select(iid, index_keys[i], prod[i])
 
             gid = grib_new_from_index(iid)
             # do convert2 program if gid at this time is not None,
             # therefore save in hid
             hid = gid
-            cflextime = None
-            for k, f in fdict.iteritems():
-                fdict[k] = open(c.inputdir + '/fort.' + k, 'w')
             if gid is not None:
                 cdate = str(grib_get(gid, 'date'))
                 time = grib_get(gid, 'time')
                 type = grib_get(gid, 'type')
                 step = grib_get(gid, 'step')
-        #       cflextime  =  self.getFlexpartTime(type,step, time)
+                # create correct timestamp from the three time informations
+                # date, time, step
                 timestamp = datetime.datetime.strptime(
                                 cdate + '{:0>2}'.format(time/100), '%Y%m%d%H')
                 timestamp += datetime.timedelta(hours=int(step))
-        #       print gid,index_keys[i],prod[i],cdate,time,step,timestamp
 
                 cdateH = datetime.datetime.strftime(timestamp, '%Y%m%d%H')
                 chms = datetime.datetime.strftime(timestamp, '%H%M%S')
@@ -1669,14 +1981,15 @@ class EIFlexpart:
                         bt = '00'
                         slimit = datetime.datetime.strptime(
                                     c.end_date + bt, '%Y%m%d%H') - \
-                                 datetime.timedelta(hours=12-int(c.dtime))
+                                    datetime.timedelta(hours=12-int(c.dtime))
                     if c.basetime == '12':
                         bt = '12'
                         slimit = datetime.datetime.strptime(
                                     c.end_date + bt, '%Y%m%d%H') - \
                                  datetime.timedelta(hours=12-int(c.dtime))
 
-                    elimit = datetime.datetime.strptime(c.end_date + bt, '%Y%m%d%H')
+                    elimit = datetime.datetime.strptime(
+                                c.end_date + bt, '%Y%m%d%H')
 
                     if timestamp < slimit or timestamp > elimit:
                         continue
@@ -1690,12 +2003,20 @@ class EIFlexpart:
                     else:
                         if cdate != olddate:
                             fwrf = open(c.outputdir + '/WRF' + cdate +
-                                        '.{:0>2}'.format(time) + '.000.grb2', 'w')
+                                        '.{:0>2}'.format(time) + '.000.grb2',
+                                        'w')
                             olddate = cdate[:]
             except AttributeError:
                 pass
 
-#           print 'cyear '+cyear+'/'+cmonth+'/'+'/EI'+cyear[2:4]+cmonth+cday+cflextime
+            # delete old fort.* files and open them newly
+            fdict = {'10':None, '11':None, '12':None, '13':None, '16':None,
+                         '17':None, '19':None, '21':None, '22':None, '20':None}
+            #for f in fdict.keys():
+            #    silentremove(c.inputdir + "/fort." + f)
+            for k, f in fdict.iteritems():
+                silentremove(c.inputdir + "/fort." + k)
+                fdict[k] = open(c.inputdir + '/fort.' + k, 'w')
 
             savedfields = []
             while 1:
@@ -1708,9 +2029,8 @@ class EIFlexpart:
                 if paramId == 133 and gridtype == 'reduced_gg':
                 # Relative humidity (Q.grb) is used as a template only
                 # so we need the first we "meet"
-                    fout = open(c.inputdir + '/fort.18', 'w')
-                    grib_write(gid, fout)
-                    fout.close()
+                    with open(c.inputdir + '/fort.18', 'w') as fout:
+                        grib_write(gid, fout)
                 elif paramId == 131 or paramId == 132:
                     grib_write(gid, fdict['10'])
                 elif paramId == 130:
@@ -1723,7 +2043,6 @@ class EIFlexpart:
                     grib_write(gid, fdict['13'])
                 elif paramId in [129, 138, 155] and levtype == 'hybrid' \
                                                 and c.wrf == '1':
-        #            print paramId,'not written'
                     pass
                 elif paramId == 246 or paramId == 247:
                     # cloud liquid water and ice
@@ -1732,7 +2051,6 @@ class EIFlexpart:
                     else:
                         clwc += grib_get_values(gid)
                         grib_set_values(gid, clwc)
-            #            grib_set(gid,'shortName','qc')
                         grib_set(gid, 'paramId', 201031)
                         grib_write(gid, fdict['22'])
                 elif paramId == 135:
@@ -1744,10 +2062,11 @@ class EIFlexpart:
                         grib_write(gid, fdict['16'])
                         savedfields.append(paramId)
                     else:
-                        print 'duplicate ' + str(paramId) + ' not written'
+                        print('duplicate ' + str(paramId) + ' not written')
 
                 try:
                     if c.wrf == '1':
+# die if abfrage scheint ueberfluessig da eh das gleihce ausgefuehrt wird
                         if levtype == 'hybrid':
                             if paramId in [129, 130, 131, 132, 133, 138, 155]:
                                 grib_write(gid, fwrf)
@@ -1758,20 +2077,21 @@ class EIFlexpart:
                     pass
 
                 grib_release(gid)
-                gid  =  grib_new_from_index(iid)
+                gid = grib_new_from_index(iid)
 
         for f in fdict.values():
             f.close()
 
         # call for CONVERT2
+# AUSLAGERN IN EIGENE FUNKTION
 
         if hid is not None:
             pwd = os.getcwd()
             os.chdir(c.inputdir)
             if os.stat('fort.21').st_size == 0 and int(c.eta) == 1:
-                print 'Parameter 77 (etadot) is missing, most likely it is \
-                       not available for this type or date/time\n'
-                print 'Check parameters CLASS, TYPE, STREAM, START_DATE\n'
+                print('Parameter 77 (etadot) is missing, most likely it is \
+                       not available for this type or date/time\n')
+                print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
                 myerror(c, 'fort.21 is empty while parameter eta is set \
                             to 1 in CONTROL file')
 
@@ -1789,7 +2109,7 @@ class EIFlexpart:
                 suffix = cdateH[2:10]
 
             fnout += suffix
-            print "outputfile = " + fnout
+            print("outputfile = " + fnout)
             self.outputfilelist.append(fnout) # needed for final processing
             fout = open(fnout, 'wb')
             shutil.copyfileobj(open(c.inputdir + '/fort.15', 'rb'), fout)
@@ -1824,20 +2144,22 @@ class EIFlexpart:
 
 
         @Input:
-            self: instance of EIFlexpart
+            self: instance of ECFlexpart
                 The current object of the class.
 
-            inputfiles: list of strings
-                A list of filenames.
+            inputfiles: instance of UIOFiles
+                Contains a list of files.
 
             c: instance of class Control
-                Contains all the parameters of control files, which are:
-                DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-                NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL,
-                LEVELIST, RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA,
-                ETADIFF, DPDETA, SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX,
-                ECSTORAGE, ECTRANS, ECFSDIR, MAILOPS, MAILFAIL,
-                GRIB2FLEXPART, FLEXPARTDIR
+                Contains all the parameters of control files, which are e.g.:
+                DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+                STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+                LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+                OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+                ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+                MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+                DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
                 For more information about format and content of the parameter
                 see documentation.
 
@@ -1848,29 +2170,30 @@ class EIFlexpart:
         table128 = init128(c.ecmwfdatadir +
                            '/grib_templates/ecmwf_grib1_table_128')
         pars = toparamId(self.params['OG_acc_SL'][0], table128)
+
         index_keys = ["date", "time", "step"]
         indexfile = c.inputdir + "/date_time_stepRange.idx"
-        silentremove(indexfile)  # delete, if it exists already
+        silentremove(indexfile)
         grib = GribTools(inputfiles.files)
+        # creates new index file
         iid = grib.index(index_keys=index_keys, index_file=indexfile)
-        print 'index done...'
 
-        # get the date, time and step values from indexfile
+        # read values of index keys
         index_vals = []
         for key in index_keys:
             key_vals = grib_index_get(iid,key)
-            print key_vals
-            # have to sort the steps, therefore convert to int first
+            print(key_vals)
+            # have to sort the steps for disaggregation,
+            # therefore convert to int first
             if key == 'step':
-                l = []
-                for k in key_vals:
-                    l.append(int(k))
-                l.sort()
-                # now convert back to str and overwrite key_vals
-                key_vals = []
-                for k in l:
-                    key_vals.append(str(k))
+                key_vals = [int(k) for k in key_vals]
+                key_vals.sort()
+                key_vals = [str(k) for k in key_vals]
             index_vals.append(key_vals)
+            # index_vals looks for example like:
+            # index_vals[0]: ('20171106', '20171107', '20171108') ; date
+            # index_vals[1]: ('0', '1200', '1800', '600') ; time
+            # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
         valsdict = {}
         svalsdict = {}
@@ -1879,23 +2202,26 @@ class EIFlexpart:
             valsdict[str(p)] = []
             svalsdict[str(p)] = []
             stepsdict[str(p)] = []
-#AP muss das hier wirklich eingerückt sein?
+ # ab hier eien Einrückung zurück!!!!
             for prod in product(*index_vals):
+                # e.g. prod = ('20170505', '0', '12')
+                #             (  date    ,time, step)
+                # per date e.g. time = 0, 600, 1200, 1800
+                # per time e.g. step = 0, 3, 6, 9, 12
                 for i in range(len(index_keys)):
                     grib_index_select(iid, index_keys[i], prod[i])
 
                 gid = grib_new_from_index(iid)
+                # do convert2 program if gid at this time is not None,
+                # therefore save in hid
                 hid = gid
-                cflextime = None
                 if gid is not None:
-                    cdate = grib_get(gid, 'date')
-                    #cyear = cdate[:4]
-                    #cmonth = cdate[4:6]
-                    #cday  = cdate[6:8]
+                    cdate = str(grib_get(gid, 'date'))
                     time = grib_get(gid, 'time')
                     type = grib_get(gid, 'type')
                     step = grib_get(gid, 'step')
-                    # date+time+step-2*dtime (since interpolated value valid for step-2*dtime)
+                    # date+time+step-2*dtime
+                    #(since interpolated value valid for step-2*dtime)
                     sdate = datetime.datetime(year=cdate / 10000,
                                               month=mod(cdate, 10000) / 100,
                                               day=mod(cdate, 100),
@@ -1925,7 +2251,7 @@ class EIFlexpart:
                 hnout = c.inputdir + '/flux' + sdates.strftime('%Y%m%d%H')
                 g = open(gnout, 'w')
                 h = open(hnout, 'w')
-            print "outputfile = " + fnout
+            print("outputfile = " + fnout)
             f = open(fnout, 'w')
 
             while 1:
@@ -1951,14 +2277,15 @@ class EIFlexpart:
                     vdp.append(values[:])  # save the accumulated values
                     if step <= int(c.dtime):
                         svdp.append(values[:] / int(c.dtime))
-                    else:
+                    else: # deaccumulate values
                         svdp.append((vdp[-1] - vdp[-2]) / int(c.dtime))
 
-                    print cparamId, atime, step, len(values), \
-                          values[0], std(values)
+                    print(cparamId, atime, step, len(values),
+                          values[0], std(values))
                     # save the 1/3-hourly or specific values
                     # svdp.append(values[:])
                     sd.append(step)
+                    # len(svdp) correspond to the time
                     if len(svdp) >= 3:
                         if len(svdp) > 3:
                             if cparamId == '142' or cparamId == '143':
