@@ -24,7 +24,7 @@
 ##PBS -l EC_memory_per_task=32000MB
 
 set -x
-
+export VERSION=7.1
 case $HOST in
   *ecg*)
   module load python
@@ -32,7 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
   export PATH=${PATH}:
   ;;
@@ -42,12 +42,12 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
   export PATH=${PATH}:
   ;;
 #  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
 #  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
 #  export SCRATCH=$ECMWFDATA/python
@@ -65,7 +65,7 @@ cat >>$CONTROL<<EOF
 EOF
 
 
-submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work >prot
+submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work 1> prot 2>&1
 
 if [ $? -eq 0 ] ; then
   l=0

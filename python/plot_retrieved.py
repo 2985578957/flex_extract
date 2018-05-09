@@ -29,7 +29,8 @@ import matplotlib.cm as cmx
 import matplotlib.colors as colors
 from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
 
-from FlexpartTools import interpret_args_and_control,silentremove,product,Control
+from Tools import interpret_args_and_control, silentremove, product
+from Control import Control
 from GribTools import GribTools
 from gribapi import *
 from rasotools.utils import stats

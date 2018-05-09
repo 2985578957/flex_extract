@@ -5,7 +5,8 @@
 #AP
 # - GribTools name möglicherweise etwas verwirrend.
 # - change self.filename in self.filenames!!!
-# -
+# - add file description
+# - bis auf --init-- und index wird keine Funktion verwendet!?
 #************************************************************************
 """
 @Author: Anne Fouilloux (University of Oslo)
@@ -19,7 +20,7 @@
         - changed some naming
 
 @License:
-    (C) Copyright 2014 UIO.
+    (C) Copyright 2014-2018.
 
     This software is licensed under the terms of the Apache Licence Version 2.0
     which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -27,7 +28,6 @@
 @Requirements:
     - A standard python 2.6 or 2.7 installation
     - dateutils
-    - matplotlib (optional, for debugging)
     - ECMWF specific packages, all available from https://software.ecmwf.int/
         ECMWF WebMARS, gribAPI with python enabled, emoslib and
         ecaccess web toolkit
@@ -35,17 +35,15 @@
 @Description:
     Further documentation may be obtained from www.flexpart.eu.
 
-    Functionality provided:
-        Prepare input 3D-wind fields in hybrid coordinates +
-        surface fields for FLEXPART runs
+    ...
 """
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
 from gribapi import *
 import traceback
-import sys, os
-
+import sys
+import os
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -54,7 +52,7 @@ class GribTools:
     Class for GRIB utilities (new methods) based on GRIB API
     '''
     # --------------------------------------------------------------------------
-    # FUNCTIONS
+    # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
     def __init__(self, filenames):
         '''

@@ -4,7 +4,7 @@
 # start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server
 # start with sbatch NAME_OF_THIS_FILE directly on machine
 
-#SBATCH --workdir=/scratch/ms/spatlh00/lh0
+#SBATCH --workdir=/scratch/ms/at/km4a
 #SBATCH --qos=normal
 #SBATCH --job-name=flex_ecmwf
 #SBATCH --output=flex_ecmwf.%j.out
@@ -24,7 +24,7 @@
 ##PBS -l EC_memory_per_task=32000MB
 
 set -x
-
+export VERSION=7.1
 case $HOST in
   *ecg*)
   module load python
@@ -32,9 +32,9 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.0/python
+  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -42,12 +42,12 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.0/python
+  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
   ;;
 #  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
 #  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
 #  export SCRATCH=$ECMWFDATA/python
@@ -62,8 +62,8 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-GATEWAY srvx7.img.univie.ac.at
-DESTINATION leo@genericSftp
+GATEWAY srvx8.img.univie.ac.at
+DESTINATION philipa8@genericSftp
 accuracy 16
 addpar 186 187 188 235 139 39 
 basetime None
@@ -73,7 +73,7 @@ debug 0
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
-ecstorage 1
+ecstorage 0
 ectrans 0
 start_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
 eta 0
@@ -84,10 +84,10 @@ gauss 1
 grib2flexpart 0
 grid 5000
 inputdir ../work
-left -175000
+left -15000
 level 60
-levelist 1/to/60
-lower -90000
+levelist 55/to/60
+lower 30000
 mailfail ${USER}
 mailops ${USER}
 makefile None
@@ -97,20 +97,20 @@ number OFF
 omega 0
 omegadiff 0
 outputdir ../work
-prefix EN
+prefix EI
 resol 63
-right 180000
+right 45000
 smooth 0
 start_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
 step 00 01 02 03 04 05 00 07 08 09 10 11 00 01 02 03 04 05 00 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
-upper 90000
+upper 75000
 EOF
 
 
-submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work >prot
+submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work 1> prot 2>&1
 
 if [ $? -eq 0 ] ; then
   l=0

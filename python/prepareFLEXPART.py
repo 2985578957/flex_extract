@@ -29,9 +29,11 @@
         - applied PEP8 style guide
         - added documentation
         - minor changes in programming style for consistence
+        - BUG: removed call of cleanup-Function after call of prepareFlexpart
+                since it is already called in prepareFlexpart at the end!
 
 @License:
-    (C) Copyright 2014.
+    (C) Copyright 2014-2018.
 
     This software is licensed under the terms of the Apache Licence Version 2.0
     which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
@@ -39,7 +41,6 @@
 @Requirements:
     - A standard python 2.6 or 2.7 installation
     - dateutils
-    - matplotlib (optional, for debugging)
     - ECMWF specific packages, all available from https://software.ecmwf.int/
         ECMWF WebMARS, gribAPI with python enabled, emoslib and
         ecaccess web toolkit
@@ -51,33 +52,38 @@
         Prepare input 3D-wind fields in hybrid coordinates +
         surface fields for FLEXPART runs
 """
-
+# ------------------------------------------------------------------------------
+# MODULES
+# ------------------------------------------------------------------------------
 import calendar
 import shutil
 import datetime
 import time
-import os,inspect,sys
+import os
+import inspect
+import sys
 import socket
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-# add path to submit.py to pythonpath so that python finds its buddies
-localpythonpath=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-if localpythonpath not in sys.path:
-    sys.path.append(localpythonpath)
-from UIOTools import UIOFiles
-#from string import strip
-from GribTools import GribTools
-from FlexpartTools import ECFlexpart, Control, interpret_args_and_control, cleanup
+import UIOFiles
+import Control
+import Tools
+import ECFlexpart
 
-hostname=socket.gethostname()
-ecapi= 'ecmwf' not in hostname
-
+hostname = socket.gethostname()
+ecapi = 'ecmwf' not in hostname
 try:
     if ecapi:
         import ecmwfapi
 except ImportError:
     ecapi = False
 
-
+# add path to submit.py to pythonpath so that python finds its buddies
+localpythonpath=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+if localpythonpath not in sys.path:
+    sys.path.append(localpythonpath)
+# ------------------------------------------------------------------------------
+# FUNCTION
+# ------------------------------------------------------------------------------
 def prepareFLEXPART(args, c):
     '''
     @Description:
@@ -120,14 +126,14 @@ def prepareFLEXPART(args, c):
                         month=int(c.end_date[4:6]),
                         day=int(c.end_date[6:]))
 
-    # to deaccumulated the fluxes correctly
+    # to deaccumulate the fluxes correctly
     # one day ahead of the start date and
     # one day after the end date is needed
     startm1 = start - datetime.timedelta(days=1)
     endp1 = end + datetime.timedelta(days=1)
 
     # get all files with flux data to be deaccumulated
-    inputfiles = UIOFiles(['.grib', '.grb', '.grib1',
+    inputfiles = UIOFiles.UIOFiles(['.grib', '.grb', '.grib1',
                            '.grib2', '.grb1', '.grb2'])
 
     inputfiles.listFiles(c.inputdir, '*OG_acc_SL*.' + c.ppid + '.*')
@@ -137,7 +143,7 @@ def prepareFLEXPART(args, c):
         os.makedirs(c.outputdir)
 
     # deaccumulate the flux data
-    flexpart = ECFlexpart(c, fluxes=True)
+    flexpart = ECFlexpart.ECFlexpart(c, fluxes=True)
     flexpart.write_namelist(c, 'fort.4')
     flexpart.deacc_fluxes(inputfiles, c)
 
@@ -145,7 +151,7 @@ def prepareFLEXPART(args, c):
           "/to/" + end.strftime("%Y%m%d"))
 
     # get a list of all files from the root inputdir
-    inputfiles = UIOFiles(['.grib', '.grb', '.grib1',
+    inputfiles = UIOFiles.UIOFiles(['.grib', '.grb', '.grib1',
                            '.grib2', '.grb1', '.grb2'])
 
     inputfiles.listFiles(c.inputdir, '????__??.*' + c.ppid + '.*')
@@ -156,20 +162,19 @@ def prepareFLEXPART(args, c):
     if c.basetime == '00':
         start = startm1
 
-    flexpart = ECFlexpart(c, fluxes=False)
+    flexpart = ECFlexpart.ECFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
     flexpart.process_output(c)
 
     # check if in debugging mode, then store all files
+    # otherwise delete temporary files
     if int(c.debug) != 0:
         print('Temporary files left intact')
     else:
-        cleanup(c)
+        Tools.cleanup(c)
 
     return
 
 if __name__ == "__main__":
-    args, c = interpret_args_and_control()
+    args, c = Tools.interpret_args_and_control()
     prepareFLEXPART(args, c)
-    cleanup(c)
-

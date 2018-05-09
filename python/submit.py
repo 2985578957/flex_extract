@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
+#
 # - Change History ist nicht angepasst ans File! Original geben lassen
 # - dead code ? what to do?
 # - seperate operational and reanlysis for clarification
+# - add correct file description
+# - divide in two submits , ondemand und operational
+# -
 #************************************************************************
 """
 @Author: Anne Fouilloux (University of Oslo)
@@ -14,59 +17,42 @@
 
 @ChangeHistory:
     November 2015 - Leopold Haimberger (University of Vienna):
-        - using the WebAPI also for general MARS retrievals
         - job submission on ecgate and cca
         - job templates suitable for twice daily operational dissemination
-        - dividing retrievals of longer periods into digestable chunks
-        - retrieve also longer term forecasts, not only analyses and
-          short term forecast data
-        - conversion into GRIB2
-        - conversion into .fp format for faster execution of FLEXPART
 
     February 2018 - Anne Philipp (University of Vienna):
         - applied PEP8 style guide
         - added documentation
-        - minor changes in programming style for consistence
+        - minor changes in programming style (for consistence)
 
 @License:
-    (C) Copyright 2014 UIO.
+    (C) Copyright 2014-2018.
 
     This software is licensed under the terms of the Apache Licence Version 2.0
     which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 
 @Requirements:
     - A standard python 2.6 or 2.7 installation
-    - dateutils
-    - matplotlib (optional, for debugging)
-    - ECMWF specific packages, all available from https://software.ecmwf.int/
-        ECMWF WebMARS, gribAPI with python enabled, emoslib and
-        ecaccess web toolkit
 
 @Description:
     Further documentation may be obtained from www.flexpart.eu.
 
-    Functionality provided:
-        Prepare input 3D-wind fields in hybrid coordinates +
-        surface fields for FLEXPART runs
+
 """
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import calendar
-import shutil
-import datetime
-import time
-import os, sys, glob
+import os
+import sys
+import glob
 import subprocess
 import inspect
-# add path to submit.py to pythonpath so that python finds its buddies
+# add the pythondir path so that python finds its buddies (from flex_extract)
 localpythonpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 sys.path.append(localpythonpath)
-from UIOTools import UIOFiles
-from string import strip
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from GribTools import GribTools
-from FlexpartTools import ECFlexpart, Control, interpret_args_and_control, normalexit, myerror
+
+# software specific classes and modules from flex_extract
+from Tools import interpret_args_and_control, normalexit
 from getMARSdata import getMARSdata
 from prepareFLEXPART import prepareFLEXPART
 # ------------------------------------------------------------------------------
@@ -75,9 +61,10 @@ from prepareFLEXPART import prepareFLEXPART
 def main():
     '''
     @Description:
-        Get the arguments from script call and initialize an object from
-        Control class. Decides from the argument "queue" if the local version
-        is done "queue=None" or the gateway version "queue=ecgate".
+        Get the arguments from script call and from Control file.
+        Decides from the argument "queue" if the local version
+        is done "queue=None" or the gateway version with "queue=ecgate"
+        or "queue=cca".
 
     @Input:
         <nothing>
@@ -87,6 +74,7 @@ def main():
     '''
     calledfromdir = os.getcwd()
     args, c = interpret_args_and_control()
+    # on local side
     if args.queue is None:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(calledfromdir, c.inputdir)
@@ -95,13 +83,13 @@ def main():
         getMARSdata(args, c)
         prepareFLEXPART(args, c)
         normalexit(c)
+    # on ECMWF server
     else:
         submit(args.job_template, c, args.queue)
 
     return
 
 def submit(jtemplate, c, queue):
-    #AP divide in two submits , ondemand und operational
     '''
     @Description:
         Prepares the job script and submit it to the specified queue.
@@ -137,15 +125,13 @@ def submit(jtemplate, c, queue):
     with open(jtemplate) as f:
         lftext = f.read().split('\n')
         insert_point = lftext.index('EOF')
-#AP es gibt mehrere EOFs überprüfen!
 
     # put all parameters of control instance into a list
-    clist = c.tolist()  # reanalysis (EI)
+    clist = c.tolist()
     colist = []  # operational
     mt = 0
 
 #AP wieso 2 for loops?
-#AP dieser part ist für die CTBTO Operational retrieves bis zum aktuellen Tag.
     for elem in clist:
         if 'maxstep' in elem:
             mt = int(elem.split(' ')[1])
@@ -161,9 +147,6 @@ def submit(jtemplate, c, queue):
         if 'time' in elem and mt > 24:
             elem = 'time ' + '${MSJ_BASETIME} {MSJ_BASETIME}'
         colist.append(elem)
-#AP end
-
-#AP whats the difference between clist and colist ?! What is MSJ?
 
     lftextondemand = lftext[:insert_point] + clist + lftext[insert_point + 2:]
     lftextoper = lftext[:insert_point] + colist + lftext[insert_point + 2:]
@@ -171,17 +154,13 @@ def submit(jtemplate, c, queue):
     with open('job.ksh', 'w') as h:
         h.write('\n'.join(lftextondemand))
 
-#AP this is not used ?! what is it for?
-#maybe a differentiation is needed
-    h = open('joboper.ksh', 'w')
-    h.write('\n'.join(lftextoper))
-    h.close()
-#AP end
+    with open('joboper.ksh', 'w') as h:
+        h.write('\n'.join(lftextoper))
 
     # submit job script to queue
     try:
         p = subprocess.check_call(['ecaccess-job-submit', '-queueName',
-                                   queue,' job.ksh'])
+                                   queue, 'job.ksh'])
     except:
         print('ecaccess-job-submit failed, probably eccert has expired')
         exit(1)

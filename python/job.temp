@@ -4,7 +4,7 @@
 # start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server
 # start with sbatch NAME_OF_THIS_FILE directly on machine
 
-#SBATCH --workdir=/scratch/ms/spatlh00/lh0
+#SBATCH --workdir=/scratch/ms/at/km4a
 #SBATCH --qos=normal
 #SBATCH --job-name=flex_ecmwf
 #SBATCH --output=flex_ecmwf.%j.out
@@ -24,7 +24,7 @@
 ##PBS -l EC_memory_per_task=32000MB
 
 set -x
-
+export VERSION=7.1
 case $HOST in
   *ecg*)
   module load python
@@ -32,9 +32,9 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.0/python
+  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -42,12 +42,12 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.0/python
+  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
   ;;
 #  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA7.0
+#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
 #  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
 #  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
 #  export SCRATCH=$ECMWFDATA/python
@@ -62,14 +62,14 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-GATEWAY srvx7.img.univie.ac.at
-DESTINATION leo@genericSftp
+GATEWAY srvx8.img.univie.ac.at
+DESTINATION philipa8@genericSftp
 EOF
 cat >>$CONTROL<<EOF
 EOF
 
 
-submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work >prot
+submit.py --controlfile=$CONTROL --inputdir=./work --outputdir=./work 1> prot 2>&1
 
 if [ $? -eq 0 ] ; then
   l=0
