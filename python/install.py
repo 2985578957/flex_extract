@@ -2,84 +2,100 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
-# - Functionality Provided is not correct for this file
 # - localpythonpath should not be set in module load section!
 # - create a class Installation and divide installation in 3 subdefs for
 #   ecgate, local and cca seperatly
 # - Change History ist nicht angepasst ans File! Original geben lassen
 #************************************************************************
-"""
-@Author: Anne Fouilloux (University of Oslo)
+#*******************************************************************************
+# @Author: Leopold Haimberger (University of Vienna)
+#
+# @Date: November 2015
+#
+# @Change History:
+#
+#    February 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#
+# @License:
+#    (C) Copyright 2015-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Program Functionality:
+#    Depending on the selected installation environment (locally or on the
+#    ECMWF server ecgate or cca) the program extracts the commandline
+#    arguments and the CONTROL file parameter and prepares the corresponding
+#    environment. The necessary files are collected in a tar-ball and placed
+#    at the target location. There its untared, the environment variables will
+#    be set and the Fortran code will be compiled. If the ECMWF environment is
+#    selected a job script is prepared and submitted for the remaining
+#    configurations after putting the tar-ball to the target ECMWF server.
+#
+# @Program Content:
+#    - main
+#    - install_args_and_control
+#    - install_via_gateway
+#
+#*******************************************************************************
 
-@Date: October 2014
-
-@ChangeHistory:
-    November 2015 - Leopold Haimberger (University of Vienna):
-        - using the WebAPI also for general MARS retrievals
-        - job submission on ecgate and cca
-        - job templates suitable for twice daily operational dissemination
-        - dividing retrievals of longer periods into digestable chunks
-        - retrieve also longer term forecasts, not only analyses and
-          short term forecast data
-        - conversion into GRIB2
-        - conversion into .fp format for faster execution of FLEXPART
-
-    February 2018 - Anne Philipp (University of Vienna):
-        - applied PEP8 style guide
-        - added documentation
-
-@License:
-    (C) Copyright 2014 UIO.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    - A standard python 2.6 or 2.7 installation
-    - dateutils
-    - matplotlib (optional, for debugging)
-    - ECMWF specific packages, all available from https://software.ecmwf.int/
-        ECMWF WebMARS, gribAPI with python enabled, emoslib and
-        ecaccess web toolkit
-
-@Description:
-    Further documentation may be obtained from www.flexpart.eu.
-
-    Functionality provided:
-        Prepare input 3D-wind fields in hybrid coordinates +
-        surface fields for FLEXPART runs
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import calendar
-import shutil
 import datetime
-import time
-import os,sys,glob
+import os
+import sys
+import glob
 import subprocess
 import inspect
-# add path to submit.py to pythonpath so that python finds its buddies
-localpythonpath=os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.append(localpythonpath)
-from UIOFiles import UIOFiles
-from string import strip
 from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
-from GribTools import GribTools
-from Control import Control
-from getMARSdata import getMARSdata
-from prepareFLEXPART import prepareFLEXPART
-from ECFlexpart import ECFlexpart
+
+# add path to pythonpath so that python finds its buddies
+localpythonpath = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+if localpythonpath not in sys.path:
+    sys.path.append(localpythonpath)
+
+# software specific classes and modules from flex_extract
+from ControlFile import ControlFile
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------
+def main():
+    '''
+    @Description:
+        Controls the installation process. Calls the installation function
+        if target is specified.
+
+    @Intput:
+        <nothing>
+
+    @Return:
+        <nothing>
+    '''
+
+    os.chdir(localpythonpath)
+    args, c = install_args_and_control()
+
+    if args.install_target is not None:
+        install_via_gateway(c, args.install_target)
+    else:
+        print('Please specify installation target (local|ecgate|cca)')
+        print('use -h or --help for help')
+
+    sys.exit()
+
+    return
+
+
 def install_args_and_control():
     '''
     @Description:
         Assigns the command line arguments for installation and reads
-        control file content. Apply default values for non mentioned arguments.
+        CONTROL file content. Apply default values for non mentioned arguments.
 
     @Input:
         <nothing>
@@ -88,8 +104,8 @@ def install_args_and_control():
         args: instance of ArgumentParser
             Contains the commandline arguments from script/program call.
 
-        c: instance of class Control
-            Contains all necessary information of a control file. The parameters
+        c: instance of class ControlFile
+            Contains all necessary information of a CONTROL file. The parameters
             are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
             NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
             RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
@@ -129,14 +145,14 @@ def install_args_and_control():
 
     parser.add_argument("--controlfile", dest="controlfile",
                         default='CONTROL.temp',
-                        help="file with control parameters")
+                        help="file with CONTROL parameters")
 
     args = parser.parse_args()
 
     try:
-        c = Control(args.controlfile)
+        c = ControlFile(args.controlfile)
     except:
-        print('Could not read control file "' + args.controlfile + '"')
+        print('Could not read CONTROL file "' + args.controlfile + '"')
         print('Either it does not exist or its syntax is wrong.')
         print('Try "' + sys.argv[0].split('/')[-1] +
               ' -h" to print usage information')
@@ -181,20 +197,31 @@ def install_args_and_control():
     return args, c
 
 
-def main():
-    '''
-    '''
-    os.chdir(localpythonpath)
-    args, c = install_args_and_control()
-    if args.install_target is not None:
-        install_via_gateway(c, args.install_target)
-    else:
-        print('Please specify installation target (local|ecgate|cca)')
-        print('use -h or --help for help')
-    sys.exit()
-
 def install_via_gateway(c, target):
+    '''
+    @Description:
+        Perform the actual installation on local machine or prepare data
+        transfer to remote gate and submit a job script which will
+        install everything on the remote gate.
 
+    @Input:
+        c: instance of class ControlFile
+            Contains all necessary information of a CONTROL file. The parameters
+            are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
+            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
+            RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
+            SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS,
+            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR
+            For more information about format and content of the parameter see
+            documentation.
+
+        target: string
+            The target where the installation should be processed.
+            E.g. "local", "ecgate" or "cca"
+
+    @Return:
+        <nothing>
+    '''
     ecd = c.ecmwfdatadir
     template = ecd + 'python/compilejob.temp'
     job = ecd + 'python/compilejob.ksh'

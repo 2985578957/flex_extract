@@ -2,102 +2,112 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
 # - specifiy file header documentation
+# - add class description in header information
 # - apply classtests
 # - add references to ECMWF specific software packages
+# - add describtion of deacc_fluxes
+# - change name of func deacc ( weil disagg )
+# - add desc of retrieve function
 #************************************************************************
-"""
-@Author: Anne Fouilloux (University of Oslo)
+#*******************************************************************************
+# @Author: Anne Fouilloux (University of Oslo)
+#
+# @Date: October 2014
+#
+# @Change History:
+#
+#    November 2015 - Leopold Haimberger (University of Vienna):
+#        - extended with class Control
+#        - removed functions mkdir_p, daterange, years_between, months_between
+#        - added functions darain, dapoly, toparamId, init128, normalexit,
+#          myerror, cleanup, install_args_and_control,
+#          interpret_args_and_control,
+#        - removed function __del__ in class EIFLexpart
+#        - added the following functions in EIFlexpart:
+#            - create_namelist
+#            - process_output
+#            - deacc_fluxes
+#        - modified existing EIFlexpart - functions for the use in
+#          flex_extract
+#        - retrieve also longer term forecasts, not only analyses and
+#          short term forecast data
+#        - added conversion into GRIB2
+#        - added conversion into .fp format for faster execution of FLEXPART
+#          (see https://www.flexpart.eu/wiki/FpCtbtoWo4FpFormat)
+#
+#    February 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#        - removed function getFlexpartTime in class ECFlexpart
+#        - outsourced class ControlFile
+#        - outsourced class MarsRetrieval
+#        - changed class name from EIFlexpart to ECFlexpart
+#        - applied minor code changes (style)
+#        - removed "dead code" , e.g. retrieval of Q since it is not needed
+#        - removed "times" parameter from retrieve-method since it is not used
+#
+# @License:
+#    (C) Copyright 2014-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Class Description:
+#    FLEXPART needs grib files in a specifc format. All necessary data fields
+#    for one time step are stored in a single file. The class represents an
+#    instance with all the parameter and settings necessary for retrieving
+#    MARS data and modifing them so they are fitting FLEXPART need. The class
+#    is able to disaggregate the fluxes and convert grid types to the one needed
+#    by FLEXPART, therefore using the FORTRAN program.
+#
+# @Class Content:
+#    - __init__
+#    - write_namelist
+#    - retrieve
+#    - process_output
+#    - create
+#    - deacc_fluxes
+#
+#*******************************************************************************
 
-@Date: October 2014
-
-@ChangeHistory:
-    November 2015 - Leopold Haimberger (University of Vienna):
-        - extended with Class Control
-        - removed functions mkdir_p, daterange, years_between, months_between
-        - added functions darain, dapoly, toparamId, init128, normalexit,
-          myerror, cleanup, install_args_and_control,
-          interpret_args_and_control,
-        - removed function __del__ in class EIFLexpart
-        - added the following functions in EIFlexpart:
-            - create_namelist
-            - process_output
-            - deacc_fluxes
-        - modified existing EIFlexpart - functions for the use in
-          flex_extract
-        - retrieve also longer term forecasts, not only analyses and
-          short term forecast data
-        - added conversion into GRIB2
-        - added conversion into .fp format for faster execution of FLEXPART
-          (see https://www.flexpart.eu/wiki/FpCtbtoWo4FpFormat)
-
-    February 2018 - Anne Philipp (University of Vienna):
-        - applied PEP8 style guide
-        - added documentation
-        - outsourced class Control
-        - outsourced class MarsRetrieval
-        - changed class name from EIFlexpart to ECFlexpart
-        - applied minor code changes (style)
-
-@License:
-    (C) Copyright 2014-2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    - A standard python 2.6 or 2.7 installation
-    - dateutils
-    - matplotlib (optional, for debugging)
-    - ECMWF specific packages, all available from https://software.ecmwf.int/
-        ECMWF WebMARS, gribAPI with python enabled, emoslib and
-        ecaccess web toolkit
-
-@Description:
-    Further documentation may be obtained from www.flexpart.eu.
-
-    Functionality provided:
-        Prepare input 3D-wind fields in hybrid coordinates +
-        surface fields for FLEXPART runs
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
 import subprocess
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-import traceback
 import shutil
 import os
-import errno
 import sys
 import inspect
 import glob
 import datetime
-from string import atoi
 from numpy import *
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 ecapi = True
 try:
     import ecmwfapi
 except ImportError:
     ecapi = False
 from gribapi import *
+
+# software specific classes and modules from flex_extract
 from GribTools import GribTools
 from Tools import init128, toparamId, silentremove, product
-from Control import Control
+from ControlFile import ControlFile
 from MARSretrieval import MARSretrieval
 import Disagg
+
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
 class ECFlexpart:
     '''
-    Class to retrieve ECMWF data specific for running FLEXPART.
+    Class to retrieve FLEXPART specific ECMWF data.
     '''
     # --------------------------------------------------------------------------
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
-    def __init__(self, c, fluxes=False): #done/ verstehen
+    def __init__(self, c, fluxes=False):
         '''
         @Description:
             Creates an object/instance of ECFlexpart with the
@@ -107,8 +117,8 @@ class ECFlexpart:
             self: instance of ECFlexpart
                 The current object of the class.
 
-            c: instance of class Control
-                Contains all the parameters of control files, which are e.g.:
+            c: instance of class ControlFile
+                Contains all the parameters of CONTROL file, which are e.g.:
                 DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
                 STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
                 LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -129,7 +139,7 @@ class ECFlexpart:
             <nothing>
         '''
 
-        # different mars types for retrieving reanalysis data for flexpart
+        # different mars types for retrieving data for flexpart
         self.types = dict()
         try:
             if c.maxstep > len(c.type):    # Pure forecast mode
@@ -146,25 +156,16 @@ class ECFlexpart:
         self.inputdir = c.inputdir
         self.basetime = c.basetime
         self.dtime = c.dtime
-        #self.mars = {}
         i = 0
-        #j = 0
         if fluxes is True and c.maxstep < 24:
             # no forecast beyond one day is needed!
             # Thus, prepare flux data manually as usual
-            # with only FC fields with start times at 00/12
+            # with only forecast fields with start times at 00/12
             # (but without 00/12 fields since these are
             # the initialisation times of the flux fields
             # and therefore are zero all the time)
-            self.types['FC'] = {'times': '00/12',
-                                'steps': '{}/to/12/by/{}'.format(c.dtime,
-                                                                      c.dtime)}
-            #i = 1
-            #for k in [0, 12]:
-            #    for j in range(int(c.dtime), 13, int(c.dtime)):
-            #        self.mars['{:0>3}'.format(i * int(c.dtime))] = \
-            #               [c.type[1], '{:0>2}'.format(k), '{:0>3}'.format(j)]
-            #        i += 1
+            self.types[c.type[1]] = {'times': '00/12', 'steps':
+                                     '{}/to/12/by/{}'.format(c.dtime, c.dtime)}
         else:
             for ty, st, ti in zip(c.type, c.step, c.time):
                 btlist = range(24)
@@ -188,14 +189,8 @@ class ECFlexpart:
                         if len(self.types[ty]['steps']) > 0:
                             self.types[ty]['steps'] += '/'
                         self.types[ty]['steps'] += st
-
-                    #self.mars['{:0>3}'.format(j)] = [ty,
-                    #                                 '{:0>2}'.format(int(ti)),
-                    #                                 '{:0>3}'.format(int(st))]
-                    #j += int(c.dtime)
-
                 i += 1
-            print 'EC init: ', self.types #AP
+
         # Different grids need different retrievals
         # SH = Spherical Harmonics, GG = Gaussian Grid,
         # OG = Output Grid, ML = MultiLevel, SL = SingleLevel
@@ -273,7 +268,7 @@ class ECFlexpart:
                 # the simplest case
                 self.params['OG__ML'][0] += '/U/V/77'
             elif c.gauss == '0' and c.eta == '0':
-#AP then remove?!?!?!?       # this is not recommended (inaccurate)
+            # this is not recommended (inaccurate)
                 self.params['OG__ML'][0] += '/U/V'
             elif c.gauss == '1' and c.eta == '0':
                 # this is needed for data before 2008, or for reanalysis data
@@ -323,7 +318,7 @@ class ECFlexpart:
         return
 
 
-    def write_namelist(self, c, filename): #done
+    def write_namelist(self, c, filename):
         '''
         @Description:
             Creates a namelist file in the temporary directory and writes
@@ -335,8 +330,8 @@ class ECFlexpart:
             self: instance of ECFlexpart
                 The current object of the class.
 
-            c: instance of class Control
-                Contains all the parameters of control files, which are e.g.:
+            c: instance of class ControlFile
+                Contains all the parameters of CONTROL files, which are e.g.:
                 DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
                 STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
                 LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -382,49 +377,41 @@ class ECFlexpart:
 
         return
 
-    def retrieve(self, server, dates, times, inputdir=''):
+    def retrieve(self, server, dates, inputdir='.'):
         '''
         @Description:
-
+            Finalizing the retrieval information by setting final details
+            depending on grid type.
+            Prepares MARS retrievals per grid type and submits them.
 
         @Input:
             self: instance of ECFlexpart
+                The current object of the class.
 
-            server: instance of ECMWFService
+            server: instance of ECMWFService or ECMWFDataServer
+                The connection to the ECMWF server. This is different
+                for member state users which have full access and non
+                member state users which have only access to the public
+                data sets. The decision is made from command line argument
+                "public"; for public access its True (ECMWFDataServer)
+                for member state users its False (ECMWFService)
 
-            dates:
-
-            times:
+            dates: string
+                Contains start and end date of the retrieval in the format
+                "YYYYMMDD/to/YYYYMMDD"
 
             inputdir: string, optional
-                Default string is empty ('').
+                Path to the directory where the retrieved data is about
+                to be stored. The default is the current directory ('.').
 
         @Return:
             <nothing>
         '''
         self.dates = dates
         self.server = server
-
-        if inputdir == "":
-            self.inputdir = '.'
-        else:
-            self.inputdir = inputdir
-
-        # Retrieve Q not for using Q but as a template for a reduced gaussian
-        # grid one date and time is enough
-        # Take analysis at 00
-        qdate = self.dates
-        idx = qdate.find("/")
-        if (idx > 0):
-            qdate = self.dates[:idx]
-
-        #QG =  MARSretrieval(self.server, marsclass = self.marsclass, stream = self.stream, type = "an", levtype = "ML", levelist = "1",
-                             #gaussian = "reduced",grid = '{}'.format((int(self.resol)+1)/2), resol = self.resol,accuracy = self.accuracy,target = self.inputdir+"/"+"QG.grb",
-                             #date = qdate, time = "00",expver = self.expver, param = "133.128")
-        #QG.displayInfo()
-        #QG.dataRetrieve()
-
+        self.inputdir = inputdir
         oro = False
+
         for ftype in self.types:
             for pk, pv in self.params.iteritems():
                 if isinstance(pv, str):
@@ -452,7 +439,6 @@ class ECFlexpart:
                         oro = True
                     else:
                         continue
-
                 if pk == 'GG__SL' and pv[0] == 'Q':
                     area = ""
                     gaussian = 'reduced'
@@ -460,6 +446,7 @@ class ECFlexpart:
                     area = self.area
                     gaussian = self.gaussian
 
+    # ------  on demand path  --------------------------------------------------
                 if self.basetime is None:
                     MR = MARSretrieval(self.server,
                             marsclass=self.marsclass, stream=mfstream,
@@ -472,35 +459,39 @@ class ECFlexpart:
 
                     MR.displayInfo()
                     MR.dataRetrieve()
-    # The whole else section is only necessary for operational scripts.
-    # It could be removed
+    # ------  operational path  ------------------------------------------------
                 else:
                     # check if mars job requests fields beyond basetime.
                     # If yes eliminate those fields since they may not
                     # be accessible with user's credentials
-                    sm1 = -1
                     if 'by' in mfstep:
                         sm1 = 2
-                    tm1 = -1
+                    else:
+                        sm1 = -1
+
                     if 'by' in mftime:
                         tm1 = 2
+                    else:
+                        tm1 = -1
+
                     maxtime = datetime.datetime.strptime(
                                 mfdate.split('/')[-1] + mftime.split('/')[tm1],
                                 '%Y%m%d%H') + datetime.timedelta(
                                 hours=int(mfstep.split('/')[sm1]))
-
                     elimit = datetime.datetime.strptime(
                                 mfdate.split('/')[-1] +
                                 self.basetime, '%Y%m%d%H')
 
                     if self.basetime == '12':
+                        # --------------  flux data ----------------------------
                         if 'acc' in pk:
 
-                # Strategy: if maxtime-elimit> = 24h reduce date by 1,
-                # if 12h< = maxtime-elimit<12h reduce time for last date
-                # if maxtime-elimit<12h reduce step for last time
-                # A split of the MARS job into 2 is likely necessary.
-                            maxtime = elimit-datetime.timedelta(hours=24)
+                        # Strategy:
+                        # if maxtime-elimit >= 24h reduce date by 1,
+                        # if 12h <= maxtime-elimit<12h reduce time for last date
+                        # if maxtime-elimit<12h reduce step for last time
+                        # A split of the MARS job into 2 is likely necessary.
+                            maxtime = elimit - datetime.timedelta(hours=24)
                             mfdate = '/'.join(('/'.join(mfdate.split('/')[:-1]),
                                                 datetime.datetime.strftime(
                                                 maxtime, '%Y%m%d')))
@@ -540,6 +531,7 @@ class ECFlexpart:
 
                             MR.displayInfo()
                             MR.dataRetrieve()
+                        # --------------  non flux data ------------------------
                         else:
                             MR = MARSretrieval(self.server,
                                             marsclass=self.marsclass,
@@ -554,10 +546,10 @@ class ECFlexpart:
 
                             MR.displayInfo()
                             MR.dataRetrieve()
-                    else:
+                    else: # basetime == 0 ??? #AP
+
                         maxtime = elimit - datetime.timedelta(hours=24)
                         mfdate = datetime.datetime.strftime(maxtime,'%Y%m%d')
-
                         mftimesave = ''.join(mftime)
 
                         if '/' in mftime:
@@ -614,14 +606,14 @@ class ECFlexpart:
         return
 
 
-    def process_output(self, c): #done
+    def process_output(self, c):
         '''
         @Description:
-            The grib files are postprocessed depending on selection in
-            control file. The resulting files are moved to the output
+            The grib files are postprocessed depending on the selection in
+            CONTROL file. The resulting files are moved to the output
             directory if its not equla to the input directory.
             The following modifications might be done if
-            properly switched in control file:
+            properly switched in CONTROL file:
             GRIB2 - Conversion to GRIB2
             ECTRANS - Transfer of files to gateway server
             ECSTORAGE - Storage at ECMWF server
@@ -631,8 +623,8 @@ class ECFlexpart:
             self: instance of ECFlexpart
                 The current object of the class.
 
-            c: instance of class Control
-                Contains all the parameters of control files, which are e.g.:
+            c: instance of class ControlFile
+                Contains all the parameters of CONTROL file, which are e.g.:
                 DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
                 STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
                 LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -649,7 +641,7 @@ class ECFlexpart:
 
         '''
 
-        print('Postprocessing:\n Format: {}\n'.format(c.format))
+        print('\n\nPostprocessing:\n Format: {}\n'.format(c.format))
 
         if c.ecapi is False:
             print('ecstorage: {}\n ecfsdir: {}\n'.
@@ -674,14 +666,14 @@ class ECFlexpart:
         if int(c.ectrans) == 1 and c.ecapi is False:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
-                                           c.gateway, '-remote', c.destination,
-                                           '-source', ofile])
+                                            c.gateway, '-remote', c.destination,
+                                            '-source', ofile])
                 print('ectrans:', p)
 
         if int(c.ecstorage) == 1 and c.ecapi is False:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['ecp', '-o', ofile,
-                                           os.path.expandvars(c.ecfsdir)])
+                                            os.path.expandvars(c.ecfsdir)])
 
         if c.outputdir != c.inputdir:
             for ofile in self.outputfilelist:
@@ -692,7 +684,7 @@ class ECFlexpart:
         if c.grib2flexpart == '1':
 
             # generate AVAILABLE file
-            # Example of AVAILABLE file data
+            # Example of AVAILABLE file data:
             # 20131107 000000      EN13110700              ON DISC
             clist = []
             for ofile in self.outputfilelist:
@@ -741,8 +733,7 @@ class ECFlexpart:
                     break
                 i += 1
 
-#            clist.sort()
-            # insert the date and time information of run star and end
+            # insert the date and time information of run start and end
             # into the list of lines of COMMAND file
             lflist = lflist[:i+1] + \
                      [clist[0][:16], clist[-1][:16]] + \
@@ -752,8 +743,7 @@ class ECFlexpart:
             with open(pwd + '/Options/COMMAND', 'w') as g:
                 g.write('\n'.join(lflist) + '\n')
 
-            # change to outputdir and start the
-            # grib2flexpart run
+            # change to outputdir and start the grib2flexpart run
             # afterwards switch back to the working dir
             os.chdir(c.outputdir)
             p = subprocess.check_call([os.path.expandvars(
@@ -764,7 +754,7 @@ class ECFlexpart:
 
         return
 
-    def create(self, inputfiles, c): #done
+    def create(self, inputfiles, c):
         '''
         @Description:
             This method is based on the ECMWF example index.py
@@ -772,11 +762,12 @@ class ECFlexpart:
 
             An index file will be created which depends on the combination
             of "date", "time" and "stepRange" values. This is used to iterate
-            over all messages in the grib files passed through the parameter
-            "inputfiles" to seperate specific parameters into fort.* files.
-            Afterwards the FORTRAN program Convert2 is called to convert
+            over all messages in each grib file which were passed through the
+            parameter "inputfiles" to seperate specific parameters into fort.*
+            files. Afterwards the FORTRAN program Convert2 is called to convert
             the data fields all to the same grid and put them in one file
-            per day.
+            per unique time step (combination of "date", "time" and
+            "stepRange").
 
         @Input:
             self: instance of ECFlexpart
@@ -785,8 +776,8 @@ class ECFlexpart:
             inputfiles: instance of UIOFiles
                 Contains a list of files.
 
-            c: instance of class Control
-                Contains all the parameters of control files, which are e.g.:
+            c: instance of class ControlFile
+                Contains all the parameters of CONTROL files, which are e.g.:
                 DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
                 STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
                 LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -825,14 +816,12 @@ class ECFlexpart:
             # index_vals[1]: ('0', '1200', '1800', '600') ; time
             # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
-        # delete old fort.* files and open them newly
         fdict = {'10':None, '11':None, '12':None, '13':None, '16':None,
                  '17':None, '19':None, '21':None, '22':None, '20':None}
-        #for f in fdict.keys():
-        #    silentremove(c.inputdir + "/fort." + f)
-
 
         for prod in product(*index_vals):
+            # flag for Fortran program CONVERT2, initially False
+            convertFlag = False
             print 'current prod: ', prod
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
@@ -841,11 +830,16 @@ class ECFlexpart:
             for i in range(len(index_keys)):
                 grib_index_select(iid, index_keys[i], prod[i])
 
+            # get first id from current product
             gid = grib_new_from_index(iid)
-            # do convert2 program if gid at this time is not None,
-            # therefore save in hid
-            hid = gid
+
+            # if there is data for this product combination
+            # prepare some date and time parameter before reading the data
             if gid is not None:
+                # Fortran program CONVERT2 is only done if gid at this time is
+                # not None, therefore save information in convertFlag
+                convertFlag = True
+                # remove old fort.* files and open new ones
                 for k, f in fdict.iteritems():
                     silentremove(c.inputdir + "/fort." + k)
                     fdict[k] = open(c.inputdir + '/fort.' + k, 'w')
@@ -899,7 +893,7 @@ class ECFlexpart:
             except AttributeError:
                 pass
 
-
+            # helper variable to remember which fields are already used.
             savedfields = []
             while 1:
                 if gid is None:
@@ -923,8 +917,8 @@ class ECFlexpart:
                     grib_write(gid, fdict['12'])
                 elif paramId == 155 and gridtype == 'sh':
                     grib_write(gid, fdict['13'])
-                elif paramId in [129, 138, 155] and levtype == 'hybrid' \
-                                                and c.wrf == '1':
+                elif  paramId in [129, 138, 155] and levtype == 'hybrid' \
+                        and c.wrf == '1':
                     pass
                 elif paramId == 246 or paramId == 247:
                     # cloud liquid water and ice
@@ -948,11 +942,10 @@ class ECFlexpart:
 
                 try:
                     if c.wrf == '1':
-# die if abfrage scheint ueberfluessig da eh das gleihce ausgefuehrt wird
-                        if levtype == 'hybrid':
+                        if levtype == 'hybrid': # model layer
                             if paramId in [129, 130, 131, 132, 133, 138, 155]:
                                 grib_write(gid, fwrf)
-                        else:
+                        else: # sfc layer
                             if paramId in wrfpars:
                                 grib_write(gid, fwrf)
                 except AttributeError:
@@ -964,10 +957,8 @@ class ECFlexpart:
             for f in fdict.values():
                 f.close()
 
-            # call for CONVERT2
-# AUSLAGERN IN EIGENE FUNKTION
-
-            if hid is not None:
+            # call for CONVERT2 if flag is True
+            if convertFlag:
                 pwd = os.getcwd()
                 os.chdir(c.inputdir)
                 if os.stat('fort.21').st_size == 0 and int(c.eta) == 1:
@@ -977,37 +968,41 @@ class ECFlexpart:
                     myerror(c, 'fort.21 is empty while parameter eta is set \
                                 to 1 in CONTROL file')
 
+                # create the corresponding output file fort.15
+                # (generated by CONVERT2) + fort.16 (paramId 167 and 168)
                 p = subprocess.check_call([os.path.expandvars(
                         os.path.expanduser(c.exedir)) + '/CONVERT2'], shell=True)
                 os.chdir(pwd)
-                # create the corresponding output file fort.15
-                # (generated by CONVERT2)
-                # + fort.16 (paramId 167 and paramId 168)
+
+                # create final output filename, e.g. EN13040500 (ENYYMMDDHH)
                 fnout = c.inputdir + '/' + c.prefix
                 if c.maxstep > 12:
                     suffix = cdate[2:8] + '.{:0>2}'.format(time/100) + \
                              '.{:0>3}'.format(step)
                 else:
                     suffix = cdateH[2:10]
-
                 fnout += suffix
                 print("outputfile = " + fnout)
                 self.outputfilelist.append(fnout) # needed for final processing
-                fout = open(fnout, 'wb')
-                shutil.copyfileobj(open(c.inputdir + '/fort.15', 'rb'), fout)
-                if c.cwc == '1':
-                    shutil.copyfileobj(open(c.inputdir + '/fort.22', 'rb'), fout)
-                shutil.copyfileobj(open(c.inputdir + '/flux' + cdate[0:2] +
-                                        suffix, 'rb'), fout)
-                shutil.copyfileobj(open(c.inputdir + '/fort.16', 'rb'), fout)
-                orolsm = glob.glob(c.inputdir +
-                                   '/OG_OROLSM__SL.*.' + c.ppid + '*')[0]
-                shutil.copyfileobj(open(orolsm, 'rb'), fout)
-                fout.close()
+
+                # create outputfile and copy all data from intermediate files
+                # to the outputfile (final GRIB files)
+                orolsm = os.path.basename(glob.glob(
+                    c.inputdir + '/OG_OROLSM__SL.*.' + c.ppid + '*')[0])
+                fluxfile = 'flux' + cdate[0:2] + suffix
+                if c.cwc != '1':
+                    flist = ['fort.15', fluxfile, 'fort.16', orolsm]
+                else:
+                    flist = ['fort.15', 'fort.22', fluxfile, 'fort.16', orolsm]
+
+                with open(fnout, 'wb') as fout:
+                    for f in flist:
+                        shutil.copyfileobj(open(c.inputdir + '/' + f, 'rb'), fout)
+
                 if c.omega == '1':
-                    fnout = c.outputdir + '/OMEGA'
-                    fout  =  open(fnout, 'wb')
-                    shutil.copyfileobj(open(c.inputdir + '/fort.25', 'rb'), fout)
+                    with open(c.outputdir + '/OMEGA', 'wb') as fout:
+                        shutil.copyfileobj(
+                            open(c.inputdir + '/fort.25', 'rb'), fout)
 
         try:
             if c.wrf == '1':
@@ -1019,11 +1014,14 @@ class ECFlexpart:
 
         return
 
-
     def deacc_fluxes(self, inputfiles, c):
         '''
         @Description:
-
+            Goes through all flux fields in ordered time and de-accumulate
+            the fields. Afterwards the fields are disaggregated in time.
+            Different versions of disaggregation is provided for rainfall
+            data (darain, modified linear) and the surface fluxes and
+            stress data (dapoly, cubic polynomial).
 
         @Input:
             self: instance of ECFlexpart
@@ -1032,8 +1030,8 @@ class ECFlexpart:
             inputfiles: instance of UIOFiles
                 Contains a list of files.
 
-            c: instance of class Control
-                Contains all the parameters of control files, which are e.g.:
+            c: instance of class ControlFile
+                Contains all the parameters of CONTROL file, which are e.g.:
                 DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
                 STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
                 LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -1132,6 +1130,7 @@ class ECFlexpart:
                 hnout = c.inputdir + '/flux' + sdates.strftime('%Y%m%d%H')
                 g = open(gnout, 'w')
                 h = open(hnout, 'w')
+
             print("outputfile = " + fnout)
             f = open(fnout, 'w')
 

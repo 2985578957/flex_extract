@@ -2,11 +2,46 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
-# -
 # -
 #************************************************************************
-## ------------------------------------------------------------------------------
+#*******************************************************************************
+# @Author: Anne Fouilloux (University of Oslo)
+#
+# @Date: October 2014
+#
+# @Change History:
+#
+#   November 2015 - Leopold Haimberger (University of Vienna):
+#        - optimized displayInfo
+#        - optimized dataRetrieve and seperate between python and shell
+#          script call
+#
+#   February 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#        - applied some minor modifications in programming style/structure
+#
+# @License:
+#    (C) Copyright 2015-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Class Description:
+#    A MARS revtrieval has a specific syntax with a selection of keywords and
+#    their corresponding values. This class provides the necessary functions
+#    by displaying the selected parameters and their values and the actual
+#    retrievement of the data through a mars request or a Python web api
+#    interface. The initialization already expects all the keyword values.
+#
+# @Class Content:
+#    - __init__
+#    - displayInfo
+#    - dataRetrieve
+#
+#*******************************************************************************
+
+# ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
 import subprocess
@@ -17,7 +52,7 @@ try:
     import ecmwfapi
 except ImportError:
     ecapi = False
-#from gribapi import *
+
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------

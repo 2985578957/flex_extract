@@ -2,23 +2,67 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
-# -
+# - check myerror
+# - check normalexit
+# - check getListAsString
+# - seperate args and control interpretation
 #************************************************************************
-"""
+#*******************************************************************************
+# @Author: Anne Philipp (University of Vienna)
+#
+# @Date: May 2018
+#
+# @Change History:
+#    October 2014 - Anne Fouilloux (University of Oslo)
+#        - created functions silentremove and product (taken from ECMWF)
+#
+#    November 2015 - Leopold Haimberger (University of Vienna)
+#        - created functions: interpret_args_and_control, cleanup
+#          myerror, normalexit, init128, toparamId
+#
+#    April 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#        - moved all functions from file FlexpartTools to this file Tools
+#        - added function getListAsString
+#
+# @License:
+#    (C) Copyright 2014-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Modul Description:
+#    This module contains a couple of helpful functions which are
+#    used in different places in flex_extract.
+#
+# @Module Content:
+#    - interpret_args_and_control
+#    - cleanup
+#    - myerror
+#    - normalexit
+#    - product
+#    - silentremove
+#    - init128
+#    - toparamId
+#    - getListAsString
+#
+#*******************************************************************************
 
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import os
 import errno
 import sys
 import glob
+import traceback
 from numpy import *
 from gribapi import *
-import Control
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+# software specific class from flex_extract
+from ControlFile import ControlFile
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -27,7 +71,7 @@ import Control
 def interpret_args_and_control():
     '''
     @Description:
-        Assigns the command line arguments and reads control file
+        Assigns the command line arguments and reads CONTROL file
         content. Apply default values for non mentioned arguments.
 
     @Input:
@@ -37,8 +81,8 @@ def interpret_args_and_control():
         args: instance of ArgumentParser
             Contains the commandline arguments from script/program call.
 
-        c: instance of class Control
-            Contains all necessary information of a control file. The parameters
+        c: instance of class ControlFile
+            Contains all necessary information of a CONTROL file. The parameters
             are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
             NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
             RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
@@ -61,7 +105,7 @@ def interpret_args_and_control():
     parser.add_argument("--date_chunk", dest="date_chunk", default=None,
                         help="# of days to be retrieved at once")
 
-    # some arguments that override the default in the control file
+    # some arguments that override the default in the CONTROL file
     parser.add_argument("--basetime", dest="basetime",
                         help="base such as 00/12 (for half day retrievals)")
     parser.add_argument("--step", dest="step",
@@ -95,21 +139,21 @@ def interpret_args_and_control():
                         (e.g. ecgate or cca )")
     parser.add_argument("--controlfile", dest="controlfile",
                         default='CONTROL.temp',
-                        help="file with control parameters")
+                        help="file with CONTROL parameters")
     parser.add_argument("--debug", dest="debug", default=0,
                         help="Debug mode - leave temporary files intact")
 
     args = parser.parse_args()
 
-    # create instance of Control for specified controlfile
+    # create instance of ControlFile for specified controlfile
     # and assign the parameters (and default values if necessary)
     try:
-        c = Control.Control(args.controlfile)
+        c = ControlFile(args.controlfile)
     except IOError:
         try:
-            c = Control.Control(localpythonpath + args.controlfile)
+            c = ControlFile(localpythonpath + args.controlfile)
         except:
-            print('Could not read control file "' + args.controlfile + '"')
+            print('Could not read CONTROL file "' + args.controlfile + '"')
             print('Either it does not exist or its syntax is wrong.')
             print('Try "' + sys.argv[0].split('/')[-1] +
                   ' -h" to print usage information')
@@ -118,12 +162,12 @@ def interpret_args_and_control():
     # check for having at least a starting date
     if  args.start_date is None and getattr(c, 'start_date') is None:
         print('start_date specified neither in command line nor \
-               in control file ' + args.controlfile)
+               in CONTROL file ' + args.controlfile)
         print('Try "' + sys.argv[0].split('/')[-1] +
               ' -h" to print usage information')
         exit(1)
 
-    # save all existing command line parameter to the Control instance
+    # save all existing command line parameter to the ControlFile instance
     # if parameter is not specified through the command line or CONTROL file
     # set default values
     if args.start_date is not None:
@@ -198,11 +242,11 @@ def cleanup(c):
     '''
     @Description:
         Remove all files from intermediate directory
-        (inputdir from control file).
+        (inputdir from CONTROL file).
 
     @Input:
-        c: instance of class Control
-            Contains all the parameters of control files, which are e.g.:
+        c: instance of class ControlFile
+            Contains all the parameters of CONTROL file, which are e.g.:
             DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
             STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
             LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -239,8 +283,8 @@ def myerror(c, message='ERROR'):
         before exiting the program.
 
     @Input:
-        c: instance of class Control
-            Contains all the parameters of control files, which are e.g.:
+        c: instance of class ControlFile
+            Contains all the parameters of CONTROL file, which are e.g.:
             DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
             STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
             LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -289,8 +333,8 @@ def normalexit(c, message='Done!'):
         Prints a specific exit message which can be passed to the function.
 
     @Input:
-        c: instance of class Control
-            Contains all the parameters of control files, which are e.g.:
+        c: instance of class ControlFile
+            Contains all the parameters of CONTROL file, which are e.g.:
             DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
             STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
             LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -356,7 +400,6 @@ def product(*args, **kwds):
             Return will be done with "yield". A tuple of combined arguments.
             See example in description above.
     '''
-
     pools = map(tuple, args) * kwds.get('repeat', 1)
     result = [[]]
     for pool in pools:
@@ -370,9 +413,8 @@ def product(*args, **kwds):
 def silentremove(filename):
     '''
     @Description:
-        Removes the file which name is passed to the function if
-        it exists. The function does not fail if the file does not
-        exist.
+        If "filename" exists , it is removed.
+        The function does not fail if the file does not exist.
 
     @Input:
         filename: string
@@ -425,7 +467,7 @@ def toparamId(pars, table):
 
     @Input:
         pars: string
-            Addpar argument from control file in the format of
+            Addpar argument from CONTROL file in the format of
             parameter names instead of ids. The parameter short
             names are sepearted with "/" and they are passed as
             one single string.
@@ -437,7 +479,7 @@ def toparamId(pars, table):
 
     @Return:
         ipar: list of integer
-            List of addpar parameters from control file transformed to
+            List of addpar parameters from CONTROL file transformed to
             parameter ids in the format of integer.
     '''
     cpar = pars.upper().split('/')
@@ -454,8 +496,20 @@ def toparamId(pars, table):
 
     return ipar
 
-def getListAsString(listobj):
+def getListAsString(listObj):
     '''
     @Description:
+        Converts a list of arbitrary content into a single string.
+
+    @Input:
+        listObj: list
+            A list with arbitrary content.
+
+    @Return:
+        strOfList: string
+            The content of the list as a single string.
     '''
-    return ", ".join( str(l) for l in listobj)
+
+    strOfList = ", ".join( str(l) for l in listObj)
+
+    return strOfList

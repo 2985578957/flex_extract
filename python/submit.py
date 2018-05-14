@@ -6,39 +6,46 @@
 # - Change History ist nicht angepasst ans File! Original geben lassen
 # - dead code ? what to do?
 # - seperate operational and reanlysis for clarification
-# - add correct file description
 # - divide in two submits , ondemand und operational
 # -
 #************************************************************************
-"""
-@Author: Anne Fouilloux (University of Oslo)
 
-@Date: October 2014
+#*******************************************************************************
+# @Author: Anne Fouilloux (University of Oslo)
+#
+# @Date: October 2014
+#
+# @Change History:
+#
+#    November 2015 - Leopold Haimberger (University of Vienna):
+#        - job submission on ecgate and cca
+#        - job templates suitable for twice daily operational dissemination
+#
+#    February 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#        - minor changes in programming style (for consistence)
+#
+# @License:
+#    (C) Copyright 2014-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Program Functionality:
+#    This program is the main program of flex_extract and controls the
+#    program flow.
+#    If it is supposed to work locally then it works through the necessary
+#    functions getMARSdata and prepareFlexpart. Otherwise it prepares
+#    a shell job script which will do the necessary work on the
+#    ECMWF server and is submitted via ecaccess-job-submit.
+#
+# @Program Content:
+#    - main
+#    - submit
+#
+#*******************************************************************************
 
-@ChangeHistory:
-    November 2015 - Leopold Haimberger (University of Vienna):
-        - job submission on ecgate and cca
-        - job templates suitable for twice daily operational dissemination
-
-    February 2018 - Anne Philipp (University of Vienna):
-        - applied PEP8 style guide
-        - added documentation
-        - minor changes in programming style (for consistence)
-
-@License:
-    (C) Copyright 2014-2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    - A standard python 2.6 or 2.7 installation
-
-@Description:
-    Further documentation may be obtained from www.flexpart.eu.
-
-
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -47,21 +54,25 @@ import sys
 import glob
 import subprocess
 import inspect
-# add the pythondir path so that python finds its buddies (from flex_extract)
-localpythonpath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-sys.path.append(localpythonpath)
+# add path to pythonpath so that python finds its buddies
+localpythonpath = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+if localpythonpath not in sys.path:
+    sys.path.append(localpythonpath)
 
 # software specific classes and modules from flex_extract
 from Tools import interpret_args_and_control, normalexit
 from getMARSdata import getMARSdata
 from prepareFLEXPART import prepareFLEXPART
+
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------
+
 def main():
     '''
     @Description:
-        Get the arguments from script call and from Control file.
+        Get the arguments from script call and from CONTROL file.
         Decides from the argument "queue" if the local version
         is done "queue=None" or the gateway version with "queue=ecgate"
         or "queue=cca".
@@ -101,8 +112,8 @@ def submit(jtemplate, c, queue):
             the job call and mail report instructions.
             Default is "job.temp".
 
-        c: instance of class Control
-            Contains all the parameters of control files, which are e.g.:
+        c: instance of class ControlFile
+            Contains all the parameters of CONTROL file, which are e.g.:
             DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
             STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
             LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
@@ -126,7 +137,7 @@ def submit(jtemplate, c, queue):
         lftext = f.read().split('\n')
         insert_point = lftext.index('EOF')
 
-    # put all parameters of control instance into a list
+    # put all parameters of ControlFile instance into a list
     clist = c.tolist()
     colist = []  # operational
     mt = 0

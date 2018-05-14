@@ -2,26 +2,29 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-# - add description of file
 # - check of license of book content
 #************************************************************************
-"""
-@Author: Anne Philipp (University of Vienna)
+#*******************************************************************************
+#
+# @Author: Anne Philipp (University of Vienna)
+#
+# @Date: March 2018
+#
+# @License:
+#    (C) Copyright 2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Program functionality:
+#    This module is not part of flex_extract. It is just used for testing and
+#    performance analysis of some functions.
+#
+# @Program Content:
+#    - timefn
+#
+#*******************************************************************************
 
-@Date: March 2018
-
-@License:
-    (C) Copyright 2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    A standard python 2.6 or 2.7 installation
-
-@Description:
-    ...
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------

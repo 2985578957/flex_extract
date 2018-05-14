@@ -2,51 +2,50 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-# - make a class out of this ???
-# - write a test class
+# - check alist of size 4 ?
+# - write a test, IMPORTANT
 #************************************************************************
-"""
-@Author: Anne Philipp (University of Vienna)
+#*******************************************************************************
+# @Author: Anne Philipp (University of Vienna)
+#
+# @Date: March 2018
+#
+# @Change History:
+#    November 2015 - Leopold Haimberger (University of Vienna):
+#        - migration of the methods dapoly and darain from Fortran
+#          (flex_extract_v6 and earlier) to Python
+#
+#    April 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added structured documentation
+#        - outsourced the disaggregation functions dapoly and darain
+#          to a new module named Disagg
+#
+# @License:
+#    (C) Copyright 2015-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Module Description:
+#    Disaggregation of deaccumulated flux data from an ECMWF model FG field.
+#    Initially the flux data to be concerned are:
+#    - large-scale precipitation
+#    - convective precipitation
+#    - surface sensible heat flux
+#    - surface solar radiation
+#    - u stress
+#    - v stress
+#    Different versions of disaggregation is provided for rainfall
+#    data (darain, modified linear) and the surface fluxes and
+#    stress data (dapoly, cubic polynomial).
+#
+# @Module Content:
+#    - dapoly
+#    - darain
+#
+#*******************************************************************************
 
-@Date: March 2018
-
-@ChangeHistory:
-    November 2015 - Leopold Haimberger (University of Vienna):
-        - integrated methods dapoly and darain from Fortran to Python
-
-    April 2018 - Anne Philipp (University of Vienna):
-        - applied PEP8 style guide
-        - added structured documentation
-        - outsourced the disaggregation functions dapoly and darain
-          to a new module named Disagg
-
-@License:
-    (C) Copyright 2015-2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    A standard python 2.6 or 2.7 installation
-
-@Description:
-    Further documentation may be obtained from www.flexpart.eu.
-
-    Functionality provided:
-        Disaggregation of deaccumulated flux data from an ECMWF model FG field.
-        Initially the flux data to be concerned are:
-        - large-scale precipitation
-        - convective precipitation
-        - surface sensible heat flux
-        - surface solar radiation
-        - u stress
-        - v stress
-
-        Different versions of disaggregation is provided for rainfall
-        data (darain, modified linear) and the surface fluxes and
-        stress data (dapoly, cubic polynomial).
-
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------

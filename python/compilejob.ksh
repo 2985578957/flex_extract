@@ -4,7 +4,7 @@
 # start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server
 # start with sbatch NAME_OF_THIS_FILE directly on machine
 
-#SBATCH --workdir=/scratch/ms/at/km4a
+#SBATCH --workdir=/scratch/ms/spatlh00/lh0
 #SBATCH --qos=normal
 #SBATCH --job-name=flex_ecmwf
 #SBATCH --output=flex_ecmwf.%j.out
@@ -32,7 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-export FLEXPART_ROOT_SCRIPTS=${HOME}
+export FLEXPART_ROOT_SCRIPTS=$HOME
 #  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
 #  export PATH=${PATH}:$ECMWFDATA/python
@@ -48,7 +48,7 @@ export FLEXPART_ROOT_SCRIPTS=${HOME}
   echo $HOME | awk -F / '{print $1, $2, $3, $4}'
   export GROUP=`echo $HOME | awk -F / '{print $4}'`
   export SCRATCH=/scratch/ms/${GROUP}/${USER}
-export FLEXPART_ROOT_SCRIPTS=${HOME}
+export FLEXPART_ROOT_SCRIPTS=$HOME
 #  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
 #  export PYTHONPATH=$ECMWFDATA/python
 #  export PATH=${PATH}:$ECMWFDATA/python

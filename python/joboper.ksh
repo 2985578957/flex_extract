@@ -63,13 +63,13 @@ export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
 GATEWAY srvx8.img.univie.ac.at
-DESTINATION philipa8@genericSftp
+DESTINATION annep@genericSftp
 accuracy 16
 addpar 186 187 188 235 139 39 
 basetime None
 cwc 0
 date_chunk 3
-debug 0
+debug True
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/

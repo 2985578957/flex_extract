@@ -2,48 +2,52 @@
 # -*- coding: utf-8 -*-
 #************************************************************************
 # TODO AP
-#AP
 # - GribTools name möglicherweise etwas verwirrend.
 # - change self.filename in self.filenames!!!
-# - add file description
 # - bis auf --init-- und index wird keine Funktion verwendet!?
 #************************************************************************
-"""
-@Author: Anne Fouilloux (University of Oslo)
+#*******************************************************************************
+# @Author: Anne Fouilloux (University of Oslo)
+#
+# @Date: July 2014
+#
+# @Change History:
+#   February 2018 - Anne Philipp (University of Vienna):
+#        - applied PEP8 style guide
+#        - added documentation
+#        - changed some naming
+#
+# @License:
+#    (C) Copyright 2014-2018.
+#
+#    This software is licensed under the terms of the Apache Licence Version 2.0
+#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#
+# @Class Description:
+#    The GRIB API provides all necessary tools to work directly with the
+#    grib files. Nevertheless, the GRIB API tools are very basic and are in
+#    direct connection with the grib files. This class provides some higher
+#    functions which apply a set of GRIB API tools together in the respective
+#    context. So, the class initially contains a list of grib files (their
+#    names) and the using program then applies the methods directly on the
+#    class objects without having to think about how the actual GRIB API
+#    tools have to be arranged.
+#
+# @Class Content:
+#    - __init__
+#    - getkeys
+#    - setkeys
+#    - copy
+#    - index
+#
+#*******************************************************************************
 
-@Date: July 2014
-
-@ChangeHistory:
-   February 2018 - Anne Philipp (University of Vienna):
-        - applied PEP8 style guide
-        - added documentation
-        - changed some naming
-
-@License:
-    (C) Copyright 2014-2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
-@Requirements:
-    - A standard python 2.6 or 2.7 installation
-    - dateutils
-    - ECMWF specific packages, all available from https://software.ecmwf.int/
-        ECMWF WebMARS, gribAPI with python enabled, emoslib and
-        ecaccess web toolkit
-
-@Description:
-    Further documentation may be obtained from www.flexpart.eu.
-
-    ...
-"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-from gribapi import *
-import traceback
-import sys
 import os
+from gribapi import *
+
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------

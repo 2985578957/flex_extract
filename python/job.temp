@@ -63,7 +63,7 @@ export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
 GATEWAY srvx8.img.univie.ac.at
-DESTINATION philipa8@genericSftp
+DESTINATION annep@genericSftp
 EOF
 cat >>$CONTROL<<EOF
 EOF

@@ -11,8 +11,8 @@
            .s .s~ .sh .sh~ .h .h~ .C .C~ .a
 
 
-GRIB_API_INCLUDE_DIR=/usr/local/gcc-4.9.3/grib1.12.3//include
-GRIB_API_LIB= -L/usr/local/gcc-4.9.3/grib1.12.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
+GRIB_API_INCLUDE_DIR=/usr/local/gcc-4.9.3/grib_api-1.14.3//include
+GRIB_API_LIB= -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
 EMOSLIB=-lemosR64
 
 OPT	= -g -O3 -fopenmp
