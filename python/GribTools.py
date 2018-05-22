@@ -318,6 +318,7 @@ class GribTools:
                 if self.iid is None:
                     self.iid = grib_index_new_from_file(file, index_keys)
                 else:
+                    print 'in else zweig'
                     grib_index_add_file(self.iid, file)
 
             if self.iid is not None:

@@ -69,12 +69,12 @@ addpar 186 187 188 235 139 39
 basetime None
 cwc 0
 date_chunk 3
-debug True
+debug 1
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
 ecstorage 0
-ectrans 0
+ectrans 1
 end_date 20160809
 eta 0
 etadiff 0
