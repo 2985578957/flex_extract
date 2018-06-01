@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# TODO AP
-# - checken welche regelmässigen methoden auf diese Files noch angewendet werden
-# und dann hier implementieren
-# cleanup hier rein
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -14,15 +8,15 @@
 # @Change History:
 #
 #    November 2015 - Leopold Haimberger (University of Vienna):
-#        - modified method listFiles to work with glob instead of listdir
-#        - added pattern search in method listFiles
+#        - modified method list_files to work with glob instead of listdir
+#        - added pattern search in method list_files
 #
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
 #        - added documentation
-#        - optimisation of method listFiles since it didn't work correctly
+#        - optimisation of method list_files since it didn't work correctly
 #          for sub directories
-#        - additional speed up of method listFiles
+#        - additional speed up of method list_files
 #        - modified the class so that it is initiated with a pattern instead
 #          of suffixes. Gives more precision in selection of files.
 #
@@ -39,8 +33,12 @@
 #
 # @Class Content:
 #    - __init__
-#    - listFiles
-#    - deleteFiles
+#    - list_files
+#    - delete_files
+#
+# @Class Attributes:
+#    - pattern
+#    - files
 #
 #*******************************************************************************
 
@@ -48,19 +46,17 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
-import glob
 import fnmatch
-import time
 
 # software specific module from flex_extract
-import profiling
-from Tools import silentremove
+#import profiling
+from tools import silent_remove
 
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
 
-class UIOFiles:
+class UioFiles(object):
     '''
     Class to manipulate files. At initialisation it has the attribute
     pattern which stores a regular expression pattern for the files associated
@@ -75,7 +71,7 @@ class UIOFiles:
             Assignes a specific pattern for these files.
 
         @Input:
-            self: instance of UIOFiles
+            self: instance of UioFiles
                 Description see class documentation.
 
             pattern: string
@@ -86,18 +82,19 @@ class UIOFiles:
         '''
 
         self.pattern = pattern
+        self.files = None
 
         return
 
     #@profiling.timefn
-    def listFiles(self, path, callid=0):
+    def list_files(self, path, callid=0):
         '''
         @Description:
             Lists all files in the directory with the matching
             regular expression pattern.
 
         @Input:
-            self: instance of UIOFiles
+            self: instance of UioFiles
                 Description see class documentation.
 
             path: string
@@ -131,24 +128,24 @@ class UIOFiles:
         # do recursive calls for sub-direcorties
         if subdirs:
             for subdir in subdirs:
-                self.listFiles(os.path.join(path, subdir), callid=1)
+                self.list_files(os.path.join(path, subdir), callid=1)
 
         return
 
-    def deleteFiles(self):
+    def delete_files(self):
         '''
         @Description:
             Deletes the files.
 
         @Input:
-            self: instance of UIOFiles
+            self: instance of UioFiles
                 Description see class documentation.
 
         @Return:
             <nothing>
         '''
 
-        for f in self.files:
-            silentremove(f)
+        for old_file in self.files:
+            silent_remove(old_file)
 
         return

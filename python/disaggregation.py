@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
+# ToDo AP
 # - check alist of size 4 ?
 # - write a test, IMPORTANT
 #************************************************************************
@@ -19,7 +19,7 @@
 #        - applied PEP8 style guide
 #        - added structured documentation
 #        - outsourced the disaggregation functions dapoly and darain
-#          to a new module named Disagg
+#          to a new module named disaggregation
 #
 # @License:
 #    (C) Copyright 2015-2018.
@@ -28,7 +28,7 @@
 #    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
 # @Module Description:
-#    Disaggregation of deaccumulated flux data from an ECMWF model FG field.
+#    disaggregationregation of deaccumulated flux data from an ECMWF model FG field.
 #    Initially the flux data to be concerned are:
 #    - large-scale precipitation
 #    - convective precipitation
@@ -69,7 +69,7 @@ def dapoly(alist):
         Interpolation of deaccumulated fluxes of an ECMWF model FG field
         using a cubic polynomial solution which conserves the integrals
         of the fluxes within each timespan.
-        Disaggregation is done for 4 accumluated timespans which generates
+        disaggregationregation is done for 4 accumluated timespans which generates
         a new, disaggregated value which is output at the central point
         of the 4 accumulation timespans. This new point is used for linear
         interpolation of the complete timeseries afterwards.
@@ -110,7 +110,7 @@ def darain(alist):
         Interpolation of deaccumulated fluxes of an ECMWF model FG rainfall
         field using a modified linear solution which conserves the integrals
         of the fluxes within each timespan.
-        Disaggregation is done for 4 accumluated timespans which generates
+        disaggregationregation is done for 4 accumluated timespans which generates
         a new, disaggregated value which is output at the central point
         of the 4 accumulation timespans. This new point is used for linear
         interpolation of the complete timeseries afterwards.
@@ -143,13 +143,3 @@ def darain(alist):
     nfield = xac + xbd
 
     return nfield
-
-
-
-
-
-
-
-
-
-

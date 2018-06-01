@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
-# - check myerror
-# - check normalexit
-# - check getListAsString
+# ToDo AP
+# - check my_error
+# - check normal_exit
+# - check get_list_as_string
 # - seperate args and control interpretation
 #************************************************************************
 #*******************************************************************************
@@ -14,17 +14,17 @@
 #
 # @Change History:
 #    October 2014 - Anne Fouilloux (University of Oslo)
-#        - created functions silentremove and product (taken from ECMWF)
+#        - created functions silent_remove and product (taken from ECMWF)
 #
 #    November 2015 - Leopold Haimberger (University of Vienna)
-#        - created functions: interpret_args_and_control, cleanup
-#          myerror, normalexit, init128, toparamId
+#        - created functions: interpret_args_and_control, clean_up
+#          my_error, normal_exit, init128, to_param_id
 #
 #    April 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
 #        - added documentation
-#        - moved all functions from file FlexpartTools to this file Tools
-#        - added function getListAsString
+#        - moved all functions from file Flexparttools to this file tools
+#        - added function get_list_as_string
 #
 # @License:
 #    (C) Copyright 2014-2018.
@@ -38,14 +38,14 @@
 #
 # @Module Content:
 #    - interpret_args_and_control
-#    - cleanup
-#    - myerror
-#    - normalexit
+#    - clean_up
+#    - my_error
+#    - normal_exit
 #    - product
-#    - silentremove
+#    - silent_remove
 #    - init128
-#    - toparamId
-#    - getListAsString
+#    - to_param_id
+#    - get_list_as_string
 #
 #*******************************************************************************
 
@@ -56,10 +56,11 @@ import os
 import errno
 import sys
 import glob
+import inspect
+import subprocess
 import traceback
-from numpy import *
-from gribapi import *
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+import numpy as np
 
 # software specific class from flex_extract
 from ControlFile import ControlFile
@@ -122,13 +123,13 @@ def interpret_args_and_control():
                         help="root directory for storing output files")
     parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
                         help="FLEXPART root directory (to find grib2flexpart \
-                        and COMMAND file)\n\ Normally ECMWFDATA resides in \
+                        and COMMAND file)\n Normally ECMWFDATA resides in \
                         the scripts directory of the FLEXPART distribution")
 
-    # this is only used by prepareFLEXPART.py to rerun a postprocessing step
+    # this is only used by prepare_flexpart.py to rerun a postprocessing step
     parser.add_argument("--ppid", dest="ppid",
                         help="Specify parent process id for \
-                        rerun of prepareFLEXPART")
+                        rerun of prepare_flexpart")
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
@@ -151,20 +152,22 @@ def interpret_args_and_control():
         c = ControlFile(args.controlfile)
     except IOError:
         try:
-            c = ControlFile(localpythonpath + args.controlfile)
-        except:
-            print('Could not read CONTROL file "' + args.controlfile + '"')
-            print('Either it does not exist or its syntax is wrong.')
-            print('Try "' + sys.argv[0].split('/')[-1] +
-                  ' -h" to print usage information')
+            LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
+                inspect.getfile(inspect.currentframe())))
+            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+        except IOError:
+            print 'Could not read CONTROL file "' + args.controlfile + '"'
+            print 'Either it does not exist or its syntax is wrong.'
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
             exit(1)
 
     # check for having at least a starting date
     if  args.start_date is None and getattr(c, 'start_date') is None:
-        print('start_date specified neither in command line nor \
-               in CONTROL file ' + args.controlfile)
-        print('Try "' + sys.argv[0].split('/')[-1] +
-              ' -h" to print usage information')
+        print 'start_date specified neither in command line nor \
+               in CONTROL file ' + args.controlfile
+        print 'Try "' + sys.argv[0].split('/')[-1] + \
+              ' -h" to print usage information'
         exit(1)
 
     # save all existing command line parameter to the ControlFile instance
@@ -205,8 +208,8 @@ def interpret_args_and_control():
         afloat = '.' in args.area
         l = args.area.split('/')
         if afloat:
-            for i in range(len(l)):
-                l[i] = str(int(float(l[i]) * 1000))
+            for i, item in enumerate(l):
+                item = str(int(float(item) * 1000))
         c.upper, c.left, c.lower, c.right = l
 
     # NOTE: basetime activates the ''operational mode''
@@ -217,11 +220,11 @@ def interpret_args_and_control():
         l = args.step.split('/')
         if 'to' in args.step.lower():
             if 'by' in args.step.lower():
-                ilist = arange(int(l[0]), int(l[2]) + 1, int(l[4]))
+                ilist = np.arange(int(l[0]), int(l[2]) + 1, int(l[4]))
                 c.step = ['{:0>3}'.format(i) for i in ilist]
             else:
-                myerror(None, args.step + ':\n' +
-                        'please use "by" as well if "to" is used')
+                my_error(None, args.step + ':\n' +
+                         'please use "by" as well if "to" is used')
         else:
             c.step = l
 
@@ -238,7 +241,7 @@ def interpret_args_and_control():
     return args, c
 
 
-def cleanup(c):
+def clean_up(c):
     '''
     @Description:
         Remove all files from intermediate directory
@@ -262,21 +265,21 @@ def cleanup(c):
         <nothing>
     '''
 
-    print("cleanup")
+    print "clean_up"
 
     cleanlist = glob.glob(c.inputdir + "/*")
     for cl in cleanlist:
         if c.prefix not in cl:
-            silentremove(cl)
+            silent_remove(cl)
         if c.ecapi is False and (c.ectrans == '1' or c.ecstorage == '1'):
-            silentremove(cl)
+            silent_remove(cl)
 
-    print("Done")
+    print "Done"
 
     return
 
 
-def myerror(c, message='ERROR'):
+def my_error(c, message='ERROR'):
     '''
     @Description:
         Prints a specified error message which can be passed to the function
@@ -302,32 +305,34 @@ def myerror(c, message='ERROR'):
     @Return:
         <nothing>
     '''
-    # uncomment if user wants email notification directly from python
-    #try:
-        #target = c.mailfail
-    #except AttributeError:
-        #target = os.getenv('USER')
 
-    #if(type(target) is not list):
-        #target = [target]
+    print message
 
-    print(message)
+    # comment if user does not want email notification directly from python
+    try:
+        target = []
+        target.extend(c.mailfail)
+    except AttributeError:
+        target = []
+        target.extend(os.getenv('USER'))
 
-    # uncomment if user wants email notification directly from python
-    #for t in target:
-    #p = subprocess.Popen(['mail','-s ECMWFDATA v7.0 ERROR', os.path.expandvars(t)],
-    #                     stdin = subprocess.PIPE, stdout = subprocess.PIPE,
-    #                     stderr = subprocess.PIPE, bufsize = 1)
-    #tr = '\n'.join(traceback.format_stack())
-    #pout = p.communicate(input = message+'\n\n'+tr)[0]
-    #print 'Email sent to '+os.path.expandvars(t) # +' '+pout.decode()
+    for t in target:
+        p = subprocess.Popen(['mail', '-s ECMWFDATA v7.0 ERROR',
+                              os.path.expandvars(t)],
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             bufsize=1)
+        tr = '\n'.join(traceback.format_stack())
+        pout = p.communicate(input=message + '\n\n' + tr)[0]
+        print 'Email sent to ' + os.path.expandvars(t) + ' ' + pout.decode()
 
     exit(1)
 
     return
 
 
-def normalexit(c, message='Done!'):
+def normal_exit(c, message='Done!'):
     '''
     @Description:
         Prints a specific exit message which can be passed to the function.
@@ -353,23 +358,23 @@ def normalexit(c, message='Done!'):
         <nothing>
 
     '''
-    # Uncomment if user wants notification directly from python
-    #try:
-        #target = c.mailops
-        #if(type(target) is not list):
-            #target = [target]
-        #for t in target:
-            #p = subprocess.Popen(['mail','-s ECMWFDATA v7.0 normal exit',
-            #                      os.path.expandvars(t)],
-            #                      stdin = subprocess.PIPE,
-            #                      stdout = subprocess.PIPE,
-            #                      stderr = subprocess.PIPE, bufsize = 1)
-            #pout = p.communicate(input = message+'\n\n')[0]
-            #print pout.decode()
-    #except:
-        #pass
+    print message
 
-    print(message)
+    # comment if user does not want notification directly from python
+    try:
+        target = []
+        target.extend(c.mailops)
+        for t in target:
+            p = subprocess.Popen(['mail', '-s ECMWFDATA v7.0 normal exit',
+                                  os.path.expandvars(t)],
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 bufsize=1)
+            pout = p.communicate(input=message+'\n\n')[0]
+            print 'Email sent to ' + os.path.expandvars(t) + ' ' + pout.decode()
+    finally:
+        pass
 
     return
 
@@ -410,7 +415,7 @@ def product(*args, **kwds):
     return
 
 
-def silentremove(filename):
+def silent_remove(filename):
     '''
     @Description:
         If "filename" exists , it is removed.
@@ -434,13 +439,13 @@ def silentremove(filename):
     return
 
 
-def init128(fn):
+def init128(filepath):
     '''
     @Description:
         Opens and reads the grib file with table 128 information.
 
     @Input:
-        fn: string
+        filepath: string
             Path to file of ECMWF grib table number 128.
 
     @Return:
@@ -450,7 +455,7 @@ def init128(fn):
             short name of the parameter.
     '''
     table128 = dict()
-    with open(fn) as f:
+    with open(filepath) as f:
         fdata = f.read().split('\n')
     for data in fdata:
         if data[0] != '!':
@@ -459,7 +464,7 @@ def init128(fn):
     return table128
 
 
-def toparamId(pars, table):
+def to_param_id(pars, table):
     '''
     @Description:
         Transform parameter names to parameter ids
@@ -485,31 +490,33 @@ def toparamId(pars, table):
     cpar = pars.upper().split('/')
     ipar = []
     for par in cpar:
-        found = False
         for k, v in table.iteritems():
             if par == k or par == v:
                 ipar.append(int(k))
-                found = True
                 break
-        if found is False:
-            print('Warning: par ' + par + ' not found in table 128')
+        else:
+            print 'Warning: par ' + par + ' not found in table 128'
 
     return ipar
 
-def getListAsString(listObj):
+def get_list_as_string(list_obj, concatenate_sign=', '):
     '''
     @Description:
         Converts a list of arbitrary content into a single string.
 
     @Input:
-        listObj: list
+        list_obj: list
             A list with arbitrary content.
 
+        concatenate_sign: string, optional
+            A string which is used to concatenate the single
+            list elements. Default value is ", ".
+
     @Return:
-        strOfList: string
+        str_of_list: string
             The content of the list as a single string.
     '''
 
-    strOfList = ", ".join( str(l) for l in listObj)
+    str_of_list = concatenate_sign.join(str(l) for l in list_obj)
 
-    return strOfList
+    return str_of_list

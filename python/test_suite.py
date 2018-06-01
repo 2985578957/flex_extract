@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
-#
+# ToDo AP
 # - provide more tests
 # - provide more documentation
-# -
 #************************************************************************
 
 #*******************************************************************************
@@ -27,7 +25,7 @@
 #
 # @Program Functionality:
 #    This script triggers the ECMWFDATA test suite. Call with
-#    testsuite.py [test group]
+#    test_suite.py [test group]
 #
 # @Program Content:
 #
@@ -45,9 +43,9 @@ import subprocess
 # PROGRAM
 # ------------------------------------------------------------------------------
 try:
-    taskfile = open('testsuite.json')
-except:
-    print 'could not open suite definition file testsuite.json'
+    taskfile = open('test_suite.json')
+except IOError:
+    print 'could not open suite definition file test_suite.json'
     exit()
 
 if not os.path.isfile('../src/CONVERT2'):
@@ -72,14 +70,14 @@ jobfailed = 0
 for g in groups:
     try:
         tk, tv = g, tasks[g]
-    except:
-        continue
+    finally:
+        pass
     garglist = []
     for ttk, ttv in tv.iteritems():
         if isinstance(ttv, basestring):
             if ttk != 'script':
                 garglist.append('--' + ttk)
-                if '$' == ttv[0]:
+                if ttv[0] == '$':
                     garglist.append(os.path.expandvars(ttv))
                 else:
                     garglist.append(ttv)
@@ -88,11 +86,11 @@ for g in groups:
             arglist = []
             for tttk, tttv in ttv.iteritems():
                 if isinstance(tttv, basestring):
-                        arglist.append('--' + tttk)
-                        if '$' in tttv[0]:
-                            arglist.append(os.path.expandvars(tttv))
-                        else:
-                            arglist.append(tttv)
+                    arglist.append('--' + tttk)
+                    if '$' in tttv[0]:
+                        arglist.append(os.path.expandvars(tttv))
+                    else:
+                        arglist.append(tttv)
             print 'Command: ', ' '.join([tv['script']] + garglist + arglist)
             o = '../test/' + tk + '_' + ttk + '_' + '_'.join(ttv.keys())
             print 'Output will be sent to ', o
@@ -100,7 +98,7 @@ for g in groups:
             try:
                 p = subprocess.check_call([tv['script']] + garglist + arglist,
                                           stdout=f, stderr=f)
-            except:
+            except subprocess.CalledProcessError as e:
                 f.write('\nFAILED\n')
                 print 'FAILED'
                 jobfailed += 1
@@ -110,5 +108,3 @@ for g in groups:
 print 'Test suite tasks completed'
 print str(jobcounter-jobfailed) + ' successful, ' + str(jobfailed) + ' failed'
 print 'If tasks have been submitted via ECACCESS please check emails'
-
-#print tasks

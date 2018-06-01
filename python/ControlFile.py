@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
+# ToDo AP
 # - write a test class
 #************************************************************************
 #*******************************************************************************
@@ -36,7 +36,28 @@
 # @Class Content:
 #    - __init__
 #    - __str__
-#    - tolist
+#    - to_list
+#
+# @Class Attributes:
+#    - start_date
+#    - end_date
+#    - accuracy
+#    - omega
+#    - cwc
+#    - omegadiff
+#    - etadiff
+#    - level
+#    - levelist
+#    - step
+#    - maxstep
+#    - prefix
+#    - makefile
+#    - basetime
+#    - date_chunk
+#    - grib2flexpart
+#    - exedir
+#    - flexpart_root_scripts
+#    - ecmwfdatadir
 #
 #*******************************************************************************
 
@@ -45,13 +66,14 @@
 # ------------------------------------------------------------------------------
 import os
 import inspect
+
 # software specific module from flex_extract
-import Tools
+from tools import get_list_as_string, my_error
 
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
-class ControlFile:
+class ControlFile(object):
     '''
     Class containing the information of the flex_extract CONTROL file.
 
@@ -113,7 +135,6 @@ class ControlFile:
                         data = [data[0]]
                         for d in dd:
                             data.append(d)
-                    pass
                 if len(data) == 2:
                     if '$' in data[1]:
                         setattr(self, data[0].lower(), data[1])
@@ -125,11 +146,9 @@ class ControlFile:
                             if var is not None:
                                 data[1] = data[1][:i] + var + data[1][k+1:]
                             else:
-                                Tools.myerror(None,
-                                              'Could not find variable ' +
-                                              data[1][j+1:k] +
-                                              ' while reading ' +
-                                              filename)
+                                my_error(None, 'Could not find variable ' +
+                                         data[1][j+1:k] + ' while reading ' +
+                                         filename)
                         setattr(self, data[0].lower() + '_expanded', data[1])
                     else:
                         if data[1].lower() != 'none':
@@ -159,8 +178,8 @@ class ControlFile:
             self.etadiff = '0'
         if not hasattr(self, 'levelist'):
             if not hasattr(self, 'level'):
-                print('Warning: neither levelist nor level \
-                       specified in CONTROL file')
+                print 'Warning: neither levelist nor level \
+                       specified in CONTROL file'
             else:
                 self.levelist = '1/to/' + self.level
         else:
@@ -223,7 +242,7 @@ class ControlFile:
 
         return ', '.join("%s: %s" % item for item in attrs.items())
 
-    def tolist(self):
+    def to_list(self):
         '''
         @Description:
             Just generates a list of strings containing the attributes and
@@ -254,7 +273,7 @@ class ControlFile:
             elif 'ecmwfdatadir' in item[0]:
                 pass
             else:
-                if type(item[1]) is list:
+                if isinstance(item[1], list):
                     stot = ''
                     for s in item[1]:
                         stot += s + ' '
@@ -264,3 +283,24 @@ class ControlFile:
                     l.append("%s %s" % item)
 
         return sorted(l)
+
+    # def to_dict(self):
+        # '''
+
+        # '''
+        # parameters_dict = vars(self)
+
+        # # remove unneeded parameter
+        # parameters_dict.pop('_expanded', None)
+        # parameters_dict.pop('exedir', None)
+        # parameters_dict.pop('flexpart_root_scripts', None)
+        # parameters_dict.pop('ecmwfdatadir', None)
+
+        # parameters_dict_str = {}
+        # for key, value in parameters_dict.iteritems():
+            # if isinstance(value, list):
+                # parameters_dict_str[str(key)] = get_list_as_string(value, ' ')
+            # else:
+                # parameters_dict_str[str(key)] = str(value)
+
+        # return parameters_dict_str

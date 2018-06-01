@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# TODO AP
-# -
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -12,8 +8,8 @@
 # @Change History:
 #
 #   November 2015 - Leopold Haimberger (University of Vienna):
-#        - optimized displayInfo
-#        - optimized dataRetrieve and seperate between python and shell
+#        - optimized display_info
+#        - optimized data_retrieve and seperate between python and shell
 #          script call
 #
 #   February 2018 - Anne Philipp (University of Vienna):
@@ -36,8 +32,29 @@
 #
 # @Class Content:
 #    - __init__
-#    - displayInfo
-#    - dataRetrieve
+#    - display_info
+#    - data_retrieve
+#
+# @Class Attributes:
+#    - server
+#    - marsclass
+#    - dtype
+#    - levtype
+#    - levelist
+#    - repres
+#    - date
+#    - resol
+#    - stream
+#    - area
+#    - time
+#    - step
+#    - expver
+#    - number
+#    - accuracy
+#    - grid
+#    - gaussian
+#    - target
+#    - param
 #
 #*******************************************************************************
 
@@ -47,16 +64,10 @@
 import subprocess
 import os
 
-ecapi = True
-try:
-    import ecmwfapi
-except ImportError:
-    ecapi = False
-
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
-class MARSretrieval:
+class MarsRetrieval(object):
     '''
     Class for submitting MARS retrievals.
 
@@ -67,14 +78,14 @@ class MARSretrieval:
 
     '''
 
-    def __init__(self, server, marsclass = "ei", type = "", levtype = "",
-                 levelist = "", repres = "", date = "", resol = "", stream = "",
-                 area = "", time = "", step = "", expver = "1", number = "",
-                 accuracy = "", grid = "", gaussian = "", target = "",
-                 param = ""):
+    def __init__(self, server, marsclass="ei", dtype="", levtype="",
+                 levelist="", repres="", date="", resol="", stream="",
+                 area="", time="", step="", expver="1", number="",
+                 accuracy="", grid="", gaussian="", target="",
+                 param=""):
         '''
         @Description:
-            Initialises the instance of the MARSretrieval class and
+            Initialises the instance of the MarsRetrieval class and
             defines and assigns a set of the necessary retrieval parameters
             for the FLEXPART input data.
             A description of MARS keywords/arguments, their dependencies
@@ -83,7 +94,7 @@ class MARSretrieval:
             https://software.ecmwf.int/wiki/display/UDOC/MARS+keywords
 
         @Input:
-            self: instance of MARSretrieval
+            self: instance of MarsRetrieval
                 For description see class documentation.
 
             server: instance of ECMWFService (from ECMWF Web-API)
@@ -95,7 +106,7 @@ class MARSretrieval:
                 E4 (ERA40), OD (Operational archive), ea (ERA5).
                 Default is the ERA-Interim dataset "ei".
 
-            type: string, optional
+            dtype: string, optional
                 Determines the type of fields to be retrieved.
                 Selects between observations, images or fields.
                 Examples for fields: Analysis (an), Forecast (fc),
@@ -274,7 +285,7 @@ class MARSretrieval:
 
         self.server = server
         self.marsclass = marsclass
-        self.type = type
+        self.dtype = dtype
         self.levtype = levtype
         self.levelist = levelist
         self.repres = repres
@@ -295,13 +306,13 @@ class MARSretrieval:
         return
 
 
-    def displayInfo(self):
+    def display_info(self):
         '''
         @Description:
             Prints all class attributes and their values.
 
         @Input:
-            self: instance of MARSretrieval
+            self: instance of MarsRetrieval
                 For description see class documentation.
 
         @Return:
@@ -313,14 +324,14 @@ class MARSretrieval:
         # iterate through all attributes and print them
         # with their corresponding values
         for item in attrs.items():
-            if item[0] in ('server'):
+            if item[0] in 'server':
                 pass
             else:
-                print(item[0] + ': ' + str(item[1]))
+                print item[0] + ': ' + str(item[1])
 
         return
 
-    def dataRetrieve(self):
+    def data_retrieve(self):
         '''
         @Description:
             Submits a MARS retrieval. Depending on the existence of
@@ -329,7 +340,7 @@ class MARSretrieval:
             are taken from the defined class attributes.
 
         @Input:
-            self: instance of MARSretrieval
+            self: instance of MarsRetrieval
                 For description see class documentation.
 
         @Return:
@@ -343,7 +354,7 @@ class MARSretrieval:
         # needed for the retrieval call
         s = 'ret'
         for k, v in attrs.iteritems():
-            if k in ('server'):
+            if k in 'server':
                 continue
             if k == 'marsclass':
                 k = 'class'
@@ -359,11 +370,11 @@ class MARSretrieval:
             try:
                 self.server.execute(s, target)
             except:
-                print('MARS Request failed, \
-                    have you already registered at apps.ecmwf.int?')
+                print 'MARS Request failed, \
+                    have you already registered at apps.ecmwf.int?'
                 raise IOError
             if os.stat(target).st_size == 0:
-                print('MARS Request returned no data - please check request')
+                print 'MARS Request returned no data - please check request'
                 raise IOError
         # MARS request via extra process in shell
         else:
@@ -372,14 +383,14 @@ class MARSretrieval:
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, bufsize=1)
             pout = p.communicate(input=s)[0]
-            print(pout.decode())
+            print pout.decode()
 
             if 'Some errors reported' in pout.decode():
-                print('MARS Request failed - please check request')
+                print 'MARS Request failed - please check request'
                 raise IOError
 
             if os.stat(target).st_size == 0:
-                print('MARS Request returned no data - please check request')
+                print 'MARS Request returned no data - please check request'
                 raise IOError
 
         return

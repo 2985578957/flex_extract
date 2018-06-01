@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
+# ToDo AP
 # - documentation der Funktionen
 # - docu der progam functionality
 # - apply pep8
@@ -18,7 +18,7 @@
 #        - added documentation
 #        - created function main and moved the two function calls for
 #          arguments and plotting into it
-#        - added function getBasics to extract the boundary conditions
+#        - added function get_basics to extract the boundary conditions
 #          of the data fields from the first grib file it gets.
 #
 # @License:
@@ -32,11 +32,11 @@
 #
 # @Program Content:
 #    - main
-#    - getBasics
-#    - plotRetrieved
-#    - plotTS
-#    - plotMap
-#    - getPlotArgs
+#    - get_basics
+#    - plot_retrieved
+#    - plot_timeseries
+#    - plot_map
+#    - get_plot_args
 #
 #*******************************************************************************
 
@@ -48,48 +48,36 @@ import datetime
 import os
 import inspect
 import sys
-import glob
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+import matplotlib
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+from eccodes import codes_grib_new_from_file, codes_get, codes_release, \
+                    codes_get_values
+import numpy as np
 
-from matplotlib.pylab import *
-import matplotlib.patches as mpatches
-from mpl_toolkits.basemap import Basemap, addcyclic
-import matplotlib.colors as mcolors
-from matplotlib.font_manager import FontProperties
-from matplotlib.patches import Polygon
-import matplotlib.cm as cmx
-import matplotlib.colors as colors
-#from rasotools.utils import stats
+# software specific classes and modules from flex_extract
+from ControlFile import ControlFile
+from UioFiles import UioFiles
+
+# add path to pythonpath so that python finds its buddies
+LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+if LOCAL_PYTHON_PATH not in sys.path:
+    sys.path.append(LOCAL_PYTHON_PATH)
 
 font = {'family': 'monospace', 'size': 12}
 matplotlib.rcParams['xtick.major.pad'] = '20'
-
 matplotlib.rc('font', **font)
-
-from eccodes import *
-import numpy as np
-
-# add path to pythonpath so that python finds its buddies
-localpythonpath = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if localpythonpath not in sys.path:
-    sys.path.append(localpythonpath)
-
-# software specific classes and modules from flex_extract
-from Tools import silentremove
-from ControlFile import ControlFile
-#from GribTools import GribTools
-from UIOFiles import UIOFiles
-
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
 def main():
     '''
     @Description:
-        If plotRetrieved is called from command line, this function controls
+        If plot_retrieved is called from command line, this function controls
         the program flow and calls the argumentparser function and
-        the plotRetrieved function for plotting the retrieved GRIB data.
+        the plot_retrieved function for plotting the retrieved GRIB data.
 
     @Input:
         <nothing>
@@ -97,12 +85,12 @@ def main():
     @Return:
         <nothing>
     '''
-    args, c = getPlotArgs()
-    plotRetrieved(args, c)
+    args, c = get_plot_args()
+    plot_retrieved(c)
 
     return
 
-def getBasics(ifile, verb=False):
+def get_basics(ifile, verb=False):
     """
     @Description:
         An example grib file will be opened and basic information will
@@ -112,6 +100,7 @@ def getBasics(ifile, verb=False):
     @Input:
         ifile: string
             Contains the full absolute path to the ECMWF grib file.
+
         verb (opt): bool
             Is True if there should be extra output in verbose mode.
             Default value is False.
@@ -126,7 +115,6 @@ def getBasics(ifile, verb=False):
             'jDirectionIncrementInDegrees',
             'iDirectionIncrementInDegrees'
     """
-    from eccodes import *
 
     data = {}
 
@@ -140,37 +128,38 @@ def getBasics(ifile, verb=False):
         gid = codes_grib_new_from_file(f)
 
         # information needed from grib message
-        keys = [
-                'Ni',
+        keys = ['Ni',
                 'Nj',
                 'latitudeOfFirstGridPointInDegrees',
                 'longitudeOfFirstGridPointInDegrees',
                 'latitudeOfLastGridPointInDegrees',
                 'longitudeOfLastGridPointInDegrees',
                 'jDirectionIncrementInDegrees',
-                'iDirectionIncrementInDegrees'
-               ]
+                'iDirectionIncrementInDegrees']
 
-        if verb: print('\nInformations are: ')
+        if verb:
+            print '\nInformations are: '
         for key in keys:
             # Get the value of the key in a grib message.
-            data[key] = codes_get(gid,key)
-            if verb: print "%s = %s" % (key,data[key])
-        if verb: print '\n'
+            data[key] = codes_get(gid, key)
+            if verb:
+                print "%s = %s" % (key, data[key])
+        if verb:
+            print '\n'
 
         # Free the memory for the message referred as gribid.
         codes_release(gid)
 
     return data
 
-def getFilesPerDate(files, datelist):
+def get_files_per_date(files, datelist):
     '''
     @Description:
         The filenames contain dates which are used to select a list
         of files for a specific time period specified in datelist.
 
     @Input:
-        files: instance of UIOFiles
+        files: instance of UioFiles
             For description see class documentation.
             It contains the attribute "files" which is a list of pathes
             to filenames.
@@ -184,24 +173,21 @@ def getFilesPerDate(files, datelist):
     '''
 
     filelist = []
-    for file in files:
-        fdate = file[-8:]
-        ddate = datetime.datetime.strptime(fdate, '%y%m%d%H')
+    for filename in files:
+        filedate = filename[-8:]
+        ddate = datetime.datetime.strptime(filedate, '%y%m%d%H')
         if ddate in datelist:
-            filelist.append(file)
+            filelist.append(filename)
 
     return filelist
 
-def plotRetrieved(args, c):
+def plot_retrieved(c):
     '''
     @Description:
         Reads GRIB data from a specified time period, a list of levels
         and a specified list of parameter.
 
     @Input:
-        args: instance of ArgumentParser
-            Contains the commandline arguments from script/program call.
-
         c: instance of class ControlFile
             Contains all necessary information of a CONTROL file. The parameters
             are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
@@ -228,40 +214,16 @@ def plotRetrieved(args, c):
 
     print 'datelist: ', datelist
 
-    c.paramIds = asarray(c.paramIds, dtype='int')
-    c.levels = asarray(c.levels, dtype='int')
-    c.area = asarray(c.area)
+    c.paramIds = np.asarray(c.paramIds, dtype='int')
+    c.levels = np.asarray(c.levels, dtype='int')
+    c.area = np.asarray(c.area)
 
-    # index_keys = ["date", "time", "step"]
-    # indexfile = c.inputdir + "/date_time_stepRange.idx"
-    # silentremove(indexfile)
-    # grib = GribTools(inputfiles.files)
-    # # creates new index file
-    # iid = grib.index(index_keys=index_keys, index_file=indexfile)
-
-    # # read values of index keys
-    # index_vals = []
-    # for key in index_keys:
-        # index_vals.append(grib_index_get(iid, key))
-        # print(index_vals[-1])
-        # # index_vals looks for example like:
-        # # index_vals[0]: ('20171106', '20171107', '20171108') ; date
-        # # index_vals[1]: ('0', '1200', '1800', '600') ; time
-        # # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
-
-
-
-
-    #index_keys = ["date", "time", "step", "paramId"]
-    #indexfile = c.inputdir + "/date_time_stepRange.idx"
-    #silentremove(indexfile)
-
-    files = UIOFiles(c.prefix+'*')
-    files.listFiles(c.inputdir)
-    ifiles = getFilesPerDate(files.files, datelist)
+    files = UioFiles(c.prefix+'*')
+    files.list_files(c.inputdir)
+    ifiles = get_files_per_date(files.files, datelist)
     ifiles.sort()
 
-    gdict = getBasics(ifiles[0], verb=False)
+    gdict = get_basics(ifiles[0], verb=False)
 
     fdict = dict()
     fmeta = dict()
@@ -273,14 +235,14 @@ def plotRetrieved(args, c):
             fmeta[key] = []
             fstamp[key] = []
 
-    for file in ifiles:
-        f = open(file)
-        print( "Opening file for reading data --- %s" % file)
-        fdate = datetime.datetime.strptime(file[-8:], "%y%m%d%H")
+    for filename in ifiles:
+        f = open(filename)
+        print "Opening file for reading data --- %s" % filename
+        fdate = datetime.datetime.strptime(filename[-8:], "%y%m%d%H")
 
         # Load in memory a grib message from a file.
         gid = codes_grib_new_from_file(f)
-        while(gid is not None):
+        while gid is not None:
             gtype = codes_get(gid, 'type')
             paramId = codes_get(gid, 'paramId')
             parameterName = codes_get(gid, 'parameterName')
@@ -289,32 +251,32 @@ def plotRetrieved(args, c):
             if paramId in c.paramIds and level in c.levels:
                 key = '{:0>3}_{:0>3}'.format(paramId, level)
                 print 'key: ', key
-                if len(fstamp[key]) != 0 :
+                if fstamp[key]:
                     for i in range(len(fstamp[key])):
                         if fdate < fstamp[key][i]:
                             fstamp[key].insert(i, fdate)
                             fmeta[key].insert(i, [paramId, parameterName, gtype,
-                                                fdate, level])
-                            fdict[key].insert(i, flipud(reshape(
-                                            codes_get_values(gid),
-                                            [gdict['Nj'], gdict['Ni']])))
+                                                  fdate, level])
+                            fdict[key].insert(i, np.flipud(np.reshape(
+                                codes_get_values(gid),
+                                [gdict['Nj'], gdict['Ni']])))
                             break
                         elif fdate > fstamp[key][i] and i == len(fstamp[key])-1:
                             fstamp[key].append(fdate)
                             fmeta[key].append([paramId, parameterName, gtype,
-                                                fdate, level])
-                            fdict[key].append(flipud(reshape(
-                                            codes_get_values(gid),
-                                            [gdict['Nj'], gdict['Ni']])))
+                                               fdate, level])
+                            fdict[key].append(np.flipud(np.reshape(
+                                codes_get_values(gid),
+                                [gdict['Nj'], gdict['Ni']])))
                             break
                         elif fdate > fstamp[key][i] and i != len(fstamp[key])-1 \
                              and fdate < fstamp[key][i+1]:
                             fstamp[key].insert(i, fdate)
                             fmeta[key].insert(i, [paramId, parameterName, gtype,
-                                                    fdate, level])
-                            fdict[key].insert(i, flipud(reshape(
-                                            codes_get_values(gid),
-                                            [gdict['Nj'], gdict['Ni']])))
+                                                  fdate, level])
+                            fdict[key].insert(i, np.flipud(np.reshape(
+                                codes_get_values(gid),
+                                [gdict['Nj'], gdict['Ni']])))
                             break
                         else:
                             pass
@@ -322,7 +284,7 @@ def plotRetrieved(args, c):
                     fstamp[key].append(fdate)
                     fmeta[key].append((paramId, parameterName, gtype,
                                        fdate, level))
-                    fdict[key].append(flipud(reshape(
+                    fdict[key].append(np.flipud(np.reshape(
                         codes_get_values(gid), [gdict['Nj'], gdict['Ni']])))
 
             codes_release(gid)
@@ -331,25 +293,21 @@ def plotRetrieved(args, c):
             gid = codes_grib_new_from_file(f)
 
         f.close()
-    #print 'fstamp: ', fstamp
-    #exit()
 
-    for k in fdict.keys():
-        print 'fmeta: ', len(fmeta),fmeta
+    for k in fdict.iterkeys():
+        print 'fmeta: ', len(fmeta), fmeta
         fml = fmeta[k]
         fdl = fdict[k]
         print 'fm1: ', len(fml), fml
-        #print 'fd1: ', fdl
-        #print zip(fdl, fml)
         for fd, fm in zip(fdl, fml):
             print fm
             ftitle = fm[1] + ' {} '.format(fm[-1]) + \
-                datetime.datetime.strftime(fm[3], '%Y%m%d%H') #+ ' ' + stats(fd)
+                datetime.datetime.strftime(fm[3], '%Y%m%d%H')
             pname = '_'.join(fm[1].split()) + '_{}_'.format(fm[-1]) + \
                 datetime.datetime.strftime(fm[3], '%Y%m%d%H')
-            plotMap(c, fd, fm, gdict, ftitle, pname, 'png')
+            plot_map(c, fd, fm, gdict, ftitle, pname, 'png')
 
-    for k in fdict.keys():
+    for k in fdict.iterkeys():
         fml = fmeta[k]
         fdl = fdict[k]
         fsl = fstamp[k]
@@ -357,25 +315,35 @@ def plotRetrieved(args, c):
             fm = fml[0]
             fd = fdl[0]
             ftitle = fm[1] + ' {} '.format(fm[-1]) + \
-                datetime.datetime.strftime(fm[3], '%Y%m%d%H') #+ ' ' + stats(fd)
+                datetime.datetime.strftime(fm[3], '%Y%m%d%H')
             pname = '_'.join(fm[1].split()) + '_{}_'.format(fm[-1]) + \
                 datetime.datetime.strftime(fm[3], '%Y%m%d%H')
-            lat = -20
-            lon = 20
-            plotTS(c, fdl, fml, fsl, lat, lon,
-                           gdict, ftitle, pname, 'png')
+            lat = -20.
+            lon = 20.
+            plot_timeseries(c, fdl, fml, fsl, lat, lon, gdict,
+                            ftitle, pname, 'png')
 
     return
 
-def plotTS(c, flist, fmetalist, ftimestamps, lat, lon,
-                   gdict, ftitle, filename, fending, show=False):
+def plot_timeseries(c, flist, fmetalist, ftimestamps, lat, lon,
+                    gdict, ftitle, filename, fending, show=False):
     '''
     @Description:
+        Creates a timeseries plot for a given lat/lon position.
 
     @Input:
-        c:
+        c: instance of class ControlFile
+            Contains all necessary information of a CONTROL file. The parameters
+            are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
+            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
+            RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
+            SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS,
+            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, DEBUG, INPUTDIR,
+            OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+            For more information about format and content of the parameter see
+            documentation.
 
-        flist:
+        flist: numpy array, 2d
             The actual data values to be plotted from the grib messages.
 
         fmetalist: list of strings
@@ -385,11 +353,20 @@ def plotTS(c, flist, fmetalist, ftimestamps, lat, lon,
         ftimestamps: list of datetime
             Contains the time stamps.
 
-        lat:
+        lat: float
+            The latitude for which the timeseries should be plotted.
 
-        lon:
+        lon: float
+            The longitude for which the timeseries should be plotted.
 
-        gdict:
+        gdict: dict
+            Contains basic informations of the ECMWF grib files, e.g.
+            'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
+            'longitudeOfFirstGridPointInDegrees',
+            'latitudeOfLastGridPointInDegrees',
+            'longitudeOfLastGridPointInDegrees',
+            'jDirectionIncrementInDegrees',
+            'iDirectionIncrementInDegrees'
 
         ftitle: string
             The title of the timeseries.
@@ -410,39 +387,36 @@ def plotTS(c, flist, fmetalist, ftimestamps, lat, lon,
 
     t1 = time.time()
 
-    llx = gdict['longitudeOfFirstGridPointInDegrees']
-    if llx > 180. :
-        llx -= 360.
-    lly = gdict['latitudeOfLastGridPointInDegrees']
-    dxout = gdict['iDirectionIncrementInDegrees']
-    dyout = gdict['jDirectionIncrementInDegrees']
-    urx = gdict['longitudeOfLastGridPointInDegrees']
-    ury = gdict['latitudeOfFirstGridPointInDegrees']
-    numxgrid = gdict['Ni']
-    numygrid = gdict['Nj']
+    #llx = gdict['longitudeOfFirstGridPointInDegrees']
+    #if llx > 180. :
+    #    llx -= 360.
+    #lly = gdict['latitudeOfLastGridPointInDegrees']
+    #dxout = gdict['iDirectionIncrementInDegrees']
+    #dyout = gdict['jDirectionIncrementInDegrees']
+    #urx = gdict['longitudeOfLastGridPointInDegrees']
+    #ury = gdict['latitudeOfFirstGridPointInDegrees']
+    #numxgrid = gdict['Ni']
+    #numygrid = gdict['Nj']
 
-    farr = asarray(flist)
+    farr = np.asarray(flist)
     #(time, lat, lon)
 
-    lonindex = linspace(llx, urx, numxgrid)
-    latindex = linspace(lly, ury, numygrid)
-    #print len(lonindex), len(latindex), farr.shape
+    #lonindex = linspace(llx, urx, numxgrid)
+    #latindex = linspace(lly, ury, numygrid)
 
-    #latindex = (lat + 90) * 180 / (gdict['Nj'] - 1)
-    #lonindex = (lon + 179) * 360 / gdict['Ni']
-    #print latindex, lonindex
-
-
-    ts = farr[:, 0, 0]#latindex[0], lonindex[0]]
+    ts = farr[:, 0, 0]
 
     fig = plt.figure(figsize=(12, 6.7))
 
     plt.plot(ftimestamps, ts)
     plt.title(ftitle)
 
-    plt.savefig(c.outputdir+'/'+filename+'_TS.'+fending, facecolor=fig.get_facecolor(), edgecolor='none',format=fending)
+    plt.savefig(c.outputdir + '/' + filename + '_TS.' + fending,
+                facecolor=fig.get_facecolor(),
+                edgecolor='none',
+                format=fending)
     print 'created ', c.outputdir + '/' + filename
-    if show == True:
+    if show:
         plt.show()
     fig.clf()
     plt.close(fig)
@@ -451,9 +425,10 @@ def plotTS(c, flist, fmetalist, ftimestamps, lat, lon,
 
     return
 
-def plotMap(c, flist, fmetalist, gdict, ftitle, filename, fending, show=False):
+def plot_map(c, flist, fmetalist, gdict, ftitle, filename, fending, show=False):
     '''
     @Description:
+        Creates a basemap plot with imshow for a given data field.
 
     @Input:
         c: instance of class ControlFile
@@ -467,9 +442,12 @@ def plotMap(c, flist, fmetalist, gdict, ftitle, filename, fending, show=False):
             For more information about format and content of the parameter see
             documentation.
 
-        flist
+        flist: numpy array, 2d
+            The actual data values to be plotted from the grib messages.
 
-        fmetalist
+        fmetalist: list of strings
+            Contains some meta date for the data field to be plotted:
+            parameter id, parameter Name, grid type, datetime, level
 
         gdict: dict
             Contains basic informations of the ECMWF grib files, e.g.
@@ -503,60 +481,81 @@ def plotMap(c, flist, fmetalist, gdict, ftitle, filename, fending, show=False):
     #mbaxes = fig.add_axes([0.05, 0.15, 0.8, 0.7])
 
     llx = gdict['longitudeOfFirstGridPointInDegrees'] #- 360
-    if llx > 180. :
+    if llx > 180.:
         llx -= 360.
     lly = gdict['latitudeOfLastGridPointInDegrees']
-    dxout = gdict['iDirectionIncrementInDegrees']
-    dyout = gdict['jDirectionIncrementInDegrees']
+    #dxout = gdict['iDirectionIncrementInDegrees']
+    #dyout = gdict['jDirectionIncrementInDegrees']
     urx = gdict['longitudeOfLastGridPointInDegrees']
     ury = gdict['latitudeOfFirstGridPointInDegrees']
-    numxgrid = gdict['Ni']
-    numygrid = gdict['Nj']
+    #numxgrid = gdict['Ni']
+    #numygrid = gdict['Nj']
 
     m = Basemap(projection='cyl', llcrnrlon=llx, llcrnrlat=lly,
-                urcrnrlon=urx, urcrnrlat=ury,resolution='i')
+                urcrnrlon=urx, urcrnrlat=ury, resolution='i')
 
-    lw = 0.5
+    #lw = 0.5
     m.drawmapboundary()
-    x = linspace(llx, urx, numxgrid)
-    y = linspace(lly, ury, numygrid)
+    #x = linspace(llx, urx, numxgrid)
+    #y = linspace(lly, ury, numygrid)
 
-    xx, yy = m(*meshgrid(x, y))
+    #xx, yy = m(*meshgrid(x, y))
 
     #s = m.contourf(xx, yy, flist)
 
     s = plt.imshow(flist.T,
-                    extent=(llx, urx, lly, ury),
-                    alpha=1.0,
-                    interpolation='nearest'
-                    #vmin=vn,
-                    #vmax=vx,
-                    #cmap=my_cmap,
-                    #levels=levels,
-                    #cmap=my_cmap,
-                    #norm=LogNorm(vn,vx)
-                    )
+                   extent=(llx, urx, lly, ury),
+                   alpha=1.0,
+                   interpolation='nearest'
+                   #vmin=vn,
+                   #vmax=vx,
+                   #cmap=my_cmap,
+                   #levels=levels,
+                   #cmap=my_cmap,
+                   #norm=LogNorm(vn,vx)
+                  )
 
-    title(ftitle, y=1.08)
+    plt.title(ftitle, y=1.08)
     cb = m.colorbar(s, location="right", pad="10%")
-    #cb.set_label('Contribution per cell (ng m$^{-3}$)',size=14)
+    cb.set_label('label', size=14)
 
-    thickline = np.arange(lly,ury+1,10.)
-    thinline  = np.arange(lly,ury+1,5.)
-    m.drawparallels(thickline,color='gray',dashes=[1,1],linewidth=0.5,labels=[1,1,1,1], xoffset=1.) # draw parallels
-    m.drawparallels(np.setdiff1d(thinline,thickline),color='lightgray',dashes=[1,1],linewidth=0.5,labels=[0,0,0,0]) # draw parallels
+    thickline = np.arange(lly, ury+1, 10.)
+    thinline = np.arange(lly, ury+1, 5.)
+    m.drawparallels(thickline,
+                    color='gray',
+                    dashes=[1, 1],
+                    linewidth=0.5,
+                    labels=[1, 1, 1, 1],
+                    xoffset=1.)
+    m.drawparallels(np.setdiff1d(thinline, thickline),
+                    color='lightgray',
+                    dashes=[1, 1],
+                    linewidth=0.5,
+                    labels=[0, 0, 0, 0])
 
-    thickline = np.arange(llx,urx+1,10.)
-    thinline  = np.arange(llx,urx+1,5.)
-    m.drawmeridians(thickline,color='gray',dashes=[1,1],linewidth=0.5,labels=[1,1,1,1],yoffset=1.) # draw meridians
-    m.drawmeridians(np.setdiff1d(thinline,thickline),color='lightgray',dashes=[1,1],linewidth=0.5,labels=[0,0,0,0]) # draw meridians
+    thickline = np.arange(llx, urx+1, 10.)
+    thinline = np.arange(llx, urx+1, 5.)
+    m.drawmeridians(thickline,
+                    color='gray',
+                    dashes=[1, 1],
+                    linewidth=0.5,
+                    labels=[1, 1, 1, 1],
+                    yoffset=1.)
+    m.drawmeridians(np.setdiff1d(thinline, thickline),
+                    color='lightgray',
+                    dashes=[1, 1],
+                    linewidth=0.5,
+                    labels=[0, 0, 0, 0])
 
     m.drawcoastlines()
     m.drawcountries()
 
-    plt.savefig(c.outputdir+'/'+filename+'_MAP.'+fending, facecolor=fig.get_facecolor(), edgecolor='none',format=fending)
+    plt.savefig(c.outputdir + '/' + filename + '_MAP.' + fending,
+                facecolor=fig.get_facecolor(),
+                edgecolor='none',
+                format=fending)
     print 'created ', c.outputdir + '/' + filename
-    if show == True:
+    if show:
         plt.show()
     fig.clf()
     plt.close(fig)
@@ -565,7 +564,7 @@ def plotMap(c, flist, fmetalist, gdict, ftitle, filename, fending, show=False):
 
     return
 
-def getPlotArgs():
+def get_plot_args():
     '''
     @Description:
         Assigns the command line arguments and reads CONTROL file
@@ -596,13 +595,13 @@ def getPlotArgs():
 # the most important arguments
     parser.add_argument("--start_date", dest="start_date",
                         help="start date YYYYMMDD")
-    parser.add_argument( "--end_date", dest="end_date",
-                         help="end_date YYYYMMDD")
+    parser.add_argument("--end_date", dest="end_date",
+                        help="end_date YYYYMMDD")
 
     parser.add_argument("--start_step", dest="start_step",
                         help="start step in hours")
-    parser.add_argument( "--end_step", dest="end_step",
-                         help="end step in hours")
+    parser.add_argument("--end_step", dest="end_step",
+                        help="end step in hours")
 
 # some arguments that override the default in the CONTROL file
     parser.add_argument("--levelist", dest="levelist",
@@ -634,9 +633,8 @@ def getPlotArgs():
         c = ControlFile(args.controlfile)
     except IOError:
         try:
-            c = ControlFile(localpythonpath + args.controlfile)
-
-        except:
+            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+        except IOError:
             print 'Could not read CONTROL file "' + args.controlfile + '"'
             print 'Either it does not exist or its syntax is wrong.'
             print 'Try "' + sys.argv[0].split('/')[-1] + \
@@ -681,4 +679,3 @@ def getPlotArgs():
 
 if __name__ == "__main__":
     main()
-

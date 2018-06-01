@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# TODO AP
-# - add function docstrings!!!!
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -12,10 +8,10 @@
 # @Change History:
 #
 #    November 2015 - Leopold Haimberger (University of Vienna):
-#        - moved the getEIdata program into a function "getMARSdata"
+#        - moved the getEIdata program into a function "get_mars_data"
 #        - moved the AgurmentParser into a seperate function
 #        - adatpted the function for the use in flex_extract
-#        - renamed file to getMARSdata
+#        - renamed file to get_mars_data
 #
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
@@ -41,7 +37,7 @@
 #
 # @Program Content:
 #    - main
-#    - getMARSdata
+#    - get_mars_data
 #
 #*******************************************************************************
 
@@ -53,23 +49,21 @@ import sys
 import datetime
 import inspect
 try:
-    ecapi=True
+    ecapi = True
     import ecmwfapi
 except ImportError:
-    ecapi=False
-
-# add path to pythonpath so that python finds its buddies
-localpythonpath = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if localpythonpath not in sys.path:
-    sys.path.append(localpythonpath)
+    ecapi = False
 
 # software specific classes and modules from flex_extract
-from ControlFile import ControlFile
-from Tools import myerror, normalexit, \
-                          interpret_args_and_control
-from ECFlexpart import ECFlexpart
-from UIOFiles import UIOFiles
+from tools import my_error, normal_exit, interpret_args_and_control
+from EcFlexpart import EcFlexpart
+from UioFiles import UioFiles
+
+# add path to pythonpath so that python finds its buddies
+LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+if LOCAL_PYTHON_PATH not in sys.path:
+    sys.path.append(LOCAL_PYTHON_PATH)
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -77,9 +71,9 @@ from UIOFiles import UIOFiles
 def main():
     '''
     @Description:
-        If getMARSdata is called from command line, this function controls
+        If get_mars_data is called from command line, this function controls
         the program flow and calls the argumentparser function and
-        the getMARSdata function for retrieving EC data.
+        the get_mars_data function for retrieving EC data.
 
     @Input:
         <nothing>
@@ -88,12 +82,12 @@ def main():
         <nothing>
     '''
     args, c = interpret_args_and_control()
-    getMARSdata(args, c)
-    normalexit(c)
+    get_mars_data(c)
+    normal_exit(c)
 
     return
 
-def getMARSdata(args, c):
+def get_mars_data(c):
     '''
     @Description:
         Retrieves the EC data needed for a FLEXPART simulation.
@@ -102,9 +96,6 @@ def getMARSdata(args, c):
         is set.
 
     @Input:
-        args: instance of ArgumentParser
-            Contains the commandline arguments from script/program call.
-
         c: instance of class ControlFile
             Contains all the parameters of CONTROL file, which are e.g.:
             DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
@@ -125,9 +116,9 @@ def getMARSdata(args, c):
     if not os.path.exists(c.inputdir):
         os.makedirs(c.inputdir)
 
-    print("Retrieving EC data!")
-    print("start date %s " % (c.start_date))
-    print("end date %s " % (c.end_date))
+    print "Retrieving EC data!"
+    print "start date %s " % (c.start_date)
+    print "end date %s " % (c.end_date)
 
     if ecapi:
         server = ecmwfapi.ECMWFService("mars")
@@ -159,9 +150,9 @@ def getMARSdata(args, c):
 
     # --------------  flux data ------------------------------------------------
     print 'removing old flux content of ' + c.inputdir
-    tobecleaned = UIOFiles('*_acc_*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.listFiles(c.inputdir)
-    tobecleaned.deleteFiles()
+    tobecleaned = UioFiles('*_acc_*.' + str(os.getppid()) + '.*.grb')
+    tobecleaned.list_files(c.inputdir)
+    tobecleaned.delete_files()
 
     # if forecast for maximum one day (upto 23h) are to be retrieved,
     # collect accumulation data (flux data)
@@ -171,7 +162,7 @@ def getMARSdata(args, c):
         day = startm1
         while day < endp1:
             # retrieve MARS data for the whole period
-            flexpart = ECFlexpart(c, fluxes=True)
+            flexpart = EcFlexpart(c, fluxes=True)
             tmpday = day + datechunk - datetime.timedelta(days=1)
             if tmpday < endp1:
                 dates = day.strftime("%Y%m%d") + "/to/" + \
@@ -185,7 +176,7 @@ def getMARSdata(args, c):
             try:
                 flexpart.retrieve(server, dates, c.inputdir)
             except IOError:
-                myerror(c, 'MARS request failed')
+                my_error(c, 'MARS request failed')
 
             day += datechunk
 
@@ -198,7 +189,7 @@ def getMARSdata(args, c):
         day = start
         while day <= end:
             # retrieve MARS data for the whole period
-            flexpart = ECFlexpart(c, fluxes=True)
+            flexpart = EcFlexpart(c, fluxes=True)
             tmpday = day + datechunk - datetime.timedelta(days=1)
             if tmpday < end:
                 dates = day.strftime("%Y%m%d") + "/to/" + \
@@ -212,39 +203,38 @@ def getMARSdata(args, c):
             try:
                 flexpart.retrieve(server, dates, c.inputdir)
             except IOError:
-                myerror(c, 'MARS request failed')
+                my_error(c, 'MARS request failed')
 
             day += datechunk
 
     # --------------  non flux data --------------------------------------------
     print 'removing old non flux content of ' + c.inputdir
-    tobecleaned = UIOFiles('*__*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.listFiles(c.inputdir)
-    tobecleaned.deleteFiles()
+    tobecleaned = UioFiles('*__*.' + str(os.getppid()) + '.*.grb')
+    tobecleaned.list_files(c.inputdir)
+    tobecleaned.delete_files()
 
     day = start
     while day <= end:
-            # retrieve all non flux MARS data for the whole period
-            flexpart = ECFlexpart(c, fluxes=False)
-            tmpday = day + datechunk - datetime.timedelta(days=1)
-            if tmpday < end:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        tmpday.strftime("%Y%m%d")
-            else:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        end.strftime("%Y%m%d")
+        # retrieve all non flux MARS data for the whole period
+        flexpart = EcFlexpart(c, fluxes=False)
+        tmpday = day + datechunk - datetime.timedelta(days=1)
+        if tmpday < end:
+            dates = day.strftime("%Y%m%d") + "/to/" + \
+                    tmpday.strftime("%Y%m%d")
+        else:
+            dates = day.strftime("%Y%m%d") + "/to/" + \
+                    end.strftime("%Y%m%d")
 
-            print "retrieve " + dates + " in dir " + c.inputdir
+        print "retrieve " + dates + " in dir " + c.inputdir
 
-            try:
-                flexpart.retrieve(server, dates, c.inputdir)
-            except IOError:
-                myerror(c, 'MARS request failed')
+        try:
+            flexpart.retrieve(server, dates, c.inputdir)
+        except IOError:
+            my_error(c, 'MARS request failed')
 
-            day += datechunk
+        day += datechunk
 
     return
 
 if __name__ == "__main__":
     main()
-

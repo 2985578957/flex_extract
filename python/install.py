@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #************************************************************************
-# TODO AP
-# - localpythonpath should not be set in module load section!
+# ToDo AP
 # - create a class Installation and divide installation in 3 subdefs for
 #   ecgate, local and cca seperatly
 # - Change History ist nicht angepasst ans File! Original geben lassen
@@ -17,6 +16,7 @@
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
 #        - added documentation
+#        - moved install_args_and_control in here
 #
 # @License:
 #    (C) Copyright 2015-2018.
@@ -44,22 +44,21 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import datetime
 import os
 import sys
 import glob
 import subprocess
 import inspect
-from argparse import ArgumentParser,ArgumentDefaultsHelpFormatter
-
-# add path to pythonpath so that python finds its buddies
-localpythonpath = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if localpythonpath not in sys.path:
-    sys.path.append(localpythonpath)
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # software specific classes and modules from flex_extract
 from ControlFile import ControlFile
+
+# add path to pythonpath so that python finds its buddies
+LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+if LOCAL_PYTHON_PATH not in sys.path:
+    sys.path.append(LOCAL_PYTHON_PATH)
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -77,14 +76,14 @@ def main():
         <nothing>
     '''
 
-    os.chdir(localpythonpath)
+    os.chdir(LOCAL_PYTHON_PATH)
     args, c = install_args_and_control()
 
     if args.install_target is not None:
         install_via_gateway(c, args.install_target)
     else:
-        print('Please specify installation target (local|ecgate|cca)')
-        print('use -h or --help for help')
+        print 'Please specify installation target (local|ecgate|cca)'
+        print 'use -h or --help for help'
 
     sys.exit()
 
@@ -151,25 +150,25 @@ def install_args_and_control():
 
     try:
         c = ControlFile(args.controlfile)
-    except:
-        print('Could not read CONTROL file "' + args.controlfile + '"')
-        print('Either it does not exist or its syntax is wrong.')
-        print('Try "' + sys.argv[0].split('/')[-1] +
-              ' -h" to print usage information')
+    except IOError:
+        print 'Could not read CONTROL file "' + args.controlfile + '"'
+        print 'Either it does not exist or its syntax is wrong.'
+        print 'Try "' + sys.argv[0].split('/')[-1] + \
+              ' -h" to print usage information'
         exit(1)
 
     if args.install_target != 'local':
-        if (args.ecgid is None or args.ecuid is None or args.gateway is None
-            or args.destination is None):
-            print('Please enter your ECMWF user id and group id as well as \
+        if args.ecgid is None or args.ecuid is None or args.gateway is None \
+           or args.destination is None:
+            print 'Please enter your ECMWF user id and group id as well as \
                    the \nname of the local gateway and the ectrans \
-                   destination ')
-            print('with command line options --ecuid --ecgid \
-                   --gateway --destination')
-            print('Try "' + sys.argv[0].split('/')[-1] +
-                  ' -h" to print usage information')
-            print('Please consult ecaccess documentation or ECMWF user support \
-                   for further details')
+                   destination '
+            print 'with command line options --ecuid --ecgid \
+                   --gateway --destination'
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
+            print 'Please consult ecaccess documentation or ECMWF user support \
+                   for further details'
             sys.exit(1)
         else:
             c.ecuid = args.ecuid
@@ -177,10 +176,8 @@ def install_args_and_control():
             c.gateway = args.gateway
             c.destination = args.destination
 
-    try:
+    if args.makefile:
         c.makefile = args.makefile
-    except:
-        pass
 
     if args.install_target == 'local':
         if args.flexpart_root_scripts is None:
@@ -239,7 +236,7 @@ def install_via_gateway(c, target):
                     data = 'export FLEXPART_ROOT_SCRIPTS=' + \
                             c.flexpart_root_scripts
                 else:
-                    data='export FLEXPART_ROOT_SCRIPTS=$HOME'
+                    data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
             if target.lower() != 'local':
                 if '--workdir' in data:
                     data = '#SBATCH --workdir=/scratch/ms/' + c.ecgid + \
@@ -291,16 +288,14 @@ def install_via_gateway(c, target):
             fo.write('DESTINATION ' + c.destination + '\n')
         fo.close()
 
-
-
     if target.lower() == 'local':
         # compile CONVERT2
         if c.flexpart_root_scripts is None or c.flexpart_root_scripts == '../':
-            print('Warning: FLEXPART_ROOT_SCRIPTS has not been specified')
-            print('Only CONVERT2 will be compiled in ' + ecd + '/../src')
+            print 'Warning: FLEXPART_ROOT_SCRIPTS has not been specified'
+            print 'Only CONVERT2 will be compiled in ' + ecd + '/../src'
         else:
             c.flexpart_root_scripts = os.path.expandvars(os.path.expanduser(
-                                        c.flexpart_root_scripts))
+                c.flexpart_root_scripts))
             if os.path.abspath(ecd) != os.path.abspath(c.flexpart_root_scripts):
                 os.chdir('/')
                 p = subprocess.check_call(['tar', '-cvf',
@@ -310,7 +305,7 @@ def install_via_gateway(c, target):
                                            ecd + 'src'])
                 try:
                     os.makedirs(c.flexpart_root_scripts + '/ECMWFDATA7.1')
-                except:
+                finally:
                     pass
                 os.chdir(c.flexpart_root_scripts + '/ECMWFDATA7.1')
                 p = subprocess.check_call(['tar', '-xvf',
@@ -328,17 +323,18 @@ def install_via_gateway(c, target):
         if flist:
             p = subprocess.check_call(['rm'] + flist)
         try:
-            print(('Using makefile: ' + makefile))
+            print 'Using makefile: ' + makefile
             p = subprocess.check_call(['make', '-f', makefile])
-            p = subprocess.check_call(['ls', '-l','CONVERT2'])
-        except:
-            print('compile failed - please edit ' + makefile +
-                  ' or try another Makefile in the src directory.')
-            print('most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '
-                    'and EMOSLIB must be adapted.')
-            print('Available Makefiles:')
-            print(glob.glob('Makefile*'))
-
+            p = subprocess.check_call(['ls', '-l', 'CONVERT2'])
+        except subprocess.CalledProcessError as e:
+            print 'compile failed with the following error:'
+            print e.output
+            print 'please edit ' + makefile + \
+                  ' or try another Makefile in the src directory.'
+            print 'most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB  \
+                   and EMOSLIB must be adapted.'
+            print 'Available Makefiles:'
+            print glob.glob('Makefile*')
     elif target.lower() == 'ecgate':
         os.chdir('/')
         p = subprocess.check_call(['tar', '-cvf',
@@ -351,18 +347,24 @@ def install_via_gateway(c, target):
                                        ecd + '../ECMWFDATA7.1.tar',
                                        'ecgate:/home/ms/' + c.ecgid + '/' +
                                        c.ecuid + '/ECMWFDATA7.1.tar'])
-        except:
-            print('ecaccess-file-put failed! Probably the eccert key has expired.')
+        except subprocess.CalledProcessError as e:
+            print 'ecaccess-file-put failed! \
+                   Probably the eccert key has expired.'
             exit(1)
-        p = subprocess.check_call(['ecaccess-job-submit',
-                                   '-queueName',
-                                   target,
-                                   ecd + 'python/compilejob.ksh'])
-        print('compilejob.ksh has been submitted to ecgate for '
-                'installation in ' + c.ec_flexpart_root_scripts +
-                '/ECMWFDATA7.1')
-        print('You should get an email with subject flexcompile within '
-                'the next few minutes')
+
+        try:
+            p = subprocess.check_call(['ecaccess-job-submit',
+                                       '-queueName',
+                                       target,
+                                       ecd + 'python/compilejob.ksh'])
+            print 'compilejob.ksh has been submitted to ecgate for  \
+                   installation in ' + c.ec_flexpart_root_scripts + \
+                   '/ECMWFDATA7.1'
+            print 'You should get an email with subject flexcompile within  \
+                   the next few minutes'
+        except subprocess.CalledProcessError as e:
+            print 'ecaccess-job-submit failed!'
+            exit(1)
 
     elif target.lower() == 'cca':
         os.chdir('/')
@@ -376,23 +378,27 @@ def install_via_gateway(c, target):
                                        ecd + '../ECMWFDATA7.1.tar',
                                        'cca:/home/ms/' + c.ecgid + '/' +
                                        c.ecuid + '/ECMWFDATA7.1.tar'])
-        except:
-            print('ecaccess-file-put failed! '
-                    'Probably the eccert key has expired.')
+        except subprocess.CalledProcessError as e:
+            print 'ecaccess-file-put failed! \
+                   Probably the eccert key has expired.'
             exit(1)
 
-        p=subprocess.check_call(['ecaccess-job-submit',
-                                '-queueName',
-                                target,
-                                ecd + 'python/compilejob.ksh'])
-        print('compilejob.ksh has been submitted to cca for installation in ' +
-              c.ec_flexpart_root_scripts + '/ECMWFDATA7.1')
-        print('You should get an email with subject flexcompile '
-                'within the next few minutes')
+        try:
+            p = subprocess.check_call(['ecaccess-job-submit',
+                                       '-queueName',
+                                       target,
+                                       ecd + 'python/compilejob.ksh'])
+            print 'compilejob.ksh has been submitted to cca for installation in ' +\
+                  c.ec_flexpart_root_scripts + '/ECMWFDATA7.1'
+            print 'You should get an email with subject flexcompile \
+                   within the next few minutes'
+        except subprocess.CalledProcessError as e:
+            print 'ecaccess-job-submit failed!'
+            exit(1)
 
     else:
-        print('ERROR: unknown installation target ', target)
-        print('Valid targets: ecgate, cca, local')
+        print 'ERROR: unknown installation target ', target
+        print 'Valid targets: ecgate, cca, local'
 
     return
 

@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# TODO AP
-# - GribTools name möglicherweise etwas verwirrend.
-# - change self.filename in self.filenames!!!
-# - bis auf --init-- und index wird keine Funktion verwendet!?
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -35,10 +29,13 @@
 #
 # @Class Content:
 #    - __init__
-#    - getkeys
-#    - setkeys
+#    - get_keys
+#    - set_keys
 #    - copy
 #    - index
+#
+# @Class Attributes:
+#    - filenames
 #
 #*******************************************************************************
 
@@ -46,12 +43,15 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
-from gribapi import *
+from gribapi import grib_new_from_file, grib_is_defined, grib_get, \
+                    grib_release, grib_set, grib_write, grib_index_read, \
+                    grib_index_new_from_file, grib_index_add_file,  \
+                    grib_index_write
 
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
-class GribTools:
+class Gribtools(object):
     '''
     Class for GRIB utilities (new methods) based on GRIB API
     '''
@@ -61,7 +61,7 @@ class GribTools:
     def __init__(self, filenames):
         '''
         @Description:
-            Initialise an object of GribTools and assign a list
+            Initialise an object of Gribtools and assign a list
             of filenames.
 
         @Input:
@@ -72,12 +72,12 @@ class GribTools:
             <nothing>
         '''
 
-        self.filename = filenames
+        self.filenames = filenames
 
         return
 
 
-    def getkeys(self, keynames, wherekeynames=[], wherekeyvalues=[]):
+    def get_keys(self, keynames, wherekeynames=[], wherekeyvalues=[]):
         '''
         @Description:
             get keyvalues for a given list of keynames
@@ -87,10 +87,10 @@ class GribTools:
             keynames: list of strings
                 List of keynames.
 
-            wherekeynames: list of ???, optional
+            wherekeynames: list of strings, optional
                 Default value is an empty list.
 
-            wherekeyvalues: list of ???, optional
+            wherekeyvalues: list of strings, optional
                 Default value is an empty list.
 
         @Return:
@@ -98,7 +98,7 @@ class GribTools:
                 List of keyvalues for given keynames.
         '''
 
-        fileid = open(self.filename, 'r')
+        fileid = open(self.filenames, 'r')
 
         return_list = []
 
@@ -135,8 +135,8 @@ class GribTools:
         return return_list
 
 
-    def setkeys(self, fromfile, keynames, keyvalues, wherekeynames=[],
-                wherekeyvalues=[], strict=False, filemode='w'):
+    def set_keys(self, fromfile, keynames, keyvalues, wherekeynames=[],
+                 wherekeyvalues=[], strict=False, filemode='w'):
         '''
         @Description:
             Opens the file to read the grib messages and then write
@@ -149,16 +149,16 @@ class GribTools:
             fromfile: string
                 Filename of the input file to read the grib messages from.
 
-            keynames: list of ???
+            keynames: list of strings
                 List of keynames. Default is an empty list.
 
-            keyvalues: list of ???
+            keyvalues: list of strings
                 List of keynames. Default is an empty list.
 
-            wherekeynames: list of ???, optional
+            wherekeynames: list of strings, optional
                 Default value is an empty list.
 
-            wherekeyvalues: list of ???, optional
+            wherekeyvalues: list of strings, optional
                 Default value is an empty list.
 
             strict: boolean, optional
@@ -173,7 +173,7 @@ class GribTools:
             <nothing>
 
         '''
-        fout = open(self.filename, filemode)
+        fout = open(self.filenames, filemode)
         fin = open(fromfile)
 
         while 1:
@@ -195,24 +195,14 @@ class GribTools:
                                       str(grib_get(gid_in, wherekey))))
                 i += 1
 
-#AP is it secured that the order of keynames is equal to keyvalues?
             if select:
                 i = 0
                 for key in keynames:
                     grib_set(gid_in, key, keyvalues[i])
                     i += 1
 
-#AP this is a redundant code section
-# delete the if/else :
-#
-#           grib_write(gid_in, fout)
-#
-            if strict:
-                if select:
-                    grib_write(gid_in, fout)
-            else:
-                grib_write(gid_in, fout)
-#AP end
+            grib_write(gid_in, fout)
+
             grib_release(gid_in)
 
         fin.close()
@@ -237,10 +227,10 @@ class GribTools:
                 different to (False) the keynames/keyvalues list passed to the
                 function. Default is True.
 
-            keynames: list of ???, optional
+            keynames: list of strings, optional
                 List of keynames. Default is an empty list.
 
-            keyvalues: list of ???, optional
+            keyvalues: list of strings, optional
                 List of keynames. Default is an empty list.
 
             filemode: string, optional
@@ -251,7 +241,7 @@ class GribTools:
         '''
 
         fin = open(filename_in)
-        fout = open(self.filename, filemode)
+        fout = open(self.filenames, filemode)
 
         while 1:
             gid_in = grib_new_from_file(fin)
@@ -306,29 +296,24 @@ class GribTools:
             iid: integer
                 Grib index id.
         '''
-        print("... index will be done")
-        self.iid = None
+        print "... index will be done"
+        iid = None
 
-        if (os.path.exists(index_file)):
-            self.iid = grib_index_read(index_file)
-            print("Use existing index file: %s " % (index_file))
+        if os.path.exists(index_file):
+            iid = grib_index_read(index_file)
+            print "Use existing index file: %s " % (index_file)
         else:
-            for file in self.filename:
-                print("Inputfile: %s " % (file))
-                if self.iid is None:
-                    self.iid = grib_index_new_from_file(file, index_keys)
+            for filename in self.filenames:
+                print "Inputfile: %s " % (filename)
+                if iid is None:
+                    iid = grib_index_new_from_file(filename, index_keys)
                 else:
                     print 'in else zweig'
-                    grib_index_add_file(self.iid, file)
+                    grib_index_add_file(iid, filename)
 
-            if self.iid is not None:
-                grib_index_write(self.iid, index_file)
+            if iid is not None:
+                grib_index_write(iid, index_file)
 
-        print('... index done')
+        print '... index done'
 
-        return self.iid
-
-
-
-
-
+        return iid
