@@ -67,9 +67,6 @@
 import os
 import inspect
 
-# software specific module from flex_extract
-from tools import get_list_as_string, my_error
-
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -108,6 +105,7 @@ class ControlFile(object):
         @Return:
             <nothing>
         '''
+        from tools import my_error
 
         # read whole CONTROL file
         with open(filename) as f:

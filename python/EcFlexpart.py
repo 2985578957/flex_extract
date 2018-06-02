@@ -111,7 +111,7 @@ from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
                     grib_index_release, grib_index_get
 
 # software specific classes and modules from flex_extract
-from Gribtools import Gribtools
+from GribTools import GribTools
 from tools import init128, to_param_id, silent_remove, product, my_error
 from MarsRetrieval import MarsRetrieval
 import disaggregation
@@ -223,17 +223,17 @@ class EcFlexpart(object):
         # for gaussian grid retrieval
         self.glevelist = '1/to/' + c.level
 
-        if c.gaussian:
+        if hasattr(c, 'gaussian') and c.gaussian:
             self.gaussian = c.gaussian
         else:
             self.gaussian = ''
 
-        if c.expver:
+        if hasattr(c, 'expver') and c.expver:
             self.expver = c.expver
         else:
             self.expver = '1'
 
-        if c.number:
+        if hasattr(c, 'number') and c.number:
             self.number = c.number
         else:
             self.number = '0'
@@ -871,7 +871,7 @@ class EcFlexpart(object):
         index_keys = ["date", "time", "step"]
         indexfile = c.inputdir + "/date_time_stepRange.idx"
         silent_remove(indexfile)
-        grib = Gribtools(inputfiles.files)
+        grib = GribTools(inputfiles.files)
         # creates new index file
         iid = grib.index(index_keys=index_keys, index_file=indexfile)
 
@@ -1113,7 +1113,7 @@ class EcFlexpart(object):
         index_keys = ["date", "time", "step"]
         indexfile = c.inputdir + "/date_time_stepRange.idx"
         silent_remove(indexfile)
-        grib = Gribtools(inputfiles.files)
+        grib = GribTools(inputfiles.files)
         # creates new index file
         iid = grib.index(index_keys=index_keys, index_file=indexfile)
 

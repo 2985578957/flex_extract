@@ -51,7 +51,7 @@ from gribapi import grib_new_from_file, grib_is_defined, grib_get, \
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
-class Gribtools(object):
+class GribTools(object):
     '''
     Class for GRIB utilities (new methods) based on GRIB API
     '''
@@ -61,7 +61,7 @@ class Gribtools(object):
     def __init__(self, filenames):
         '''
         @Description:
-            Initialise an object of Gribtools and assign a list
+            Initialise an object of GribTools and assign a list
             of filenames.
 
         @Input:
