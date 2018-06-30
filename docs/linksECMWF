@@ -1,0 +1,86 @@
+USEFUL LINKS FOR WORKING WITH ECMWF ARCHIVE AND FLEX_EXTRACT
+============================================================
+
+general overview
+----------------
+https://software.ecmwf.int/wiki/display/WEBAPI/ECMWF+Web+API+Home
+https://software.ecmwf.int/wiki/display/SUP/Home
+
+follow instructions to register
+-------------------------------
+https://software.ecmwf.int/wiki/display/WEBAPI/Access+MARS
+
+available public datasets and accept licence
+--------------------------------------------
+https://software.ecmwf.int/wiki/display/WEBAPI/Available+ECMWF+Public+Datasets
+
+member-state WebApi access
+--------------------------
+http://apps.ecmwf.int/archive-catalogue/
+
+website to download directly public datasets and check webapi activity
+----------------------------------------------------------------------
+http://apps.ecmwf.int/datasets/
+
+general user documentation
+--------------------------
+https://software.ecmwf.int/wiki/display/UDOC/User+Documentation
+
+mars user documentation
+-----------------------
+https://software.ecmwf.int/wiki/display/UDOC/MARS+user+documentation
+  -> specifically the keywords!!!!
+  https://software.ecmwf.int/wiki/display/UDOC/MARS+keywords
+  
+libraries:
+---------
+https://software.ecmwf.int/wiki/display/SUP/2015/05/11/Building+ECMWF+software+with+gfortran
+http://www.fftw.org
+https://software.ecmwf.int/wiki/display/EMOS/Emoslib
+https://software.ecmwf.int/wiki/display/GRIB
+https://software.ecmwf.int/wiki/display/ECC
+
+
+Information to datasets:
+========================
+https://www.ecmwf.int/en/forecasts/datasets/archive-datasets
+
+EA5
+----
+https://software.ecmwf.int/wiki/display/CKB/What+is+ERA5
+https://software.ecmwf.int/wiki/display/CKB/How+to+download+ERA5+data+via+the+ECMWF+Web+API
+https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation
+
+CERA-20C
+---------
+https://software.ecmwf.int/wiki/display/CKB/What+is+CERA-20C
+https://www.ecmwf.int/en/forecasts/datasets/archive-datasets/reanalysis-datasets/cera-20c
+
+ERA-Interim
+------------
+https://www.ecmwf.int/en/forecasts/datasets/archive-datasets/reanalysis-datasets/era-interim
+
+Plotting GRIB fields:
+-----------------------
+https://software.ecmwf.int/wiki/display/CKB/How+to+plot+GRIB+files+with+Python+and+matplotlib
+
+
+Installation hints:
+===================
+1. Read Emoslib installation instructions
+2. Read ECMWF blog about gfortran
+3. Install FFTW
+4. Install EMOSLIB (2 times make! one without any options and one with single precision option)
+5. Install ECCODES OR GRIB_API
+6. Register at Mars
+7. Install WEBAPI
+8. Check LD_LIBRARY_PATH environment variable if it contains all paths to the libs
+9. Check available python packages (e.g. import eccodes / import grib_api / import ecmwfapi)
+10. Start test retrieval
+11. Install flex_extract
+
+Notes:
+--------
+- use the same compiler and compiler version all the time
+- don't forget to set all Library paths to the LD_LIBRARY_PATH variable
+- adapt makefile
