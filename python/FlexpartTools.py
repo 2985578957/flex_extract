@@ -649,8 +649,8 @@ class MARSretrieval:
         mclass = attrs.get('marsclass')
         del attrs['marsclass']
         attrs['class'] = mclass
+        target = attrs.get('target')
         if not int(self.public):
-            target = attrs.get('target')
             del attrs['target']
         print 'target: ', target
 
