@@ -25,12 +25,14 @@ import os
 import sys
 import inspect
 
-
 _VERSION_STR = '7.1'
-
 
 # add path to pythonpath
 LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 if LOCAL_PYTHON_PATH not in sys.path:
     sys.path.append(LOCAL_PYTHON_PATH)
+
+# path to gribtable
+PATH_GRIBTABLE = LOCAL_PYTHON_PATH + '/templates/ecmwf_grib1_table_128'
+

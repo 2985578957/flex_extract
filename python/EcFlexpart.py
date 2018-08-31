@@ -851,8 +851,7 @@ class EcFlexpart(object):
             <nothing>
         '''
 
-        table128 = init128(c.ecmwfdatadir +
-                           '/grib_templates/ecmwf_grib1_table_128')
+        table128 = init128(_config.PATH_GRIBTABLE)
         wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
                             stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
                             table128)
@@ -1099,8 +1098,7 @@ class EcFlexpart(object):
             <nothing>
         '''
 
-        table128 = init128(c.ecmwfdatadir +
-                           '/grib_templates/ecmwf_grib1_table_128')
+        table128 = init128(_config.PATH_GRIBTABLE)
         pars = to_param_id(self.params['OG_acc_SL'][0], table128)
         index_keys = ["date", "time", "step"]
         indexfile = c.inputdir + "/date_time_stepRange.idx"
