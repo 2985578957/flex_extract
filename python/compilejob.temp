@@ -33,9 +33,6 @@ case $HOST in
   module load grib_api/1.14.5
   module load emos/437-r64
   export FLEXPART_ROOT_SCRIPTS=
-#  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-#  export PATH=${PATH}:$ECMWFDATA/python
   export MAKEFILE=Makefile.gfortran
   ;;
   *cca*)
@@ -49,16 +46,13 @@ case $HOST in
   export GROUP=`echo $HOME | awk -F / '{print $4}'`
   export SCRATCH=/scratch/ms/${GROUP}/${USER}
   export FLEXPART_ROOT_SCRIPTS=
-#  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-#  export PATH=${PATH}:$ECMWFDATA/python
   export MAKEFILE=Makefile.CRAY
   ;;
 esac
 
-mkdir -p $FLEXPART_ROOT_SCRIPTS/ECMWFDATA$VERSION
-cd $FLEXPART_ROOT_SCRIPTS/ECMWFDATA$VERSION   # if FLEXPART_ROOT is not set this means cd to the home directory
-tar -xvf $HOME/ECMWFDATA$VERSION.tar
+mkdir -p $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION
+cd $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION   # if FLEXPART_ROOT is not set this means cd to the home directory
+tar -xvf $HOME/flex_extract_v$VERSION.tar
 cd src
 \rm *.o *.mod CONVERT2
 make -f $MAKEFILE >flexcompile 2>flexcompile

@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - wieso start=startm1 wenn basetime = 0 ?  wenn die fluxes nicht mehr
-#   relevant sind? verstehe ich nicht
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -61,10 +56,11 @@ import os
 import inspect
 import sys
 import socket
+import _config
 
 # software specific classes and modules from flex_extract
 from UioFiles import UioFiles
-from tools import interpret_args_and_control, clean_up
+from tools import clean_up, get_cmdline_arguments, read_ecenv
 from EcFlexpart import EcFlexpart
 
 ecapi = 'ecmwf' not in socket.gethostname()
@@ -79,6 +75,7 @@ LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
 if LOCAL_PYTHON_PATH not in sys.path:
     sys.path.append(LOCAL_PYTHON_PATH)
+
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -96,12 +93,30 @@ def main():
     @Return:
         <nothing>
     '''
-    args, c = interpret_args_and_control()
-    prepare_flexpart(args, c)
+
+    args = get_cmdline_arguments()
+
+    try:
+        c = ControlFile(args.controlfile)
+    except IOError:
+        try:
+            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+        except IOError:
+            print 'Could not read CONTROL file "' + args.controlfile + '"'
+            print 'Either it does not exist or its syntax is wrong.'
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
+            sys.exit(1)
+
+    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    c.assign_args_to_control(args, env_parameter)
+    c.assign_envs_to_control(env_parameter)
+    c.check_conditions()
+    prepare_flexpart(args.ppid, c)
 
     return
 
-def prepare_flexpart(args, c):
+def prepare_flexpart(ppid, c):
     '''
     @Description:
         Lists all grib files retrieved from MARS with get_mars_data and
@@ -111,8 +126,9 @@ def prepare_flexpart(args, c):
         a file with a specific FLEXPART relevant naming convention.
 
     @Input:
-        args: instance of ArgumentParser
-            Contains the commandline arguments from script/program call.
+        ppid: int
+            Contains the ppid number of the current ECMWF job. If it is called
+            from this script, it is "None".
 
         c: instance of class ControlFile
             Contains all the parameters of CONTROL file, which are e.g.:
@@ -131,10 +147,10 @@ def prepare_flexpart(args, c):
         <nothing>
     '''
 
-    if not args.ppid:
+    if not ppid:
         c.ppid = str(os.getppid())
     else:
-        c.ppid = args.ppid
+        c.ppid = ppid
 
     c.ecapi = ecapi
 
@@ -147,38 +163,32 @@ def prepare_flexpart(args, c):
                         month=int(c.end_date[4:6]),
                         day=int(c.end_date[6:]))
 
-    # to deaccumulate the fluxes correctly
-    # one day ahead of the start date and
-    # one day after the end date is needed
-    startm1 = start - datetime.timedelta(days=1)
-#    endp1 = end + datetime.timedelta(days=1)
+    # assign starting date minus 1 day
+    # since for basetime 00 we need the 12 hours upfront
+    # (the day before from 12 UTC to current day 00 UTC)
+    if c.basetime == '00':
+        start = start - datetime.timedelta(days=1)
 
-    # get all files with flux data to be deaccumulated
-    inputfiles = UioFiles('*OG_acc_SL*.' + c.ppid + '.*')
-    inputfiles.list_files(c.inputdir)
+    print 'Prepare ' + start.strftime("%Y%m%d") + \
+           "/to/" + end.strftime("%Y%m%d")
 
     # create output dir if necessary
     if not os.path.exists(c.outputdir):
         os.makedirs(c.outputdir)
+
+    # get all files with flux data to be deaccumulated
+    inputfiles = UioFiles(c.inputdir, '*OG_acc_SL*.' + c.ppid + '.*')
 
     # deaccumulate the flux data
     flexpart = EcFlexpart(c, fluxes=True)
     flexpart.write_namelist(c, 'fort.4')
     flexpart.deacc_fluxes(inputfiles, c)
 
-    print 'Prepare ' + start.strftime("%Y%m%d") + \
-          "/to/" + end.strftime("%Y%m%d")
-
     # get a list of all files from the root inputdir
-    inputfiles = UioFiles('????__??.*' + c.ppid + '.*')
-    inputfiles.list_files(c.inputdir)
+    inputfiles = UioFiles(c.inputdir, '????__??.*' + c.ppid + '.*')
 
-    # produce FLEXPART-ready GRIB files and
-    # process GRIB files -
+    # produce FLEXPART-ready GRIB files and process them -
     # copy/transfer/interpolate them or make them GRIB2
-    if c.basetime == '00':
-        start = startm1
-
     flexpart = EcFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
     flexpart.process_output(c)
@@ -186,7 +196,7 @@ def prepare_flexpart(args, c):
     # check if in debugging mode, then store all files
     # otherwise delete temporary files
     if int(c.debug) != 0:
-        print 'Temporary files left intact'
+        print '\nTemporary files left intact'
     else:
         clean_up(c)
 

@@ -32,9 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -42,17 +40,8 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
-#  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
-#  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
-#  export SCRATCH=$ECMWFDATA/python
-#  which python
-#  ;;
 esac
 
 cd $SCRATCH
@@ -62,10 +51,6 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-GATEWAY srvx8.img.univie.ac.at
-DESTINATION annep@genericSftp
-EOF
-cat >>$CONTROL<<EOF
 EOF
 
 

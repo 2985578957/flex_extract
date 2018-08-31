@@ -43,17 +43,15 @@ import os
 import sys
 import subprocess
 import inspect
+import collections
 
 # software specific classes and modules from flex_extract
-from tools import interpret_args_and_control, normal_exit
+import _config
+from tools import normal_exit, get_cmdline_arguments, submit_job_to_ecserver, \
+                  read_ecenv
 from get_mars_data import get_mars_data
 from prepare_flexpart import prepare_flexpart
-
-# add path to pythonpath so that python finds its buddies
-LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if LOCAL_PYTHON_PATH not in sys.path:
-    sys.path.append(LOCAL_PYTHON_PATH)
+from ControlFile import ControlFile
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -75,17 +73,36 @@ def main():
     '''
 
     called_from_dir = os.getcwd()
-    args, c = interpret_args_and_control()
+
+    args = get_cmdline_arguments()
+
+    try:
+        c = ControlFile(args.controlfile)
+    except IOError:
+        try:
+            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+        except IOError:
+            print 'Could not read CONTROL file "' + args.controlfile + '"'
+            print 'Either it does not exist or its syntax is wrong.'
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
+            sys.exit(1)
+
+    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    c.assign_args_to_control(args)
+    c.assign_envs_to_control(env_parameter)
+    c.check_conditions()
 
     # on local side
+    # on ECMWF server this would be the local side
     if args.queue is None:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(called_from_dir, c.inputdir)
         if c.outputdir[0] != '/':
             c.outputdir = os.path.join(called_from_dir, c.outputdir)
-        get_mars_data(args, c)
-        prepare_flexpart(args, c)
-        normal_exit(c)
+        get_mars_data(c)
+        prepare_flexpart(args.ppid, c)
+        normal_exit(c.mailfail, 'Done!')
     # on ECMWF server
     else:
         submit(args.job_template, c, args.queue)
@@ -124,50 +141,54 @@ def submit(jtemplate, c, queue):
         <nothing>
     '''
 
-    # read template file and split from newline signs
+    # read template file and get index for CONTROL input
     with open(jtemplate) as f:
         lftext = f.read().split('\n')
-        insert_point = lftext.index('EOF')
+    insert_point = lftext.index('EOF')
 
-    # put all parameters of ControlFile instance into a list
-    clist = c.to_list() # ondemand
-    colist = []  # operational
-    mt = 0
+    if not c.basetime:
+    # --------- create on demand job script ------------------------------------
+        if c.maxstep > 24:
+            print '---- Pure forecast mode! ----'
+        else:
+            print '---- On-demand mode! ----'
+        job_file = jtemplate[:-4] + 'ksh'
+        clist = c.to_list()
 
-    for elem in clist:
-        if 'maxstep' in elem:
-            mt = int(elem.split(' ')[1])
+        lftextondemand = lftext[:insert_point] + clist + lftext[insert_point:]
 
-    for elem in clist:
-        if 'start_date' in elem:
-            elem = 'start_date ' + '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
-        if 'end_date' in elem:
-            elem = 'end_date ' + '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
-        if 'base_time' in elem:
-            elem = 'base_time ' + '${MSJ_BASETIME}'
-        if 'time' in elem and mt > 24:
-            elem = 'time ' + '${MSJ_BASETIME} {MSJ_BASETIME}'
-        colist.append(elem)
+        with open(job_file, 'w') as f:
+            f.write('\n'.join(lftextondemand))
 
-    lftextondemand = lftext[:insert_point] + clist + lftext[insert_point + 2:]
-    lftextoper = lftext[:insert_point] + colist + lftext[insert_point + 2:]
+        submit_job_to_ecserver('', queue, job_file)
 
-    with open('job.ksh', 'w') as h:
-        h.write('\n'.join(lftextondemand))
+    else:
+    # --------- create operational job script ----------------------------------
+        print '---- Operational mode! ----'
+        job_file = jtemplate[:-5] + 'oper.ksh'
+        #colist = []
 
-    with open('joboper.ksh', 'w') as h:
-        h.write('\n'.join(lftextoper))
+        if c.maxstep:
+            mt = int(c.maxstep)
+        else:
+            mt = 0
 
-    # submit job script to queue
-    try:
-        p = subprocess.check_call(['ecaccess-job-submit', '-queueName',
-                                   queue, 'job.ksh'])
-    except subprocess.CalledProcessError as e:
-        print 'ecaccess-job-submit failed!'
-        print 'Error Message: '
-        print e.output
-        exit(1)
+        c.start_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
+        c.end_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
+        c.base_time = '${MSJ_BASETIME}'
+        if mt > 24:
+            c.time = '${MSJ_BASETIME} {MSJ_BASETIME}'
 
+        colist = c.to_list()
+
+        lftextoper = lftext[:insert_point] + colist + lftext[insert_point + 2:]
+
+        with open(job_file, 'w') as f:
+            f.write('\n'.join(lftextoper))
+
+        submit_job_to_ecserver('', queue, job_file)
+
+    # --------------------------------------------------------------------------
     print 'You should get an email with subject flex.hostname.pid'
 
     return

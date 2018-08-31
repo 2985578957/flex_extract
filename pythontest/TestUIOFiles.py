@@ -5,10 +5,10 @@ import unittest
 import os
 import sys
 sys.path.append('../python')
-import UIOFiles
+import UioFiles
 
 
-class TestUIOFiles(unittest.TestCase):
+class TestUioFiles(unittest.TestCase):
     '''
     Test class to test the UIOFiles methods.
     '''
@@ -51,8 +51,8 @@ class TestUIOFiles(unittest.TestCase):
         '''
 
         # Initialise and collect filenames
-        files = UIOFiles.UIOFiles(['.grb'])
-        files.listFiles(self.testpath, '*')
+        files = UioFiles.UioFiles(['.grb'])
+        files.list_files(self.testpath, '*')
         # get the basename to just check for equality of filenames
         filelist = [os.path.basename(f) for f in files.files]
         # comparison of expected filenames against the collected ones

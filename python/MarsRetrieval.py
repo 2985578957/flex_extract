@@ -78,7 +78,7 @@ class MarsRetrieval(object):
 
     '''
 
-    def __init__(self, server, marsclass="ei", dtype="", levtype="",
+    def __init__(self, server, marsclass="ei", type="", levtype="",
                  levelist="", repres="", date="", resol="", stream="",
                  area="", time="", step="", expver="1", number="",
                  accuracy="", grid="", gaussian="", target="",
@@ -106,7 +106,7 @@ class MarsRetrieval(object):
                 E4 (ERA40), OD (Operational archive), ea (ERA5).
                 Default is the ERA-Interim dataset "ei".
 
-            dtype: string, optional
+            type: string, optional
                 Determines the type of fields to be retrieved.
                 Selects between observations, images or fields.
                 Examples for fields: Analysis (an), Forecast (fc),
@@ -285,7 +285,7 @@ class MarsRetrieval(object):
 
         self.server = server
         self.marsclass = marsclass
-        self.dtype = dtype
+        self.type = type
         self.levtype = levtype
         self.levelist = levelist
         self.repres = repres

@@ -33,6 +33,6 @@ ECTRANS 1
 ECFSDIR ectmp:/${USER}/econdemand/
 MAILOPS ${USER}
 MAILFAIL ${USER}
-FLEXPARTDIR ${HOME}/ECMWFDATA7.0/flexpart_code
+FLEXPARTDIR ${HOME}/flex_extract_v7.1/flexpart_code
 GRIB2FLEXPART grib2flexpart
 EOF

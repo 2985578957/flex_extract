@@ -33,7 +33,8 @@
 #
 # @Class Content:
 #    - __init__
-#    - list_files
+#    - __str__
+#    - __list_files__
 #    - delete_files
 #
 # @Class Attributes:
@@ -50,7 +51,7 @@ import fnmatch
 
 # software specific module from flex_extract
 #import profiling
-from tools import silent_remove
+from tools import silent_remove, get_list_as_string
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -65,7 +66,7 @@ class UioFiles(object):
     # --------------------------------------------------------------------------
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
-    def __init__(self, pattern):
+    def __init__(self, path, pattern):
         '''
         @Description:
             Assignes a specific pattern for these files.
@@ -74,6 +75,9 @@ class UioFiles(object):
             self: instance of UioFiles
                 Description see class documentation.
 
+            path: string
+                Directory where to list the files.
+
             pattern: string
                 Regular expression pattern. For example: '*.grb'
 
@@ -81,13 +85,16 @@ class UioFiles(object):
             <nothing>
         '''
 
+        self.path = path
         self.pattern = pattern
         self.files = None
+
+        self.__list_files__(self.path)
 
         return
 
     #@profiling.timefn
-    def list_files(self, path, callid=0):
+    def __list_files__(self, path, callid=0):
         '''
         @Description:
             Lists all files in the directory with the matching
@@ -98,7 +105,7 @@ class UioFiles(object):
                 Description see class documentation.
 
             path: string
-                Directory where to list the files.
+                Path to the files.
 
             callid: integer
                 Id which tells the function if its the first call
@@ -128,9 +135,29 @@ class UioFiles(object):
         # do recursive calls for sub-direcorties
         if subdirs:
             for subdir in subdirs:
-                self.list_files(os.path.join(path, subdir), callid=1)
+                self.__list_files__(os.path.join(path, subdir), callid=1)
 
         return
+
+    def __str__(self):
+        '''
+        @Description:
+            Converts the list of files into a single string.
+            The entries are sepereated by "," sign.
+
+        @Input:
+            self: instance of UioFiles
+                Description see class documentation.
+
+        @Return:
+            files_string: string
+                The content of the list as a single string.
+        '''
+
+        filenames = [os.path.basename(f) for f in self.files]
+        files_string = get_list_as_string(filenames, concatenate_sign=', ')
+
+        return files_string
 
     def delete_files(self):
         '''

@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - check alist of size 4 ?
-# - write a test, IMPORTANT
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
 #
 # @Date: March 2018
 #
 # @Change History:
+#
 #    November 2015 - Leopold Haimberger (University of Vienna):
 #        - migration of the methods dapoly and darain from Fortran
 #          (flex_extract_v6 and earlier) to Python
@@ -28,7 +24,7 @@
 #    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
 # @Module Description:
-#    disaggregationregation of deaccumulated flux data from an ECMWF model FG field.
+#    disaggregation of deaccumulated flux data from an ECMWF model FG field.
 #    Initially the flux data to be concerned are:
 #    - large-scale precipitation
 #    - convective precipitation

@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - provide more tests
-# - provide more documentation
-#************************************************************************
-
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
 #
@@ -24,7 +18,7 @@
 #    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
 #
 # @Program Functionality:
-#    This script triggers the ECMWFDATA test suite. Call with
+#    This script triggers the flex_extract test suite. Call with
 #    test_suite.py [test group]
 #
 # @Program Content:

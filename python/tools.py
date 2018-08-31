@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - check my_error
-# - check normal_exit
-# - check get_list_as_string
-# - seperate args and control interpretation
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
 #
@@ -25,6 +18,7 @@
 #        - added documentation
 #        - moved all functions from file Flexparttools to this file tools
 #        - added function get_list_as_string
+#        - seperated args and control interpretation
 #
 # @License:
 #    (C) Copyright 2014-2018.
@@ -37,7 +31,7 @@
 #    used in different places in flex_extract.
 #
 # @Module Content:
-#    - interpret_args_and_control
+#    - get_cmdline_arguments
 #    - clean_up
 #    - my_error
 #    - normal_exit
@@ -46,6 +40,7 @@
 #    - init128
 #    - to_param_id
 #    - get_list_as_string
+#    - make_dir
 #
 #*******************************************************************************
 
@@ -56,24 +51,19 @@ import os
 import errno
 import sys
 import glob
-import inspect
 import subprocess
 import traceback
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-import numpy as np
-
-# software specific class from flex_extract
-from ControlFile import ControlFile
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------
 
-def interpret_args_and_control():
+def get_cmdline_arguments():
     '''
     @Description:
-        Assigns the command line arguments and reads CONTROL file
-        content. Apply default values for non mentioned arguments.
+        Decomposes the command line arguments and assigns them to variables.
+        Apply default values for non mentioned arguments.
 
     @Input:
         <nothing>
@@ -81,39 +71,28 @@ def interpret_args_and_control():
     @Return:
         args: instance of ArgumentParser
             Contains the commandline arguments from script/program call.
-
-        c: instance of class ControlFile
-            Contains all necessary information of a CONTROL file. The parameters
-            are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
-            RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
-            SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS,
-            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, DEBUG, INPUTDIR,
-            OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
-            For more information about format and content of the parameter see
-            documentation.
-
     '''
+
     parser = ArgumentParser(description='Retrieve FLEXPART input from \
-                            ECMWF MARS archive',
+                                ECMWF MARS archive',
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
     # the most important arguments
-    parser.add_argument("--start_date", dest="start_date",
+    parser.add_argument("--start_date", dest="start_date", default=None,
                         help="start date YYYYMMDD")
-    parser.add_argument("--end_date", dest="end_date",
+    parser.add_argument("--end_date", dest="end_date", default=None,
                         help="end_date YYYYMMDD")
     parser.add_argument("--date_chunk", dest="date_chunk", default=None,
                         help="# of days to be retrieved at once")
 
     # some arguments that override the default in the CONTROL file
-    parser.add_argument("--basetime", dest="basetime",
+    parser.add_argument("--basetime", dest="basetime", default=None,
                         help="base such as 00/12 (for half day retrievals)")
-    parser.add_argument("--step", dest="step",
+    parser.add_argument("--step", dest="step", default=None,
                         help="steps such as 00/to/48")
-    parser.add_argument("--levelist", dest="levelist",
+    parser.add_argument("--levelist", dest="levelist", default=None,
                         help="Vertical levels to be retrieved, e.g. 30/to/60")
-    parser.add_argument("--area", dest="area",
+    parser.add_argument("--area", dest="area", default=None,
                         help="area defined as north/west/south/east")
 
     # set the working directories
@@ -122,124 +101,54 @@ def interpret_args_and_control():
     parser.add_argument("--outputdir", dest="outputdir", default=None,
                         help="root directory for storing output files")
     parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
+                        default=None,
                         help="FLEXPART root directory (to find grib2flexpart \
-                        and COMMAND file)\n Normally ECMWFDATA resides in \
+                        and COMMAND file)\n Normally flex_extract resides in \
                         the scripts directory of the FLEXPART distribution")
 
     # this is only used by prepare_flexpart.py to rerun a postprocessing step
-    parser.add_argument("--ppid", dest="ppid",
-                        help="Specify parent process id for \
+    parser.add_argument("--ppid", dest="ppid", default=None,
+                        help="specify parent process id for \
                         rerun of prepare_flexpart")
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
                         default="job.temp",
                         help="job template file for submission to ECMWF")
-    parser.add_argument("--queue", dest="queue",
+    parser.add_argument("--queue", dest="queue", default=None,
                         help="queue for submission to ECMWF \
                         (e.g. ecgate or cca )")
     parser.add_argument("--controlfile", dest="controlfile",
                         default='CONTROL.temp',
                         help="file with CONTROL parameters")
-    parser.add_argument("--debug", dest="debug", default=0,
-                        help="Debug mode - leave temporary files intact")
+    parser.add_argument("--debug", dest="debug", default=None,
+                        help="debug mode - leave temporary files intact")
 
     args = parser.parse_args()
 
-    # create instance of ControlFile for specified controlfile
-    # and assign the parameters (and default values if necessary)
-    try:
-        c = ControlFile(args.controlfile)
-    except IOError:
-        try:
-            LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
-                inspect.getfile(inspect.currentframe())))
-            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
-        except IOError:
-            print 'Could not read CONTROL file "' + args.controlfile + '"'
-            print 'Either it does not exist or its syntax is wrong.'
-            print 'Try "' + sys.argv[0].split('/')[-1] + \
-                  ' -h" to print usage information'
-            exit(1)
+    return args
 
-    # check for having at least a starting date
-    if  args.start_date is None and getattr(c, 'start_date') is None:
-        print 'start_date specified neither in command line nor \
-               in CONTROL file ' + args.controlfile
-        print 'Try "' + sys.argv[0].split('/')[-1] + \
-              ' -h" to print usage information'
-        exit(1)
+def read_ecenv(filename):
+    '''
+    @Description:
+        Reads the file into a dictionary where the key values are the parameter
+        names.
 
-    # save all existing command line parameter to the ControlFile instance
-    # if parameter is not specified through the command line or CONTROL file
-    # set default values
-    if args.start_date is not None:
-        c.start_date = args.start_date
-    if args.end_date is not None:
-        c.end_date = args.end_date
-    if c.end_date is None:
-        c.end_date = c.start_date
-    if args.date_chunk is not None:
-        c.date_chunk = args.date_chunk
+    @Input:
+        filename: string
+            Name of file where the ECMWV environment parameters are stored.
 
-    if not hasattr(c, 'debug'):
-        c.debug = args.debug
+    @Return:
+        envs: dict
+    '''
+    envs= {}
+    print filename
+    with open(filename, 'r') as f:
+        for line in f:
+            data = line.strip().split()
+            envs[str(data[0])] = str(data[1])
 
-    if args.inputdir is None and args.outputdir is None:
-        c.inputdir = '../work'
-        c.outputdir = '../work'
-    else:
-        if args.inputdir is not None:
-            c.inputdir = args.inputdir
-        if args.outputdir is None:
-            c.outputdir = args.inputdir
-        if args.outputdir is not None:
-            c.outputdir = args.outputdir
-        if args.inputdir is None:
-            c.inputdir = args.outputdir
-
-    if hasattr(c, 'outputdir') is False and args.outputdir is None:
-        c.outputdir = c.inputdir
-    else:
-        if args.outputdir is not None:
-            c.outputdir = args.outputdir
-
-    if args.area is not None:
-        afloat = '.' in args.area
-        l = args.area.split('/')
-        if afloat:
-            for i, item in enumerate(l):
-                item = str(int(float(item) * 1000))
-        c.upper, c.left, c.lower, c.right = l
-
-    # NOTE: basetime activates the ''operational mode''
-    if args.basetime is not None:
-        c.basetime = args.basetime
-
-    if args.step is not None:
-        l = args.step.split('/')
-        if 'to' in args.step.lower():
-            if 'by' in args.step.lower():
-                ilist = np.arange(int(l[0]), int(l[2]) + 1, int(l[4]))
-                c.step = ['{:0>3}'.format(i) for i in ilist]
-            else:
-                my_error(None, args.step + ':\n' +
-                         'please use "by" as well if "to" is used')
-        else:
-            c.step = l
-
-    if args.levelist is not None:
-        c.levelist = args.levelist
-        if 'to' in c.levelist:
-            c.level = c.levelist.split('/')[2]
-        else:
-            c.level = c.levelist.split('/')[-1]
-
-    if args.flexpart_root_scripts is not None:
-        c.flexpart_root_scripts = args.flexpart_root_scripts
-
-    return args, c
-
+    return envs
 
 def clean_up(c):
     '''
@@ -268,36 +177,28 @@ def clean_up(c):
     print "clean_up"
 
     cleanlist = glob.glob(c.inputdir + "/*")
-    for cl in cleanlist:
-        if c.prefix not in cl:
-            silent_remove(cl)
+    for clist in cleanlist:
+        if c.prefix not in clist:
+            silent_remove(clist)
         if c.ecapi is False and (c.ectrans == '1' or c.ecstorage == '1'):
-            silent_remove(cl)
+            silent_remove(clist)
 
     print "Done"
 
     return
 
 
-def my_error(c, message='ERROR'):
+def my_error(users, message='ERROR'):
     '''
     @Description:
         Prints a specified error message which can be passed to the function
         before exiting the program.
 
     @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file, which are e.g.:
-            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
-            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
-            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
-            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
-            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
-            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
-            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
-
-            For more information about format and content of the parameter
-            see documentation.
+        user: list of strings
+            Contains all email addresses which should be notified.
+            It might also contain just the ecmwf user name which wil trigger
+            mailing to the associated email address for this user.
 
         message: string, optional
             Error message. Default value is "ERROR".
@@ -309,47 +210,40 @@ def my_error(c, message='ERROR'):
     print message
 
     # comment if user does not want email notification directly from python
-    try:
-        target = []
-        target.extend(c.mailfail)
-    except AttributeError:
-        target = []
-        target.extend(os.getenv('USER'))
+    for user in users:
+        if '${USER}' in user:
+            user = os.getenv('USER')
+        try:
+            p = subprocess.Popen(['mail', '-s flex_extract_v7.1 ERROR',
+                                  os.path.expandvars(user)],
+                                 stdin=subprocess.PIPE,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE,
+                                 bufsize=1)
+            trace = '\n'.join(traceback.format_stack())
+            pout = p.communicate(input=message + '\n\n' + trace)[0]
+        except ValueError as e:
+            print 'ERROR: ', e
+            sys.exit('Email could not be sent!')
+        else:
+            print 'Email sent to ' + os.path.expandvars(user) + ' ' + \
+                  pout.decode()
 
-    for t in target:
-        p = subprocess.Popen(['mail', '-s ECMWFDATA v7.0 ERROR',
-                              os.path.expandvars(t)],
-                             stdin=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             bufsize=1)
-        tr = '\n'.join(traceback.format_stack())
-        pout = p.communicate(input=message + '\n\n' + tr)[0]
-        print 'Email sent to ' + os.path.expandvars(t) + ' ' + pout.decode()
-
-    exit(1)
+    sys.exit(1)
 
     return
 
 
-def normal_exit(c, message='Done!'):
+def normal_exit(users, message='Done!'):
     '''
     @Description:
         Prints a specific exit message which can be passed to the function.
 
     @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file, which are e.g.:
-            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
-            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
-            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
-            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
-            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
-            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
-            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
-
-            For more information about format and content of the parameter
-            see documentation.
+        user: list of strings
+            Contains all email addresses which should be notified.
+            It might also contain just the ecmwf user name which wil trigger
+            mailing to the associated email address for this user.
 
         message: string, optional
             Message for exiting program. Default value is "Done!".
@@ -361,20 +255,23 @@ def normal_exit(c, message='Done!'):
     print message
 
     # comment if user does not want notification directly from python
-    try:
-        target = []
-        target.extend(c.mailops)
-        for t in target:
-            p = subprocess.Popen(['mail', '-s ECMWFDATA v7.0 normal exit',
-                                  os.path.expandvars(t)],
+    for user in users:
+        if '${USER}' in user:
+            user = os.getenv('USER')
+        try:
+            p = subprocess.Popen(['mail', '-s flex_extract_v7.1 normal exit',
+                                  os.path.expandvars(user)],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  bufsize=1)
             pout = p.communicate(input=message+'\n\n')[0]
-            print 'Email sent to ' + os.path.expandvars(t) + ' ' + pout.decode()
-    finally:
-        pass
+        except ValueError as e:
+            print 'ERROR: ', e
+            print 'Email could not be sent!'
+        else:
+            print 'Email sent to ' + os.path.expandvars(user) + ' ' + \
+                  pout.decode()
 
     return
 
@@ -432,7 +329,7 @@ def silent_remove(filename):
         os.remove(filename)
     except OSError as e:
         # this would be "except OSError, e:" before Python 2.6
-        if e.errno is not  errno.ENOENT:
+        if e.errno != errno.ENOENT:
             # errno.ENOENT  =  no such file or directory
             raise  # re-raise exception if a different error occured
 
@@ -520,3 +417,97 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
     str_of_list = concatenate_sign.join(str(l) for l in list_obj)
 
     return str_of_list
+
+def make_dir(directory):
+    '''
+    @Description:
+        Creates a directory and gives a warning if the directory
+        already exists. The program stops only if there is another problem.
+
+    @Input:
+        directory: string
+            The directory path which should be created.
+
+    @Return:
+        <nothing>
+    '''
+    try:
+        os.makedirs(directory)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            # errno.EEXIST = directory already exists
+            raise # re-raise exception if a different error occured
+        else:
+            print 'WARNING: Directory {0} already exists!'.format(directory)
+
+    return
+
+def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
+    '''
+    @Description:
+        Uses the ecaccess command to send a file to the ECMWF servers.
+        Catches and prints the error if it failed.
+
+    @Input:
+        ecd: string
+            The path were the file is to be stored.
+
+        filename: string
+            The name of the file to send to the ECMWF server.
+
+        target: string
+            The target where the file should be sent to, e.g. the queue.
+
+        ecuid: string
+            The user id on ECMWF server.
+
+        ecgid: string
+            The group id on ECMWF server.
+
+    @Return:
+        <nothing>
+    '''
+
+    try:
+        subprocess.check_call(['ecaccess-file-put',
+                               ecd + '../' + filename,
+                               target + ':/home/ms/' +
+                               ecgid + '/' + ecuid +
+                               '/' + filename])
+    except subprocess.CalledProcessError as e:
+        print 'ERROR:'
+        print e
+        sys.exit('ecaccess-file-put failed!\n' + \
+                 'Probably the eccert key has expired.')
+
+    return
+
+def submit_job_to_ecserver(ecd, target, jobname):
+    '''
+    @Description:
+        Uses ecaccess to submit a job to the ECMWF server.
+        Catches and prints the error if one arise.
+
+    @Input:
+        ecd: string
+            The path were the file is to be stored.
+
+        target: string
+            The target where the file should be sent to, e.g. the queue.
+
+        jobname: string
+            The name of the jobfile to be submitted to the ECMWF server.
+
+    @Return:
+        <nothing>
+    '''
+
+    try:
+        subprocess.check_call(['ecaccess-job-submit',
+                               '-queueName', target,
+                               jobname])
+    except subprocess.CalledProcessError as e:
+        print '... ERROR CODE: ', e.returncode
+        sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
+
+    return

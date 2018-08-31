@@ -1,15 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - specifiy file header documentation
-# - add class description in header information
-# - apply classtests
-# - add references to ECMWF specific software packages
-# - add describtion of deacc_fluxes
-# - change name of func deacc ( weil disagg )
-# - add desc of retrieve function
-#************************************************************************
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
 #
@@ -150,7 +140,7 @@ class EcFlexpart(object):
                 see documentation.
 
             fluxes: boolean, optional
-                Decides if a the flux parameter settings are stored or
+                Decides if the flux parameter settings are stored or
                 the rest of the parameter list.
                 Default value is False.
 
@@ -174,7 +164,7 @@ class EcFlexpart(object):
         self.basetime = c.basetime
         self.dtime = c.dtime
         i = 0
-        if fluxes is True and c.maxstep < 24:
+        if fluxes and c.maxstep <= 24:
             # no forecast beyond one day is needed!
             # Thus, prepare flux data manually as usual
             # with only forecast fields with start times at 00/12
@@ -191,7 +181,7 @@ class EcFlexpart(object):
                 if c.basetime == '00':
                     btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
 
-                if i % int(c.dtime) == 0 and c.maxstep > 24 or i in btlist:
+                if i % int(c.dtime) == 0 and (i in btlist or c.maxstep > 24):
 
                     if ty not in self.types.keys():
                         self.types[ty] = {'times': '', 'steps': ''}
@@ -206,7 +196,6 @@ class EcFlexpart(object):
                             self.types[ty]['steps'] += '/'
                         self.types[ty]['steps'] += st
                 i += 1
-
 
         self.marsclass = c.marsclass
         self.stream = c.stream
@@ -303,15 +292,15 @@ class EcFlexpart(object):
                 self.params['GG__ML'] = ['U/V/D/77', 'ML', self.glevelist, \
                                          '{}'.format((int(self.resol) + 1) / 2)]
 
-            if c.omega == '1':
+            if hasattr(c, 'omega') and c.omega == '1':
                 self.params['OG__ML'][0] += '/W'
 
             # add cloud water content if necessary
-            if c.cwc == '1':
+            if hasattr(c, 'cwc') and c.cwc == '1':
                 self.params['OG__ML'][0] += '/CLWC/CIWC'
 
             # add vorticity and geopotential height for WRF if necessary
-            if c.wrf == '1':
+            if hasattr(c, 'wrf') and c.wrf == '1':
                 self.params['OG__ML'][0] += '/Z/VO'
                 if '/D' not in self.params['OG__ML'][0]:
                     self.params['OG__ML'][0] += '/D'
@@ -739,7 +728,7 @@ class EcFlexpart(object):
                 p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
                                            c.gateway, '-remote', c.destination,
                                            '-source', ofile])
-                print('ectrans:', p)
+                #print('ectrans:', p)
 
         if int(c.ecstorage) == 1 and c.ecapi is False:
             for ofile in self.outputfilelist:
@@ -889,7 +878,7 @@ class EcFlexpart(object):
                  '17':None, '19':None, '21':None, '22':None, '20':None}
 
         for prod in product(*index_vals):
-            # flag for Fortran program CONVERT2, initially False
+            # flag for Fortran program CONVERT2 and file merging
             convertFlag = False
             print 'current prod: ', prod
             # e.g. prod = ('20170505', '0', '12')
@@ -905,10 +894,13 @@ class EcFlexpart(object):
             # if there is data for this product combination
             # prepare some date and time parameter before reading the data
             if gid is not None:
-                # Fortran program CONVERT2 is only done if gid at this time is
-                # not None, therefore save information in convertFlag
+                # Combine all temporary data files into final grib file if
+                # gid is at least one time not None. Therefore set convertFlag
+                # to save information. The fortran program CONVERT2 is also
+                # only done if convertFlag is True
                 convertFlag = True
                 # remove old fort.* files and open new ones
+                # they are just valid for a single product
                 for k, f in fdict.iteritems():
                     silent_remove(c.inputdir + "/fort." + k)
                     fdict[k] = open(c.inputdir + '/fort.' + k, 'w')
@@ -921,7 +913,6 @@ class EcFlexpart(object):
                 timestamp = datetime.strptime(cdate + '{:0>2}'.format(time/100),
                                               '%Y%m%d%H')
                 timestamp += timedelta(hours=int(step))
-
                 cdateH = datetime.strftime(timestamp, '%Y%m%d%H')
 
                 if c.basetime is not None:
@@ -965,7 +956,7 @@ class EcFlexpart(object):
                 gridtype = grib_get(gid, 'gridType')
                 levtype = grib_get(gid, 'typeOfLevel')
                 if paramId == 133 and gridtype == 'reduced_gg':
-                # Relative humidity (Q.grb) is used as a template only
+                # Specific humidity (Q.grb) is used as a template only
                 # so we need the first we "meet"
                     with open(c.inputdir + '/fort.18', 'w') as fout:
                         grib_write(gid, fout)
@@ -1027,8 +1018,8 @@ class EcFlexpart(object):
                     print 'Parameter 77 (etadot) is missing, most likely it is \
                            not available for this type or date/time\n'
                     print 'Check parameters CLASS, TYPE, STREAM, START_DATE\n'
-                    my_error(c, 'fort.21 is empty while parameter eta is set \
-                                to 1 in CONTROL file')
+                    my_error(c.mailfail, 'fort.21 is empty while parameter eta \
+                             is set to 1 in CONTROL file')
 
                 # create the corresponding output file fort.15
                 # (generated by CONVERT2) + fort.16 (paramId 167 and 168)
@@ -1060,14 +1051,15 @@ class EcFlexpart(object):
 
                 with open(fnout, 'wb') as fout:
                     for f in flist:
-                        shutil.copyfileobj(open(c.inputdir + '/' + f, 'rb'), fout)
+                        shutil.copyfileobj(
+                            open(c.inputdir + '/' + f, 'rb'), fout)
 
                 if c.omega == '1':
                     with open(c.outputdir + '/OMEGA', 'wb') as fout:
                         shutil.copyfileobj(
                             open(c.inputdir + '/fort.25', 'rb'), fout)
 
-        if c.wrf == '1':
+        if hasattr(c, 'wrf') and c.wrf == '1':
             fwrf.close()
 
         grib_index_release(iid)
@@ -1306,5 +1298,4 @@ class EcFlexpart(object):
 
         grib_index_release(iid)
 
-        exit()
         return

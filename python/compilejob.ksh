@@ -4,7 +4,7 @@
 # start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server
 # start with sbatch NAME_OF_THIS_FILE directly on machine
 
-#SBATCH --workdir=/scratch/ms/spatlh00/lh0
+#SBATCH --workdir=/scratch/ms/at/km4a
 #SBATCH --qos=normal
 #SBATCH --job-name=flex_ecmwf
 #SBATCH --output=flex_ecmwf.%j.out
@@ -32,11 +32,8 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-export FLEXPART_ROOT_SCRIPTS=$HOME
-#  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-#  export PATH=${PATH}:$ECMWFDATA/python
-  export MAKEFILE=Makefile.gfortran
+export FLEXPART_ROOT_SCRIPTS=${HOME}
+export MAKEFILE=Makefile.gfortran
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -48,17 +45,14 @@ export FLEXPART_ROOT_SCRIPTS=$HOME
   echo $HOME | awk -F / '{print $1, $2, $3, $4}'
   export GROUP=`echo $HOME | awk -F / '{print $4}'`
   export SCRATCH=/scratch/ms/${GROUP}/${USER}
-export FLEXPART_ROOT_SCRIPTS=$HOME
-#  export ECMWFDATA=$FLEXPART_ROOT/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-#  export PATH=${PATH}:$ECMWFDATA/python
-  export MAKEFILE=Makefile.CRAY
+export FLEXPART_ROOT_SCRIPTS=${HOME}
+export MAKEFILE=Makefile.gfortran
   ;;
 esac
 
-mkdir -p $FLEXPART_ROOT_SCRIPTS/ECMWFDATA$VERSION
-cd $FLEXPART_ROOT_SCRIPTS/ECMWFDATA$VERSION   # if FLEXPART_ROOT is not set this means cd to the home directory
-tar -xvf $HOME/ECMWFDATA$VERSION.tar
+mkdir -p $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION
+cd $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION   # if FLEXPART_ROOT is not set this means cd to the home directory
+tar -xvf $HOME/flex_extract_v$VERSION.tar
 cd src
 \rm *.o *.mod CONVERT2
 make -f $MAKEFILE >flexcompile 2>flexcompile

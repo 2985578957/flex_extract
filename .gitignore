@@ -1,0 +1,37 @@
+#
+# gitignore lists all directories and files which should not be versionized!!! 
+#
+
+# these dirs and files shouldn't be versionized at any time in this project!!!
+*.pyc
+*.o
+*.mod
+*.tar*
+/work*
+/src/CONVERT2
+/python/ECMWF_ENV
+
+
+# temporary ignorance of the following files!
+Content_Paper2.txt
+DOCUFPEXTRACT.txt
+FLEXEXTRACT_CONTENT.txt
+NewDocu.odt
+dokuECMWFDATA
+
+/python/.cache/
+/python/CONTROL.temp.backup
+
+/python/SphinxDoc/
+/python/assoc.txt
+/python/classes.dot
+/python/classes.dot.png
+
+/python/packages.dot
+/python/packages.dot.png
+/python/prepare_flexpart.py.lprof
+/python/pylintrc
+/python/testecmwfapi.py
+
+/pythontest/
+

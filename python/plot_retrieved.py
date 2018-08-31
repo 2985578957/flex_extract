@@ -1,11 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - documentation der Funktionen
-# - docu der progam functionality
-# - apply pep8
-#************************************************************************
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
 #
@@ -33,6 +27,7 @@
 # @Program Content:
 #    - main
 #    - get_basics
+#    - get_files_per_date
 #    - plot_retrieved
 #    - plot_timeseries
 #    - plot_map
@@ -218,8 +213,7 @@ def plot_retrieved(c):
     c.levels = np.asarray(c.levels, dtype='int')
     c.area = np.asarray(c.area)
 
-    files = UioFiles(c.prefix+'*')
-    files.list_files(c.inputdir)
+    files = UioFiles(c.inputdir, c.prefix+'*')
     ifiles = get_files_per_date(files.files, datelist)
     ifiles.sort()
 
@@ -621,7 +615,7 @@ def get_plot_args():
     parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
                         help="FLEXPART root directory (to find \
                         'grib2flexpart and COMMAND file)\n \
-                        Normally ECMWFDATA resides in the scripts directory \
+                        Normally flex_extract resides in the scripts directory \
                         of the FLEXPART distribution")
 
     parser.add_argument("--controlfile", dest="controlfile",

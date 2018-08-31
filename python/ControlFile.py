@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#************************************************************************
-# ToDo AP
-# - write a test class
-#************************************************************************
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
 #
@@ -18,6 +14,10 @@
 #        - changed name of class Control to ControlFile for more
 #          self-explanation naming
 #        - outsource of class ControlFile
+#        - initialisation of class attributes ( to avoid high number of
+#          conditional statements and set default values )
+#        - divided assignment of attributes and the check of conditions
+#        - outsourced the commandline argument assignments to control attributes
 #
 # @License:
 #    (C) Copyright 2015-2018.
@@ -35,29 +35,16 @@
 #
 # @Class Content:
 #    - __init__
+#    - __read_controlfile__
 #    - __str__
+#    - assign_args_to_control
+#    - assign_envs_to_control
+#    - check_conditions
+#    - check_install_conditions
 #    - to_list
 #
 # @Class Attributes:
-#    - start_date
-#    - end_date
-#    - accuracy
-#    - omega
-#    - cwc
-#    - omegadiff
-#    - etadiff
-#    - level
-#    - levelist
-#    - step
-#    - maxstep
-#    - prefix
-#    - makefile
-#    - basetime
-#    - date_chunk
-#    - grib2flexpart
-#    - exedir
-#    - flexpart_root_scripts
-#    - ecmwfdatadir
+#
 #
 #*******************************************************************************
 
@@ -65,6 +52,7 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
+import sys
 import inspect
 
 # ------------------------------------------------------------------------------
@@ -91,9 +79,10 @@ class ControlFile(object):
     def __init__(self, filename):
         '''
         @Description:
-            Initialises the instance of ControlFile class and defines and
-            assign all CONTROL file variables. Set default values if
-            parameter was not in CONTROL file.
+            Initialises the instance of ControlFile class and defines
+            all class attributes with default values. Afterwards calls
+            function __read_controlfile__ to read parameter from
+            Control file.
 
         @Input:
             self: instance of ControlFile class
@@ -105,14 +94,87 @@ class ControlFile(object):
         @Return:
             <nothing>
         '''
+
+        # list of all possible class attributes and their default values
+        self.controlfile = filename
+        self.start_date = None
+        self.end_date = None
+        self.date_chunk = 3
+        self.dtime = None
+        self.basetime = None
+        self.maxstep = None
+        self.type = None
+        self.time = None
+        self.step = None
+        self.marsclass = None
+        self.stream = None
+        self.number = 'OFF'
+        self.expver = None
+        self.grid = None
+        self.area = ''
+        self.left = None
+        self.lower = None
+        self.upper = None
+        self.right = None
+        self.level = None
+        self.levelist = None
+        self.resol = None
+        self.gauss = 0
+        self.accuracy = 24
+        self.omega = 0
+        self.omegadiff = 0
+        self.eta = 0
+        self.etadiff = 0
+        self.etapar = 77
+        self.dpdeta = 1
+        self.smooth = 0
+        self.format = 'GRIB1'
+        self.addpar = None
+        self.prefix = 'EN'
+        self.cwc = 0
+        self.wrf = 0
+        self.ecfsdir = 'ectmp:/${USER}/econdemand/'
+        self.mailfail = ['${USER}']
+        self.mailops = ['${USER}']
+        self.grib2flexpart = 0
+        self.ecstorage = 0
+        self.ectrans = 0
+        self.inputdir = '../work'
+        self.outputdir = self.inputdir
+        self.ecmwfdatadir = None
+        self.exedir = None
+        self.flexpart_root_scripts = None
+        self.makefile = None
+        self.destination = None
+        self.gateway = None
+        self.ecuid = None
+        self.ecgid = None
+        self.install_target = None
+        self.debug = 0
+
+        self.__read_controlfile__()
+
+        return
+
+    def __read_controlfile__(self):
+        '''
+        @Description:
+            Read CONTROL file and assign all CONTROL file variables.
+
+        @Input:
+            self: instance of ControlFile class
+                Description see class documentation.
+
+        @Return:
+            <nothing>
+        '''
         from tools import my_error
 
         # read whole CONTROL file
-        with open(filename) as f:
+        with open(self.controlfile) as f:
             fdata = f.read().split('\n')
 
         # go through every line and store parameter
-        # as class variable
         for ldata in fdata:
             data = ldata.split()
             if len(data) > 1:
@@ -144,9 +206,10 @@ class ControlFile(object):
                             if var is not None:
                                 data[1] = data[1][:i] + var + data[1][k+1:]
                             else:
-                                my_error(None, 'Could not find variable ' +
-                                         data[1][j+1:k] + ' while reading ' +
-                                         filename)
+                                my_error(self.mailfail,
+                                         'Could not find variable '
+                                         + data[1][j+1:k] + ' while reading ' +
+                                         self.controlfile)
                         setattr(self, data[0].lower() + '_expanded', data[1])
                     else:
                         if data[1].lower() != 'none':
@@ -158,75 +221,30 @@ class ControlFile(object):
             else:
                 pass
 
-        # check a couple of necessary attributes if they contain values
-        # otherwise set default values
-        if not hasattr(self, 'start_date'):
-            self.start_date = None
-        if not hasattr(self, 'end_date'):
-            self.end_date = self.start_date
-        if not hasattr(self, 'accuracy'):
-            self.accuracy = 24
-        if not hasattr(self, 'omega'):
-            self.omega = '0'
-        if not hasattr(self, 'cwc'):
-            self.cwc = '0'
-        if not hasattr(self, 'omegadiff'):
-            self.omegadiff = '0'
-        if not hasattr(self, 'etadiff'):
-            self.etadiff = '0'
-        if not hasattr(self, 'levelist'):
-            if not hasattr(self, 'level'):
-                print 'Warning: neither levelist nor level \
-                       specified in CONTROL file'
-            else:
-                self.levelist = '1/to/' + self.level
-        else:
-            if 'to' in self.levelist:
-                self.level = self.levelist.split('/')[2]
-            else:
-                self.level = self.levelist.split('/')[-1]
-
-        if not hasattr(self, 'maxstep'):
-            # find out maximum step
-            self.maxstep = 0
-            for s in self.step:
-                if int(s) > self.maxstep:
-                    self.maxstep = int(s)
-        else:
-            self.maxstep = int(self.maxstep)
-
-        if not hasattr(self, 'prefix'):
-            self.prefix = 'EN'
-        if not hasattr(self, 'makefile'):
-            self.makefile = None
-        if not hasattr(self, 'basetime'):
-            self.basetime = None
-        if not hasattr(self, 'date_chunk'):
-            self.date_chunk = '3'
-        if not hasattr(self, 'grib2flexpart'):
-            self.grib2flexpart = '0'
-
         # script directory
         self.ecmwfdatadir = os.path.dirname(os.path.abspath(inspect.getfile(
             inspect.currentframe()))) + '/../'
+
         # Fortran source directory
         self.exedir = self.ecmwfdatadir + 'src/'
-
-        # FLEXPART directory
-        if not hasattr(self, 'flexpart_root_scripts'):
-            self.flexpart_root_scripts = self.ecmwfdatadir
 
         return
 
     def __str__(self):
         '''
         @Description:
-            Prepares a single string with all the comma seperated ControlFile
-            class attributes including their values.
+            Prepares a string which have all the ControlFile
+            class attributes with its associated values.
+            Each attribute is printed in one line and in
+            alphabetical order.
 
             Example:
-            {'kids': 0, 'name': 'Dog', 'color': 'Spotted',
-             'age': 10, 'legs': 2, 'smell': 'Alot'}
+            'age': 10
+            'color': 'Spotted'
+            'kids': 0
+            'legs': 2
+            'name': 'Dog'
+            'smell': 'Alot'
 
         @Input:
             self: instance of ControlFile class
@@ -235,10 +253,219 @@ class ControlFile(object):
         @Return:
             string of ControlFile class attributes with their values
         '''
+        import collections
 
         attrs = vars(self)
+        attrs = collections.OrderedDict(sorted(attrs.items()))
 
-        return ', '.join("%s: %s" % item for item in attrs.items())
+        return '\n'.join("%s: %s" % item for item in attrs.items())
+
+    def assign_args_to_control(self, args):
+        '''
+        @Description:
+            Overwrites the existing ControlFile instance attributes with
+            the command line arguments.
+
+        @Input:
+            self: instance of ControlFile class
+                Description see class documentation.
+
+            args: instance of ArgumentParser
+                Contains the commandline arguments from script/program call.
+
+        @Return:
+            <nothing>
+        '''
+
+        # get dictionary of command line parameters and eliminate all
+        # parameters which are None (were not specified)
+        args_dict = vars(args)
+        arguments = {k : args_dict[k] for k in args_dict
+                     if args_dict[k] != None}
+
+        # assign all passed command line arguments to ControlFile instance
+        for k, v in arguments.iteritems():
+            setattr(self, str(k), v)
+
+        return
+
+    def assign_envs_to_control(self, envs):
+        '''
+        @Description:
+            Assigns the ECMWF environment parameter.
+
+        @Input:
+            envs: dict of strings
+                Contains the ECMWF environment parameternames "ECUID", "ECGID",
+                "DESTINATION" and "GATEWAY" with its corresponding values.
+                They were read from the file "ECMWF_ENV".
+
+        @Return:
+            <nothing>
+        '''
+
+        for k, v in envs.iteritems():
+            setattr(self, str(k).lower(), str(v))
+
+        return
+
+    def check_conditions(self):
+        '''
+        @Description:
+            Checks a couple of necessary attributes and conditions,
+            such as if they exist and contain values.
+            Otherwise set default values.
+
+        @Input:
+            self: instance of ControlFile class
+                Description see class documentation.
+
+        @Return:
+            <nothing>
+        '''
+        from tools import my_error
+        import numpy as np
+
+        # check for having at least a starting date
+        # otherwise program is not allowed to run
+        if self.start_date is None:
+            print 'start_date specified neither in command line nor ' + \
+                  'in CONTROL file ' +  self.controlfile
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
+            sys.exit(1)
+
+        # retrieve just one day if end_date isn't set
+        if self.end_date is None:
+            self.end_date = self.start_date
+
+        # assure consistency of levelist and level
+        if self.levelist is None:
+            if self.level is None:
+                print 'Warning: neither levelist nor level ' + \
+                      'specified in CONTROL file'
+                sys.exit(1)
+            else:
+                self.levelist = '1/to/' + self.level
+        else:
+            if 'to' in self.levelist.lower():
+                self.level = self.levelist.split('/')[2]
+            else:
+                self.level = self.levelist.split('/')[-1]
+
+        # if area was provided at command line
+        # decompse area into its 4 components
+        if self.area:
+            afloat = '.' in self.area
+            l = self.area.split('/')
+            if afloat:
+                for i, item in enumerate(l):
+                    item = str(int(float(item) * 1000))
+            self.upper, self.left, self.lower, self.right = l
+
+        # prepare step for correct usage
+        if '/' in self.step:
+            l = self.step.split('/')
+            if 'to' in self.step.lower():
+                if 'by' in self.step.lower():
+                    ilist = np.arange(int(l[0]), int(l[2]) + 1, int(l[4]))
+                    self.step = ['{:0>3}'.format(i) for i in ilist]
+                else:
+                    my_error(self.mailfail, self.step + ':\n' +
+                             'if "to" is used, please use "by" as well')
+            else:
+                self.step = l
+
+        # if maxstep wasn't provided
+        # search for it in the "step" parameter
+        if self.maxstep is None:
+            self.maxstep = 0
+            for s in self.step:
+                if int(s) > self.maxstep:
+                    self.maxstep = int(s)
+        else:
+            self.maxstep = int(self.maxstep)
+
+        # set root scripts since it is needed later on
+        if not self.flexpart_root_scripts:
+            self.flexpart_root_scripts = self.ecmwfdatadir
+
+        if not isinstance(self.mailfail, list):
+            if ',' in self.mailfail:
+                self.mailfail = self.mailfail.split(',')
+            elif ' ' in self.mailfail:
+                self.mailfail = self.mailfail.split()
+            else:
+                self.mailfail = [self.mailfail]
+
+        if not isinstance(self.mailops, list):
+            if ',' in self.mailops:
+                self.mailops = self.mailops.split(',')
+            elif ' ' in self.mailops:
+                self.mailops = self.mailops.split()
+            else:
+                self.mailops = [self.mailops]
+
+        if not self.gateway or not self.destination or \
+           not self.ecuid or not self.ecgid:
+            print '\nEnvironment variables GATWAY, DESTINATION, ECUID and ' + \
+                  'ECGID were not set properly!'
+            print 'Please check for excistence of file "ECMWF_ENV" in the ' + \
+                  'python directory!'
+            sys.exit(1)
+
+        return
+
+    def check_install_conditions(self):
+        '''
+        @Description:
+            Checks a couple of necessary attributes and conditions
+            for the installation such as if they exist and contain values.
+            Otherwise set default values.
+
+        @Input:
+            self: instance of ControlFile class
+                Description see class documentation.
+
+        @Return:
+            <nothing>
+        '''
+
+        if self.install_target and \
+           self.install_target not in ['local', 'ecgate', 'cca']:
+            print 'ERROR: unknown or missing installation target '
+            print 'target: ', self.install_target
+            print 'please specify correct installation target \
+                   (local | ecgate | cca)'
+            print 'use -h or --help for help'
+            sys.exit(1)
+
+        if self.install_target and self.install_target != 'local':
+            if not self.ecgid or not self.ecuid or \
+               not self.gateway or not self.destination:
+                print 'Please enter your ECMWF user id and group id as well as \
+                       the \nname of the local gateway and the ectrans \
+                       destination '
+                print 'with command line options --ecuid --ecgid \
+                       --gateway --destination'
+                print 'Try "' + sys.argv[0].split('/')[-1] + \
+                      ' -h" to print usage information'
+                print 'Please consult ecaccess documentation or ECMWF user \
+                       support for further details'
+                sys.exit(1)
+
+            if not self.flexpart_root_scripts:
+                self.flexpart_root_scripts = '${HOME}'
+            else:
+                self.flexpart_root_scripts = self.flexpart_root_scripts
+        else:
+            if not self.flexpart_root_scripts:
+                self.flexpart_root_scripts = '../'
+
+        if not self.makefile:
+            self.makefile = 'Makefile.gfortran'
+
+        return
 
     def to_list(self):
         '''
@@ -258,7 +485,10 @@ class ControlFile(object):
                 "ecmwfdatadir" and "flexpart_root_scripts".
         '''
 
-        attrs = vars(self)
+        import collections
+
+        attrs = collections.OrderedDict(sorted(vars(self).items()))
+
         l = list()
 
         for item in attrs.items():
@@ -282,23 +512,3 @@ class ControlFile(object):
 
         return sorted(l)
 
-    # def to_dict(self):
-        # '''
-
-        # '''
-        # parameters_dict = vars(self)
-
-        # # remove unneeded parameter
-        # parameters_dict.pop('_expanded', None)
-        # parameters_dict.pop('exedir', None)
-        # parameters_dict.pop('flexpart_root_scripts', None)
-        # parameters_dict.pop('ecmwfdatadir', None)
-
-        # parameters_dict_str = {}
-        # for key, value in parameters_dict.iteritems():
-            # if isinstance(value, list):
-                # parameters_dict_str[str(key)] = get_list_as_string(value, ' ')
-            # else:
-                # parameters_dict_str[str(key)] = str(value)
-
-        # return parameters_dict_str

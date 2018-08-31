@@ -32,9 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -42,17 +40,8 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
-#  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
-#  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
-#  export SCRATCH=$ECMWFDATA/python
-#  which python
-#  ;;
 esac
 
 cd $SCRATCH
@@ -66,30 +55,40 @@ GATEWAY srvx8.img.univie.ac.at
 DESTINATION annep@genericSftp
 accuracy 16
 addpar 186 187 188 235 139 39 
+area 
+base_time ${MSJ_BASETIME}
 basetime None
+controlfile CONTROL.temp
 cwc 0
 date_chunk 3
 debug 1
+destination None
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
+ecgid None
 ecstorage 0
 ectrans 1
-start_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
+ecuid None
+end_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
 eta 0
 etadiff 0
+etapar 77
 expver 1
 format GRIB1
+gateway None
 gauss 1
 grib2flexpart 0
 grid 5000
 inputdir ../work
+install_target None
+job_template job.temp
 left -15000
 level 60
 levelist 55/to/60
 lower 30000
-mailfail ${USER}
-mailops ${USER}
+mailfail ${USER} 
+mailops ${USER} 
 makefile None
 marsclass EI
 maxstep 11
@@ -98,6 +97,7 @@ omega 0
 omegadiff 0
 outputdir ../work
 prefix EI
+queue ecgate
 resol 63
 right 45000
 smooth 0
@@ -107,6 +107,7 @@ stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
 upper 75000
+wrf 0
 EOF
 
 

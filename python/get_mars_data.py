@@ -21,7 +21,7 @@
 #          (necessary for better documentation with docstrings for later
 #          online documentation)
 #        - use of UIFiles class for file selection and deletion
-
+#
 #
 # @License:
 #    (C) Copyright 2014-2018.
@@ -38,6 +38,7 @@
 # @Program Content:
 #    - main
 #    - get_mars_data
+#    - do_retrievement
 #
 #*******************************************************************************
 
@@ -55,7 +56,7 @@ except ImportError:
     ecapi = False
 
 # software specific classes and modules from flex_extract
-from tools import my_error, normal_exit, interpret_args_and_control
+from tools import my_error, normal_exit, get_cmdline_arguments, read_ecenv
 from EcFlexpart import EcFlexpart
 from UioFiles import UioFiles
 
@@ -81,9 +82,28 @@ def main():
     @Return:
         <nothing>
     '''
-    args, c = interpret_args_and_control()
+
+    args = get_cmdline_arguments()
+
+    try:
+        c = ControlFile(args.controlfile)
+    except IOError:
+        try:
+            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+        except IOError:
+            print 'Could not read CONTROL file "' + args.controlfile + '"'
+            print 'Either it does not exist or its syntax is wrong.'
+            print 'Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information'
+            sys.exit(1)
+
+    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    c.assign_args_to_control(args, env_parameter)
+    c.assign_envs_to_control(env_parameter)
+    c.check_conditions()
+
     get_mars_data(c)
-    normal_exit(c)
+    normal_exit(c.mailfail, 'Done!')
 
     return
 
@@ -128,57 +148,60 @@ def get_mars_data(c):
     c.ecapi = ecapi
     print 'ecapi: ', c.ecapi
 
+    # basetime geht rückwärts
+
+    # if basetime 00
+    # dann wird von 12 am vortag bis 00 am start tag geholt
+    # aber ohne 12 selbst sondern 12 + step
+
+    # if basetime 12
+    # dann wird von 00 + step bis 12 am start tag geholt
+
+    # purer forecast wird vorwärts bestimmt.
+    # purer forecast mode ist dann wenn  größer 24 stunden
+    # wie kann das noch festgestellt werden ????
+    # nur FC und steps mehr als 24 ?
+    # die einzige problematik beim reinen forecast ist die benennung der files!
+    # also sobald es Tagesüberschneidungen gibt
+    # allerdings ist das relevant und ersichtlich an den NICHT FLUSS DATEN
+
+
     # set start date of retrieval period
     start = datetime.date(year=int(c.start_date[:4]),
                           month=int(c.start_date[4:6]),
                           day=int(c.start_date[6:]))
     startm1 = start - datetime.timedelta(days=1)
-    if c.basetime == '00':
-        start = startm1
 
     # set end date of retrieval period
     end = datetime.date(year=int(c.end_date[:4]),
                         month=int(c.end_date[4:6]),
                         day=int(c.end_date[6:]))
-    if c.basetime == '00' or c.basetime == '12':
-        endp1 = end + datetime.timedelta(days=1)
-    else:
-        endp1 = end + datetime.timedelta(days=2)
 
-    # set time period of one single retrieval
+    # set time period for one single retrieval
     datechunk = datetime.timedelta(days=int(c.date_chunk))
+
+    if c.basetime == '00':
+        start = startm1
+
+    if c.basetime == '00' or c.basetime == '12':
+        # endp1 = end + datetime.timedelta(days=1)
+        endp1 = end
+    else:
+        # endp1 = end + datetime.timedelta(days=2)
+        endp1 = end + datetime.timedelta(days=1)
 
     # --------------  flux data ------------------------------------------------
     print 'removing old flux content of ' + c.inputdir
-    tobecleaned = UioFiles('*_acc_*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.list_files(c.inputdir)
+    tobecleaned = UioFiles(c.inputdir,
+                           '*_acc_*.' + str(os.getppid()) + '.*.grb')
     tobecleaned.delete_files()
 
-    # if forecast for maximum one day (upto 23h) are to be retrieved,
+    # if forecast for maximum one day (upto 24h) are to be retrieved,
     # collect accumulation data (flux data)
     # with additional days in the beginning and at the end
     # (used for complete disaggregation of original period)
-    if c.maxstep < 24:
-        day = startm1
-        while day < endp1:
-            # retrieve MARS data for the whole period
-            flexpart = EcFlexpart(c, fluxes=True)
-            tmpday = day + datechunk - datetime.timedelta(days=1)
-            if tmpday < endp1:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        tmpday.strftime("%Y%m%d")
-            else:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        end.strftime("%Y%m%d")
-
-            print "retrieve " + dates + " in dir " + c.inputdir
-
-            try:
-                flexpart.retrieve(server, dates, c.inputdir)
-            except IOError:
-                my_error(c, 'MARS request failed')
-
-            day += datechunk
+    if c.maxstep <= 24:
+        do_retrievement(c, server, startm1, endp1, datechunk, fluxes=True)
 
     # if forecast data longer than 24h are to be retrieved,
     # collect accumulation data (flux data)
@@ -186,38 +209,69 @@ def get_mars_data(c):
     # (disaggregation will be done for the
     # exact time period with boundary conditions)
     else:
-        day = start
-        while day <= end:
-            # retrieve MARS data for the whole period
-            flexpart = EcFlexpart(c, fluxes=True)
-            tmpday = day + datechunk - datetime.timedelta(days=1)
-            if tmpday < end:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        tmpday.trftime("%Y%m%d")
-            else:
-                dates = day.strftime("%Y%m%d") + "/to/" + \
-                        end.strftime("%Y%m%d")
-
-            print "retrieve " + dates + " in dir " + c.inputdir
-
-            try:
-                flexpart.retrieve(server, dates, c.inputdir)
-            except IOError:
-                my_error(c, 'MARS request failed')
-
-            day += datechunk
+        do_retrievement(c, server, start, end, datechunk, fluxes=True)
 
     # --------------  non flux data --------------------------------------------
     print 'removing old non flux content of ' + c.inputdir
-    tobecleaned = UioFiles('*__*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.list_files(c.inputdir)
+    tobecleaned = UioFiles(c.inputdir,
+                           '*__*.' + str(os.getppid()) + '.*.grb')
     tobecleaned.delete_files()
+
+    do_retrievement(c, server, start, end, datechunk, fluxes=False)
+
+    return
+
+def do_retrievement(c, server, start, end, delta_t, fluxes=False):
+    '''
+    @Description:
+        Divides the complete retrieval period in smaller chunks and
+        retrieves the data from MARS.
+
+    @Input:
+        c: instance of ControlFile
+            Contains all the parameters of CONTROL file, which are e.g.:
+            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
+            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
+            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
+            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
+            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
+            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
+            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
+
+            For more information about format and content of the parameter
+            see documentation.
+
+        server: instance of ECMWFService
+            The server connection to ECMWF
+
+        start: instance of datetime
+            The start date of the retrieval.
+
+        end: instance of datetime
+            The end date of the retrieval.
+
+        delta_t: instance of datetime
+            Delta_t +1 is the maximal time period of a single
+            retrieval.
+
+        fluxes: boolean, optional
+            Decides if the flux parameters are to be retrieved or
+            the rest of the parameter list.
+            Default value is False.
+
+    @Return:
+        <nothing>
+    '''
+
+    # since actual day also counts as one day,
+    # we only need to add datechunk - 1 days to retrieval
+    # for a period
+    delta_t_m1 = delta_t - datetime.timedelta(days=1)
 
     day = start
     while day <= end:
-        # retrieve all non flux MARS data for the whole period
-        flexpart = EcFlexpart(c, fluxes=False)
-        tmpday = day + datechunk - datetime.timedelta(days=1)
+        flexpart = EcFlexpart(c, fluxes)
+        tmpday = day + delta_t_m1
         if tmpday < end:
             dates = day.strftime("%Y%m%d") + "/to/" + \
                     tmpday.strftime("%Y%m%d")
@@ -230,9 +284,9 @@ def get_mars_data(c):
         try:
             flexpart.retrieve(server, dates, c.inputdir)
         except IOError:
-            my_error(c, 'MARS request failed')
+            my_error(c.mailfail, 'MARS request failed')
 
-        day += datechunk
+        day += delta_t
 
     return
 

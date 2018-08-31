@@ -32,9 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -42,17 +40,8 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PYTHONPATH=$ECMWFDATA/python
-  export PATH=${PATH}:${HOME}/ECMWFDATA7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
   ;;
-#  *)
-#  export ECMWFDATA=$HOME/ECMWFDATA$VERSION
-#  export PATH=/opt/anaconda/bin:$ECMWFDATA/python:${PATH}
-#  export PYTHONPATH=/opt/anaconda/lib/python2.7/site-packages/grib_api:$ECMWFDATA/python
-#  export SCRATCH=$ECMWFDATA/python
-#  which python
-#  ;;
 esac
 
 cd $SCRATCH
@@ -62,34 +51,41 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-GATEWAY srvx8.img.univie.ac.at
-DESTINATION annep@genericSftp
-accuracy 16
+accuracy 24
 addpar 186 187 188 235 139 39 
+area 
 basetime None
+controlfile CONTROL.test
 cwc 0
 date_chunk 3
-debug 1
+debug 0
+destination annep@genericSftp
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
+ecgid at
 ecstorage 0
 ectrans 1
-end_date 20160809
+ecuid km4a
+end_date 20000101
 eta 0
 etadiff 0
+etapar 77
 expver 1
 format GRIB1
+gateway srvx8.img.univie.ac.at
 gauss 1
 grib2flexpart 0
 grid 5000
 inputdir ../work
+install_target None
+job_template job.temp
 left -15000
 level 60
 levelist 55/to/60
 lower 30000
-mailfail ${USER}
-mailops ${USER}
+mailfail ${USER} 
+mailops ${USER} 
 makefile None
 marsclass EI
 maxstep 11
@@ -97,16 +93,18 @@ number OFF
 omega 0
 omegadiff 0
 outputdir ../work
-prefix EI
+prefix EItest_
+queue ecgate
 resol 63
 right 45000
 smooth 0
-start_date 20160809
+start_date 20000101
 step 00 01 02 03 04 05 00 07 08 09 10 11 00 01 02 03 04 05 00 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
 upper 75000
+wrf 0
 EOF
 
 
