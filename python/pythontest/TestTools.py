@@ -4,12 +4,15 @@
 import os
 import sys
 #import unittest
+import subprocess
+import pipes
 import pytest
 
 sys.path.append('../')
 import _config
 from tools import (init128, to_param_id, my_error, read_ecenv,
-                   get_cmdline_arguments, submit_job_to_ecserver)
+                   get_cmdline_arguments, submit_job_to_ecserver,
+                   put_file_to_ecserver)
 
 
 class TestTools():
@@ -114,9 +117,13 @@ class TestTools():
     def test_make_dir(self):
         assert True
 
-    def test_put_file_to_ecserver(self):
-        assert True
-        #assert subprocess.call(['ssh', host, 'test -e ' + pipes.quote(path)]) == 0
+    def test_success_put_file_to_ecserver(self):
+        ecuid=os.environ['ECUID']#'km4a'
+        ecgid=os.environ['ECGID']#'at'
+        put_file_to_ecserver('TestData/', 'testfile.txt', 'ecgate', ecuid, ecgid)
+        assert subprocess.call(['ssh', 'km4a@ecaccess.ecmwf.int' ,
+                                'test -e ' +
+                                pipes.quote('/home/ms/'+ecgid+'/'+ecuid)]) == 0
 
     def test_fail_submit_job_to_ecserver(self):
         with pytest.raises(SystemExit) as pytest_wrapped_e:
@@ -125,7 +132,6 @@ class TestTools():
         assert pytest_wrapped_e.value.code == '... ECACCESS-JOB-SUBMIT FAILED!'
 
     def test_success_submit_job_to_ecserver(self):
-
         result = submit_job_to_ecserver('ecgate', 'TestData/testfile.txt')
         assert result == 0
 

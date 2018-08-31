@@ -470,7 +470,7 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
 
     try:
         subprocess.check_call(['ecaccess-file-put',
-                               ecd + '../' + filename,
+                               ecd + '/' + filename,
                                target + ':/home/ms/' +
                                ecgid + '/' + ecuid +
                                '/' + filename])
