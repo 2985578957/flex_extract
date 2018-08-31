@@ -160,7 +160,7 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextondemand))
 
-        submit_job_to_ecserver('', queue, job_file)
+        result_code = submit_job_to_ecserver(queue, job_file)
 
     else:
     # --------- create operational job script ----------------------------------
@@ -186,7 +186,7 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextoper))
 
-        submit_job_to_ecserver('', queue, job_file)
+        result_code = submit_job_to_ecserver(queue, job_file)
 
     # --------------------------------------------------------------------------
     print 'You should get an email with subject flex.hostname.pid'

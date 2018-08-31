@@ -120,14 +120,13 @@ class TestTools():
 
     def test_fail_submit_job_to_ecserver(self):
         with pytest.raises(SystemExit) as pytest_wrapped_e:
-            submit_job_to_ecserver('${HOME}', 'ecgate', 'job.ksh')
+            submit_job_to_ecserver('ecgate', 'job.ksh')
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == '... ECACCESS-JOB-SUBMIT FAILED!'
 
     def test_success_submit_job_to_ecserver(self):
 
-        result = submit_job_to_ecserver('TestData/testfile.txt',
-                                        'ecgate', 'TestData/testfile.txt')
+        result = submit_job_to_ecserver('ecgate', 'TestData/testfile.txt')
         assert result == 0
 
 

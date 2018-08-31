@@ -194,8 +194,8 @@ def install_via_gateway(c):
         put_file_to_ecserver(ecd, tarball_name, c.install_target,
                              c.ecuid, c.ecgid)
 
-        submit_job_to_ecserver(ecd + '/python/', c.install_target,
-                               'compilejob.ksh')
+        result_code = submit_job_to_ecserver(ecd + '/python/', c.install_target,
+                                             'compilejob.ksh')
 
         print 'job compilation script has been submitted to ecgate for ' + \
               'installation in ' + c.flexpart_root_scripts + \
