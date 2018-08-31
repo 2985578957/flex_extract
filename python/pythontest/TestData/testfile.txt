@@ -1,0 +1,2 @@
+#This file is just for testing the submission of files to an ecserver. 
+ls -l
