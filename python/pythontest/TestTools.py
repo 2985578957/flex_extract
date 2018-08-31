@@ -8,7 +8,8 @@ import pytest
 
 sys.path.append('../')
 import _config
-from tools import init128, to_param_id, my_error, read_ecenv
+from tools import (init128, to_param_id, my_error, read_ecenv,
+                   get_cmdline_arguments)
 
 
 class TestTools():
@@ -19,7 +20,44 @@ class TestTools():
         pass
 
     def test_get_cmdline_arguments(self):
-        assert True
+        '''
+        '''
+        cmd_dict_control = {'start_date':'20180101',
+                            'end_date':'20180101',
+                            'date_chunk':'3',
+                            'basetime':'12',
+                            'step':'1',
+                            'levelist':'1/to/10',
+                            'area':'50/10/60/20',
+                            'inputdir':'../work',
+                            'outputdir':'../work',
+                            'flexpart_root_scripts':'../',
+                            'ppid':'1234',
+                            'job_template':'job.sh',
+                            'queue':'ecgate',
+                            'controlfile':'CONTROL.WORK',
+                            'debug':'1'}
+
+        sys.argv = ['dummy.py',
+                    '--start_date=20180101',
+                    '--end_date=20180101',
+                    '--date_chunk=3',
+                    '--basetime=12',
+                    '--step=1',
+                    '--levelist=1/to/10',
+                    '--area=50/10/60/20',
+                    '--inputdir=../work',
+                    '--outputdir=../work',
+                    '--flexpart_root_scripts=../',
+                    '--ppid=1234',
+                    '--job_template=job.sh',
+                    '--queue=ecgate',
+                    '--controlfile=CONTROL.WORK',
+                    '--debug=1']
+
+        results = get_cmdline_arguments()
+
+        assert cmd_dict_control == vars(results)
 
     def test_init128(self):
         '''
@@ -29,7 +67,6 @@ class TestTools():
         # check a sample of parameters which must have been read in
         result = all((k in table128 and table128[k]==v) for k,v in expected.iteritems())
         assert result == True
-
 
     def test_to_param_id(self):
         '''
@@ -58,7 +95,6 @@ class TestTools():
         envs = read_ecenv(os.getcwd() + '/TestData/ECMWF_ENV')
 
         assert envs_ref == envs
-
 
     def test_clean_up(self):
         assert True
