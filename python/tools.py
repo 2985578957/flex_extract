@@ -499,15 +499,16 @@ def submit_job_to_ecserver(ecd, target, jobname):
             The name of the jobfile to be submitted to the ECMWF server.
 
     @Return:
-        <nothing>
+        rcode: integer
+            Resulting code of subprocess.check_call.
     '''
 
     try:
-        subprocess.check_call(['ecaccess-job-submit',
-                               '-queueName', target,
-                               jobname])
+        rcode = subprocess.check_call(['ecaccess-job-submit',
+                                       '-queueName', target,
+                                       jobname])
     except subprocess.CalledProcessError as e:
         print '... ERROR CODE: ', e.returncode
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
 
-    return
+    return rcode

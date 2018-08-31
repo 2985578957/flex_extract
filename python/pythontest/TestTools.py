@@ -9,7 +9,7 @@ import pytest
 sys.path.append('../')
 import _config
 from tools import (init128, to_param_id, my_error, read_ecenv,
-                   get_cmdline_arguments)
+                   get_cmdline_arguments, submit_job_to_ecserver)
 
 
 class TestTools():
@@ -76,7 +76,7 @@ class TestTools():
         for par in pars:
             assert par in [130, 134, 142, 146]
 
-    def test_error_notifcation(self):
+    def test_my_error(self):
         '''
         '''
         with pytest.raises(SystemExit) as pytest_wrapped_e:
@@ -108,7 +108,6 @@ class TestTools():
     def test_silent_remove(self):
         assert True
 
-
     def test_get_list_as_string(self):
         assert True
 
@@ -117,9 +116,21 @@ class TestTools():
 
     def test_put_file_to_ecserver(self):
         assert True
+        #assert subprocess.call(['ssh', host, 'test -e ' + pipes.quote(path)]) == 0
 
-    def submit_job_to_ecserver(self):
-        assert True
+    def test_fail_submit_job_to_ecserver(self):
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            submit_job_to_ecserver('${HOME}', 'ecgate', 'job.ksh')
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == '... ECACCESS-JOB-SUBMIT FAILED!'
+
+    def test_success_submit_job_to_ecserver(self):
+
+        result = submit_job_to_ecserver('TestData/testfile.txt',
+                                        'ecgate', 'TestData/testfile.txt')
+        assert result == 0
+
+
 
 if __name__ == "__main__":
     unittest.main()
