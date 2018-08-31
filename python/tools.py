@@ -482,16 +482,13 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
 
     return
 
-def submit_job_to_ecserver(ecd, target, jobname):
+def submit_job_to_ecserver(target, jobname):
     '''
     @Description:
         Uses ecaccess to submit a job to the ECMWF server.
         Catches and prints the error if one arise.
 
     @Input:
-        ecd: string
-            The path were the file is to be stored.
-
         target: string
             The target where the file should be sent to, e.g. the queue.
 
