@@ -3,7 +3,6 @@
 
 import os
 import sys
-#import unittest
 import subprocess
 import pipes
 import pytest
@@ -117,11 +116,12 @@ class TestTools():
     def test_make_dir(self):
         assert True
 
+    @pytest.mark.msuser
     def test_success_put_file_to_ecserver(self):
-        ecuid=os.environ['ECUID']#'km4a'
-        ecgid=os.environ['ECGID']#'at'
+        ecuid=os.environ['ECUID']
+        ecgid=os.environ['ECGID']
         put_file_to_ecserver('TestData/', 'testfile.txt', 'ecgate', ecuid, ecgid)
-        assert subprocess.call(['ssh', 'km4a@ecaccess.ecmwf.int' ,
+        assert subprocess.call(['ssh', ecuid+'@ecaccess.ecmwf.int' ,
                                 'test -e ' +
                                 pipes.quote('/home/ms/'+ecgid+'/'+ecuid)]) == 0
 
