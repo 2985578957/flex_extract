@@ -176,7 +176,7 @@ def install_via_gateway(c):
     target_dir = 'flex_extract_v' + _VERSION_STR
     fortran_executable = 'CONVERT2'
 
-    if c.install_target.lower() != 'local':
+    if c.install_target.lower() != 'local': # ecgate or cca
 
         mk_compilejob(ecd + 'python/compilejob.temp', c.makefile,
                       c.install_target, c.ecuid, c.ecgid,
@@ -194,13 +194,13 @@ def install_via_gateway(c):
         put_file_to_ecserver(ecd, tarball_name, c.install_target,
                              c.ecuid, c.ecgid)
 
-        result_code = submit_job_to_ecserver(ecd + '/python/', c.install_target,
-                                             'compilejob.ksh')
+        submit_job_to_ecserver(ecd + '/python/', c.install_target,
+                               'compilejob.ksh')
 
         print 'job compilation script has been submitted to ecgate for ' + \
               'installation in ' + c.flexpart_root_scripts + \
                '/' + target_dir
-        print 'You should get an email with subject flexcompile within ' + \
+        print 'You should get an email with subject "flexcompile" within ' + \
               'the next few minutes!'
 
     else: #local

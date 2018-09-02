@@ -445,18 +445,22 @@ def make_dir(directory):
 def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
     '''
     @Description:
-        Uses the ecaccess command to send a file to the ECMWF servers.
-        Catches and prints the error if it failed.
+        Uses the ecaccess-file-put command to send a file to the ECMWF servers.
+
+        NOTE:
+        The return value is just for testing reasons. It does not have
+        to be used from the calling function since the whole error handling
+        is done in here.
 
     @Input:
         ecd: string
-            The path were the file is to be stored.
+            The path were the file is stored.
 
         filename: string
             The name of the file to send to the ECMWF server.
 
         target: string
-            The target where the file should be sent to, e.g. the queue.
+            The target queue where the file should be sent to.
 
         ecuid: string
             The user id on ECMWF server.
@@ -465,28 +469,37 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
             The group id on ECMWF server.
 
     @Return:
-        <nothing>
+        rcode: string
+            Resulting code of command execution. If successful the string
+            will be empty.
     '''
 
     try:
-        subprocess.check_call(['ecaccess-file-put',
-                               ecd + '/' + filename,
-                               target + ':/home/ms/' +
-                               ecgid + '/' + ecuid +
-                               '/' + filename])
+        rcode = subprocess.check_output(['ecaccess-file-put',
+                                          ecd + '/' + filename,
+                                          target + ':/home/ms/' +
+                                          ecgid + '/' + ecuid +
+                                          '/' + filename],
+                                         stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
-        print 'ERROR:'
-        print e
-        sys.exit('ecaccess-file-put failed!\n' + \
-                 'Probably the eccert key has expired.')
+        print '... ERROR CODE:\n ... ', e.returncode
+        print '... ERROR MESSAGE:\n ... ', e
+        print '... COMMAND MESSAGE:\n ...', e.output
 
-    return
+        print '\nDo you have a valid eccert key?'
+        sys.exit('... ECACCESS-FILE-PUT FAILED!')
+
+    return rcode
 
 def submit_job_to_ecserver(target, jobname):
     '''
     @Description:
-        Uses ecaccess to submit a job to the ECMWF server.
-        Catches and prints the error if one arise.
+        Uses ecaccess-job-submit command to submit a job to the ECMWF server.
+
+        NOTE:
+        The return value is just for testing reasons. It does not have
+        to be used from the calling function since the whole error handling
+        is done in here.
 
     @Input:
         target: string
@@ -496,16 +509,22 @@ def submit_job_to_ecserver(target, jobname):
             The name of the jobfile to be submitted to the ECMWF server.
 
     @Return:
-        rcode: integer
-            Resulting code of subprocess.check_call.
+        rcode: string
+            Resulting code of command execution. If successful the string
+            will contain an integer number, representing the id of the job
+            at the ecmwf server.
     '''
 
     try:
-        rcode = subprocess.check_call(['ecaccess-job-submit',
-                                       '-queueName', target,
-                                       jobname])
+        rcode = subprocess.check_output(['ecaccess-job-submit',
+                                         '-queueName', target,
+                                         jobname])
     except subprocess.CalledProcessError as e:
         print '... ERROR CODE: ', e.returncode
+        print '... ERROR MESSAGE:\n ... ', e
+        print '... COMMAND MESSAGE:\n ...', e.output
+
+        print '\nDo you have a valid eccert key?'
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
 
     return rcode

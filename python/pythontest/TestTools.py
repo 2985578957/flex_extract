@@ -116,8 +116,24 @@ class TestTools():
     def test_make_dir(self):
         assert True
 
-    @pytest.mark.msuser
+    def test_fail_put_file_to_ecserver(self):
+        ecuid=os.environ['ECUID']
+        ecgid=os.environ['ECGID']
+        with pytest.raises(SystemExit) as pytest_wrapped_e:
+            put_file_to_ecserver('TestData/', 'testfil.txt',
+                                 'ecgate', ecuid, ecgid)
+        assert pytest_wrapped_e.type == SystemExit
+        assert pytest_wrapped_e.value.code == '... ECACCESS-FILE-PUT FAILED!'
+
     def test_success_put_file_to_ecserver(self):
+        ecuid=os.environ['ECUID']
+        ecgid=os.environ['ECGID']
+        result = put_file_to_ecserver('TestData/', 'testfile.txt',
+                                      'ecgate', ecuid, ecgid)
+        assert result == ''
+
+    @pytest.mark.msuser_pw
+    def test_fullsuccess_put_file_to_ecserver(self):
         ecuid=os.environ['ECUID']
         ecgid=os.environ['ECGID']
         put_file_to_ecserver('TestData/', 'testfile.txt', 'ecgate', ecuid, ecgid)
@@ -133,8 +149,7 @@ class TestTools():
 
     def test_success_submit_job_to_ecserver(self):
         result = submit_job_to_ecserver('ecgate', 'TestData/testfile.txt')
-        assert result == 0
-
+        assert result.strip().isdigit() == True
 
 
 if __name__ == "__main__":
