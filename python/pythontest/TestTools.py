@@ -6,7 +6,6 @@ import sys
 import subprocess
 import pipes
 import pytest
-from unittest.mock import patch
 
 sys.path.append('../')
 import _config
@@ -123,16 +122,14 @@ class TestTools():
         out, err = capfd.readouterr()
         assert os.path.isfile(testfile) == False
         assert out == ''
-
-    @patch(silent_remove)
-    def test_failany_silent_remove(self, mock_silent_remove):
-        testfile = 'testfileany.test'
-        mock_silent_remove.side_effect = OSError
-        with pytest.raises(OSError) as pytest_wrapped_e:
-            silent_remove(testfile)
-        #out, err = capfd.readouterr()
-        #assert os.path.isfile(testfile) == False
-        #assert out == ''
+#
+#    def test_failany_silent_remove(self):
+#        testfile = 'testfileany.test'
+#        with pytest.raises(OSError) as pytest_wrapped_e:
+#            silent_remove(testfile)
+#        #out, err = capfd.readouterr()
+#        #assert os.path.isfile(testfile) == False
+#        #assert out == ''
 
     def test_get_list_as_string(self):
         assert True
