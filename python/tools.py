@@ -315,7 +315,7 @@ def product(*args, **kwds):
 def silent_remove(filename):
     '''
     @Description:
-        If "filename" exists , it is removed.
+        Remove file if it exists.
         The function does not fail if the file does not exist.
 
     @Input:
@@ -328,7 +328,6 @@ def silent_remove(filename):
     try:
         os.remove(filename)
     except OSError as e:
-        # this would be "except OSError, e:" before Python 2.6
         if e.errno != errno.ENOENT:
             # errno.ENOENT  =  no such file or directory
             raise  # re-raise exception if a different error occured
@@ -426,7 +425,7 @@ def make_dir(directory):
 
     @Input:
         directory: string
-            The directory path which should be created.
+            The directory name including the path which should be created.
 
     @Return:
         <nothing>

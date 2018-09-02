@@ -6,12 +6,14 @@ import sys
 import subprocess
 import pipes
 import pytest
+from unittest.mock import patch
 
 sys.path.append('../')
 import _config
-from tools import (init128, to_param_id, my_error, read_ecenv,
-                   get_cmdline_arguments, submit_job_to_ecserver,
-                   put_file_to_ecserver)
+from tools import (get_cmdline_arguments, read_ecenv, clean_up, my_error,
+                   normal_exit, product, silent_remove, init128, to_param_id,
+                   get_list_as_string, make_dir, put_file_to_ecserver,
+                   submit_job_to_ecserver)
 
 
 class TestTools():
@@ -107,14 +109,51 @@ class TestTools():
     def test_product(self):
         assert True
 
-    def test_silent_remove(self):
-        assert True
+    def test_success_silent_remove(self, capfd):
+        testfile = 'testfile.test'
+        open(testfile, 'w').close()
+        silent_remove(testfile)
+        out, err = capfd.readouterr()
+        assert os.path.isfile(testfile) == False
+        assert out == ''
+
+    def test_failnotexist_silent_remove(self, capfd):
+        testfile = 'testfile.test'
+        silent_remove(testfile)
+        out, err = capfd.readouterr()
+        assert os.path.isfile(testfile) == False
+        assert out == ''
+
+    @patch(silent_remove)
+    def test_failany_silent_remove(self, mock_silent_remove):
+        testfile = 'testfileany.test'
+        mock_silent_remove.side_effect = OSError
+        with pytest.raises(OSError) as pytest_wrapped_e:
+            silent_remove(testfile)
+        #out, err = capfd.readouterr()
+        #assert os.path.isfile(testfile) == False
+        #assert out == ''
 
     def test_get_list_as_string(self):
         assert True
 
-    def test_make_dir(self):
-        assert True
+    def test_warningexist_make_dir(self, capfd):
+        testdir = 'TestData'
+        make_dir(testdir)
+        out, err = capfd.readouterr()
+        assert out.strip() == 'WARNING: Directory {0} already exists!'.format(testdir)
+
+    def test_failany_make_dir(self):
+        testdir = '/test' # force a permission denied error
+        with pytest.raises(OSError) as pytest_wrapped_e:
+            make_dir(testdir)
+        assert pytest_wrapped_e.type == OSError
+
+    def test_success_make_dir(self):
+        testdir = 'testing_mkdir'
+        make_dir(testdir)
+        assert os.path.exists(testdir) == True
+        os.rmdir(testdir)
 
     def test_fail_put_file_to_ecserver(self):
         ecuid=os.environ['ECUID']
