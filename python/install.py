@@ -262,7 +262,7 @@ def mk_tarball(ecd, tarname):
                                ecd + 'python/*ksh ' +
                                ecd + 'python/*temp* ' +
                                ecd + 'python/ECMWF_ENV ' +
-                               ecd + 'grib_templates ' +
+                               ecd + '_templates ' +
                                ecd + 'src/*.f ' +
                                ecd + 'src/*.f90 ' +
                                ecd + 'src/*.h ' +

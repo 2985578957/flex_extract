@@ -80,7 +80,7 @@ def main():
         c = ControlFile(args.controlfile)
     except IOError:
         try:
-            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
+            c = ControlFile(_config.PATH_LOCAL_PYTHON + args.controlfile)
         except IOError:
             print 'Could not read CONTROL file "' + args.controlfile + '"'
             print 'Either it does not exist or its syntax is wrong.'

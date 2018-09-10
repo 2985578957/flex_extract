@@ -28,11 +28,23 @@ import inspect
 _VERSION_STR = '7.1'
 
 # add path to pythonpath
-LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
+PATH_LOCAL_PYTHON = os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe())))
-if LOCAL_PYTHON_PATH not in sys.path:
-    sys.path.append(LOCAL_PYTHON_PATH)
+if PATH_LOCAL_PYTHON not in sys.path:
+    sys.path.append(PATH_LOCAL_PYTHON)
+
+PATH_FLEXEXTRACT_DIR = os.path.normpath(os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe()))) + '/../')
+
+PATH_TEMPLATES = os.path.join(PATH_FLEXEXTRACT_DIR + os.path.sep +
+                              '_templates')
 
 # path to gribtable
-PATH_GRIBTABLE = LOCAL_PYTHON_PATH + '/templates/ecmwf_grib1_table_128'
+PATH_GRIBTABLE = os.path.join(PATH_TEMPLATES + os.path.sep +
+                              'ecmwf_grib1_table_128')
 
+PATH_RUN_DIR = os.path.join(PATH_FLEXEXTRACT_DIR + os.path.sep +
+                                'run')
+
+PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR + os.path.sep +
+                                'control')

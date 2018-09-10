@@ -67,7 +67,7 @@ ecgid at
 ecstorage 0
 ectrans 1
 ecuid km4a
-end_date 20000101
+end_date 20100606
 eta 0
 etadiff 0
 etapar 77
@@ -80,9 +80,9 @@ grid 5000
 inputdir ../work
 install_target None
 job_template job.temp
-left -15000
+left -10000
 level 60
-levelist 55/to/60
+levelist 59/to/60
 lower 30000
 mailfail ${USER} 
 mailops ${USER} 
@@ -96,14 +96,14 @@ outputdir ../work
 prefix EItest_
 queue ecgate
 resol 63
-right 45000
+right 10000
 smooth 0
-start_date 20000101
+start_date 20100606
 step 00 01 02 03 04 05 00 07 08 09 10 11 00 01 02 03 04 05 00 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
-upper 75000
+upper 40000
 wrf 0
 EOF
 

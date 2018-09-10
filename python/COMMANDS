@@ -1,0 +1,16 @@
+./install.py --target=ecgate --ecuid=km4a --ecgid=at --gateway=srvx8.img.univie.ac.at --destination=annep@genericSftp 
+
+./submit.py --queue=ecgate --start_date=20160809 --debug=True
+
+firefox  SphinxDoc/_build/html/index.html  &
+
+./plot_retrieved.py --start_date=2016080906 --inputdir=../work2/ --paramIds=131 --end_date=2016080909 --prefix=EI --levelist=59/60
+
+./prepareFLEXPART.py --start_date=20010809 --debug=1 --controlfile=CONTROL_CERA.test --ppid=1411 --inputdir=../work2/
+
+find ./ -name \*.py -exec sed -i 's/Disagg/disaggregation/g' {} \;
+
+
+pyreserve *.py # on s1
+dot -Tpng packages.dot -O #on s8
+dot -Tpng classes.dot -O #on s8

@@ -23,8 +23,6 @@ class TestTools():
         pass
 
     def test_get_cmdline_arguments(self):
-        '''
-        '''
         cmd_dict_control = {'start_date':'20180101',
                             'end_date':'20180101',
                             'date_chunk':'3',
@@ -63,8 +61,6 @@ class TestTools():
         assert cmd_dict_control == vars(results)
 
     def test_init128(self):
-        '''
-        '''
         table128 = init128(_config.PATH_GRIBTABLE)
         expected = {'078': 'TCLW', '130': 'T', '034': 'SST'}
         # check a sample of parameters which must have been read in
@@ -72,24 +68,18 @@ class TestTools():
         assert result == True
 
     def test_to_param_id(self):
-        '''
-        '''
         table128 = init128(_config.PATH_GRIBTABLE)
         pars = to_param_id("T/SP/LSP/SSHF", table128)
         for par in pars:
             assert par in [130, 134, 142, 146]
 
     def test_my_error(self):
-        '''
-        '''
         with pytest.raises(SystemExit) as pytest_wrapped_e:
             my_error(['${USER}', 'anne.philipp@univie.ac.at'], 'Failed!')
         assert pytest_wrapped_e.type == SystemExit
         assert pytest_wrapped_e.value.code == 1
 
     def test_read_ecenv(self):
-        '''
-        '''
         envs_ref = {'ECUID': 'km4a',
                     'ECGID': 'at',
                     'GATEWAY': 'srvx8.img.univie.ac.at',
@@ -100,6 +90,7 @@ class TestTools():
         assert envs_ref == envs
 
     def test_clean_up(self):
+
         assert True
 
     def test_normal_exit(self):
@@ -122,17 +113,28 @@ class TestTools():
         out, err = capfd.readouterr()
         assert os.path.isfile(testfile) == False
         assert out == ''
-#
-#    def test_failany_silent_remove(self):
-#        testfile = 'testfileany.test'
-#        with pytest.raises(OSError) as pytest_wrapped_e:
-#            silent_remove(testfile)
-#        #out, err = capfd.readouterr()
-#        #assert os.path.isfile(testfile) == False
-#        #assert out == ''
 
-    def test_get_list_as_string(self):
-        assert True
+    @pytest.mark.skip(reason="no way of currently testing this")
+    def test_failany_silent_remove(self):
+        testfile = 'testfileany.test'
+        with pytest.raises(OSError) as pytest_wrapped_e:
+            silent_remove(testfile)
+        #out, err = capfd.readouterr()
+        #assert os.path.isfile(testfile) == False
+        #assert out == ''
+
+    def test_success_get_list_as_string(self):
+        list_object =  [1, 2, 3, '...', 'testlist']
+        list_as_string = '1, 2, 3, ..., testlist'
+        assert list_as_string == get_list_as_string(list_object)
+
+    @pytest.mark.skip(reason="no way of currently testing this")
+    def test_fail_get_list_as_string(self):
+        list_object =  [1, 2, 3, '...', 'testlist']
+        list_as_string = '1, 2, 3, ..., testlist'
+        with pytest.raises(Exception) as pytest_wrapped_e:
+            result = get_list_as_string(list_object)
+        assert result == list_as_string
 
     def test_warningexist_make_dir(self, capfd):
         testdir = 'TestData'
