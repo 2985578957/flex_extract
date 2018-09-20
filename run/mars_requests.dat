@@ -1,0 +1,252 @@
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: SFC
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCOG_acc_SL.20170808.41511.90849.grb
+step: 3/to/12/by/3
+grid: 5.0/5.0
+param: LSP/CP/SSHF/EWSS/NSSS/SSR
+time: 00/12
+date: 20170808/to/20170810
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 59/to/60
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCOG__ML.20170809.41511.90849.grb
+step: 03/09
+grid: 5.0/5.0
+param: T/Q
+time: 00/12
+date: 20170809/to/20170809
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: SFC
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/OG_OROLSM__SL.20170809.41511.90849.grb
+step: 000
+grid: 5.0/5.0
+param: 160/27/28/173
+time: 00
+date: 20170809
+resol: 63
+type: AN
+accuracy: 24
+
+
+mars
+gaussian: reduced
+stream: OPER
+levelist: 1
+area: 
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCGG__SL.20170809.41511.90849.grb
+step: 03/09
+grid: 32
+param: Q
+time: 00/12
+date: 20170809/to/20170809
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1/to/60
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCGG__ML.20170809.41511.90849.grb
+step: 03/09
+grid: 32
+param: U/V/D/77
+time: 00/12
+date: 20170809/to/20170809
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCSH__SL.20170809.41511.90849.grb
+step: 03/09
+grid: OFF
+param: LNSP
+time: 00/12
+date: 20170809/to/20170809
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: SFC
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/FCOG__SL.20170809.41511.90849.grb
+step: 03/09
+grid: 5.0/5.0
+param: 141/151/164/165/166/167/168/129/172/186/187/188/235/139/39
+time: 00/12
+date: 20170809/to/20170809
+resol: 63
+type: FC
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 59/to/60
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/ANOG__ML.20170809.41511.90849.grb
+step: 00
+grid: 5.0/5.0
+param: T/Q
+time: 00/06/12/18
+date: 20170809/to/20170809
+resol: 63
+type: AN
+accuracy: 24
+
+
+mars
+gaussian: reduced
+stream: OPER
+levelist: 1
+area: 
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/ANGG__SL.20170809.41511.90849.grb
+step: 00
+grid: 32
+param: Q
+time: 00/06/12/18
+date: 20170809/to/20170809
+resol: 63
+type: AN
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1/to/60
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/ANGG__ML.20170809.41511.90849.grb
+step: 00
+grid: 32
+param: U/V/D/77
+time: 00/06/12/18
+date: 20170809/to/20170809
+resol: 63
+type: AN
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: ML
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/ANSH__SL.20170809.41511.90849.grb
+step: 00
+grid: OFF
+param: LNSP
+time: 00/06/12/18
+date: 20170809/to/20170809
+resol: 63
+type: AN
+accuracy: 24
+
+
+mars
+gaussian: 
+stream: OPER
+levelist: 1
+area: 40.0/-10.0/30.0/10.0
+marsclass: EI
+levtype: SFC
+number: OFF
+expver: 1
+repres: 
+target: /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/python/../work/ANOG__SL.20170809.41511.90849.grb
+step: 00
+grid: 5.0/5.0
+param: 141/151/164/165/166/167/168/129/172/186/187/188/235/139/39
+time: 00/06/12/18
+date: 20170809/to/20170809
+resol: 63
+type: AN
+accuracy: 24
+
+

@@ -123,6 +123,9 @@ def get_cmdline_arguments():
                         help="file with CONTROL parameters")
     parser.add_argument("--debug", dest="debug", default=None,
                         help="debug mode - leave temporary files intact")
+    parser.add_argument("--request", dest="request", default=None,
+                        help="list all mars request in file mars_requests.dat \
+                        and skip submission to mars")
 
     args = parser.parse_args()
 
@@ -136,13 +139,15 @@ def read_ecenv(filename):
 
     @Input:
         filename: string
-            Name of file where the ECMWV environment parameters are stored.
+            Path to file where the ECMWV environment parameters are stored.
 
     @Return:
         envs: dict
+            Contains the environment parameter ecuid, ecgid, gateway
+            and destination for ECMWF server environments.
     '''
     envs= {}
-    print filename
+
     with open(filename, 'r') as f:
         for line in f:
             data = line.strip().split()
@@ -174,7 +179,7 @@ def clean_up(c):
         <nothing>
     '''
 
-    print "clean_up"
+    print("clean_up")
 
     cleanlist = glob.glob(c.inputdir + "/*")
     for clist in cleanlist:
@@ -183,7 +188,7 @@ def clean_up(c):
         if c.ecapi is False and (c.ectrans == '1' or c.ecstorage == '1'):
             silent_remove(clist)
 
-    print "Done"
+    print("Done")
 
     return
 
@@ -207,7 +212,7 @@ def my_error(users, message='ERROR'):
         <nothing>
     '''
 
-    print message
+    print(message)
 
     # comment if user does not want email notification directly from python
     for user in users:
@@ -223,11 +228,11 @@ def my_error(users, message='ERROR'):
             trace = '\n'.join(traceback.format_stack())
             pout = p.communicate(input=message + '\n\n' + trace)[0]
         except ValueError as e:
-            print 'ERROR: ', e
+            print('ERROR: ', e)
             sys.exit('Email could not be sent!')
         else:
-            print 'Email sent to ' + os.path.expandvars(user) + ' ' + \
-                  pout.decode()
+            print('Email sent to ' + os.path.expandvars(user) + ' ' +
+                  pout.decode())
 
     sys.exit(1)
 
@@ -252,7 +257,7 @@ def normal_exit(users, message='Done!'):
         <nothing>
 
     '''
-    print message
+    print(message)
 
     # comment if user does not want notification directly from python
     for user in users:
@@ -267,11 +272,11 @@ def normal_exit(users, message='Done!'):
                                  bufsize=1)
             pout = p.communicate(input=message+'\n\n')[0]
         except ValueError as e:
-            print 'ERROR: ', e
-            print 'Email could not be sent!'
+            print('ERROR: ', e)
+            print('Email could not be sent!')
         else:
-            print 'Email sent to ' + os.path.expandvars(user) + ' ' + \
-                  pout.decode()
+            print('Email sent to ' + os.path.expandvars(user) + ' ' +
+                  pout.decode())
 
     return
 
@@ -391,7 +396,7 @@ def to_param_id(pars, table):
                 ipar.append(int(k))
                 break
         else:
-            print 'Warning: par ' + par + ' not found in table 128'
+            print('Warning: par ' + par + ' not found in table 128')
 
     return ipar
 
@@ -437,7 +442,7 @@ def make_dir(directory):
             # errno.EEXIST = directory already exists
             raise # re-raise exception if a different error occured
         else:
-            print 'WARNING: Directory {0} already exists!'.format(directory)
+            print('WARNING: Directory {0} already exists!'.format(directory))
 
     return
 
@@ -481,11 +486,10 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
                                           '/' + filename],
                                          stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
-        print '... ERROR CODE:\n ... ', e.returncode
-        print '... ERROR MESSAGE:\n ... ', e
-        print '... COMMAND MESSAGE:\n ...', e.output
+        print('... ERROR CODE:\n ... ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n ... ' + str(e))
 
-        print '\nDo you have a valid eccert key?'
+        print('\n... Do you have a valid ecaccess certification key?')
         sys.exit('... ECACCESS-FILE-PUT FAILED!')
 
     return rcode
@@ -519,11 +523,11 @@ def submit_job_to_ecserver(target, jobname):
                                          '-queueName', target,
                                          jobname])
     except subprocess.CalledProcessError as e:
-        print '... ERROR CODE: ', e.returncode
-        print '... ERROR MESSAGE:\n ... ', e
-        print '... COMMAND MESSAGE:\n ...', e.output
+        print('... ERROR CODE:\n ... ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n ... ' + str(e))
 
-        print '\nDo you have a valid eccert key?'
+
+        print('\n... Do you have a valid ecaccess certification key?')
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
 
     return rcode

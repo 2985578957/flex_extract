@@ -11,6 +11,9 @@
 #        - applied PEP8 style guide
 #        - added documentation
 #        - moved install_args_and_control in here
+#        - splitted code in smaller functions
+#        - delete convert build files in here instead of compile job script
+#        - changed static path names to Variables from config file
 #
 # @License:
 #    (C) Copyright 2015-2018.
@@ -33,6 +36,7 @@
 #    - get_install_cmdline_arguments
 #    - install_via_gateway
 #    - mk_tarball
+#    - un_tarball
 #    - mk_env_vars
 #    - mk_compilejob
 #    - mk_job_template
@@ -46,22 +50,16 @@
 # ------------------------------------------------------------------------------
 import os
 import sys
+import glob
 import subprocess
 import inspect
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # software specific classes and modules from flex_extract
+import _config
 from ControlFile import ControlFile
 from UioFiles import UioFiles
 from tools import make_dir, put_file_to_ecserver, submit_job_to_ecserver
-
-# add path to pythonpath so that python finds its buddies
-LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if LOCAL_PYTHON_PATH not in sys.path:
-    sys.path.append(LOCAL_PYTHON_PATH)
-
-_VERSION_STR = '7.1'
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -79,16 +77,17 @@ def main():
         <nothing>
     '''
 
-    os.chdir(LOCAL_PYTHON_PATH)
+    #os.chdir(_config.PATH_LOCAL_PYTHON)
+
     args = get_install_cmdline_arguments()
 
     try:
         c = ControlFile(args.controlfile)
     except IOError:
-        print 'Could not read CONTROL file "' + args.controlfile + '"'
-        print 'Either it does not exist or its syntax is wrong.'
-        print 'Try "' + sys.argv[0].split('/')[-1] + \
-              ' -h" to print usage information'
+        print('Could not read CONTROL file "' + args.controlfile + '"')
+        print('Either it does not exist or its syntax is wrong.')
+        print('Try "' + sys.argv[0].split('/')[-1] +
+              ' -h" to print usage information')
         exit(1)
 
     c.assign_args_to_control(args)
@@ -133,7 +132,7 @@ def get_install_cmdline_arguments():
                         default=None, help="FLEXPART root directory on ECMWF \
                         servers (to find grib2flexpart and COMMAND file)\n\
                         Normally flex_extract resides in the scripts directory \
-                        of the FLEXPART distribution, thus the:")
+                        of the FLEXPART distribution.")
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
@@ -170,120 +169,171 @@ def install_via_gateway(c):
     @Return:
         <nothing>
     '''
+    import tarfile
 
-    ecd = c.ecmwfdatadir
-    tarball_name = 'flex_extract_v' + _VERSION_STR + '.tar'
-    target_dir = 'flex_extract_v' + _VERSION_STR
-    fortran_executable = 'CONVERT2'
+    ecd = _config.PATH_FLEXEXTRACT_DIR
+    tarball_name = _config.FLEXEXTRACT_DIRNAME + '.tar'
+    tar_file = os.path.join(ecd, tarball_name)
+
+    target_dirname = _config.FLEXEXTRACT_DIRNAME
+    fortran_executable = _config.FORTRAN_EXECUTABLE
 
     if c.install_target.lower() != 'local': # ecgate or cca
 
-        mk_compilejob(ecd + 'python/compilejob.temp', c.makefile,
-                      c.install_target, c.ecuid, c.ecgid,
+        mk_compilejob(c.makefile, c.install_target, c.ecuid, c.ecgid,
                       c.flexpart_root_scripts)
 
-        mk_job_template(ecd + 'python/job.temp.o', c.ecuid, c.ecgid, c.gateway,
+        mk_job_template(c.ecuid, c.ecgid, c.gateway,
                         c.destination, c.flexpart_root_scripts)
 
-        mk_env_vars(ecd, c.ecuid, c.ecgid, c.gateway, c.destination)
+        mk_env_vars(c.ecuid, c.ecgid, c.gateway, c.destination)
 
-        #os.chdir('/')
-
-        mk_tarball(ecd, tarball_name)
+        mk_tarball(tar_file)
 
         put_file_to_ecserver(ecd, tarball_name, c.install_target,
                              c.ecuid, c.ecgid)
 
-        submit_job_to_ecserver(ecd + '/python/', c.install_target,
-                               'compilejob.ksh')
+        submit_job_to_ecserver(c.install_target,
+                               os.path.join(_config.PATH_RELATIVE_JOBSCRIPTS,
+                                            _config.FILE_INSTALL_COMPILEJOB))
 
-        print 'job compilation script has been submitted to ecgate for ' + \
-              'installation in ' + c.flexpart_root_scripts + \
-               '/' + target_dir
-        print 'You should get an email with subject "flexcompile" within ' + \
-              'the next few minutes!'
+        print('job compilation script has been submitted to ecgate for ' +
+              'installation in ' + c.flexpart_root_scripts +
+               '/' + target_dirname)
+        print('You should get an email with subject "flexcompile" within ' +
+              'the next few minutes!')
 
     else: #local
-        if not c.flexpart_root_scripts or c.flexpart_root_scripts == '../':
-            print 'WARNING: FLEXPART_ROOT_SCRIPTS has not been specified'
-            print 'There will be only the compilation of ' + \
-                  ' in ' + ecd + '/src'
-            os.chdir(ecd + '/src')
+        if c.flexpart_root_scripts == _config.PATH_FLEXEXTRACT_DIR :
+            print('WARNING: FLEXPART_ROOT_SCRIPTS has not been specified')
+            print('flex_extract will be installed in here by compiling the ' +
+                  'Fortran source in ' + _config.PATH_FORTRAN_SRC)
+            os.chdir(_config.PATH_FORTRAN_SRC)
         else: # creates the target working directory for flex_extract
             c.flexpart_root_scripts = os.path.expandvars(os.path.expanduser(
-                c.flexpart_root_scripts))
+                                        c.flexpart_root_scripts))
             if os.path.abspath(ecd) != os.path.abspath(c.flexpart_root_scripts):
-                os.chdir('/')
-                mk_tarball(ecd, tarball_name)
-                make_dir(c.flexpart_root_scripts + '/' + target_dir)
-                os.chdir(c.flexpart_root_scripts + '/' + target_dir)
-                print 'Untar ...'
-                subprocess.check_call(['tar', '-xvf',
-                                       ecd + '../' + tarball_name])
-                os.chdir(c.flexpart_root_scripts + '/' + target_dir + '/src')
+                mk_tarball(tar_file)
+                make_dir(os.path.join(c.flexpart_root_scripts,
+                                      target_dirname))
+                os.chdir(os.path.join(c.flexpart_root_scripts,
+                                      target_dirname))
+                un_tarball(tar_file)
+                os.chdir(os.path.join(c.flexpart_root_scripts,
+                                      target_dirname,
+                                      _config.PATH_RELATIVE_FORTRAN_SRC))
 
         # Create Fortran executable - CONVERT2
-        print 'Install ' + target_dir + ' software on ' + \
-              c.install_target + ' in directory ' + \
-              os.path.abspath(os.getcwd() + '/../') + '\n'
+        print('Install ' + target_dirname + ' software at ' +
+              c.install_target + ' in directory ' +
+              os.path.abspath(c.flexpart_root_scripts) + '\n')
 
-        delete_convert_build('')
-        make_convert_build('', c.makefile, fortran_executable)
+        delete_convert_build('.')
+        make_convert_build('.', c.makefile)
+
+        os.chdir(ecd)
+        if os.path.isfile(tar_file):
+            os.remove(tar_file)
 
     return
 
-def mk_tarball(ecd, tarname):
+def mk_tarball(tarball_path):
     '''
     @Description:
-        Creates a tarball from all files which need to be sent to the
+        Creates a tarball with all necessary files which need to be sent to the
         installation directory.
         It does not matter if this is local or remote.
         Collects all python files, the Fortran source and makefiles,
-        the ECMWF_ENV file, the CONTROL files as well as
-        the korn shell and template files.
+        the ECMWF_ENV file, the CONTROL files as well as the
+        template files.
 
     @Input:
-        ecd: string
-            The path were the file is to be stored.
-
-        tarname: string
-            The name of the file to send to the ECMWF server.
+        tarball_path: string
+            The complete path to the tar file which will contain all
+            relevant data for flex_extract.
 
     @Return:
         <nothing>
     '''
+    import tarfile
+    from glob import glob
 
-    print 'Create tarball ...'
+    print('Create tarball ...')
+
+    # change to FLEXEXTRACT directory so that the tar can contain
+    # relative pathes to the files and directories
+    ecd = _config.PATH_FLEXEXTRACT_DIR + '/'
+    os.chdir(ecd)
+
+    # get lists of the files to be added to the tar file
+    ECMWF_ENV_FILE = [_config.PATH_RELATIVE_ECMWF_ENV]
+    pyfiles = [os.path.relpath(x, ecd)
+               for x in glob(_config.PATH_LOCAL_PYTHON +
+                             os.path.sep + '*py')]
+    controlfiles = [os.path.relpath(x, ecd)
+                    for x in glob(_config.PATH_CONTROLFILES +
+                                  os.path.sep + 'CONTROL*')]
+    tempfiles = [os.path.relpath(x, ecd)
+                 for x in glob(_config.PATH_TEMPLATES +
+                               os.path.sep + '*')]
+    ffiles = [os.path.relpath(x, ecd)
+              for x in glob(_config.PATH_FORTRAN_SRC +
+                            os.path.sep + '*.f*')]
+    hfiles = [os.path.relpath(x, ecd)
+              for x in glob(_config.PATH_FORTRAN_SRC +
+                            os.path.sep + '*.h')]
+    makefiles = [os.path.relpath(x, ecd)
+                 for x in glob(_config.PATH_FORTRAN_SRC +
+                               os.path.sep + 'Makefile*')]
+
+    # concatenate single lists to one for a better looping
+    filelist = pyfiles + controlfiles + tempfiles + ffiles + hfiles + \
+               makefiles + ECMWF_ENV_FILE
+
+    # create installation tar-file
     try:
-        subprocess.check_call(['tar -cvf '+
-                               ecd + '../' + tarname + ' ' +
-                               ecd + 'python/*py ' +
-                               ecd + 'python/CONTROL* ' +
-                               ecd + 'python/*ksh ' +
-                               ecd + 'python/*temp* ' +
-                               ecd + 'python/ECMWF_ENV ' +
-                               ecd + '_templates ' +
-                               ecd + 'src/*.f ' +
-                               ecd + 'src/*.f90 ' +
-                               ecd + 'src/*.h ' +
-                               ecd + 'src/Makefile*'], shell=True)
+        with tarfile.open(tarball_path, "w:gz") as tar_handle:
+            for file in filelist:
+                tar_handle.add(file)
+
     except subprocess.CalledProcessError as e:
-        print 'ERROR:'
-        print e.output
-        sys.exit('could not make installation tar ball!')
+        print('... ERROR CODE:\n ... ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n ... ' + str(e))
+
+        sys.exit('... could not make installation tar ball!')
 
     return
 
-def mk_env_vars(ecd, ecuid, ecgid, gateway, destination):
+
+def un_tarball(tarball_path):
+    '''
+    @Description:
+        Extracts the given tarball into current directory.
+
+    @Input:
+        tarball_path: string
+            The complete path to the tar file which will contain all
+            relevant data for flex_extract.
+
+    @Return:
+        <nothing>
+    '''
+    import tarfile
+
+    print('Untar ...')
+
+    with tarfile.open(tarball_path) as tar_handle:
+        tar_handle.extractall()
+
+    return
+
+def mk_env_vars(ecuid, ecgid, gateway, destination):
     '''
     @Description:
         Creates a file named ECMWF_ENV which contains the
         necessary environmental variables at ECMWF servers.
 
     @Input:
-        ecd: string
-            The path were the file is to be stored.
-
         ecuid: string
             The user id on ECMWF server.
 
@@ -301,7 +351,7 @@ def mk_env_vars(ecd, ecuid, ecgid, gateway, destination):
         <nothing>
     '''
 
-    with open(ecd + 'python/ECMWF_ENV', 'w') as fo:
+    with open(_config.PATH_RELATIVE_ECMWF_ENV, 'w') as fo:
         fo.write('ECUID ' + ecuid + '\n')
         fo.write('ECGID ' + ecgid + '\n')
         fo.write('GATEWAY ' + gateway + '\n')
@@ -309,7 +359,7 @@ def mk_env_vars(ecd, ecuid, ecgid, gateway, destination):
 
     return
 
-def mk_compilejob(template, makefile, target, ecuid, ecgid, fp_root):
+def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
     '''
     @Description:
         Modifies the original job template file so that it is specified
@@ -317,10 +367,6 @@ def mk_compilejob(template, makefile, target, ecuid, ecgid, fp_root):
         is stored in a new file "job.temp" in the python directory.
 
     @Input:
-        template: string
-            File which contains the original text for the job template.
-            It must contain the complete path to the file.
-
         makefile: string
             Name of the makefile which should be used to compile FORTRAN
             CONVERT2 program.
@@ -342,10 +388,14 @@ def mk_compilejob(template, makefile, target, ecuid, ecgid, fp_root):
         <nothing>
     '''
 
+    template = os.path.join(_config.PATH_RELATIVE_TEMPLATES,
+                            _config.TEMPFILE_INSTALL_COMPILEJOB)
     with open(template) as f:
         fdata = f.read().split('\n')
 
-    with open(template[:-4] + 'ksh', 'w') as fo:
+    compilejob = os.path.join(_config.PATH_RELATIVE_JOBSCRIPTS,
+                              _config.FILE_INSTALL_COMPILEJOB)
+    with open(compilejob, 'w') as fo:
         for data in fdata:
             if 'MAKEFILE=' in data:
                 data = 'export MAKEFILE=' + makefile
@@ -370,18 +420,14 @@ def mk_compilejob(template, makefile, target, ecuid, ecgid, fp_root):
 
     return
 
-def mk_job_template(template, ecuid, ecgid, gateway, destination, fp_root):
+def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
     '''
     @Description:
         Modifies the original job template file so that it is specified
         for the user and the environment were it will be applied. Result
-        is stored in a new file "job.temp" in the python directory.
+        is stored in a new file.
 
     @Input:
-        template: string
-            File which contains the original text for the job template.
-            It must contain the complete path to the file.
-
         ecuid: string
             The user id on ECMWF server.
 
@@ -402,41 +448,46 @@ def mk_job_template(template, ecuid, ecgid, gateway, destination, fp_root):
     @Return:
         <nothing>
     '''
+    fp_root_path_to_python = os.path.join(fp_root, _config.FLEXEXTRACT_DIRNAME,
+                         _config.PATH_RELATIVE_PYTHON)
 
+    template = os.path.join(_config.PATH_RELATIVE_TEMPLATES,
+                            _config.TEMPFILE_INSTALL_JOB)
     with open(template) as f:
         fdata = f.read().split('\n')
 
-    with open(template[:-2], 'w') as fo:
+    jobfile_temp = os.path.join(_config.PATH_RELATIVE_TEMPLATES,
+                                _config.TEMPFILE_JOB)
+    with open(jobfile_temp, 'w') as fo:
         for data in fdata:
             if '--workdir' in data:
-                data = '#SBATCH --workdir=/scratch/ms/' + ecgid + \
-                        '/' + ecuid
+                data = '#SBATCH --workdir=/scratch/ms/' + ecgid + '/' + ecuid
             elif '##PBS -o' in data:
                 data = '##PBS -o /scratch/ms/' + ecgid + '/' + \
                         ecuid + 'flex_ecmwf.$Jobname.$Job_ID.out'
             elif  'export PATH=${PATH}:' in data:
-                data += fp_root + '/flex_extract_v7.1/python'
+                data += fp_root_path_to_python
 
             fo.write(data + '\n')
     return
 
-def delete_convert_build(ecd):
+def delete_convert_build(src_path):
     '''
     @Description:
         Clean up the Fortran source directory and remove all
         build files (e.g. *.o, *.mod and CONVERT2)
 
     @Input:
-        ecd: string
-            The path to the Fortran program.
+        src_path: string
+            Path to the fortran source directory.
 
     @Return:
         <nothing>
     '''
 
-    modfiles = UioFiles(ecd, '*.mod')
-    objfiles = UioFiles(ecd, '*.o')
-    exefile = UioFiles(ecd, 'CONVERT2')
+    modfiles = UioFiles(src_path, '*.mod')
+    objfiles = UioFiles(src_path, '*.o')
+    exefile = UioFiles(src_path, _config.FORTRAN_EXECUTABLE)
 
     modfiles.delete_files()
     objfiles.delete_files()
@@ -444,49 +495,48 @@ def delete_convert_build(ecd):
 
     return
 
-def make_convert_build(ecd, makefile, f_executable):
+def make_convert_build(src_path, makefile):
     '''
     @Description:
         Compiles the Fortran code and generates the executable.
 
     @Input:
-        ecd: string
-            The path were the file is to be stored.
+        src_path: string
+            Path to the fortran source directory.
 
         makefile: string
             The name of the makefile which should be used.
-
-        f_executable: string
-            The name of the executable the Fortran program generates after
-            compilation.
 
     @Return:
         <nothing>
     '''
 
     try:
-        print 'Using makefile: ' + makefile
-        p = subprocess.Popen(['make', '-f', ecd + makefile],
+        print('Using makefile: ' + makefile)
+        p = subprocess.Popen(['make', '-f',
+                              os.path.join(src_path, makefile)],
                              stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              bufsize=1)
         pout, perr = p.communicate()
-        print pout
+        print(pout)
         if p.returncode != 0:
-            print perr
-            print 'Please edit ' + makefile + \
-                  ' or try another Makefile in the src directory.'
-            print 'Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB ' \
-                  'and EMOSLIB must be adapted.'
-            print 'Available Makefiles:'
-            print UioFiles('.', 'Makefile*')
+            print(perr)
+            print('Please edit ' + makefile +
+                  ' or try another Makefile in the src directory.')
+            print('Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '
+                  'and EMOSLIB must be adapted.')
+            print('Available Makefiles:')
+            print(UioFiles(src_path, 'Makefile*'))
             sys.exit('Compilation failed!')
     except ValueError as e:
-        print 'ERROR: Makefile call failed:'
-        print e
+        print('ERROR: Makefile call failed:')
+        print(e)
     else:
-        subprocess.check_call(['ls', '-l', ecd + f_executable])
+        subprocess.check_call(['ls', '-l',
+                               os.path.join(src_path,
+                                            _config.FORTRAN_EXECUTABLE)])
 
     return
 

@@ -52,8 +52,11 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
+import re
 import sys
 import inspect
+
+import _config
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -109,7 +112,7 @@ class ControlFile(object):
         self.marsclass = None
         self.stream = None
         self.number = 'OFF'
-        self.expver = None
+        self.expver = '1'
         self.grid = None
         self.area = ''
         self.left = None
@@ -141,16 +144,21 @@ class ControlFile(object):
         self.ectrans = 0
         self.inputdir = '../work'
         self.outputdir = self.inputdir
-        self.ecmwfdatadir = None
-        self.exedir = None
+        self.ecmwfdatadir = _config.PATH_FLEXEXTRACT_DIR
+        self.exedir = _config.PATH_FORTRAN_SRC
         self.flexpart_root_scripts = None
-        self.makefile = None
+        self.makefile = 'Makefile.gfortran'
         self.destination = None
         self.gateway = None
         self.ecuid = None
         self.ecgid = None
         self.install_target = None
         self.debug = 0
+        self.request = 0
+
+        self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
+                         'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
+                         'ectrans', 'debug', 'request']
 
         self.__read_controlfile__()
 
@@ -171,7 +179,8 @@ class ControlFile(object):
         from tools import my_error
 
         # read whole CONTROL file
-        with open(self.controlfile) as f:
+        with open(os.path.join(_config.PATH_CONTROLFILES,
+                               self.controlfile)) as f:
             fdata = f.read().split('\n')
 
         # go through every line and store parameter
@@ -220,13 +229,6 @@ class ControlFile(object):
                     setattr(self, data[0].lower(), (data[1:]))
             else:
                 pass
-
-        # script directory
-        self.ecmwfdatadir = os.path.dirname(os.path.abspath(inspect.getfile(
-            inspect.currentframe()))) + '/../'
-
-        # Fortran source directory
-        self.exedir = self.ecmwfdatadir + 'src/'
 
         return
 
@@ -309,7 +311,7 @@ class ControlFile(object):
 
         return
 
-    def check_conditions(self):
+    def check_conditions(self, queue):
         '''
         @Description:
             Checks a couple of necessary attributes and conditions,
@@ -320,6 +322,11 @@ class ControlFile(object):
             self: instance of ControlFile class
                 Description see class documentation.
 
+            queue: string
+                Name of the queue if submitted to the ECMWF servers.
+                Used to check if ecuid, ecgid, gateway and destination
+                are set correctly and are not empty.
+
         @Return:
             <nothing>
         '''
@@ -329,10 +336,10 @@ class ControlFile(object):
         # check for having at least a starting date
         # otherwise program is not allowed to run
         if self.start_date is None:
-            print 'start_date specified neither in command line nor ' + \
-                  'in CONTROL file ' +  self.controlfile
-            print 'Try "' + sys.argv[0].split('/')[-1] + \
-                  ' -h" to print usage information'
+            print('start_date specified neither in command line nor \
+                   in CONTROL file ' +  self.controlfile)
+            print('Try "' + sys.argv[0].split('/')[-1] +
+                  ' -h" to print usage information')
             sys.exit(1)
 
         # retrieve just one day if end_date isn't set
@@ -340,41 +347,42 @@ class ControlFile(object):
             self.end_date = self.start_date
 
         # assure consistency of levelist and level
-        if self.levelist is None:
-            if self.level is None:
-                print 'Warning: neither levelist nor level ' + \
-                      'specified in CONTROL file'
-                sys.exit(1)
-            else:
-                self.levelist = '1/to/' + self.level
+        if self.levelist is None and self.level is None:
+            print('Warning: neither levelist nor level \
+                               specified in CONTROL file')
+            sys.exit(1)
+        elif self.levelist is None and self.level:
+            self.levelist = '1/to/' + self.level
+        elif (self.levelist and self.level is None) or \
+             (self.levelist[-1] != self.level[-1]):
+            self.level = self.levelist.split('/')[-1]
         else:
-            if 'to' in self.levelist.lower():
-                self.level = self.levelist.split('/')[2]
-            else:
-                self.level = self.levelist.split('/')[-1]
+            pass
 
-        # if area was provided at command line
-        # decompse area into its 4 components
+        # if area was provided (only from commandline)
+        # decompose area into its 4 components
         if self.area:
-            afloat = '.' in self.area
-            l = self.area.split('/')
-            if afloat:
-                for i, item in enumerate(l):
-                    item = str(int(float(item) * 1000))
-            self.upper, self.left, self.lower, self.right = l
+            components = self.area.split('/')
+            # convert float to integer coordinates
+            if '.' in self.area:
+                components = [str(int(float(item) * 1000))
+                              for i, item in enumerate(components)]
+            self.upper, self.left, self.lower, self.right = components
 
-        # prepare step for correct usage
+        # prepare step list if "/" signs are found
         if '/' in self.step:
-            l = self.step.split('/')
-            if 'to' in self.step.lower():
-                if 'by' in self.step.lower():
-                    ilist = np.arange(int(l[0]), int(l[2]) + 1, int(l[4]))
-                    self.step = ['{:0>3}'.format(i) for i in ilist]
-                else:
-                    my_error(self.mailfail, self.step + ':\n' +
-                             'if "to" is used, please use "by" as well')
+            steps = self.step.split('/')
+            if 'to' in self.step.lower() and 'by' in self.step.lower():
+                ilist = np.arange(int(steps[0]),
+                                  int(steps[2]) + 1,
+                                  int(steps[4]))
+                self.step = ['{:0>3}'.format(i) for i in ilist]
+            elif 'to' in self.step.lower() and 'by' not in self.step.lower():
+                my_error(self.mailfail, self.step + ':\n' +
+                         'if "to" is used in steps parameter, \
+                         please use "by" as well')
             else:
-                self.step = l
+                self.step = steps
 
         # if maxstep wasn't provided
         # search for it in the "step" parameter
@@ -406,13 +414,26 @@ class ControlFile(object):
             else:
                 self.mailops = [self.mailops]
 
-        if not self.gateway or not self.destination or \
+        if queue in ['ecgate', 'cca'] and \
+           not self.gateway or not self.destination or \
            not self.ecuid or not self.ecgid:
-            print '\nEnvironment variables GATWAY, DESTINATION, ECUID and ' + \
-                  'ECGID were not set properly!'
-            print 'Please check for excistence of file "ECMWF_ENV" in the ' + \
-                  'python directory!'
+            print('\nEnvironment variables GATEWAY, DESTINATION, ECUID and \
+                   ECGID were not set properly!')
+            print('Please check for existence of file "ECMWF_ENV" in the \
+                   python directory!')
             sys.exit(1)
+
+        if self.request != 0:
+            marsfile = os.path.join(_config.PATH_RUN_DIR,
+                                    _config.FILE_MARS_REQUESTS)
+            if os.path.isfile(marsfile):
+                os.remove(marsfile)
+
+        # check all logical variables for data type
+        # if its a string change to integer
+        for var in self.logicals:
+            if not isinstance(getattr(self, var), int):
+                setattr(self, var, int(getattr(self, var)))
 
         return
 
@@ -433,37 +454,34 @@ class ControlFile(object):
 
         if self.install_target and \
            self.install_target not in ['local', 'ecgate', 'cca']:
-            print 'ERROR: unknown or missing installation target '
-            print 'target: ', self.install_target
-            print 'please specify correct installation target \
-                   (local | ecgate | cca)'
-            print 'use -h or --help for help'
+            print('ERROR: unknown or missing installation target ')
+            print('target: ', self.install_target)
+            print('please specify correct installation target ' +
+                  '(local | ecgate | cca)')
+            print('use -h or --help for help')
             sys.exit(1)
 
         if self.install_target and self.install_target != 'local':
             if not self.ecgid or not self.ecuid or \
                not self.gateway or not self.destination:
-                print 'Please enter your ECMWF user id and group id as well as \
-                       the \nname of the local gateway and the ectrans \
-                       destination '
-                print 'with command line options --ecuid --ecgid \
-                       --gateway --destination'
-                print 'Try "' + sys.argv[0].split('/')[-1] + \
-                      ' -h" to print usage information'
-                print 'Please consult ecaccess documentation or ECMWF user \
-                       support for further details'
+                print('Please enter your ECMWF user id and group id as well ' +
+                      'as the \nname of the local gateway and the ectrans ' +
+                      'destination ')
+                print('with command line options --ecuid --ecgid \
+                       --gateway --destination')
+                print('Try "' + sys.argv[0].split('/')[-1] + \
+                      ' -h" to print usage information')
+                print('Please consult ecaccess documentation or ECMWF user \
+                       support for further details')
                 sys.exit(1)
 
             if not self.flexpart_root_scripts:
                 self.flexpart_root_scripts = '${HOME}'
             else:
                 self.flexpart_root_scripts = self.flexpart_root_scripts
-        else:
+        else: # local
             if not self.flexpart_root_scripts:
-                self.flexpart_root_scripts = '../'
-
-        if not self.makefile:
-            self.makefile = 'Makefile.gfortran'
+                self.flexpart_root_scripts = _config.PATH_FLEXEXTRACT_DIR
 
         return
 

@@ -64,6 +64,7 @@
 import subprocess
 import os
 
+import _config
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -309,7 +310,8 @@ class MarsRetrieval(object):
     def display_info(self):
         '''
         @Description:
-            Prints all class attributes and their values.
+            Prints all class attributes and their values to the
+            standard output.
 
         @Input:
             self: instance of MarsRetrieval
@@ -327,7 +329,39 @@ class MarsRetrieval(object):
             if item[0] in 'server':
                 pass
             else:
-                print item[0] + ': ' + str(item[1])
+                print(item[0] + ': ' + str(item[1]))
+
+        return
+
+
+    def print_info(self):
+        '''
+        @Description:
+            Prints all mars requests to an extra file for debugging and
+            information.
+
+        @Input:
+            self: instance of MarsRetrieval
+                For description see class documentation.
+
+        @Return:
+            <nothing>
+        '''
+        # Get all class attributes and their values as a dictionary
+        attrs = vars(self)
+
+        # open a file to store all requests to
+        with open(os.path.join(_config.PATH_RUN_DIR,
+                               _config.FILE_MARS_REQUESTS), 'a') as f:
+            f.write('mars\n')
+            # iterate through all attributes and print them
+            # with their corresponding values
+            for item in attrs.items():
+                if item[0] in 'server':
+                    pass
+                else:
+                    f.write(item[0] + ': ' + str(item[1]) + '\n')
+            f.write('\n\n')
 
         return
 
@@ -370,11 +404,11 @@ class MarsRetrieval(object):
             try:
                 self.server.execute(s, target)
             except:
-                print 'MARS Request failed, \
-                    have you already registered at apps.ecmwf.int?'
+                print('MARS Request failed, \
+                      have you already registered at apps.ecmwf.int?')
                 raise IOError
             if os.stat(target).st_size == 0:
-                print 'MARS Request returned no data - please check request'
+                print('MARS Request returned no data - please check request')
                 raise IOError
         # MARS request via extra process in shell
         else:
@@ -383,14 +417,14 @@ class MarsRetrieval(object):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, bufsize=1)
             pout = p.communicate(input=s)[0]
-            print pout.decode()
+            print(pout.decode())
 
             if 'Some errors reported' in pout.decode():
-                print 'MARS Request failed - please check request'
+                print('MARS Request failed - please check request')
                 raise IOError
 
             if os.stat(target).st_size == 0:
-                print 'MARS Request returned no data - please check request'
+                print('MARS Request returned no data - please check request')
                 raise IOError
 
         return

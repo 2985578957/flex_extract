@@ -296,15 +296,15 @@ class GribTools(object):
             iid: integer
                 Grib index id.
         '''
-        print "... index will be done"
+        print("... index will be done")
         iid = None
 
         if os.path.exists(index_file):
             iid = grib_index_read(index_file)
-            print "Use existing index file: %s " % (index_file)
+            print("Use existing index file: %s " % (index_file))
         else:
             for filename in self.filenames:
-                print "Inputfile: %s " % (filename)
+                print("Inputfile: %s " % (filename))
                 if iid is None:
                     iid = grib_index_new_from_file(filename, index_keys)
                 else:
@@ -313,6 +313,6 @@ class GribTools(object):
             if iid is not None:
                 grib_index_write(iid, index_file)
 
-        print '... index done'
+        print('... index done')
 
         return iid

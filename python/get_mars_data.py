@@ -56,16 +56,10 @@ except ImportError:
     ecapi = False
 
 # software specific classes and modules from flex_extract
+import _config
 from tools import my_error, normal_exit, get_cmdline_arguments, read_ecenv
 from EcFlexpart import EcFlexpart
 from UioFiles import UioFiles
-
-# add path to pythonpath so that python finds its buddies
-LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if LOCAL_PYTHON_PATH not in sys.path:
-    sys.path.append(LOCAL_PYTHON_PATH)
-
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
@@ -88,19 +82,16 @@ def main():
     try:
         c = ControlFile(args.controlfile)
     except IOError:
-        try:
-            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
-        except IOError:
-            print 'Could not read CONTROL file "' + args.controlfile + '"'
-            print 'Either it does not exist or its syntax is wrong.'
-            print 'Try "' + sys.argv[0].split('/')[-1] + \
-                  ' -h" to print usage information'
-            sys.exit(1)
+        print('Could not read CONTROL file "' + args.controlfile + '"')
+        print('Either it does not exist or its syntax is wrong.')
+        print('Try "' + sys.argv[0].split('/')[-1] + \
+              ' -h" to print usage information')
+        sys.exit(1)
 
-    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
     c.assign_args_to_control(args, env_parameter)
     c.assign_envs_to_control(env_parameter)
-    c.check_conditions()
+    c.check_conditions(args.queue)
 
     get_mars_data(c)
     normal_exit(c.mailfail, 'Done!')
@@ -136,9 +127,13 @@ def get_mars_data(c):
     if not os.path.exists(c.inputdir):
         os.makedirs(c.inputdir)
 
-    print "Retrieving EC data!"
-    print "start date %s " % (c.start_date)
-    print "end date %s " % (c.end_date)
+    if c.request == 0 or c.request == 2:
+        print("Retrieving EC data!")
+    elif c.request == 1:
+        print("Printing mars requests!")
+
+    print("start date %s " % (c.start_date))
+    print("end date %s " % (c.end_date))
 
     if ecapi:
         server = ecmwfapi.ECMWFService("mars")
@@ -146,7 +141,7 @@ def get_mars_data(c):
         server = False
 
     c.ecapi = ecapi
-    print 'ecapi: ', c.ecapi
+    print('Using ECMWF WebAPI: ' + str(c.ecapi))
 
     # basetime geht rückwärts
 
@@ -191,10 +186,11 @@ def get_mars_data(c):
         endp1 = end + datetime.timedelta(days=1)
 
     # --------------  flux data ------------------------------------------------
-    print 'removing old flux content of ' + c.inputdir
-    tobecleaned = UioFiles(c.inputdir,
-                           '*_acc_*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.delete_files()
+    if c.request == 0 or c.request == 2:
+        print('... removing old flux content of ' + c.inputdir)
+        tobecleaned = UioFiles(c.inputdir,
+                               '*_acc_*.' + str(os.getppid()) + '.*.grb')
+        tobecleaned.delete_files()
 
     # if forecast for maximum one day (upto 24h) are to be retrieved,
     # collect accumulation data (flux data)
@@ -212,10 +208,11 @@ def get_mars_data(c):
         do_retrievement(c, server, start, end, datechunk, fluxes=True)
 
     # --------------  non flux data --------------------------------------------
-    print 'removing old non flux content of ' + c.inputdir
-    tobecleaned = UioFiles(c.inputdir,
-                           '*__*.' + str(os.getppid()) + '.*.grb')
-    tobecleaned.delete_files()
+    if c.request == 0 or c.request == 2:
+        print('... removing old non flux content of ' + c.inputdir)
+        tobecleaned = UioFiles(c.inputdir,
+                               '*__*.' + str(os.getppid()) + '.*.grb')
+        tobecleaned.delete_files()
 
     do_retrievement(c, server, start, end, datechunk, fluxes=False)
 
@@ -279,10 +276,10 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
             dates = day.strftime("%Y%m%d") + "/to/" + \
                     end.strftime("%Y%m%d")
 
-        print "retrieve " + dates + " in dir " + c.inputdir
+        print("... retrieve " + dates + " in dir " + c.inputdir)
 
         try:
-            flexpart.retrieve(server, dates, c.inputdir)
+            flexpart.retrieve(server, dates, c.request, c.inputdir)
         except IOError:
             my_error(c.mailfail, 'MARS request failed')
 

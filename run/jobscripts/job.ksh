@@ -51,62 +51,61 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-GATEWAY srvx8.img.univie.ac.at
-DESTINATION annep@genericSftp
-accuracy 16
+accuracy 24
 addpar 186 187 188 235 139 39 
 area 
-base_time ${MSJ_BASETIME}
 basetime None
-controlfile CONTROL.temp
+controlfile CONTROL.test
 cwc 0
 date_chunk 3
 debug 1
-destination None
+destination annep@genericSftp
 dpdeta 1
 dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
-ecgid None
+ecgid at
 ecstorage 0
 ectrans 1
-ecuid None
-end_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
+ecuid km4a
+end_date 20160606
 eta 0
 etadiff 0
 etapar 77
 expver 1
 format GRIB1
-gateway None
+gateway srvx8.img.univie.ac.at
 gauss 1
 grib2flexpart 0
 grid 5000
 inputdir ../work
 install_target None
 job_template job.temp
-left -15000
+left -10000
 level 60
-levelist 55/to/60
+levelist 59/to/60
+logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug request 
 lower 30000
 mailfail ${USER} 
 mailops ${USER} 
-makefile None
+makefile Makefile.gfortran
 marsclass EI
 maxstep 11
 number OFF
 omega 0
 omegadiff 0
 outputdir ../work
-prefix EI
+prefix EItest_
 queue ecgate
+request 0
 resol 63
-right 45000
+right 10000
 smooth 0
-start_date ${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}
+start_date 20160606
 step 00 01 02 03 04 05 00 07 08 09 10 11 00 01 02 03 04 05 00 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
-upper 75000
+upper 40000
 wrf 0
 EOF
 

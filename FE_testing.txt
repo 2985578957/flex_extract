@@ -1,0 +1,13 @@
+Abhängigkeiten: 
+pytest
+pytest-cov  (https://pypi.org/project/pytest-cov/  ;  https://pytest-cov.readthedocs.io/en/latest/)
+coverage
+
+#Grundsätzlicher Befehl die Coverage des Testens zu überprüfen
+pytest --cov=PATH_TO_PROJECT_SRC PATH_TO_TEST_SRC
+
+# einen test mit einem bestimmten marker nicht ausführen
+pytest TestTools.py -m "not msuser_pw"  
+
+# Tests mit einem bestimmten Marker ausführen 
+pytest TestTools.py -m "msuser_pw"

@@ -56,9 +56,9 @@ import os
 import inspect
 import sys
 import socket
-import _config
 
 # software specific classes and modules from flex_extract
+import _config
 from UioFiles import UioFiles
 from tools import clean_up, get_cmdline_arguments, read_ecenv
 from EcFlexpart import EcFlexpart
@@ -69,13 +69,6 @@ try:
         import ecmwfapi
 except ImportError:
     ecapi = False
-
-# add path to pythonpath so that python finds its buddies
-LOCAL_PYTHON_PATH = os.path.dirname(os.path.abspath(
-    inspect.getfile(inspect.currentframe())))
-if LOCAL_PYTHON_PATH not in sys.path:
-    sys.path.append(LOCAL_PYTHON_PATH)
-
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -99,19 +92,16 @@ def main():
     try:
         c = ControlFile(args.controlfile)
     except IOError:
-        try:
-            c = ControlFile(LOCAL_PYTHON_PATH + args.controlfile)
-        except IOError:
-            print 'Could not read CONTROL file "' + args.controlfile + '"'
-            print 'Either it does not exist or its syntax is wrong.'
-            print 'Try "' + sys.argv[0].split('/')[-1] + \
-                  ' -h" to print usage information'
-            sys.exit(1)
+        print('Could not read CONTROL file "' + args.controlfile + '"')
+        print('Either it does not exist or its syntax is wrong.')
+        print('Try "' + sys.argv[0].split('/')[-1] + \
+              ' -h" to print usage information')
+        sys.exit(1)
 
-    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
     c.assign_args_to_control(args, env_parameter)
     c.assign_envs_to_control(env_parameter)
-    c.check_conditions()
+    c.check_conditions(args.queue)
     prepare_flexpart(args.ppid, c)
 
     return
@@ -169,8 +159,8 @@ def prepare_flexpart(ppid, c):
     if c.basetime == '00':
         start = start - datetime.timedelta(days=1)
 
-    print 'Prepare ' + start.strftime("%Y%m%d") + \
-           "/to/" + end.strftime("%Y%m%d")
+    print('Prepare ' + start.strftime("%Y%m%d") +
+           "/to/" + end.strftime("%Y%m%d"))
 
     # create output dir if necessary
     if not os.path.exists(c.outputdir):
@@ -181,7 +171,7 @@ def prepare_flexpart(ppid, c):
 
     # deaccumulate the flux data
     flexpart = EcFlexpart(c, fluxes=True)
-    flexpart.write_namelist(c, 'fort.4')
+    flexpart.write_namelist(c, _config.FILE_NAMELIST)
     flexpart.deacc_fluxes(inputfiles, c)
 
     # get a list of all files from the root inputdir
@@ -196,7 +186,7 @@ def prepare_flexpart(ppid, c):
     # check if in debugging mode, then store all files
     # otherwise delete temporary files
     if int(c.debug) != 0:
-        print '\nTemporary files left intact'
+        print('\nTemporary files left intact')
     else:
         clean_up(c)
 

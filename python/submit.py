@@ -15,6 +15,9 @@
 #        - applied PEP8 style guide
 #        - added documentation
 #        - minor changes in programming style (for consistence)
+#        - changed path names to variables from config file
+#        - added option for writing mars requests to extra file
+#          additionally,as option without submitting the mars jobs
 #
 # @License:
 #    (C) Copyright 2014-2018.
@@ -72,38 +75,37 @@ def main():
         <nothing>
     '''
 
-    called_from_dir = os.getcwd()
-
     args = get_cmdline_arguments()
 
     try:
         c = ControlFile(args.controlfile)
     except IOError:
-        try:
-            c = ControlFile(_config.PATH_LOCAL_PYTHON + args.controlfile)
-        except IOError:
-            print 'Could not read CONTROL file "' + args.controlfile + '"'
-            print 'Either it does not exist or its syntax is wrong.'
-            print 'Try "' + sys.argv[0].split('/')[-1] + \
-                  ' -h" to print usage information'
-            sys.exit(1)
+        print('Could not read CONTROL file "' + args.controlfile + '"')
+        print('Either it does not exist or its syntax is wrong.')
+        print('Try "' + sys.argv[0].split('/')[-1] + \
+              ' -h" to print usage information')
+        sys.exit(1)
 
-    env_parameter = read_ecenv(c.ecmwfdatadir + 'python/ECMWF_ENV')
+    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
     c.assign_args_to_control(args)
     c.assign_envs_to_control(env_parameter)
-    c.check_conditions()
+    c.check_conditions(args.queue)
 
     # on local side
-    # on ECMWF server this would be the local side
+    # on ECMWF server this would also be the local side
+    called_from_dir = os.getcwd()
     if args.queue is None:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(called_from_dir, c.inputdir)
         if c.outputdir[0] != '/':
             c.outputdir = os.path.join(called_from_dir, c.outputdir)
         get_mars_data(c)
-        prepare_flexpart(args.ppid, c)
-        normal_exit(c.mailfail, 'Done!')
-    # on ECMWF server
+        if c.request == 0 or c.request == 2:
+            prepare_flexpart(args.ppid, c)
+            normal_exit(c.mailfail, 'FLEX_EXTRACT IS DONE!')
+        else:
+            normal_exit(c.mailfail, 'PRINTING MARS_REQUESTS DONE!')
+    # send files to ECMWF server and install there
     else:
         submit(args.job_template, c, args.queue)
 
@@ -116,7 +118,8 @@ def submit(jtemplate, c, queue):
 
     @Input:
         jtemplate: string
-            Job template file for submission to ECMWF. It contains all necessary
+            Job template file from sub-directory "_templates" for
+            submission to ECMWF. It contains all necessary
             module and variable settings for the ECMWF environment as well as
             the job call and mail report instructions.
             Default is "job.temp".
@@ -142,17 +145,18 @@ def submit(jtemplate, c, queue):
     '''
 
     # read template file and get index for CONTROL input
-    with open(jtemplate) as f:
+    with open(os.path.join(_config.PATH_TEMPLATES, jtemplate)) as f:
         lftext = f.read().split('\n')
     insert_point = lftext.index('EOF')
 
     if not c.basetime:
     # --------- create on demand job script ------------------------------------
         if c.maxstep > 24:
-            print '---- Pure forecast mode! ----'
+            print('---- Pure forecast mode! ----')
         else:
-            print '---- On-demand mode! ----'
-        job_file = jtemplate[:-4] + 'ksh'
+            print('---- On-demand mode! ----')
+        job_file = os.path.join(_config.PATH_JOBSCRIPTS,
+                                jtemplate[:-4] + 'ksh')
         clist = c.to_list()
 
         lftextondemand = lftext[:insert_point] + clist + lftext[insert_point:]
@@ -160,13 +164,13 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextondemand))
 
-        result_code = submit_job_to_ecserver(queue, job_file)
+        submit_job_to_ecserver(queue, job_file)
 
     else:
     # --------- create operational job script ----------------------------------
-        print '---- Operational mode! ----'
-        job_file = jtemplate[:-5] + 'oper.ksh'
-        #colist = []
+        print('---- Operational mode! ----')
+        job_file = os.path.join(_config.PATH_JOBSCRIPTS,
+                                jtemplate[:-5] + 'oper.ksh')
 
         if c.maxstep:
             mt = int(c.maxstep)
@@ -186,10 +190,10 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextoper))
 
-        result_code = submit_job_to_ecserver(queue, job_file)
+        submit_job_to_ecserver(queue, job_file)
 
     # --------------------------------------------------------------------------
-    print 'You should get an email with subject flex.hostname.pid'
+    print('You should get an email with subject flex.hostname.pid')
 
     return
 

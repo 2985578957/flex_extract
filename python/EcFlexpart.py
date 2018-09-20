@@ -101,6 +101,7 @@ from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
                     grib_index_release, grib_index_get
 
 # software specific classes and modules from flex_extract
+import _config
 from GribTools import GribTools
 from tools import init128, to_param_id, silent_remove, product, my_error
 from MarsRetrieval import MarsRetrieval
@@ -203,12 +204,7 @@ class EcFlexpart(object):
         self.resol = c.resol
         self.accuracy = c.accuracy
         self.level = c.level
-
-        if c.levelist:
-            self.levelist = c.levelist
-        else:
-            self.levelist = '1/to/' + c.level
-
+        self.expver = c.expver
         # for gaussian grid retrieval
         self.glevelist = '1/to/' + c.level
 
@@ -216,16 +212,6 @@ class EcFlexpart(object):
             self.gaussian = c.gaussian
         else:
             self.gaussian = ''
-
-        if hasattr(c, 'expver') and c.expver:
-            self.expver = c.expver
-        else:
-            self.expver = '1'
-
-        if hasattr(c, 'number') and c.number:
-            self.number = c.number
-        else:
-            self.number = '0'
 
         if 'N' in c.grid:  # Gaussian output grid
             self.grid = c.grid
@@ -248,7 +234,6 @@ class EcFlexpart(object):
         #    c) Output grid using parameter 77 retrieved from MARS
         # 3) Calculation/Retrieval of omega
         # 4) Download also data for WRF
-
 
         # Different grids need different retrievals
         # SH = Spherical Harmonics, GG = Gaussian Grid,
@@ -273,34 +258,37 @@ class EcFlexpart(object):
 
             self.params['OG__ML'] = ['T/Q', 'ML', self.levelist, self.grid]
 
-            if c.gauss == '0' and c.eta == '1':
+            #if c.gauss == '0' and c.eta == '1':
+            if not c.gauss and c.eta:
                 # the simplest case
                 self.params['OG__ML'][0] += '/U/V/77'
-            elif c.gauss == '0' and c.eta == '0':
+            #elif c.gauss == '0' and c.eta == '0':
+            elif not c.gauss and not c.eta:
             # this is not recommended (inaccurate)
                 self.params['OG__ML'][0] += '/U/V'
-            elif c.gauss == '1' and c.eta == '0':
+            #elif c.gauss == '1' and c.eta == '0':
+            elif c.gauss and not c.eta:
                 # this is needed for data before 2008, or for reanalysis data
                 self.params['GG__SL'] = ['Q', 'ML', '1', \
                                          '{}'.format((int(self.resol) + 1) / 2)]
                 self.params['SH__ML'] = ['U/V/D', 'ML', self.glevelist, 'OFF']
             else:
-                print 'Warning: This is a very costly parameter combination, \
-                       use only for debugging!'
+                print('Warning: This is a very costly parameter combination, \
+                      use only for debugging!')
                 self.params['GG__SL'] = ['Q', 'ML', '1', \
                                          '{}'.format((int(self.resol) + 1) / 2)]
                 self.params['GG__ML'] = ['U/V/D/77', 'ML', self.glevelist, \
                                          '{}'.format((int(self.resol) + 1) / 2)]
 
-            if hasattr(c, 'omega') and c.omega == '1':
+            if c.omega:
                 self.params['OG__ML'][0] += '/W'
 
             # add cloud water content if necessary
-            if hasattr(c, 'cwc') and c.cwc == '1':
+            if c.cwc:
                 self.params['OG__ML'][0] += '/CLWC/CIWC'
 
             # add vorticity and geopotential height for WRF if necessary
-            if hasattr(c, 'wrf') and c.wrf == '1':
+            if c.wrf:
                 self.params['OG__ML'][0] += '/Z/VO'
                 if '/D' not in self.params['OG__ML'][0]:
                     self.params['OG__ML'][0] += '/D'
@@ -366,27 +354,28 @@ class EcFlexpart(object):
         with open(self.inputdir + '/' + filename, 'w') as f:
             f.write('&NAMGEN\n')
             f.write(',\n  '.join(['maxl = ' + str(maxl), 'maxb = ' + str(maxb),
-                                  'mlevel = ' + self.level,
-                                  'mlevelist = ' + '"' + self.levelist + '"',
-                                  'mnauf = ' + self.resol,
+                                  'mlevel = ' + str(self.level),
+                                  'mlevelist = ' + '"' + str(self.levelist)
+                                                 + '"',
+                                  'mnauf = ' + str(self.resol),
                                   'metapar = ' + '77',
                                   'rlo0 = ' + str(area[1]),
                                   'rlo1 = ' + str(area[3]),
                                   'rla0 = ' + str(area[2]),
                                   'rla1 = ' + str(area[0]),
-                                  'momega = ' + c.omega,
-                                  'momegadiff = ' + c.omegadiff,
-                                  'mgauss = ' + c.gauss,
-                                  'msmooth = ' + c.smooth,
-                                  'meta = ' + c.eta,
-                                  'metadiff = ' + c.etadiff,
-                                  'mdpdeta = ' + c.dpdeta]))
+                                  'momega = ' + str(c.omega),
+                                  'momegadiff = ' + str(c.omegadiff),
+                                  'mgauss = ' + str(c.gauss),
+                                  'msmooth = ' + str(c.smooth),
+                                  'meta = ' + str(c.eta),
+                                  'metadiff = ' + str(c.etadiff),
+                                  'mdpdeta = ' + str(c.dpdeta)]))
 
             f.write('\n/\n')
 
         return
 
-    def retrieve(self, server, dates, inputdir='.'):
+    def retrieve(self, server, dates, request, inputdir='.'):
         '''
         @Description:
             Finalizing the retrieval information by setting final details
@@ -436,7 +425,7 @@ class EcFlexpart(object):
                 if pk == 'OG__SL':
                     pass
                 if pk == 'OG_OROLSM__SL':
-                    if oro is False:
+                    if not oro:
                         mfstream = 'OPER'
                         mftype = 'AN'
                         mftime = '00'
@@ -456,7 +445,7 @@ class EcFlexpart(object):
                     gaussian = self.gaussian
 
     # ------  on demand path  --------------------------------------------------
-                if self.basetime is None:
+                if not self.basetime:
                     MR = MarsRetrieval(self.server,
                                        marsclass=self.marsclass,
                                        stream=mfstream,
@@ -476,8 +465,17 @@ class EcFlexpart(object):
                                        expver=self.expver,
                                        param=pv[0])
 
-                    MR.display_info()
-                    MR.data_retrieve()
+                    if request == 0:
+                        MR.display_info()
+                        MR.data_retrieve()
+                    elif request == 1:
+                        MR.print_info()
+                    elif request == 2:
+                        MR.print_info()
+                        MR.display_info()
+                        MR.data_retrieve()
+                    else:
+                        print('Failure')
     # ------  operational path  ------------------------------------------------
                 else:
                     # check if mars job requests fields beyond basetime.
@@ -565,6 +563,7 @@ class EcFlexpart(object):
                                                param=pv[0])
 
                             MR.display_info()
+
                             MR.data_retrieve()
                         # --------------  non flux data ------------------------
                         else:
@@ -661,7 +660,10 @@ class EcFlexpart(object):
                             MR.display_info()
                             MR.data_retrieve()
 
-        print "MARS retrieve done... "
+        if request == 0 or request == 2:
+            print('MARS retrieve done ... ')
+        elif request == 1:
+            print('MARS request printed ...')
 
         return
 
@@ -701,20 +703,20 @@ class EcFlexpart(object):
 
         '''
 
-        print '\n\nPostprocessing:\n Format: {}\n'.format(c.format)
+        print('\n\nPostprocessing:\n Format: {}\n'.format(c.format))
 
-        if c.ecapi is False:
+        if not c.ecapi:
             print('ecstorage: {}\n ecfsdir: {}\n'.
                   format(c.ecstorage, c.ecfsdir))
-            if not hasattr(c, 'gateway'):
-                c.gateway = os.getenv('GATEWAY')
-            if not hasattr(c, 'destination'):
-                c.destination = os.getenv('DESTINATION')
+            #if not hasattr(c, 'gateway'):
+            #    c.gateway = os.getenv('GATEWAY')
+            #if not hasattr(c, 'destination'):
+            #    c.destination = os.getenv('DESTINATION')
             print('ectrans: {}\n gateway: {}\n destination: {}\n '
                   .format(c.ectrans, c.gateway, c.destination))
 
-        print 'Output filelist: \n'
-        print self.outputfilelist
+        print('Output filelist: \n')
+        print(self.outputfilelist)
 
         if c.format.lower() == 'grib2':
             for ofile in self.outputfilelist:
@@ -723,14 +725,14 @@ class EcFlexpart(object):
                                            ofile, ofile + '_2'])
                 p = subprocess.check_call(['mv', ofile + '_2', ofile])
 
-        if int(c.ectrans) == 1 and c.ecapi is False:
+        if c.ectrans and not c.ecapi:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
                                            c.gateway, '-remote', c.destination,
                                            '-source', ofile])
                 #print('ectrans:', p)
 
-        if int(c.ecstorage) == 1 and c.ecapi is False:
+        if c.ecstorage and not c.ecapi:
             for ofile in self.outputfilelist:
                 p = subprocess.check_call(['ecp', '-o', ofile,
                                            os.path.expandvars(c.ecfsdir)])
@@ -741,7 +743,7 @@ class EcFlexpart(object):
 
         # prepare environment for the grib2flexpart run
         # to convert grib to flexpart binary
-        if c.grib2flexpart == '1':
+        if c.grib2flexpart:
 
             # generate AVAILABLE file
             # Example of AVAILABLE file data:
@@ -857,7 +859,7 @@ class EcFlexpart(object):
                             table128)
 
         index_keys = ["date", "time", "step"]
-        indexfile = c.inputdir + "/date_time_stepRange.idx"
+        indexfile = os.path.join(c.inputdir, _config.FILE_GRIB_INDEX)
         silent_remove(indexfile)
         grib = GribTools(inputfiles.files)
         # creates new index file
@@ -867,7 +869,7 @@ class EcFlexpart(object):
         index_vals = []
         for key in index_keys:
             index_vals.append(grib_index_get(iid, key))
-            print index_vals[-1]
+            print(index_vals[-1])
             # index_vals looks for example like:
             # index_vals[0]: ('20171106', '20171107', '20171108') ; date
             # index_vals[1]: ('0', '1200', '1800', '600') ; time
@@ -877,9 +879,13 @@ class EcFlexpart(object):
                  '17':None, '19':None, '21':None, '22':None, '20':None}
 
         for prod in product(*index_vals):
+            # e.g. prod = ('20170505', '0', '12')
+            #             (  date    ,time, step)
+            # per date e.g. time = 0, 1200
+            # per time e.g. step = 3, 6, 9, 12
             # flag for Fortran program CONVERT2 and file merging
             convertFlag = False
-            print 'current prod: ', prod
+            print('current prod: ', prod)
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
             # per date e.g. time = 0, 600, 1200, 1800
@@ -901,8 +907,9 @@ class EcFlexpart(object):
                 # remove old fort.* files and open new ones
                 # they are just valid for a single product
                 for k, f in fdict.iteritems():
-                    silent_remove(c.inputdir + "/fort." + k)
-                    fdict[k] = open(c.inputdir + '/fort.' + k, 'w')
+                    fortfile = os.path.join(c.inputdir, 'fort.' + k)
+                    silent_remove(fortfile)
+                    fdict[k] = open(fortfile, 'w')
 
                 cdate = str(grib_get(gid, 'date'))
                 time = grib_get(gid, 'time')
@@ -930,23 +937,20 @@ class EcFlexpart(object):
 
                     if timestamp < slimit or timestamp > elimit:
                         continue
+            else:
+                pass
 
             try:
-                if c.wrf == '1':
-                    if 'olddate' not in locals():
-                        fwrf = open(c.outputdir + '/WRF' + cdate +
-                                    '.{:0>2}'.format(time) + '.000.grb2', 'w')
+                if c.wrf:
+                    if 'olddate' not in locals() or cdate != olddate:
+                        fwrf = open(os.path.join(c.outputdir,
+                                    'WRF' + cdate + '.{:0>2}'.format(time) +
+                                    '.000.grb2'), 'w')
                         olddate = cdate[:]
-                    else:
-                        if cdate != olddate:
-                            fwrf = open(c.outputdir + '/WRF' + cdate +
-                                        '.{:0>2}'.format(time) + '.000.grb2',
-                                        'w')
-                            olddate = cdate[:]
             except AttributeError:
                 pass
 
-            # helper variable to remember which fields are already used.
+            # helper variable to remember which fields were already used.
             savedfields = []
             while 1:
                 if gid is None:
@@ -957,7 +961,7 @@ class EcFlexpart(object):
                 if paramId == 133 and gridtype == 'reduced_gg':
                 # Specific humidity (Q.grb) is used as a template only
                 # so we need the first we "meet"
-                    with open(c.inputdir + '/fort.18', 'w') as fout:
+                    with open(os.path.join(c.inputdir, 'fort.18'), 'w') as fout:
                         grib_write(gid, fout)
                 elif paramId == 131 or paramId == 132:
                     grib_write(gid, fdict['10'])
@@ -970,7 +974,7 @@ class EcFlexpart(object):
                 elif paramId == 155 and gridtype == 'sh':
                     grib_write(gid, fdict['13'])
                 elif  paramId in [129, 138, 155] and levtype == 'hybrid' \
-                        and c.wrf == '1':
+                        and c.wrf:
                     pass
                 elif paramId == 246 or paramId == 247:
                     # cloud liquid water and ice
@@ -990,16 +994,17 @@ class EcFlexpart(object):
                         grib_write(gid, fdict['16'])
                         savedfields.append(paramId)
                     else:
-                        print 'duplicate ' + str(paramId) + ' not written'
+                        print('duplicate ' + str(paramId) + ' not written')
 
                 try:
-                    if c.wrf == '1':
-                        if levtype == 'hybrid': # model layer
-                            if paramId in [129, 130, 131, 132, 133, 138, 155]:
-                                grib_write(gid, fwrf)
-                        else: # sfc layer
-                            if paramId in wrfpars:
-                                grib_write(gid, fwrf)
+                    if c.wrf:
+                        # model layer
+                        if levtype == 'hybrid' and \
+                           paramId in [129, 130, 131, 132, 133, 138, 155]:
+                            grib_write(gid, fwrf)
+                        # sfc layer
+                        elif paramId in wrfpars:
+                            grib_write(gid, fwrf)
                 except AttributeError:
                     pass
 
@@ -1013,29 +1018,28 @@ class EcFlexpart(object):
             if convertFlag:
                 pwd = os.getcwd()
                 os.chdir(c.inputdir)
-                if os.stat('fort.21').st_size == 0 and int(c.eta) == 1:
-                    print 'Parameter 77 (etadot) is missing, most likely it is \
-                           not available for this type or date/time\n'
-                    print 'Check parameters CLASS, TYPE, STREAM, START_DATE\n'
+                if os.stat('fort.21').st_size == 0 and c.eta:
+                    print('Parameter 77 (etadot) is missing, most likely it is \
+                           not available for this type or date/time\n')
+                    print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
                     my_error(c.mailfail, 'fort.21 is empty while parameter eta \
                              is set to 1 in CONTROL file')
 
                 # create the corresponding output file fort.15
                 # (generated by CONVERT2) + fort.16 (paramId 167 and 168)
-                p = subprocess.check_call(
-                    [os.path.expandvars(os.path.expanduser(c.exedir)) +
-                     '/CONVERT2'], shell=True)
+                p = subprocess.check_call([os.path.join(c.exedir, 'CONVERT2')],
+                                          shell=True)
                 os.chdir(pwd)
 
                 # create final output filename, e.g. EN13040500 (ENYYMMDDHH)
-                fnout = c.inputdir + '/' + c.prefix
+                fnout = os.path.join(c.inputdir, c.prefix)
                 if c.maxstep > 12:
                     suffix = cdate[2:8] + '.{:0>2}'.format(time/100) + \
                              '.{:0>3}'.format(step)
                 else:
                     suffix = cdateH[2:10]
                 fnout += suffix
-                print "outputfile = " + fnout
+                print("outputfile = " + fnout)
                 self.outputfilelist.append(fnout) # needed for final processing
 
                 # create outputfile and copy all data from intermediate files
@@ -1043,22 +1047,25 @@ class EcFlexpart(object):
                 orolsm = os.path.basename(glob.glob(
                     c.inputdir + '/OG_OROLSM__SL.*.' + c.ppid + '*')[0])
                 fluxfile = 'flux' + cdate[0:2] + suffix
-                if c.cwc != '1':
+                if not c.cwc:
                     flist = ['fort.15', fluxfile, 'fort.16', orolsm]
                 else:
                     flist = ['fort.15', 'fort.22', fluxfile, 'fort.16', orolsm]
 
                 with open(fnout, 'wb') as fout:
                     for f in flist:
-                        shutil.copyfileobj(
-                            open(c.inputdir + '/' + f, 'rb'), fout)
+                        shutil.copyfileobj(open(os.path.join(c.inputdir, f),
+                                                'rb'), fout)
 
-                if c.omega == '1':
-                    with open(c.outputdir + '/OMEGA', 'wb') as fout:
+                if c.omega:
+                    with open(os.path.join(c.outputdir, 'OMEGA'), 'wb') as fout:
                         shutil.copyfileobj(
-                            open(c.inputdir + '/fort.25', 'rb'), fout)
+                            open(os.path.join(c.inputdir, 'fort.25'),
+                                 'rb'), fout)
+            else:
+                pass
 
-        if hasattr(c, 'wrf') and c.wrf == '1':
+        if c.wrf:
             fwrf.close()
 
         grib_index_release(iid)
@@ -1101,7 +1108,7 @@ class EcFlexpart(object):
         table128 = init128(_config.PATH_GRIBTABLE)
         pars = to_param_id(self.params['OG_acc_SL'][0], table128)
         index_keys = ["date", "time", "step"]
-        indexfile = c.inputdir + "/date_time_stepRange.idx"
+        indexfile = os.path.join(c.inputdir, _config.FILE_GRIB_INDEX)
         silent_remove(indexfile)
         grib = GribTools(inputfiles.files)
         # creates new index file
@@ -1111,7 +1118,7 @@ class EcFlexpart(object):
         index_vals = []
         for key in index_keys:
             key_vals = grib_index_get(iid, key)
-            print key_vals
+            print(key_vals)
             # have to sort the steps for disaggregation,
             # therefore convert to int first
             if key == 'step':
@@ -1132,17 +1139,22 @@ class EcFlexpart(object):
             svalsdict[str(p)] = []
             stepsdict[str(p)] = []
 
-        print 'maxstep: ', c.maxstep
+        print('maxstep: ', c.maxstep)
 
         for prod in product(*index_vals):
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
             # per date e.g. time = 0, 1200
             # per time e.g. step = 3, 6, 9, 12
+            print('current prod: ', prod)
             for i in range(len(index_keys)):
                 grib_index_select(iid, index_keys[i], prod[i])
 
+            # get first id from current product
             gid = grib_new_from_index(iid)
+
+            # if there is data for this product combination
+            # prepare some date and time parameter before reading the data
             if gid is not None:
                 cdate = grib_get(gid, 'date')
                 time = grib_get(gid, 'time')
@@ -1160,28 +1172,31 @@ class EcFlexpart(object):
                 break
 
             if c.maxstep > 12:
-                fnout = c.inputdir + '/flux' + \
-                    sdate.strftime('%Y%m%d') + '.{:0>2}'.format(time/100) + \
-                    '.{:0>3}'.format(step-2*int(c.dtime))
-                gnout = c.inputdir + '/flux' + \
-                    sdate.strftime('%Y%m%d') + '.{:0>2}'.format(time/100) + \
-                    '.{:0>3}'.format(step-int(c.dtime))
-                hnout = c.inputdir + '/flux' + \
-                    sdate.strftime('%Y%m%d') + '.{:0>2}'.format(time/100) + \
-                    '.{:0>3}'.format(step)
-                g = open(gnout, 'w')
-                h = open(hnout, 'w')
+                fnout = os.path.join(c.inputdir, 'flux' +
+                                     sdate.strftime('%Y%m%d') +
+                                     '.{:0>2}'.format(time/100) +
+                                     '.{:0>3}'.format(step-2*int(c.dtime)))
+                gnout = os.path.join(c.inputdir, 'flux' +
+                                     sdate.strftime('%Y%m%d') +
+                                     '.{:0>2}'.format(time/100) +
+                                     '.{:0>3}'.format(step-int(c.dtime)))
+                hnout = os.path.join(c.inputdir, 'flux' +
+                                     sdate.strftime('%Y%m%d') +
+                                     '.{:0>2}'.format(time/100) +
+                                     '.{:0>3}'.format(step))
             else:
-                fnout = c.inputdir + '/flux' + fdate.strftime('%Y%m%d%H')
-                gnout = c.inputdir + '/flux' + (fdate +
-                                                timedelta(hours=int(c.dtime))
-                                               ).strftime('%Y%m%d%H')
-                hnout = c.inputdir + '/flux' + sdates.strftime('%Y%m%d%H')
-                g = open(gnout, 'w')
-                h = open(hnout, 'w')
+                fnout = os.path.join(c.inputdir, 'flux' +
+                                     fdate.strftime('%Y%m%d%H'))
+                gnout = os.path.join(c.inputdir, 'flux' +
+                                     (fdate + timedelta(hours=int(c.dtime))).
+                                     strftime('%Y%m%d%H'))
+                hnout = os.path.join(c.inputdir, 'flux' +
+                                     sdates.strftime('%Y%m%d%H'))
 
-            print "outputfile = " + fnout
-            f = open(fnout, 'w')
+            print("outputfile = " + fnout)
+            f_handle = open(fnout, 'w')
+            g_handle = open(gnout, 'w')
+            h_handle = open(hnout, 'w')
 
             # read message for message and store relevant data fields
             # data keywords are stored in pars
@@ -1242,7 +1257,7 @@ class EcFlexpart(object):
                             grib_set(gid, 'time', fdate.hour*100)
                             grib_set(gid, 'date', fdate.year*10000 +
                                      fdate.month*100+fdate.day)
-                        grib_write(gid, f)
+                        grib_write(gid, f_handle)
 
                         if c.basetime is not None:
                             elimit = datetime.strptime(c.end_date +
@@ -1269,7 +1284,7 @@ class EcFlexpart(object):
                             grib_set(gid, 'date', truedatetime.year * 10000 +
                                      truedatetime.month * 100 +
                                      truedatetime.day)
-                            grib_write(gid, h)
+                            grib_write(gid, h_handle)
 
                             #values = (svdp[1]+svdp[2])/2.
                             if cparamId == '142' or cparamId == '143':
@@ -1284,15 +1299,15 @@ class EcFlexpart(object):
                                      truedatetime.month * 100 +
                                      truedatetime.day)
                             grib_set_values(gid, values)
-                            grib_write(gid, g)
+                            grib_write(gid, g_handle)
 
                     grib_release(gid)
 
                     gid = grib_new_from_index(iid)
 
-            f.close()
-            g.close()
-            h.close()
+            f_handle.close()
+            g_handle.close()
+            h_handle.close()
 
         grib_index_release(iid)
 
