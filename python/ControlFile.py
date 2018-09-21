@@ -424,7 +424,7 @@ class ControlFile(object):
             sys.exit(1)
 
         if self.request != 0:
-            marsfile = os.path.join(_config.PATH_RUN_DIR,
+            marsfile = os.path.join(self.inputdir,
                                     _config.FILE_MARS_REQUESTS)
             if os.path.isfile(marsfile):
                 os.remove(marsfile)

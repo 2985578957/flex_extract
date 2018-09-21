@@ -48,7 +48,7 @@ cd $SCRATCH
 mkdir -p python$$
 cd python$$
 
-export CONTROL=CONTROL
+export CONTROL=$PWD/CONTROL
 
 cat >$CONTROL<<EOF
 accuracy 24

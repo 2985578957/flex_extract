@@ -76,8 +76,14 @@ PATH_RUN_DIR = os.path.join(PATH_FLEXEXTRACT_DIR, 'run')
 PATH_RELATIVE_RUN_DIR = os.path.relpath(PATH_RUN_DIR, PATH_FLEXEXTRACT_DIR)
 
 # path to directory where all control files are stored
-PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'control')
-PATH_RELATIVE_CONTROLFILES = os.path.relpath(PATH_CONTROLFILES, PATH_FLEXEXTRACT_DIR)
+if os.getenv('CONTROL') and '/' in os.getenv('CONTROL'):
+    # this is only needed if remote version with job script is used!
+    # because job is directly submitted from SCRATCH and because the
+    # CONTROL file is stored there, the normal path is not valid.
+    PATH_CONTROLFILES = os.getenv('CONTROL')
+else:
+    PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'control')
+    PATH_RELATIVE_CONTROLFILES = os.path.relpath(PATH_CONTROLFILES, PATH_FLEXEXTRACT_DIR)
 
 # path to directory where all job scripts are stored
 PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')

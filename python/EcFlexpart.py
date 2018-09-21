@@ -205,6 +205,7 @@ class EcFlexpart(object):
         self.accuracy = c.accuracy
         self.level = c.level
         self.expver = c.expver
+        self.levelist = c.levelist
         # for gaussian grid retrieval
         self.glevelist = '1/to/' + c.level
 
