@@ -19,7 +19,7 @@ ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
 DESTINATION='annep@genericSftp'
 FLEXPART_ROOT_SCRIPTS=""
-JOB_TEMPLATE=""
+JOB_TEMPLATE="job.temp.o"
 CONTROLFILE="CONTROL.test"
 # -----------------------------------------------------------------
 #
@@ -28,7 +28,7 @@ CONTROLFILE="CONTROL.test"
 # -----------------------------------------------------------------
 
 # PATH TO INSTALLATION SCRIPT
-script="python/install.py"
+script="source/python/install.py"
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""

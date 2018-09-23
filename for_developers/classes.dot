@@ -1,0 +1,9 @@
+digraph "classes" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{ControlFile|accuracy : int\larea : str\lbasetime : NoneType\lcwc : str\ldate_chunk : str\ldebug\ldestination\lec_flexpart_root_scripts : str\lecgid\lecmwfdatadir\lecuid\lend_date : NoneType\lend_step : int\letadiff : str\lexedir\lflexpart_root_scripts : str\lgateway\lgrib2flexpart : str\linputdir : str\lleft\llevel\llevelist\llevels : list\llower\lmakefile : NoneType\lmaxstep : int\lomega : str\lomegadiff : str\loutputdir : str\lparamIds\lprefix : str\lright\lstart_date : NoneType\lstart_step : int\lstep\lupper\l|to_list()\l}", shape="record"];
+"1" [label="{EcFlexpart|accuracy\larea : str\lbasetime\ldates\ldtime\lexpver : str\lgaussian : str\lglevelist\lgrid : str\linputdir : str\llevel\llevelist\lmarsclass\lnumber : str\loutputfilelist : list\lparams : dict\lresol\lserver\lstream\ltypes : dict\l|create()\ldeacc_fluxes()\lprocess_output()\lretrieve()\lwrite_namelist()\l}", shape="record"];
+"2" [label="{GribTools|filenames\l|copy()\lget_keys()\lindex()\lset_keys()\l}", shape="record"];
+"3" [label="{MarsRetrieval|accuracy : str\larea : str\ldate : str\ldtype : str\lexpver : str\lgaussian : str\lgrid : str\llevelist : str\llevtype : str\lmarsclass : str\lnumber : str\lparam : str\lrepres : str\lresol : str\lserver\lstep : str\lstream : str\ltarget : str\ltime : str\l|data_retrieve()\ldisplay_info()\l}", shape="record"];
+"4" [label="{UioFiles|files : list, NoneType\lpattern\l|delete_files()\llist_files()\l}", shape="record"];
+}
