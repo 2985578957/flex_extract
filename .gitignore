@@ -1,0 +1,13 @@
+#
+# gitignore lists all directories and files which should not be versionized!!! 
+#
+
+# these dirs and files shouldn't be versionized at any time in this project!!!
+*.pyc
+*.o
+*.mod
+*.tar*
+*.ksh
+/work*
+/src/CONVERT2
+/python/ECMWF_ENV
