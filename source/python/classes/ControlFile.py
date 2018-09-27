@@ -179,9 +179,17 @@ class ControlFile(object):
         from mods.tools import my_error
 
         # read whole CONTROL file
-        with open(os.path.join(_config.PATH_CONTROLFILES,
-                               self.controlfile)) as f:
-            fdata = f.read().split('\n')
+
+        try:
+            with open(os.path.join(_config.PATH_CONTROLFILES,
+                                   self.controlfile)) as f:
+                fdata = f.read().split('\n')
+        except IOError:
+            print('Could not read CONTROL file "' + args.controlfile + '"')
+            print('Either it does not exist or its syntax is wrong.')
+            print('Try "' + sys.argv[0].split('/')[-1] + \
+                      ' -h" to print usage information')
+            sys.exit(1)
 
         # go through every line and store parameter
         for ldata in fdata:

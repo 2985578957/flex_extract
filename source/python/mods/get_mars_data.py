@@ -78,15 +78,7 @@ def main():
     '''
 
     args = get_cmdline_arguments()
-
-    try:
-        c = ControlFile(args.controlfile)
-    except IOError:
-        print('Could not read CONTROL file "' + args.controlfile + '"')
-        print('Either it does not exist or its syntax is wrong.')
-        print('Try "' + sys.argv[0].split('/')[-1] + \
-              ' -h" to print usage information')
-        sys.exit(1)
+    c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
     c.assign_args_to_control(args, env_parameter)

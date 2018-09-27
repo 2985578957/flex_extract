@@ -77,19 +77,8 @@ def main():
         <nothing>
     '''
 
-    #os.chdir(_config.PATH_LOCAL_PYTHON)
-
     args = get_install_cmdline_arguments()
-
-    try:
-        c = ControlFile(args.controlfile)
-    except IOError:
-        print('Could not read CONTROL file "' + args.controlfile + '"')
-        print('Either it does not exist or its syntax is wrong.')
-        print('Try "' + sys.argv[0].split('/')[-1] +
-              ' -h" to print usage information')
-        exit(1)
-
+    c = ControlFile(args.controlfile)
     c.assign_args_to_control(args)
     c.check_install_conditions()
 

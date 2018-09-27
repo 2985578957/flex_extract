@@ -76,15 +76,7 @@ def main():
     '''
 
     args = get_cmdline_arguments()
-
-    try:
-        c = ControlFile(args.controlfile)
-    except IOError:
-        print('Could not read CONTROL file "' + args.controlfile + '"')
-        print('Either it does not exist or its syntax is wrong.')
-        print('Try "' + sys.argv[0].split('/')[-1] + \
-              ' -h" to print usage information')
-        sys.exit(1)
+    c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
     c.assign_args_to_control(args)
@@ -94,7 +86,7 @@ def main():
     # on local side
     # on ECMWF server this would also be the local side
     called_from_dir = os.getcwd()
-    if args.queue is None:
+    if not args.queue:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(called_from_dir, c.inputdir)
         if c.outputdir[0] != '/':
