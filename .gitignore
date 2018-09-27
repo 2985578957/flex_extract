@@ -4,8 +4,8 @@
 
 # these dirs and files shouldn't be versionized at any time in this project!!!
 *.pyc
-sources/fortran/*.o
-sources/fortran/*.mod
+source/fortran/*.o
+source/fortran/*.mod
 *.tar*
 run/ECMWF_ENV
 run/workspace/*
@@ -15,3 +15,8 @@ source/pythontest/.cache
 source/pythontest/.pytest_cache
 
 # temporary ignorance of the following files!
+for_developers/Content_Paper2.txt
+for_developers/DOCUFPEXTRACT.txt
+for_developers/FLEXEXTRACT_CONTENT.txt
+for_developers/NewDocu.odt
+for_developers/dokuECMWFDATA
