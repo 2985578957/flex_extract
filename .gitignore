@@ -8,6 +8,7 @@
 *.mod
 *.tar*
 *.ksh
+mk_upload_tarball.sh
 /work*
 /src/CONVERT2
 /python/ECMWF_ENV
