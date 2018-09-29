@@ -91,9 +91,10 @@ def main():
     c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
-    c.assign_args_to_control(args, env_parameter)
+    c.assign_args_to_control(args)
     c.assign_envs_to_control(env_parameter)
     c.check_conditions(args.queue)
+
     prepare_flexpart(args.ppid, c)
 
     return

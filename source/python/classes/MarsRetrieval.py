@@ -334,7 +334,7 @@ class MarsRetrieval(object):
         return
 
 
-    def print_info(self, inputdir):
+    def print_info(self, inputdir, request_number):
         '''
         @Description:
             Prints all mars requests to an extra file for debugging and
@@ -347,7 +347,10 @@ class MarsRetrieval(object):
             inputdir: string
                 The path where all data from the retrievals are stored.
 
-        @Return:
+            request_number: integer
+                Number of mars requests for flux and non-flux data.
+
+            @Return:
             <nothing>
         '''
         # Get all class attributes and their values as a dictionary
@@ -356,7 +359,7 @@ class MarsRetrieval(object):
         # open a file to store all requests to
         with open(os.path.join(inputdir,
                                _config.FILE_MARS_REQUESTS), 'a') as f:
-            f.write('mars\n')
+            f.write('mars_request #' + str(request_number) + '\n')
             # iterate through all attributes and print them
             # with their corresponding values
             for item in attrs.items():
@@ -365,6 +368,40 @@ class MarsRetrieval(object):
                 else:
                     f.write(item[0] + ': ' + str(item[1]) + '\n')
             f.write('\n\n')
+
+        return
+
+
+    def print_infodata_csv(self, inputdir, request_number):
+        '''
+        @Description:
+            Write all request parameter in alpabetical order into a "csv" file.
+
+        @Input:
+            self: instance of MarsRetrieval
+                For description see class documentation.
+
+            inputdir: string
+                The path where all data from the retrievals are stored.
+
+            request_number: integer
+                Number of mars requests for flux and non-flux data.
+
+        @Return:
+            <nothing>
+        '''
+
+        # Get all class attributes and their values as a dictionary
+        attrs = vars(self)
+        del attrs['server']
+
+        # open a file to store all requests to
+        with open(os.path.join(inputdir,
+                                   _config.FILE_MARS_REQUESTS), 'a') as f:
+            f.write(str(request_number) + ', ')
+            f.write(', '.join(str(attrs[key])
+                              for key in sorted(attrs.iterkeys())))
+            f.write('\n')
 
         return
 

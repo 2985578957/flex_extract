@@ -66,7 +66,8 @@ from classes.UioFiles import UioFiles
 def main():
     '''
     @Description:
-        If get_mars_data is called from command line, this function controls
+        If get_mars_data is called directly from command line,
+
         the program flow and calls the argumentparser function and
         the get_mars_data function for retrieving EC data.
 
@@ -81,7 +82,7 @@ def main():
     c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
-    c.assign_args_to_control(args, env_parameter)
+    c.assign_args_to_control(args)
     c.assign_envs_to_control(env_parameter)
     c.check_conditions(args.queue)
 

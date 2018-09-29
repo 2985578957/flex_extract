@@ -129,6 +129,8 @@ class EcFlexpart(object):
         @Return:
             <nothing>
         '''
+        # set a counter for the number of mars requests generated
+        self.mreq_count = 0
 
         # different mars types for retrieving data for flexpart
         self.types = dict()
@@ -224,6 +226,8 @@ class EcFlexpart(object):
                        'GG__ML': '', 'GG__SL': '',
                        'OG__ML': '', 'OG__SL': '',
                        'OG_OROLSM_SL': '', 'OG_acc_SL': ''}
+        # the self.params dictionary stores a list of
+        # [param, levtype, levelist, grid] per key
 
         if fluxes is False:
             self.params['SH__SL'] = ['LNSP', 'ML', '1', 'OFF']
@@ -277,7 +281,7 @@ class EcFlexpart(object):
                 #wrf_sfc = 'sp/msl/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/stl1/ /
                 #           stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4'.upper()
                 wrf_sfc = '134/235/167/165/166/168/129/172/34/31/141/ \
-                           139/170/183/236/39/40/41/42'.upper()
+                           139/170/183/236/39/40/41/42'
                 lwrt_sfc = wrf_sfc.split('/')
                 for par in lwrt_sfc:
                     if par not in self.params['OG__SL'][0]:
@@ -291,6 +295,95 @@ class EcFlexpart(object):
 
         return
 
+
+    def _start_retrievement(self, request, par_dict):
+        '''
+        @Description:
+            Creates the Mars Retrieval and prints or submits the request
+            depending on the status of the request variable.
+
+        @Input:
+            self: instance of EcFlexpart
+                The current object of the class.
+
+            request: integer
+                Selects the mode of retrieval.
+                0: Retrieves the data from ECMWF.
+                1: Prints the mars requests to an output file.
+                2: Retrieves the data and prints the mars request.
+
+            par_dict: dictionary
+                Contains all parameter which have to be set for creating the
+                Mars Retrievals. The parameter are:
+                marsclass, stream, type, levtype, levelist, resol, gaussian,
+                accuracy, grid, target, area, date, time, number, step, expver,
+                param
+
+        @Return:
+            <nothing>
+        '''
+        # increase number of mars requests
+        self.mreq_count += 1
+
+        MR = MarsRetrieval(self.server,
+                           marsclass=par_dict['marsclass'],
+                           stream=par_dict['stream'],
+                           type=par_dict['type'],
+                           levtype=par_dict['levtype'],
+                           levelist=par_dict['levelist'],
+                           resol=par_dict['resol'],
+                           gaussian=par_dict['gaussian'],
+                           accuracy=par_dict['accuracy'],
+                           grid=par_dict['grid'],
+                           target=par_dict['target'],
+                           area=par_dict['area'],
+                           date=par_dict['date'],
+                           time=par_dict['time'],
+                           number=par_dict['number'],
+                           step=par_dict['step'],
+                           expver=par_dict['expver'],
+                           param=par_dict['param'])
+
+        if request == 0:
+            MR.display_info()
+            MR.data_retrieve()
+        elif request == 1:
+            MR.print_infodata_csv(self.inputdir, self.mreq_count)
+        elif request == 2:
+            MR.print_infodata_csv(self.inputdir, self.mreq_count)
+            MR.display_info()
+            MR.data_retrieve()
+        else:
+            print('Failure')
+
+        return
+
+
+    def _mk_targetname(self, ftype, param, date):
+        '''
+        @Description:
+            Creates the filename for the requested grib data to be stored in.
+            This name is passed as the "target" parameter in the request.
+
+        @Input:
+            ftype: string
+                Shortcut name of the type of the field. E.g. AN, FC, PF, ...
+
+            param: string
+                Shortcut of the grid type. E.g. SH__ML, SH__SL, GG__ML,
+                GG__SL, OG__ML, OG__SL, OG_OROLSM_SL, OG_acc_SL
+
+            date: string
+                The date period of the grib data to be stored in this file.
+
+        @Return:
+            targetname: string
+                The target filename for the grib data.
+        '''
+        targetname = (self.inputdir + '/' + ftype + param + '.' + date + '.' +
+                      str(os.getppid()) + '.' + str(os.getpid()) + '.grb')
+
+        return targetname
 
     def write_namelist(self, c, filename):
         '''
@@ -380,6 +473,12 @@ class EcFlexpart(object):
                 Contains start and end date of the retrieval in the format
                 "YYYYMMDD/to/YYYYMMDD"
 
+            request: integer
+                Selects the mode of retrieval.
+                0: Retrieves the data from ECMWF.
+                1: Prints the mars requests to an output file.
+                2: Retrieves the data and prints the mars request.
+
             inputdir: string, optional
                 Path to the directory where the retrieved data is about
                 to be stored. The default is the current directory ('.').
@@ -392,94 +491,101 @@ class EcFlexpart(object):
         self.inputdir = inputdir
         oro = False
 
+        # define times
+        t12h = timedelta(hours=12)
+        t24h = timedelta(hours=24)
+
+        # dictionary which contains all parameter for the mars request
+        # Entries with a "None" will change for different requests and therefore
+        # will be set in each request seperately
+        retr_param_dict = {'marsclass':self.marsclass,
+                           'stream':None,
+                           'type':None,
+                           'levtype':None,
+                           'levelist':None,
+                           'resol':self.resol,
+                           'gaussian':None,
+                           'accuracy':self.accuracy,
+                           'grid':None,
+                           'target':None,
+                           'area':None,
+                           'date':None,
+                           'time':None,
+                           'number':self.number,
+                           'step':None,
+                           'expver':self.expver,
+                           'param':None}
+
         for ftype in self.types:
+            # fk contains fields types such as
+            #     [AN, FC, PF, CV]
+            # fv contains all of the items of the belonging key
+            #     [times, steps]
             for pk, pv in self.params.iteritems():
+                # pk contains one of these keys of params
+                #     [SH__ML, SH__SL, GG__ML, GG__SL, OG__ML, OG__SL,
+                #      OG_OROLSM_SL, OG_acc_SL]
+                # pv contains all of the items of the belonging key
+                #     [param, levtype, levelist, grid]
                 if isinstance(pv, str):
                     continue
-                mftype = '' + ftype
-                mftime = self.types[ftype]['times']
-                mfstep = self.types[ftype]['steps']
-                mfdate = self.dates
-                mfstream = self.stream
-                mftarget = self.inputdir + "/" + ftype + pk + '.' + \
-                           self.dates.split('/')[0] + '.' + str(os.getppid()) +\
-                           '.' + str(os.getpid()) + ".grb"
+                retr_param_dict['type'] = '' + ftype
+                retr_param_dict['time'] = self.types[ftype]['times']
+                retr_param_dict['step'] = self.types[ftype]['steps']
+                retr_param_dict['date'] = self.dates
+                retr_param_dict['stream'] = self.stream
+                retr_param_dict['target'] = self.inputdir + "/" + ftype + \
+                        pk + '.' + self.dates.split('/')[0] + '.' + \
+                        str(os.getppid()) + '.' + str(os.getpid()) + ".grb"
+                retr_param_dict['param'] = pv[0]
+                retr_param_dict['levtype'] = pv[1]
+                retr_param_dict['levelist'] = pv[2]
+                retr_param_dict['grid'] = pv[3]
+                retr_param_dict['area'] = self.area
+                retr_param_dict['gaussian'] = self.gaussian
+
                 if pk == 'OG__SL':
                     pass
-                if pk == 'OG_OROLSM__SL':
-                    if not oro:
-                        mfstream = 'OPER'
-                        mftype = 'AN'
-                        mftime = '00'
-                        mfstep = '000'
-                        mfdate = self.dates.split('/')[0]
-                        mftarget = self.inputdir + "/" + pk + '.' + mfdate + \
-                                   '.' + str(os.getppid()) + '.' + \
-                                   str(os.getpid()) + ".grb"
-                        oro = True
-                    else:
-                        continue
+                if pk == 'OG_OROLSM__SL' and not oro:
+                    oro = True
+                    retr_param_dict['stream'] = 'OPER'
+                    retr_param_dict['type'] = 'AN'
+                    retr_param_dict['time'] = '00'
+                    retr_param_dict['step'] = '000'
+                    retr_param_dict['date'] = self.dates.split('/')[0]
+                    retr_param_dict['target'] = self._mk_targetname('',
+                                            pk, retr_param_dict['date'])
+                elif pk == 'OG_OROLSM__SL' and oro:
+                    continue
                 if pk == 'GG__SL' and pv[0] == 'Q':
-                    area = ""
-                    gaussian = 'reduced'
-                else:
-                    area = self.area
-                    gaussian = self.gaussian
+                    retr_param_dict['area'] = ""
+                    retr_param_dict['gaussian'] = 'reduced'
 
     # ------  on demand path  --------------------------------------------------
                 if not self.basetime:
-                    MR = MarsRetrieval(self.server,
-                                       marsclass=self.marsclass,
-                                       stream=mfstream,
-                                       type=mftype,
-                                       levtype=pv[1],
-                                       levelist=pv[2],
-                                       resol=self.resol,
-                                       gaussian=gaussian,
-                                       accuracy=self.accuracy,
-                                       grid=pv[3],
-                                       target=mftarget,
-                                       area=area,
-                                       date=mfdate,
-                                       time=mftime,
-                                       number=self.number,
-                                       step=mfstep,
-                                       expver=self.expver,
-                                       param=pv[0])
-
-                    if request == 0:
-                        MR.display_info()
-                        MR.data_retrieve()
-                    elif request == 1:
-                        MR.print_info(self.inputdir)
-                    elif request == 2:
-                        MR.print_info(self.inputdir)
-                        MR.display_info()
-                        MR.data_retrieve()
-                    else:
-                        print('Failure')
+                    self._start_retrievement(request, retr_param_dict)
     # ------  operational path  ------------------------------------------------
                 else:
                     # check if mars job requests fields beyond basetime.
                     # If yes eliminate those fields since they may not
                     # be accessible with user's credentials
-                    if 'by' in mfstep:
+                    if 'by' in retr_param_dict['step']:
                         sm1 = 2
                     else:
                         sm1 = -1
 
-                    if 'by' in mftime:
+                    if 'by' in retr_param_dict['time']:
                         tm1 = 2
                     else:
                         tm1 = -1
 
-                    maxdate = datetime.strptime(mfdate.split('/')[-1] +
-                                                mftime.split('/')[tm1],
+                    maxdate = datetime.strptime(retr_param_dict['date'].split('/')[-1] +
+                                                retr_param_dict['time'].split('/')[tm1],
                                                 '%Y%m%d%H')
-                    istep = int(mfstep.split('/')[sm1])
-                    maxtime = maxdate + timedelta(hours=istep)
+                    maxtime = maxdate + \
+                        timedelta(hours=int(retr_param_dict['step'].split('/')[sm1]))
 
-                    elimit = datetime.strptime(mfdate.split('/')[-1] +
+                    elimit = datetime.strptime(retr_param_dict['date'].split('/')[-1] +
                                                self.basetime, '%Y%m%d%H')
 
                     if self.basetime == '12':
@@ -491,156 +597,61 @@ class EcFlexpart(object):
                         # if 12h <= maxtime-elimit<12h reduce time for last date
                         # if maxtime-elimit<12h reduce step for last time
                         # A split of the MARS job into 2 is likely necessary.
-                            maxtime = elimit - timedelta(hours=24)
-                            mfdate = '/'.join(['/'.join(mfdate.split('/')[:-1]),
-                                               datetime.strftime(maxtime,
-                                                                 '%Y%m%d')])
 
-                            MR = MarsRetrieval(self.server,
-                                               marsclass=self.marsclass,
-                                               stream=self.stream,
-                                               type=mftype,
-                                               levtype=pv[1],
-                                               levelist=pv[2],
-                                               resol=self.resol,
-                                               gaussian=gaussian,
-                                               accuracy=self.accuracy,
-                                               grid=pv[3],
-                                               target=mftarget,
-                                               area=area,
-                                               date=mfdate,
-                                               time=mftime,
-                                               number=self.number,
-                                               step=mfstep,
-                                               expver=self.expver,
-                                               param=pv[0])
 
-                            MR.display_info()
-                            MR.data_retrieve()
+                            startdate = retr_param_dict['date'].split('/')[0]
+                            enddate = datetime.strftime(elimit - t24h,'%Y%m%d')
+                            retr_param_dict['date'] = '/'.join([startdate, 'to', enddate])
 
-                            maxtime = elimit - timedelta(hours=12)
-                            mfdate = datetime.strftime(maxtime, '%Y%m%d')
-                            mftime = '00'
-                            mftarget = self.inputdir + "/" + ftype + pk + \
-                                       '.' + mfdate + '.' + str(os.getppid()) +\
-                                       '.' + str(os.getpid()) + ".grb"
+                            self._start_retrievement(request, retr_param_dict)
 
-                            MR = MarsRetrieval(self.server,
-                                               marsclass=self.marsclass,
-                                               stream=self.stream,
-                                               type=mftype,
-                                               levtype=pv[1],
-                                               levelist=pv[2],
-                                               resol=self.resol,
-                                               gaussian=gaussian,
-                                               accuracy=self.accuracy,
-                                               grid=pv[3],
-                                               target=mftarget,
-                                               area=area,
-                                               date=mfdate,
-                                               time=mftime,
-                                               number=self.number,
-                                               step=mfstep,
-                                               expver=self.expver,
-                                               param=pv[0])
+                            retr_param_dict['date'] = \
+                                datetime.strftime(elimit - t12h, '%Y%m%d')
+                            retr_param_dict['time'] = '00'
+                            retr_param_dict['target'] = \
+                                self._mk_targetname(ftype, pk,
+                                                    retr_param_dict['date'])
 
-                            MR.display_info()
+                            self._start_retrievement(request, retr_param_dict)
 
-                            MR.data_retrieve()
                         # --------------  non flux data ------------------------
                         else:
-                            MR = MarsRetrieval(self.server,
-                                               marsclass=self.marsclass,
-                                               stream=self.stream,
-                                               type=mftype,
-                                               levtype=pv[1],
-                                               levelist=pv[2],
-                                               resol=self.resol,
-                                               gaussian=gaussian,
-                                               accuracy=self.accuracy,
-                                               grid=pv[3],
-                                               target=mftarget,
-                                               area=area,
-                                               date=mfdate,
-                                               time=mftime,
-                                               number=self.number,
-                                               step=mfstep,
-                                               expver=self.expver,
-                                               param=pv[0])
+                            self._start_retrievement(request, retr_param_dict)
 
-                            MR.display_info()
-                            MR.data_retrieve()
-                    else: # basetime == 0 ??? #AP
+                    else: # basetime = 0
+                        retr_param_dict['date'] = \
+                            datetime.strftime(elimit - t24h, '%Y%m%d')
 
-                        maxtime = elimit - timedelta(hours=24)
-                        mfdate = datetime.strftime(maxtime, '%Y%m%d')
-                        mftimesave = ''.join(mftime)
+                        timesave = ''.join(retr_param_dict['time'])
 
-                        if '/' in mftime:
-                            times = mftime.split('/')
-                            while ((int(times[0]) +
-                                    int(mfstep.split('/')[0]) <= 12) and
-                                   (pk != 'OG_OROLSM__SL') and 'acc' not in pk):
+                        if '/' in retr_param_dict['time']:
+                            times = retr_param_dict['time'].split('/')
+                            steps = retr_param_dict['step'].split('/')
+                            while (pk != 'OG_OROLSM__SL' and
+                                   'acc' not in pk and
+                                   (int(times[0]) + int(steps[0])) <= 12):
                                 times = times[1:]
+
                             if len(times) > 1:
-                                mftime = '/'.join(times)
+                                retr_param_dict['time'] = '/'.join(times)
                             else:
-                                mftime = times[0]
+                                retr_param_dict['time'] = times[0]
 
-                        MR = MarsRetrieval(self.server,
-                                           marsclass=self.marsclass,
-                                           stream=self.stream,
-                                           type=mftype,
-                                           levtype=pv[1],
-                                           levelist=pv[2],
-                                           resol=self.resol,
-                                           gaussian=gaussian,
-                                           accuracy=self.accuracy,
-                                           grid=pv[3],
-                                           target=mftarget,
-                                           area=area,
-                                           date=mfdate,
-                                           time=mftime,
-                                           number=self.number,
-                                           step=mfstep,
-                                           expver=self.expver,
-                                           param=pv[0])
+                        self._start_retrievement(request, retr_param_dict)
 
-                        MR.display_info()
-                        MR.data_retrieve()
+                        if (pk != 'OG_OROLSM__SL' and
+                            int(retr_param_dict['step'].split('/')[0]) == 0 and
+                            int(timesave.split('/')[0]) == 0):
 
-                        if (int(mftimesave.split('/')[0]) == 0 and
-                                int(mfstep.split('/')[0]) == 0 and
-                                pk != 'OG_OROLSM__SL'):
+                            retr_param_dict['date'] = \
+                                datetime.strftime(elimit, '%Y%m%d')
+                            retr_param_dict['time'] = '00'
+                            retr_param_dict['step'] = '000'
+                            retr_param_dict['target'] = \
+                                self._mk_targetname(ftype, pk,
+                                                    retr_param_dict['date'])
 
-                            mfdate = datetime.strftime(elimit, '%Y%m%d')
-                            mftime = '00'
-                            mfstep = '000'
-                            mftarget = self.inputdir + "/" + ftype + pk + \
-                                       '.' + mfdate + '.' + str(os.getppid()) +\
-                                       '.' + str(os.getpid()) + ".grb"
-
-                            MR = MarsRetrieval(self.server,
-                                               marsclass=self.marsclass,
-                                               stream=self.stream,
-                                               type=mftype,
-                                               levtype=pv[1],
-                                               levelist=pv[2],
-                                               resol=self.resol,
-                                               gaussian=gaussian,
-                                               accuracy=self.accuracy,
-                                               grid=pv[3],
-                                               target=mftarget,
-                                               area=area,
-                                               date=mfdate,
-                                               time=mftime,
-                                               number=self.number,
-                                               step=mfstep,
-                                               expver=self.expver,
-                                               param=pv[0])
-
-                            MR.display_info()
-                            MR.data_retrieve()
+                            self._start_retrievement(request, retr_param_dict)
 
         if request == 0 or request == 2:
             print('MARS retrieve done ... ')
@@ -903,7 +914,7 @@ class EcFlexpart(object):
                 timestamp += timedelta(hours=int(step))
                 cdateH = datetime.strftime(timestamp, '%Y%m%d%H')
 
-                if c.basetime is not None:
+                if c.basetime:
                     slimit = datetime.strptime(c.start_date + '00', '%Y%m%d%H')
                     bt = '23'
                     if c.basetime == '00':
@@ -1241,7 +1252,7 @@ class EcFlexpart(object):
                                      fdate.month*100+fdate.day)
                         grib_write(gid, f_handle)
 
-                        if c.basetime is not None:
+                        if c.basetime:
                             elimit = datetime.strptime(c.end_date +
                                                        c.basetime, '%Y%m%d%H')
                         else:
@@ -1294,3 +1305,6 @@ class EcFlexpart(object):
         grib_index_release(iid)
 
         return
+
+
+

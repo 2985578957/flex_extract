@@ -86,7 +86,7 @@ def main():
     # on local side
     # on ECMWF server this would also be the local side
     called_from_dir = os.getcwd()
-    if not args.queue:
+    if args.queue is None:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(called_from_dir, c.inputdir)
         if c.outputdir[0] != '/':

@@ -31,7 +31,7 @@ _VERSION_STR = '7.1'
 # FILENAMES
 # ------------------------------------------------------------------------------
 
-FILE_MARS_REQUESTS = 'mars_requests.dat'
+FILE_MARS_REQUESTS = 'mars_requests.csv'
 FORTRAN_EXECUTABLE = 'CONVERT2'
 FILE_USER_ENVVARS = 'ECMWF_ENV'
 TEMPFILE_INSTALL_COMPILEJOB = 'compilejob.temp'
