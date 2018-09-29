@@ -491,13 +491,13 @@ class EcFlexpart(object):
         self.inputdir = inputdir
         oro = False
 
-        # define times
+        # define times with datetime module
         t12h = timedelta(hours=12)
         t24h = timedelta(hours=24)
 
         # dictionary which contains all parameter for the mars request
-        # Entries with a "None" will change for different requests and therefore
-        # will be set in each request seperately
+        # entries with a "None" will change in different requests and will
+        # therefore be set in each request seperately
         retr_param_dict = {'marsclass':self.marsclass,
                            'stream':None,
                            'type':None,
@@ -517,7 +517,7 @@ class EcFlexpart(object):
                            'param':None}
 
         for ftype in self.types:
-            # fk contains fields types such as
+            # fk contains field types such as
             #     [AN, FC, PF, CV]
             # fv contains all of the items of the belonging key
             #     [times, steps]
@@ -534,9 +534,9 @@ class EcFlexpart(object):
                 retr_param_dict['step'] = self.types[ftype]['steps']
                 retr_param_dict['date'] = self.dates
                 retr_param_dict['stream'] = self.stream
-                retr_param_dict['target'] = self.inputdir + "/" + ftype + \
-                        pk + '.' + self.dates.split('/')[0] + '.' + \
-                        str(os.getppid()) + '.' + str(os.getpid()) + ".grb"
+                retr_param_dict['target'] = \
+                    self._mk_targetname(ftype, pk,
+                                        retr_param_dict['date'].split('/')[0])
                 retr_param_dict['param'] = pv[0]
                 retr_param_dict['levtype'] = pv[1]
                 retr_param_dict['levelist'] = pv[2]
@@ -563,30 +563,17 @@ class EcFlexpart(object):
 
     # ------  on demand path  --------------------------------------------------
                 if not self.basetime:
+                    # ******* start retrievement
                     self._start_retrievement(request, retr_param_dict)
     # ------  operational path  ------------------------------------------------
                 else:
                     # check if mars job requests fields beyond basetime.
-                    # If yes eliminate those fields since they may not
+                    # if yes eliminate those fields since they may not
                     # be accessible with user's credentials
-                    if 'by' in retr_param_dict['step']:
-                        sm1 = 2
-                    else:
-                        sm1 = -1
 
-                    if 'by' in retr_param_dict['time']:
-                        tm1 = 2
-                    else:
-                        tm1 = -1
-
-                    maxdate = datetime.strptime(retr_param_dict['date'].split('/')[-1] +
-                                                retr_param_dict['time'].split('/')[tm1],
-                                                '%Y%m%d%H')
-                    maxtime = maxdate + \
-                        timedelta(hours=int(retr_param_dict['step'].split('/')[sm1]))
-
-                    elimit = datetime.strptime(retr_param_dict['date'].split('/')[-1] +
-                                               self.basetime, '%Y%m%d%H')
+                    enddate = retr_param_dict['date'].split('/')[-1]
+                    elimit = datetime.strptime(enddate + self.basetime,
+                                               '%Y%m%d%H')
 
                     if self.basetime == '12':
                         # --------------  flux data ----------------------------
@@ -601,8 +588,11 @@ class EcFlexpart(object):
 
                             startdate = retr_param_dict['date'].split('/')[0]
                             enddate = datetime.strftime(elimit - t24h,'%Y%m%d')
-                            retr_param_dict['date'] = '/'.join([startdate, 'to', enddate])
+                            retr_param_dict['date'] = '/'.join([startdate,
+                                                                'to',
+                                                                enddate])
 
+                            # ******* start retrievement
                             self._start_retrievement(request, retr_param_dict)
 
                             retr_param_dict['date'] = \
@@ -612,10 +602,12 @@ class EcFlexpart(object):
                                 self._mk_targetname(ftype, pk,
                                                     retr_param_dict['date'])
 
+                            # ******* start retrievement
                             self._start_retrievement(request, retr_param_dict)
 
                         # --------------  non flux data ------------------------
                         else:
+                            # ******* start retrievement
                             self._start_retrievement(request, retr_param_dict)
 
                     else: # basetime = 0
@@ -637,6 +629,7 @@ class EcFlexpart(object):
                             else:
                                 retr_param_dict['time'] = times[0]
 
+                        # ******* start retrievement
                         self._start_retrievement(request, retr_param_dict)
 
                         if (pk != 'OG_OROLSM__SL' and
@@ -651,6 +644,7 @@ class EcFlexpart(object):
                                 self._mk_targetname(ftype, pk,
                                                     retr_param_dict['date'])
 
+                            # ******* start retrievement
                             self._start_retrievement(request, retr_param_dict)
 
         if request == 0 or request == 2:
