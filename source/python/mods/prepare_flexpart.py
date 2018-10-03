@@ -114,15 +114,8 @@ def prepare_flexpart(ppid, c):
             from this script, it is "None".
 
         c: instance of class ControlFile
-            Contains all the parameters of CONTROL file, which are e.g.:
-            DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
-            STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
-            LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
-            OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
-            ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
-            MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR, BASETIME
-            DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
-
+            Contains all the parameters of CONTROL file and
+            command line.
             For more information about format and content of the parameter
             see documentation.
 
@@ -175,10 +168,14 @@ def prepare_flexpart(ppid, c):
     flexpart = EcFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
     flexpart.process_output(c)
+    if c.grib2flexpart:
+        # prepare environment for a FLEXPART run
+        # to convert grib to flexpart binary format
+        flexpart.prepare_fp_files(c)
 
     # check if in debugging mode, then store all files
     # otherwise delete temporary files
-    if int(c.debug) != 0:
+    if c.debug:
         print('\nTemporary files left intact')
     else:
         clean_up(c)

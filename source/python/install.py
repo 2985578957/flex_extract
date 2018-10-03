@@ -146,14 +146,10 @@ def install_via_gateway(c):
 
     @Input:
         c: instance of class ControlFile
-            Contains all necessary information of a CONTROL file. The parameters
-            are: DAY1, DAY2, DTIME, MAXSTEP, TYPE, TIME, STEP, CLASS, STREAM,
-            NUMBER, EXPVER, GRID, LEFT, LOWER, UPPER, RIGHT, LEVEL, LEVELIST,
-            RESOL, GAUSS, ACCURACY, OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA,
-            SMOOTH, FORMAT, ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS,
-            ECFSDIR, MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR
-            For more information about format and content of the parameter see
-            documentation.
+            Contains all the parameters of CONTROL file and
+            command line.
+            For more information about format and content of the parameter
+            see documentation.
 
     @Return:
         <nothing>
