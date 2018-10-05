@@ -97,6 +97,9 @@ def interpret_args_and_control(*args,**kwargs):
     parser.add_argument("--public", dest="public", default=0,
                         help="Public mode - retrieves the public datasets")
 
+    parser.add_argument("--request", dest="request", default=0,
+                        help="list all mars request in file mars_requests.dat \
+                        and skip submission to mars")
 
     args = parser.parse_args()
 
@@ -187,6 +190,15 @@ def interpret_args_and_control(*args,**kwargs):
 
     if args.flexpart_root_scripts!=None:
         c.flexpart_root_scripts=args.flexpart_root_scripts
+
+    # set request attribute to control file
+    if args.request != '0':
+        c.request=args.request
+
+    if c.request != '0':
+        marsfile = os.path.join(c.inputdir, 'mars_request.csv')
+        if os.path.isfile(marsfile):
+            os.remove(marsfile)
 
     return args,c
 
@@ -563,7 +575,8 @@ class Control:
                     print('Analysis retrievals must have STEP = 0 (setting to 0)')
                     self.type[i] = 0
 
-
+            if not hasattr(self,'request'):
+                self.request='0'
 
         return
     def __str__(self):
@@ -641,6 +654,38 @@ class MARSretrieval:
 
         return
 
+    def print_infodata_csv(self, inputdir, request_number):
+        '''
+        @Description:
+            Write all request parameter in alpabetical order into a "csv" file.
+
+        @Input:
+            self: instance of MarsRetrieval
+                For description see class documentation.
+
+            inputdir: string
+                The path where all data from the retrievals are stored.
+
+            request_number: integer
+                Number of mars requests for flux and non-flux data.
+
+        @Return:
+            <nothing>
+        '''
+
+        # Get all class attributes and their values as a dictionary
+        attrs = vars(self)
+        del attrs['server']
+
+        # open a file to store all requests to
+        with open(os.path.join(inputdir, 'mars_request.csv'), 'a') as f:
+            f.write(str(request_number) + ', ')
+            f.write(', '.join(str(attrs[key])
+                        for key in sorted(attrs.iterkeys())))
+            f.write('\n')
+
+        return
+
     def dataRetrieve(self):
         attrs=vars(self).copy()
 
@@ -708,8 +753,10 @@ class EIFlexpart:
 ##############################################################
 
     def __init__(self,c,fluxes=False):
-# different mars types for retrieving reanalysis data for flexpart
+        # different mars types for retrieving reanalysis data for flexpart
 
+        # set a counter for the number of mars requests generated
+        self.mreq_count = 0
         self.types=dict()
         try:
             if c.maxstep>len(c.type):    # Pure forecast mode
@@ -911,7 +958,7 @@ class EIFlexpart:
         return
 
 
-    def retrieve(self, server, public, dates,times, inputdir=''):
+    def retrieve(self, server, public, dates, request, times, inputdir=''):
         self.dates=dates
         self.server=server
         self.public=public
@@ -970,13 +1017,22 @@ class EIFlexpart:
                     gaussian=self.gaussian
 
                 if self.basetime==None:
+                    # increase number of mars requests
+                    self.mreq_count += 1
                     MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=mfstream,
                                       type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                   accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                   date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                    MR.displayInfo()
-                    MR.dataRetrieve()
+                    if request == "0":
+                        MR.display_info()
+                        MR.data_retrieve()
+                    elif request == "1":
+                        MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                    elif request == "2":
+                        MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                        MR.display_info()
+                        MR.data_retrieve()
 # The whole else section is only necessary for operational scripts. It could be removed
                 else: # check if mars job requests fields beyond basetime. If yes eliminate those fields since they may not
                         # be accessible with user's credentials
@@ -1000,35 +1056,59 @@ class EIFlexpart:
                     # A split of the MARS job into 2 is likely necessary.
                             maxtime=elimit-datetime.timedelta(hours=24)
                             mfdate='/'.join(('/'.join(mfdate.split('/')[:-1]),datetime.datetime.strftime(maxtime,'%Y%m%d')))
-
+                            # increase number of mars requests
+                            self.mreq_count += 1
                             MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
                                               type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            MR.displayInfo()
-                            MR.dataRetrieve()
+                            if request == "0":
+                                MR.display_info()
+                                MR.data_retrieve()
+                            elif request == "1":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                            elif request == "2":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                                MR.display_info()
+                                MR.data_retrieve()
 
                             maxtime=elimit-datetime.timedelta(hours=12)
                             mfdate=datetime.datetime.strftime(maxtime,'%Y%m%d')
                             mftime='00'
                             mftarget=self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
-
+                            # increase number of mars requests
+                            self.mreq_count += 1
                             MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
                                               type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
-
-                            MR.displayInfo()
-                            MR.dataRetrieve()
+                            if request == "0":
+                                MR.display_info()
+                                MR.data_retrieve()
+                            elif request == "1":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                            elif request == "2":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                                MR.display_info()
+                                MR.data_retrieve()
                         else:
+                            # increase number of mars requests
+                            self.mreq_count += 1
                             MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
                                               type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            MR.displayInfo()
-                            MR.dataRetrieve()
+                            if request == "0":
+                                MR.display_info()
+                                MR.data_retrieve()
+                            elif request == "1":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                            elif request == "2":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                                MR.display_info()
+                                MR.data_retrieve()
                     else:
                         maxtime=elimit-datetime.timedelta(hours=24)
                         mfdate=datetime.datetime.strftime(maxtime,'%Y%m%d')
@@ -1043,32 +1123,50 @@ class EIFlexpart:
                                     mftime='/'.join(times)
                                 else:
                                     mftime=times[0]
-
+                        # increase number of mars requests
+                        self.mreq_count += 1
                         MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
                                           type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                       accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                       date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                        MR.displayInfo()
-                        MR.dataRetrieve()
+                        if request == "0":
+                            MR.display_info()
+                            MR.data_retrieve()
+                        elif request == "1":
+                            MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                        elif request == "2":
+                            MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                            MR.display_info()
+                            MR.data_retrieve()
 
                         if int(mftimesave.split('/')[0])==0 and int(mfstep.split('/')[0])==0 and pk!='OG_OROLSM__SL':
                             mfdate=datetime.datetime.strftime(elimit,'%Y%m%d')
                             mftime='00'
                             mfstep='000'
                             mftarget=self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
-
+                            # increase number of mars requests
+                            self.mreq_count += 1
                             MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
                                               type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                           accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                           date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            MR.displayInfo()
-                            MR.dataRetrieve()
+                            if request == "0":
+                                MR.display_info()
+                                MR.data_retrieve()
+                            elif request == "1":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                            elif request == "2":
+                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
+                                MR.display_info()
+                                MR.data_retrieve()
 
 
-
-        print "MARS retrieve done... "
+        if request == "0" or request == "2":
+            print('MARS retrieve done ... ')
+        elif request == "1":
+            print('MARS request printed ...')
 
     def getFlexpartTime(self, type,step, time):
         cstep='{:0>3}'.format(step)

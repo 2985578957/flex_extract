@@ -55,8 +55,11 @@ def main():
         if c.outputdir[0]!='/':
             c.outputdir=os.path.join(calledfromdir,c.outputdir)
         getMARSdata(args,c)
-        prepareFLEXPART(args,c)
-        normalexit(c)
+	if c.request == '0' or c.request == '2':
+            prepareFLEXPART(args,c)
+            normalexit(c)
+        else:
+            normalexit(c)
     else:
         submit(args.job_template,c,args.queue)
 
