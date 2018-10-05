@@ -58,8 +58,10 @@ import sys
 import socket
 
 # software specific classes and modules from flex_extract
+sys.path.append('../')
 import _config
 from classes.UioFiles import UioFiles
+from classes.ControlFile import ControlFile
 from tools import clean_up, get_cmdline_arguments, read_ecenv
 from classes.EcFlexpart import EcFlexpart
 

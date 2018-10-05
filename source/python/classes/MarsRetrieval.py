@@ -61,9 +61,12 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import subprocess
 import os
+import sys
+import subprocess
 
+# software specific classes and modules from flex_extract
+sys.path.append('../')
 import _config
 # ------------------------------------------------------------------------------
 # CLASS

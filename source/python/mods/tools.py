@@ -59,6 +59,45 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 # FUNCTIONS
 # ------------------------------------------------------------------------------
 
+def none_or_str(value):
+    '''
+    @Description:
+        Converts the input string into pythons None-type if the string
+        contains "None".
+
+    @Input:
+        value: string
+            String to be checked for the "None" word.
+
+    @Return:
+        None or value:
+            Return depends on the content of the input value. If it was "None",
+            then the python type None is returned. Otherwise the string itself.
+    '''
+    if value == 'None':
+        return None
+    return value
+
+def none_or_int(value):
+    '''
+    @Description:
+        Converts the input string into pythons None-type if the string
+        contains "None". Otherwise it is converted to an integer value.
+
+    @Input:
+        value: string
+            String to be checked for the "None" word.
+
+    @Return:
+        None or int(value):
+            Return depends on the content of the input value. If it was "None",
+            then the python type None is returned. Otherwise the string is
+            converted into an integer value.
+    '''
+    if value == 'None':
+        return None
+    return int(value)
+
 def get_cmdline_arguments():
     '''
     @Description:
@@ -78,54 +117,69 @@ def get_cmdline_arguments():
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
     # the most important arguments
-    parser.add_argument("--start_date", dest="start_date", default=None,
+    parser.add_argument("--start_date", dest="start_date",
+                        type=none_or_str, default=None,
                         help="start date YYYYMMDD")
-    parser.add_argument("--end_date", dest="end_date", default=None,
+    parser.add_argument("--end_date", dest="end_date",
+                        type=none_or_str, default=None,
                         help="end_date YYYYMMDD")
-    parser.add_argument("--date_chunk", dest="date_chunk", default=None,
+    parser.add_argument("--date_chunk", dest="date_chunk",
+                        type=none_or_int, default=None,
                         help="# of days to be retrieved at once")
+    parser.add_argument("--controlfile", dest="controlfile",
+                        type=none_or_str, default='CONTROL.temp',
+                        help="file with CONTROL parameters")
+
+    # parameter for extra output information
+    parser.add_argument("--debug", dest="debug",
+                        type=none_or_int, default=None,
+                        help="debug mode - leave temporary files intact")
+    parser.add_argument("--request", dest="request",
+                        type=none_or_int, default=None,
+                        help="list all mars request in file mars_requests.dat \
+                        and skip submission to mars")
 
     # some arguments that override the default in the CONTROL file
-    parser.add_argument("--basetime", dest="basetime", default=None,
-                        help="base such as 00/12 (for half day retrievals)")
-    parser.add_argument("--step", dest="step", default=None,
+    parser.add_argument("--basetime", dest="basetime",
+                        type=none_or_int, default=None,
+                        help="base such as 00 or 12 (for half day retrievals)")
+    parser.add_argument("--step", dest="step",
+                        type=none_or_str, default=None,
                         help="steps such as 00/to/48")
-    parser.add_argument("--levelist", dest="levelist", default=None,
+    parser.add_argument("--levelist", dest="levelist",
+                        type=none_or_str, default=None,
                         help="Vertical levels to be retrieved, e.g. 30/to/60")
-    parser.add_argument("--area", dest="area", default=None,
+    parser.add_argument("--area", dest="area",
+                        type=none_or_str, default=None,
                         help="area defined as north/west/south/east")
 
     # set the working directories
-    parser.add_argument("--inputdir", dest="inputdir", default=None,
+    parser.add_argument("--inputdir", dest="inputdir",
+                        type=none_or_str, default=None,
                         help="root directory for storing intermediate files")
-    parser.add_argument("--outputdir", dest="outputdir", default=None,
+    parser.add_argument("--outputdir", dest="outputdir",
+                        type=none_or_str, default=None,
                         help="root directory for storing output files")
     parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
-                        default=None,
+                        type=none_or_str, default=None,
                         help="FLEXPART root directory (to find grib2flexpart \
                         and COMMAND file)\n Normally flex_extract resides in \
                         the scripts directory of the FLEXPART distribution")
 
     # this is only used by prepare_flexpart.py to rerun a postprocessing step
-    parser.add_argument("--ppid", dest="ppid", default=None,
+    parser.add_argument("--ppid", dest="ppid",
+                        type=none_or_int, default=None,
                         help="specify parent process id for \
                         rerun of prepare_flexpart")
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
-                        default="job.temp",
+                        type=none_or_str, default="job.temp",
                         help="job template file for submission to ECMWF")
-    parser.add_argument("--queue", dest="queue", default=None,
+    parser.add_argument("--queue", dest="queue",
+                        type=none_or_str, default=None,
                         help="queue for submission to ECMWF \
                         (e.g. ecgate or cca )")
-    parser.add_argument("--controlfile", dest="controlfile",
-                        default='CONTROL.temp',
-                        help="file with CONTROL parameters")
-    parser.add_argument("--debug", dest="debug", default=None,
-                        help="debug mode - leave temporary files intact")
-    parser.add_argument("--request", dest="request", default=None,
-                        help="list all mars request in file mars_requests.dat \
-                        and skip submission to mars")
 
     args = parser.parse_args()
 

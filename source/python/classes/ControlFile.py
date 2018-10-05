@@ -56,7 +56,10 @@ import re
 import sys
 import inspect
 
+# software specific classes and modules from flex_extract
+sys.path.append('../')
 import _config
+from mods.tools import my_error
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -143,7 +146,7 @@ class ControlFile(object):
         self.ecstorage = 0
         self.ectrans = 0
         self.inputdir = _config.PATH_INPUT_DIR
-        self.outputdir = self.inputdir
+        self.outputdir = None
         self.ecmwfdatadir = _config.PATH_FLEXEXTRACT_DIR
         self.exedir = _config.PATH_FORTRAN_SRC
         self.flexpart_root_scripts = None
@@ -176,9 +179,6 @@ class ControlFile(object):
         @Return:
             <nothing>
         '''
-        from mods.tools import my_error
-
-        # read whole CONTROL file
 
         try:
             with open(os.path.join(_config.PATH_CONTROLFILES,
@@ -354,6 +354,13 @@ class ControlFile(object):
         if self.end_date is None:
             self.end_date = self.start_date
 
+        # basetime has only two possible values
+        if self.basetime:
+            if int(self.basetime) != 0 and int(self.basetime) != 12:
+                print('Basetime has an invalid value!')
+                print('Basetime = ' + str(self.basetime))
+                sys.exit(1)
+
         # assure consistency of levelist and level
         if self.levelist is None and self.level is None:
             print('Warning: neither levelist nor level \
@@ -405,6 +412,9 @@ class ControlFile(object):
         # set root scripts since it is needed later on
         if not self.flexpart_root_scripts:
             self.flexpart_root_scripts = self.ecmwfdatadir
+
+        if not self.outputdir:
+            self.outputdir = self.inputdir
 
         if not isinstance(self.mailfail, list):
             if ',' in self.mailfail:

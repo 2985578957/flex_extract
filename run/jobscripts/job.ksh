@@ -32,7 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -40,7 +40,7 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-  export PATH=${PATH}:${HOME}/flex_extract_v7.1/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
   ;;
 esac
 
@@ -48,14 +48,14 @@ cd $SCRATCH
 mkdir -p python$$
 cd python$$
 
-export CONTROL=$PWD/CONTROL
+export CONTROL=CONTROL
 
 cat >$CONTROL<<EOF
-accuracy 24
+accuracy 16
 addpar 186 187 188 235 139 39 
 area 
 basetime None
-controlfile CONTROL.test
+controlfile CONTROL.temp
 cwc 0
 date_chunk 3
 debug 1
@@ -67,7 +67,7 @@ ecgid at
 ecstorage 0
 ectrans 1
 ecuid km4a
-end_date 20160606
+end_date 20120908
 eta 0
 etadiff 0
 etapar 77
@@ -77,12 +77,12 @@ gateway srvx8.img.univie.ac.at
 gauss 1
 grib2flexpart 0
 grid 5000
-inputdir ../work
+inputdir ../../run/workspace/test
 install_target None
 job_template job.temp
-left -10000
+left -15000
 level 60
-levelist 59/to/60
+levelist 40/to/60
 logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug request 
 lower 30000
 mailfail ${USER} 
@@ -93,19 +93,20 @@ maxstep 11
 number OFF
 omega 0
 omegadiff 0
-outputdir ../work
-prefix EItest_
-queue ecgate
+outputdir ../../run/workspace/test
+ppid 41511
+prefix EI
+queue local
 request 1
 resol 63
-right 10000
+right 45000
 smooth 0
-start_date 20160606
+start_date 20120908
 step 00 01 02 03 04 05 00 07 08 09 10 11 00 01 02 03 04 05 00 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 06 00 00 00 00 00 12 12 12 12 12 12 18 12 12 12 12 12 
 type AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC AN FC FC FC FC FC 
-upper 40000
+upper 75000
 wrf 0
 EOF
 

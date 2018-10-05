@@ -73,10 +73,11 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import subprocess
-import shutil
 import os
+import sys
 import glob
+import shutil
+import subprocess
 from datetime import datetime, timedelta
 import numpy as np
 from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
@@ -84,11 +85,12 @@ from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
                     grib_index_release, grib_index_get
 
 # software specific classes and modules from flex_extract
+sys.path.append('../')
 import _config
 from GribTools import GribTools
 from mods.tools import init128, to_param_id, silent_remove, product, my_error
 from MarsRetrieval import MarsRetrieval
-import mods.disaggregation
+import mods.disaggregation as disaggregation
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -286,8 +288,6 @@ class EcFlexpart(object):
             self.params['OG_acc_SL'] = ["LSP/CP/SSHF/EWSS/NSSS/SSR", \
                                         'SFC', '1', self.grid]
 
-        # if needed, add additional WRF specific parameters here
-
         return
 
 
@@ -381,6 +381,63 @@ class EcFlexpart(object):
         return
 
 
+    def _mk_index_values(self, inputdir, inputfiles, keys):
+        '''
+        @Description:
+            Creates an index file for a set of grib parameter keys.
+            The values from the index keys are returned in a list.
+
+        @Input:
+            keys: dictionary
+                List of parameter names which serves as index.
+
+            inputfiles: instance of UioFiles
+                Contains a list of files.
+
+        @Return:
+            iid: grib_index
+                This is a grib specific index structure to access
+                messages in a file.
+
+            index_vals: list
+                Contains the values from the keys used for a distinct selection
+                of grib messages in processing  the grib files.
+                Content looks like e.g.:
+                index_vals[0]: ('20171106', '20171107', '20171108') ; date
+                index_vals[1]: ('0', '1200', '1800', '600') ; time
+                index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
+        '''
+        iid = None
+        index_keys = keys
+
+        indexfile = os.path.join(inputdir, _config.FILE_GRIB_INDEX)
+        silent_remove(indexfile)
+        grib = GribTools(inputfiles.files)
+        # creates new index file
+        iid = grib.index(index_keys=index_keys, index_file=indexfile)
+
+        # read the values of index keys
+        index_vals = []
+        for key in index_keys:
+            #index_vals.append(grib_index_get(iid, key))
+            #print(index_vals[-1])
+            key_vals = grib_index_get(iid, key)
+            print(key_vals)
+            # have to sort the steps for disaggregation,
+            # therefore convert to int first
+            if key == 'step':
+                key_vals = [int(k) for k in key_vals]
+                key_vals.sort()
+                key_vals = [str(k) for k in key_vals]
+            index_vals.append(key_vals)
+            # index_vals looks for example like:
+            # index_vals[0]: ('20171106', '20171107', '20171108') ; date
+            # index_vals[1]: ('0', '1200') ; time
+            # index_vals[2]: (3', '6', '9', '12') ; stepRange
+
+        return iid, index_vals
+
+
     def retrieve(self, server, dates, request, inputdir='.'):
         '''
         @Description:
@@ -426,7 +483,7 @@ class EcFlexpart(object):
         t12h = timedelta(hours=12)
         t24h = timedelta(hours=24)
 
-        # dictionary which contains all parameter for the mars request
+        # dictionary which contains all parameter for the mars request,
         # entries with a "None" will change in different requests and will
         # therefore be set in each request seperately
         retr_param_dict = {'marsclass':self.marsclass,
@@ -673,112 +730,95 @@ class EcFlexpart(object):
 
         table128 = init128(_config.PATH_GRIBTABLE)
         pars = to_param_id(self.params['OG_acc_SL'][0], table128)
-        index_keys = ["date", "time", "step"]
-        indexfile = os.path.join(c.inputdir, _config.FILE_GRIB_INDEX)
-        silent_remove(indexfile)
-        grib = GribTools(inputfiles.files)
-        # creates new index file
-        iid = grib.index(index_keys=index_keys, index_file=indexfile)
 
-        # read values of index keys
-        index_vals = []
-        for key in index_keys:
-            key_vals = grib_index_get(iid, key)
-            print(key_vals)
-            # have to sort the steps for disaggregation,
-            # therefore convert to int first
-            if key == 'step':
-                key_vals = [int(k) for k in key_vals]
-                key_vals.sort()
-                key_vals = [str(k) for k in key_vals]
-            index_vals.append(key_vals)
-            # index_vals looks for example like:
-            # index_vals[0]: ('20171106', '20171107', '20171108') ; date
-            # index_vals[1]: ('0', '1200') ; time
-            # index_vals[2]: (3', '6', '9', '12') ; stepRange
+        iid = None
+        index_vals = None
+
+        # get the values of the keys which are used for distinct access
+        # of grib messages via product
+        index_keys = ["date", "time", "step"]
+        iid, index_vals = self._mk_index_values(c.inputdir,
+                                                inputfiles,
+                                                index_keys)
+        # index_vals looks like e.g.:
+        # index_vals[0]: ('20171106', '20171107', '20171108') ; date
+        # index_vals[1]: ('0', '1200', '1800', '600') ; time
+        # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
         valsdict = {}
         svalsdict = {}
-        stepsdict = {}
+#        stepsdict = {}
         for p in pars:
             valsdict[str(p)] = []
             svalsdict[str(p)] = []
-            stepsdict[str(p)] = []
+#            stepsdict[str(p)] = []
 
         print('maxstep: ', c.maxstep)
 
+        # "product" genereates each possible combination between the
+        # values of the index keys
         for prod in product(*index_vals):
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
-            # per date e.g. time = 0, 1200
-            # per time e.g. step = 3, 6, 9, 12
-            print('current prod: ', prod)
+
+            print('current product: ', prod)
+
             for i in range(len(index_keys)):
                 grib_index_select(iid, index_keys[i], prod[i])
 
             # get first id from current product
             gid = grib_new_from_index(iid)
 
-            # if there is data for this product combination
-            # prepare some date and time parameter before reading the data
-            if gid is not None:
-                cdate = grib_get(gid, 'date')
-                time = grib_get(gid, 'time')
-                step = grib_get(gid, 'step')
-                # date+time+step-2*dtime
-                # (since interpolated value valid for step-2*dtime)
-                sdate = datetime(year=cdate/10000,
-                                 month=(cdate % 10000)/100,
-                                 day=(cdate % 100),
-                                 hour=time/100)
-                fdate = sdate + timedelta(hours=step-2*int(c.dtime))
-                sdates = sdate + timedelta(hours=step)
-                elimit = None
-            else:
-                break
+            # if there is no data for this specific time combination / product
+            # skip the rest of the for loop and start with next timestep/product
+            if not gid:
+                continue
+
+            # create correct timestamp from the three time informations
+            cdate = str(grib_get(gid, 'date'))
+            ctime = '{:0>2}'.format(grib_get(gid, 'time')/100)
+            cstep = '{:0>3}'.format(grib_get(gid, 'step'))
+            t_date = datetime.strptime(cdate + ctime, '%Y%m%d%H')
+            t_dt = t_date + timedelta(hours=int(cstep))
+            t_m1dt = t_date + timedelta(hours=int(cstep)-int(c.dtime))
+            t_m2dt = t_date + timedelta(hours=int(cstep)-2*int(c.dtime))
+            t_enddate = None
 
             if c.maxstep > 12:
                 fnout = os.path.join(c.inputdir, 'flux' +
-                                     sdate.strftime('%Y%m%d') +
-                                     '.{:0>2}'.format(time/100) +
+                                     t_date.strftime('%Y%m%d.%H') +
                                      '.{:0>3}'.format(step-2*int(c.dtime)))
                 gnout = os.path.join(c.inputdir, 'flux' +
-                                     sdate.strftime('%Y%m%d') +
-                                     '.{:0>2}'.format(time/100) +
+                                     t_date.strftime('%Y%m%d.%H') +
                                      '.{:0>3}'.format(step-int(c.dtime)))
                 hnout = os.path.join(c.inputdir, 'flux' +
-                                     sdate.strftime('%Y%m%d') +
-                                     '.{:0>2}'.format(time/100) +
+                                     t_date.strftime('%Y%m%d.%H') +
                                      '.{:0>3}'.format(step))
             else:
                 fnout = os.path.join(c.inputdir, 'flux' +
-                                     fdate.strftime('%Y%m%d%H'))
+                                     t_m2dt.strftime('%Y%m%d%H'))
                 gnout = os.path.join(c.inputdir, 'flux' +
-                                     (fdate + timedelta(hours=int(c.dtime))).
-                                     strftime('%Y%m%d%H'))
+                                     t_m1dt.strftime('%Y%m%d%H'))
                 hnout = os.path.join(c.inputdir, 'flux' +
-                                     sdates.strftime('%Y%m%d%H'))
+                                     t_dt.strftime('%Y%m%d%H'))
 
             print("outputfile = " + fnout)
-            f_handle = open(fnout, 'w')
-            g_handle = open(gnout, 'w')
-            h_handle = open(hnout, 'w')
 
             # read message for message and store relevant data fields
             # data keywords are stored in pars
             while 1:
-                if gid is None:
+                if not gid:
                     break
                 cparamId = str(grib_get(gid, 'paramId'))
                 step = grib_get(gid, 'step')
-                atime = grib_get(gid, 'time')
+                time = grib_get(gid, 'time')
                 ni = grib_get(gid, 'Ni')
                 nj = grib_get(gid, 'Nj')
                 if cparamId in valsdict.keys():
                     values = grib_get_values(gid)
                     vdp = valsdict[cparamId]
                     svdp = svalsdict[cparamId]
-                    sd = stepsdict[cparamId]
+ #                   sd = stepsdict[cparamId]
 
                     if cparamId == '142' or cparamId == '143':
                         fak = 1. / 1000.
@@ -792,11 +832,9 @@ class EcFlexpart(object):
                     else:  # deaccumulate values
                         svdp.append((vdp[-1] - vdp[-2]) / int(c.dtime))
 
-                    print(cparamId, atime, step, len(values),
+                    print(cparamId, time, step, len(values),
                           values[0], np.std(values))
-                    # save the 1/3-hourly or specific values
-                    # svdp.append(values[:])
-                    sd.append(step)
+
                     # len(svdp) correspond to the time
                     if len(svdp) >= 3:
                         if len(svdp) > 3:
@@ -806,7 +844,7 @@ class EcFlexpart(object):
                                 values = disaggregation.dapoly(svdp)
 
                             if not (step == c.maxstep and c.maxstep > 12 \
-                                    or sdates == elimit):
+                                    or t_dt == t_enddate):
                                 vdp.pop(0)
                                 svdp.pop(0)
                         else:
@@ -816,41 +854,45 @@ class EcFlexpart(object):
                                 values = svdp[0]
 
                         grib_set_values(gid, values)
+
                         if c.maxstep > 12:
                             grib_set(gid, 'step', max(0, step-2*int(c.dtime)))
                         else:
                             grib_set(gid, 'step', 0)
-                            grib_set(gid, 'time', fdate.hour*100)
-                            grib_set(gid, 'date', fdate.year*10000 +
-                                     fdate.month*100+fdate.day)
-                        grib_write(gid, f_handle)
+                            grib_set(gid, 'time', t_m2dt.hour*100)
+                            grib_set(gid, 'date', int(t_m2dt.strftime('%Y%m%d')))
+
+                        with open(fnout, 'w') as f_handle:
+                            grib_write(gid, f_handle)
 
                         if c.basetime:
-                            elimit = datetime.strptime(c.end_date +
-                                                       c.basetime, '%Y%m%d%H')
+                            t_enddate = datetime.strptime(c.end_date +
+                                                          c.basetime,
+                                                          '%Y%m%d%H')
                         else:
-                            elimit = sdate + timedelta(2*int(c.dtime))
+                            t_enddate = t_date + timedelta(2*int(c.dtime))
 
                         # squeeze out information of last two steps contained
                         # in svdp
                         # if step+int(c.dtime) == c.maxstep and c.maxstep>12
-                        # or sdates+timedelta(hours = int(c.dtime))
-                        # >= elimit:
+                        # or t_dt+timedelta(hours = int(c.dtime))
+                        # >= t_enddate:
                         # Note that svdp[0] has not been popped in this case
 
                         if step == c.maxstep and c.maxstep > 12 or \
-                           sdates == elimit:
+                           t_dt == t_enddate:
 
                             values = svdp[3]
                             grib_set_values(gid, values)
                             grib_set(gid, 'step', 0)
-                            truedatetime = fdate + timedelta(hours=
+                            truedatetime = t_m2dt + timedelta(hours=
                                                              2*int(c.dtime))
                             grib_set(gid, 'time', truedatetime.hour * 100)
                             grib_set(gid, 'date', truedatetime.year * 10000 +
                                      truedatetime.month * 100 +
                                      truedatetime.day)
-                            grib_write(gid, h_handle)
+                            with open(hnout, 'w') as h_handle:
+                                grib_write(gid, h_handle)
 
                             #values = (svdp[1]+svdp[2])/2.
                             if cparamId == '142' or cparamId == '143':
@@ -859,21 +901,18 @@ class EcFlexpart(object):
                                 values = disaggregation.dapoly(list(reversed(svdp)))
 
                             grib_set(gid, 'step', 0)
-                            truedatetime = fdate + timedelta(hours=int(c.dtime))
+                            truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
                             grib_set(gid, 'time', truedatetime.hour * 100)
                             grib_set(gid, 'date', truedatetime.year * 10000 +
                                      truedatetime.month * 100 +
                                      truedatetime.day)
                             grib_set_values(gid, values)
-                            grib_write(gid, g_handle)
+                            with open(gnout, 'w') as g_handle:
+                                grib_write(gid, g_handle)
 
-                    grib_release(gid)
+                grib_release(gid)
 
-                    gid = grib_new_from_index(iid)
-
-            f_handle.close()
-            g_handle.close()
-            h_handle.close()
+                gid = grib_new_from_index(iid)
 
         grib_index_release(iid)
 
@@ -912,144 +951,128 @@ class EcFlexpart(object):
             <nothing>
         '''
 
-        table128 = init128(_config.PATH_GRIBTABLE)
-        wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
-                            stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
-                            table128)
+        if c.wrf:
+            table128 = init128(_config.PATH_GRIBTABLE)
+            wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
+                                   stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
+                                  table128)
 
-        index_keys = ["date", "time", "step"]
-        indexfile = os.path.join(c.inputdir, _config.FILE_GRIB_INDEX)
-        silent_remove(indexfile)
-        grib = GribTools(inputfiles.files)
-        # creates new index file
-        iid = grib.index(index_keys=index_keys, index_file=indexfile)
-
-        # read values of index keys
-        index_vals = []
-        for key in index_keys:
-            index_vals.append(grib_index_get(iid, key))
-            print(index_vals[-1])
-            # index_vals looks for example like:
-            # index_vals[0]: ('20171106', '20171107', '20171108') ; date
-            # index_vals[1]: ('0', '1200', '1800', '600') ; time
-            # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
-
+        # these numbers are indices for the temporary files "fort.xx"
+        # which are used to seperate the grib fields to,
+        # for the Fortran program input
+        # 10: U,V | 11: T | 12: lnsp | 13: D | 16: sfc fields
+        # 17: Q | 18: Q , gaussian| 19: w | 21: etadot | 22: clwc+ciwc
         fdict = {'10':None, '11':None, '12':None, '13':None, '16':None,
-                 '17':None, '19':None, '21':None, '22':None, '20':None}
+                 '17':None, '18':None, '19':None, '21':None, '22':None}
 
+        iid = None
+        index_vals = None
+
+        # get the values of the keys which are used for distinct access
+        # of grib messages via product
+        index_keys = ["date", "time", "step"]
+        iid, index_vals = self._mk_index_values(c.inputdir,
+                                                inputfiles,
+                                                index_keys)
+        # index_vals looks like e.g.:
+        # index_vals[0]: ('20171106', '20171107', '20171108') ; date
+        # index_vals[1]: ('0', '1200', '1800', '600') ; time
+        # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
+
+        # "product" genereates each possible combination between the
+        # values of the index keys
         for prod in product(*index_vals):
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
-            # per date e.g. time = 0, 1200
-            # per time e.g. step = 3, 6, 9, 12
-            # flag for Fortran program and file merging
-            convertFlag = False
-            print('current prod: ', prod)
-            # e.g. prod = ('20170505', '0', '12')
-            #             (  date    ,time, step)
-            # per date e.g. time = 0, 600, 1200, 1800
-            # per time e.g. step = 0, 3, 6, 9, 12
+
+            print('current product: ', prod)
+
             for i in range(len(index_keys)):
                 grib_index_select(iid, index_keys[i], prod[i])
 
             # get first id from current product
             gid = grib_new_from_index(iid)
 
-            # if there is data for this product combination
-            # prepare some date and time parameter before reading the data
-            if gid is not None:
-                # Combine all temporary data files into final grib file if
-                # gid is at least one time not None. Therefore set convertFlag
-                # to save information. The Fortran program is also
-                # only executed if convertFlag is True
-                convertFlag = True
-                # remove old fort.* files and open new ones
-                # they are just valid for a single product
-                for k, f in fdict.iteritems():
-                    fortfile = os.path.join(c.inputdir, 'fort.' + k)
-                    silent_remove(fortfile)
-                    fdict[k] = open(fortfile, 'w')
+            # if there is no data for this specific time combination / product
+            # skip the rest of the for loop and start with next timestep/product
+            if not gid:
+                continue
 
-                cdate = str(grib_get(gid, 'date'))
-                time = grib_get(gid, 'time')
-                step = grib_get(gid, 'step')
-                # create correct timestamp from the three time informations
-                # date, time, step
-                timestamp = datetime.strptime(cdate + '{:0>2}'.format(time/100),
-                                              '%Y%m%d%H')
-                timestamp += timedelta(hours=int(step))
-                cdateH = datetime.strftime(timestamp, '%Y%m%d%H')
+            # remove old fort.* files and open new ones
+            # they are just valid for a single product
+            for k, f in fdict.iteritems():
+                fortfile = os.path.join(c.inputdir, 'fort.' + k)
+                silent_remove(fortfile)
+                fdict[k] = open(fortfile, 'w')
 
-                if c.basetime:
-                    slimit = datetime.strptime(c.start_date + '00', '%Y%m%d%H')
-                    bt = '23'
-                    if c.basetime == '00':
-                        bt = '00'
-                        slimit = datetime.strptime(c.end_date + bt, '%Y%m%d%H')\
-                            - timedelta(hours=12-int(c.dtime))
-                    if c.basetime == '12':
-                        bt = '12'
-                        slimit = datetime.strptime(c.end_date + bt, '%Y%m%d%H')\
-                            - timedelta(hours=12-int(c.dtime))
+            # create correct timestamp from the three time informations
+            cdate = str(grib_get(gid, 'date'))
+            ctime = '{:0>2}'.format(grib_get(gid, 'time')/100)
+            cstep = '{:0>3}'.format(grib_get(gid, 'step'))
+            timestamp = datetime.strptime(cdate + ctime, '%Y%m%d%H')
+            timestamp += timedelta(hours=int(cstep))
+            cdate_hour = datetime.strftime(timestamp, '%Y%m%d%H')
 
-                    elimit = datetime.strptime(c.end_date + bt, '%Y%m%d%H')
+            # if the timestamp is out of basetime start/end date period,
+            # skip this specific product
+            if c.basetime:
+                start_time = datetime.strptime(c.end_date + c.basetime,
+                                                '%Y%m%d%H') - time_delta
+                end_time = datetime.strptime(c.end_date + c.basetime,
+                                             '%Y%m%d%H')
+                if timestamp < start_time or timestamp > end_time:
+                    continue
 
-                    if timestamp < slimit or timestamp > elimit:
-                        continue
-            else:
-                pass
+            if c.wrf:
+                if 'olddate' not in locals() or cdate != olddate:
+                    fwrf = open(os.path.join(c.outputdir,
+                                'WRF' + cdate + '.' + ctime + '.000.grb2'), 'w')
+                    olddate = cdate[:]
 
-            try:
-                if c.wrf:
-                    if 'olddate' not in locals() or cdate != olddate:
-                        fwrf = open(os.path.join(c.outputdir,
-                                    'WRF' + cdate + '.{:0>2}'.format(time) +
-                                    '.000.grb2'), 'w')
-                        olddate = cdate[:]
-            except AttributeError:
-                pass
-
-            # helper variable to remember which fields were already used.
+            # savedfields remembers which fields were already used.
             savedfields = []
+            # sum of cloud liquid and ice water content
+            scwc = None
             while 1:
-                if gid is None:
+                if not gid:
                     break
                 paramId = grib_get(gid, 'paramId')
                 gridtype = grib_get(gid, 'gridType')
                 levtype = grib_get(gid, 'typeOfLevel')
-                if paramId == 133 and gridtype == 'reduced_gg':
-                # Specific humidity (Q.grb) is used as a template only
-                # so we need the first we "meet"
-                    with open(os.path.join(c.inputdir, 'fort.18'), 'w') as fout:
-                        grib_write(gid, fout)
-                elif paramId == 131 or paramId == 132:
-                    grib_write(gid, fdict['10'])
-                elif paramId == 130:
+                if paramId == 77: # ETADOT
+                    grib_write(gid, fdict['21'])
+                elif paramId == 130: # T
                     grib_write(gid, fdict['11'])
-                elif paramId == 133 and gridtype != 'reduced_gg':
+                elif paramId == 131 or paramId == 132: # U, V wind component
+                    grib_write(gid, fdict['10'])
+                elif paramId == 133 and gridtype != 'reduced_gg': # Q
                     grib_write(gid, fdict['17'])
-                elif paramId == 152:
+                elif paramId == 133 and gridtype == 'reduced_gg': # Q, gaussian
+                    grib_write(gid, fdict['18'])
+                elif paramId == 135: # W
+                    grib_write(gid, fdict['19'])
+                elif paramId == 152: # LNSP
                     grib_write(gid, fdict['12'])
-                elif paramId == 155 and gridtype == 'sh':
+                elif paramId == 155 and gridtype == 'sh': # D
                     grib_write(gid, fdict['13'])
-                elif  paramId in [129, 138, 155] and levtype == 'hybrid' \
-                        and c.wrf:
-                    pass
-                elif paramId == 246 or paramId == 247:
-                    # cloud liquid water and ice
-                    if paramId == 246:
-                        clwc = grib_get_values(gid)
+                elif paramId == 246 or paramId == 247: # CLWC, CIWC
+                    # sum cloud liquid water and ice
+                    if not scwc:
+                        scwc = grib_get_values(gid)
                     else:
-                        clwc += grib_get_values(gid)
-                        grib_set_values(gid, clwc)
+                        scwc += grib_get_values(gid)
+                        grib_set_values(gid, scwc)
                         grib_set(gid, 'paramId', 201031)
                         grib_write(gid, fdict['22'])
-                elif paramId == 135:
-                    grib_write(gid, fdict['19'])
-                elif paramId == 77:
-                    grib_write(gid, fdict['21'])
+                elif c.wrf and paramId in [129, 138, 155] and \
+                      levtype == 'hybrid': # Z, VO, D
+                    # do not do anything right now
+                    # these are specific parameter for WRF
+                    pass
                 else:
                     if paramId not in savedfields:
+                        # SD/MSL/TCC/10U/10V/2T/2D/Z/LSM/SDOR/CVL/CVH/SR
+                        # and all ADDPAR parameter
                         grib_write(gid, fdict['16'])
                         savedfields.append(paramId)
                     else:
@@ -1073,56 +1096,51 @@ class EcFlexpart(object):
             for f in fdict.values():
                 f.close()
 
-            # call for Fortran program if flag is True
-            if convertFlag:
-                pwd = os.getcwd()
-                os.chdir(c.inputdir)
-                if os.stat('fort.21').st_size == 0 and c.eta:
-                    print('Parameter 77 (etadot) is missing, most likely it is \
-                           not available for this type or date/time\n')
-                    print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
-                    my_error(c.mailfail, 'fort.21 is empty while parameter eta \
-                             is set to 1 in CONTROL file')
+            # call for Fortran program to convert e.g. reduced_gg grids to
+            # regular_ll and calculate detadot/dp
+            pwd = os.getcwd()
+            os.chdir(c.inputdir)
+            if os.stat('fort.21').st_size == 0 and c.eta:
+                print('Parameter 77 (etadot) is missing, most likely it is \
+                       not available for this type or date/time\n')
+                print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
+                my_error(c.mailfail, 'fort.21 is empty while parameter eta \
+                         is set to 1 in CONTROL file')
 
-                # create the corresponding output file fort.15
-                # (generated by Fortran program) + fort.16 (paramId 167 and 168)
-                p = subprocess.check_call([os.path.join(
-                    c.exedir, _config.FORTRAN_EXECUTABLE)], shell=True)
-                os.chdir(pwd)
+            # Fortran program creates file fort.15 (with u,v,etadot,t,sp,q)
+            p = subprocess.check_call([os.path.join(
+                c.exedir, _config.FORTRAN_EXECUTABLE)], shell=True)
+            os.chdir(pwd)
 
-                # create final output filename, e.g. EN13040500 (ENYYMMDDHH)
-                fnout = os.path.join(c.inputdir, c.prefix)
-                if c.maxstep > 12:
-                    suffix = cdate[2:8] + '.{:0>2}'.format(time/100) + \
-                             '.{:0>3}'.format(step)
-                else:
-                    suffix = cdateH[2:10]
-                fnout += suffix
-                print("outputfile = " + fnout)
-                self.outputfilelist.append(fnout) # needed for final processing
-
-                # create outputfile and copy all data from intermediate files
-                # to the outputfile (final GRIB files)
-                orolsm = os.path.basename(glob.glob(
-                    c.inputdir + '/OG_OROLSM__SL.*.' + c.ppid + '*')[0])
-                fluxfile = 'flux' + cdate[0:2] + suffix
-                if not c.cwc:
-                    flist = ['fort.15', fluxfile, 'fort.16', orolsm]
-                else:
-                    flist = ['fort.15', 'fort.22', fluxfile, 'fort.16', orolsm]
-
-                with open(fnout, 'wb') as fout:
-                    for f in flist:
-                        shutil.copyfileobj(open(os.path.join(c.inputdir, f),
-                                                'rb'), fout)
-
-                if c.omega:
-                    with open(os.path.join(c.outputdir, 'OMEGA'), 'wb') as fout:
-                        shutil.copyfileobj(
-                            open(os.path.join(c.inputdir, 'fort.25'),
-                                 'rb'), fout)
+            # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
+            if c.maxstep > 12:
+                suffix = cdate[2:8] + '.' + ctime + '.' + cstep
             else:
-                pass
+                suffix = cdate_hour[2:10]
+            fnout = os.path.join(c.inputdir, c.prefix + suffix)
+            print("outputfile = " + fnout)
+            # collect for final processing
+            self.outputfilelist.append(os.path.basename(fnout))
+
+            # create outputfile and copy all data from intermediate files
+            # to the outputfile (final GRIB input files for FLEXPART)
+            orolsm = os.path.basename(glob.glob(c.inputdir +
+                                        '/OG_OROLSM__SL.*.' + c.ppid + '*')[0])
+            fluxfile = 'flux' + cdate[0:2] + suffix
+            if not c.cwc:
+                flist = ['fort.15', fluxfile, 'fort.16', orolsm]
+            else:
+                flist = ['fort.15', 'fort.22', fluxfile, 'fort.16', orolsm]
+
+            with open(fnout, 'wb') as fout:
+                for f in flist:
+                    shutil.copyfileobj(open(os.path.join(c.inputdir, f), 'rb'),
+                                       fout)
+
+            if c.omega:
+                with open(os.path.join(c.outputdir, 'OMEGA'), 'wb') as fout:
+                    shutil.copyfileobj(open(os.path.join(c.inputdir, 'fort.25'),
+                                            'rb'), fout)
 
         if c.wrf:
             fwrf.close()
@@ -1167,7 +1185,7 @@ class EcFlexpart(object):
             print('ectrans: {}\n gateway: {}\n destination: {}\n '
                   .format(c.ectrans, c.gateway, c.destination))
 
-        print('Output filelist: \n')
+        print('Output filelist: ')
         print(self.outputfilelist)
 
         if c.format.lower() == 'grib2':
@@ -1190,7 +1208,9 @@ class EcFlexpart(object):
 
         if c.outputdir != c.inputdir:
             for ofile in self.outputfilelist:
-                p = subprocess.check_call(['mv', ofile, c.outputdir])
+                p = subprocess.check_call(['mv',
+                                           os.path.join(c.inputdir, ofile),
+                                           c.outputdir])
 
         return
 

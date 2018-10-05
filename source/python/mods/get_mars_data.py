@@ -47,19 +47,21 @@
 # ------------------------------------------------------------------------------
 import os
 import sys
-import datetime
 import inspect
+from datetime import datetime, timedelta
+
+# software specific classes and modules from flex_extract
+sys.path.append('../')
+import _config
+from tools import my_error, normal_exit, get_cmdline_arguments, read_ecenv
+from classes.EcFlexpart import EcFlexpart
+from classes.UioFiles import UioFiles
+
 try:
     ecapi = True
     import ecmwfapi
 except ImportError:
     ecapi = False
-
-# software specific classes and modules from flex_extract
-import _config
-from tools import my_error, normal_exit, get_cmdline_arguments, read_ecenv
-from classes.EcFlexpart import EcFlexpart
-from classes.UioFiles import UioFiles
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
@@ -146,30 +148,23 @@ def get_mars_data(c):
     # also sobald es Tagesüberschneidungen gibt
     # allerdings ist das relevant und ersichtlich an den NICHT FLUSS DATEN
 
-
-    # set start date of retrieval period
-    start = datetime.date(year=int(c.start_date[:4]),
-                          month=int(c.start_date[4:6]),
-                          day=int(c.start_date[6:]))
-    startm1 = start - datetime.timedelta(days=1)
-
-    # set end date of retrieval period
-    end = datetime.date(year=int(c.end_date[:4]),
-                        month=int(c.end_date[4:6]),
-                        day=int(c.end_date[6:]))
-
-    # set time period for one single retrieval
-    datechunk = datetime.timedelta(days=int(c.date_chunk))
+    start = datetime.strptime(c.start_date, '%Y%m%d')
+    end = datetime.strptime(c.end_date, '%Y%m%d')
+    # time period for one single retrieval
+    datechunk = timedelta(days=int(c.date_chunk))
 
     if c.basetime == '00':
-        start = startm1
+        start = start - timedelta(days=1)
+
+    if c.maxstep <= 24:
+        startm1 = start - timedelta(days=1)
 
     if c.basetime == '00' or c.basetime == '12':
-        # endp1 = end + datetime.timedelta(days=1)
+        # endp1 = end + timedelta(days=1)
         endp1 = end
     else:
-        # endp1 = end + datetime.timedelta(days=2)
-        endp1 = end + datetime.timedelta(days=1)
+        # endp1 = end + timedelta(days=2)
+        endp1 = end + timedelta(days=1)
 
     # --------------  flux data ------------------------------------------------
     if c.request == 0 or c.request == 2:
@@ -242,7 +237,7 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
     # since actual day also counts as one day,
     # we only need to add datechunk - 1 days to retrieval
     # for a period
-    delta_t_m1 = delta_t - datetime.timedelta(days=1)
+    delta_t_m1 = delta_t - timedelta(days=1)
 
     day = start
     while day <= end:

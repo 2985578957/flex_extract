@@ -47,9 +47,11 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
+import sys
 import fnmatch
 
 # software specific module from flex_extract
+sys.path.append('../')
 #import profiling
 from mods.tools import silent_remove, get_list_as_string
 
