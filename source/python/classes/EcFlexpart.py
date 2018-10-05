@@ -88,7 +88,8 @@ from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
 sys.path.append('../')
 import _config
 from GribTools import GribTools
-from mods.tools import init128, to_param_id, silent_remove, product, my_error
+from mods.tools import (init128, to_param_id, silent_remove, product,
+                        my_error, make_dir)
 from MarsRetrieval import MarsRetrieval
 import mods.disaggregation as disaggregation
 
@@ -142,6 +143,7 @@ class EcFlexpart(object):
                 c.time.append(c.time[0])
 
         self.inputdir = c.inputdir
+        self.dataset = c.dataset
         self.basetime = c.basetime
         self.dtime = c.dtime
         i = 0
@@ -337,9 +339,9 @@ class EcFlexpart(object):
             par_dict: dictionary
                 Contains all parameter which have to be set for creating the
                 Mars Retrievals. The parameter are:
-                marsclass, stream, type, levtype, levelist, resol, gaussian,
-                accuracy, grid, target, area, date, time, number, step, expver,
-                param
+                marsclass, dataset, stream, type, levtype, levelist, resol,
+                gaussian, accuracy, grid, target, area, date, time, number,
+                step, expver, param
 
         @Return:
             <nothing>
@@ -348,7 +350,9 @@ class EcFlexpart(object):
         self.mreq_count += 1
 
         MR = MarsRetrieval(self.server,
+                           self.public,
                            marsclass=par_dict['marsclass'],
+                           dataset=par_dict['dataset'],
                            stream=par_dict['stream'],
                            type=par_dict['type'],
                            levtype=par_dict['levtype'],
@@ -438,7 +442,7 @@ class EcFlexpart(object):
         return iid, index_vals
 
 
-    def retrieve(self, server, dates, request, inputdir='.'):
+    def retrieve(self, server, dates, public, request, inputdir='.'):
         '''
         @Description:
             Finalizing the retrieval information by setting final details
@@ -476,6 +480,7 @@ class EcFlexpart(object):
         '''
         self.dates = dates
         self.server = server
+        self.public = public
         self.inputdir = inputdir
         oro = False
 
@@ -487,6 +492,7 @@ class EcFlexpart(object):
         # entries with a "None" will change in different requests and will
         # therefore be set in each request seperately
         retr_param_dict = {'marsclass':self.marsclass,
+                           'dataset':self.dataset,
                            'stream':None,
                            'type':None,
                            'levtype':None,
@@ -1264,7 +1270,7 @@ class EcFlexpart(object):
 
         # create Options dir if necessary
         if not os.path.exists(pwd + '/Options'):
-            os.makedirs(pwd+'/Options')
+            make_dir(pwd+'/Options')
 
         # read template COMMAND file
         with open(os.path.expandvars(os.path.expanduser(

@@ -62,7 +62,7 @@ sys.path.append('../')
 import _config
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
-from tools import clean_up, get_cmdline_arguments, read_ecenv
+from tools import clean_up, get_cmdline_arguments, read_ecenv, make_dir
 from classes.EcFlexpart import EcFlexpart
 
 ecapi = 'ecmwf' not in socket.gethostname()
@@ -152,7 +152,7 @@ def prepare_flexpart(ppid, c):
 
     # create output dir if necessary
     if not os.path.exists(c.outputdir):
-        os.makedirs(c.outputdir)
+        make_dir(c.outputdir)
 
     # get all files with flux data to be deaccumulated
     inputfiles = UioFiles(c.inputdir, '*OG_acc_SL*.' + c.ppid + '.*')

@@ -113,6 +113,7 @@ class ControlFile(object):
         self.time = None
         self.step = None
         self.marsclass = None
+        self.dataset = None
         self.stream = None
         self.number = 'OFF'
         self.expver = '1'
@@ -158,10 +159,11 @@ class ControlFile(object):
         self.install_target = None
         self.debug = 0
         self.request = 0
+        self.public = 0
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
                          'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
-                         'ectrans', 'debug', 'request']
+                         'ectrans', 'debug', 'request', 'public']
 
         self.__read_controlfile__()
 
@@ -265,7 +267,7 @@ class ControlFile(object):
         '''
         import collections
 
-        attrs = vars(self)
+        attrs = vars(self).copy()
         attrs = collections.OrderedDict(sorted(attrs.items()))
 
         return '\n'.join("%s: %s" % item for item in attrs.items())
@@ -453,6 +455,12 @@ class ControlFile(object):
             if not isinstance(getattr(self, var), int):
                 setattr(self, var, int(getattr(self, var)))
 
+        if self.public and not self.dataset:
+            print('ERROR: ')
+            print('If public mars data wants to be retrieved, '
+                  'the "dataset"-parameter has to be set in the control file!')
+            sys.exit(1)
+
         return
 
     def check_install_conditions(self):
@@ -523,7 +531,7 @@ class ControlFile(object):
 
         import collections
 
-        attrs = collections.OrderedDict(sorted(vars(self).items()))
+        attrs = collections.OrderedDict(sorted(vars(self).copy().items()))
 
         l = list()
 

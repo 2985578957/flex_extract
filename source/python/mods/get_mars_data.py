@@ -53,7 +53,8 @@ from datetime import datetime, timedelta
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from tools import my_error, normal_exit, get_cmdline_arguments, read_ecenv
+from tools import (my_error, normal_exit, get_cmdline_arguments,
+                   read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
 from classes.UioFiles import UioFiles
 
@@ -113,7 +114,7 @@ def get_mars_data(c):
     '''
 
     if not os.path.exists(c.inputdir):
-        os.makedirs(c.inputdir)
+        make_dir(c.inputdir)
 
     if c.request == 0 or c.request == 2:
         print("Retrieving EC data!")
@@ -124,7 +125,10 @@ def get_mars_data(c):
     print("end date %s " % (c.end_date))
 
     if ecapi:
-        server = ecmwfapi.ECMWFService("mars")
+        if c.public:
+            server = ecmwfapi.ECMWFDataServer()
+        else:
+            server = ecmwfapi.ECMWFService("mars")
     else:
         server = False
 
@@ -253,7 +257,7 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
         print("... retrieve " + dates + " in dir " + c.inputdir)
 
         try:
-            flexpart.retrieve(server, dates, c.request, c.inputdir)
+            flexpart.retrieve(server, dates, c.public, c.request, c.inputdir)
         except IOError:
             my_error(c.mailfail, 'MARS request failed')
 

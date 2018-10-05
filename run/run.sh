@@ -22,14 +22,15 @@ BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
-INPUTDIR='../../run/workspace/test'
+INPUTDIR='/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace/test'
 OUTPUTDIR=None
 FLEXPART_ROOT_SCRIPTS=None 
 PP_ID=None
 JOB_TEMPLATE='job.temp' 
-CONTROLFILE='CONTROL.temp' 
+CONTROLFILE='CONTROL_EI.public' 
 DEBUG=1 
 REQUEST=1
+PUBLIC=1
 
 # -----------------------------------------------------------------
 #
@@ -91,6 +92,9 @@ if [ -n "$DEBUG" ]; then
 fi
 if [ -n "$REQUEST" ]; then
   parameterlist+=" --request=$REQUEST"
+fi
+if [ -n "$PUBLIC" ]; then
+  parameterlist+=" --public=$PUBLIC"
 fi
 
 # -----------------------------------------------------------------

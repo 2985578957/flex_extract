@@ -138,6 +138,9 @@ def get_cmdline_arguments():
                         type=none_or_int, default=None,
                         help="list all mars request in file mars_requests.dat \
                         and skip submission to mars")
+    parser.add_argument("--public", dest="public",
+                        type=none_or_int, default=None,
+                        help="public mode - retrieves the public datasets")
 
     # some arguments that override the default in the CONTROL file
     parser.add_argument("--basetime", dest="basetime",

@@ -82,10 +82,10 @@ class MarsRetrieval(object):
 
     '''
 
-    def __init__(self, server, marsclass="ei", type="", levtype="",
-                 levelist="", repres="", date="", resol="", stream="",
-                 area="", time="", step="", expver="1", number="",
-                 accuracy="", grid="", gaussian="", target="",
+    def __init__(self, server, public, marsclass="ei", dataset="", type="",
+                 levtype="", levelist="", repres="", date="", resol="",
+                 stream="", area="", time="", step="", expver="1",
+                 number="", accuracy="", grid="", gaussian="", target="",
                  param=""):
         '''
         @Description:
@@ -105,10 +105,24 @@ class MarsRetrieval(object):
                 This is the connection to the ECMWF data servers.
                 It is needed for the pythonic access of ECMWF data.
 
+            public: integer
+                Decides which Web API version is used:
+                0: member-state users and full archive access
+                1: public access and limited access to the public server and
+                   datasets. Needs the parameter dataset.
+                Default is "0" and for member-state users.
+
             marsclass: string, optional
                 Characterisation of dataset. E.g. EI (ERA-Interim),
                 E4 (ERA40), OD (Operational archive), ea (ERA5).
                 Default is the ERA-Interim dataset "ei".
+
+            dataset: string, optional
+                For public datasets there is the specific naming and parameter
+                dataset which has to be used to characterize the type of
+                data. Usually there is less data available, either in times,
+                domain or parameter.
+                Default is an empty string.
 
             type: string, optional
                 Determines the type of fields to be retrieved.
@@ -288,7 +302,9 @@ class MarsRetrieval(object):
         '''
 
         self.server = server
+        self.public = public
         self.marsclass = marsclass
+        self.dataset = dataset
         self.type = type
         self.levtype = levtype
         self.levelist = levelist
@@ -324,12 +340,12 @@ class MarsRetrieval(object):
             <nothing>
         '''
         # Get all class attributes and their values as a dictionary
-        attrs = vars(self)
+        attrs = vars(self).copy()
 
         # iterate through all attributes and print them
         # with their corresponding values
         for item in attrs.items():
-            if item[0] in 'server':
+            if item[0] in ['server', 'public']:
                 pass
             else:
                 print(item[0] + ': ' + str(item[1]))
@@ -357,7 +373,7 @@ class MarsRetrieval(object):
             <nothing>
         '''
         # Get all class attributes and their values as a dictionary
-        attrs = vars(self)
+        attrs = vars(self).copy()
 
         # open a file to store all requests to
         with open(os.path.join(inputdir,
@@ -366,7 +382,7 @@ class MarsRetrieval(object):
             # iterate through all attributes and print them
             # with their corresponding values
             for item in attrs.items():
-                if item[0] in 'server':
+                if item[0] in ['server', 'public']:
                     pass
                 else:
                     f.write(item[0] + ': ' + str(item[1]) + '\n')
@@ -395,8 +411,9 @@ class MarsRetrieval(object):
         '''
 
         # Get all class attributes and their values as a dictionary
-        attrs = vars(self)
+        attrs = vars(self).copy()
         del attrs['server']
+        del attrs['public']
 
         # open a file to store all requests to
         with open(os.path.join(inputdir,
@@ -424,50 +441,80 @@ class MarsRetrieval(object):
             <nothing>
         '''
         # Get all class attributes and their values as a dictionary
-        attrs = vars(self)
+        attrs = vars(self).copy()
 
-        # convert the dictionary of attributes into a comma
-        # seperated list of attributes with their values
-        # needed for the retrieval call
-        s = 'ret'
-        for k, v in attrs.iteritems():
-            if k in 'server':
-                continue
-            if k == 'marsclass':
-                k = 'class'
-            if v == '':
-                continue
-            if k.lower() == 'target':
-                target = v
+        # eliminate unnecessary attributes from the dictionary attrs
+        del attrs['server']
+        del attrs['public']
+
+        # exchange parameter name for marsclass
+        mclass = attrs.get('marsclass')
+        del attrs['marsclass']
+        attrs['class'] = mclass
+
+        # prepare target variable as needed for the Web API mode
+        # within the dictionary for full access
+        # as a single variable for public access
+        target = attrs.get('target')
+        if not int(self.public):
+            del attrs['target']
+        print('target: ' + target)
+
+        # find all keys without a value and convert all other values to strings
+        empty_keys = []
+        for key, value in attrs.itteritems():
+            if value == '':
+                empty_keys.append(str(key))
             else:
-                s = s + ',' + k + '=' + str(v)
+                attrs[key] = str(value)
+
+        # delete all empty parameter from the dictionary
+        for key in empty_keys:
+            del attrs[key]
 
         # MARS request via Python script
-        if self.server is not False:
+        if self.server:
             try:
-                self.server.execute(s, target)
+                if self.public:
+                    print('RETRIEVE PUBLIC DATA!')
+                    self.server.retrieve(attrs)
+                else:
+                    print('EXECUTE NON-PUBLIC RETRIEVAL!')
+                    self.server.execute(attrs, target)
             except:
-                print('MARS Request failed, \
-                      have you already registered at apps.ecmwf.int?')
-                raise IOError
-            if os.stat(target).st_size == 0:
+                e = sys.exc_info()[0]
+                print("ERROR: ", e)
+                print('MARS Request failed!')
+            if not self.public and os.stat(target).st_size == 0:
                 print('MARS Request returned no data - please check request')
+                raise IOError
+            elif self.public and os.stat(target).st_size == 0:
+                print('Public MARS Request returned no data - '
+                      'please check request')
+                raise IOError
+            else:
                 raise IOError
         # MARS request via extra process in shell
         else:
-            s += ',target = "' + target + '"'
-            p = subprocess.Popen(['mars'], stdin=subprocess.PIPE,
+            request_str = 'ret'
+            for key, value in attrs.iteritems():
+                request_str = request_str + ',' + key + '=' + str(value)
+            request_str += ',target="' + target + '"'
+            p = subprocess.Popen(['mars'],
+                                 stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE, bufsize=1)
-            pout = p.communicate(input=s)[0]
+                                 stderr=subprocess.PIPE,
+                                 bufsize=1)
+            pout = p.communicate(input=request_str)[0]
             print(pout.decode())
 
             if 'Some errors reported' in pout.decode():
                 print('MARS Request failed - please check request')
                 raise IOError
-
-            if os.stat(target).st_size == 0:
+            elif os.stat(target).st_size == 0:
                 print('MARS Request returned no data - please check request')
                 raise IOError
+            else:
+                raise
 
         return
