@@ -134,7 +134,7 @@ class EcFlexpart(object):
         self.types = dict()
 
         if c.maxstep > len(c.type):    # Pure forecast mode
-            c.type = [c.type[1]]
+            c.type = [c.type[0]]
             c.step = ['{:0>3}'.format(int(c.step[0]))]
             c.time = [c.time[0]]
             for i in range(1, c.maxstep + 1):
@@ -154,8 +154,9 @@ class EcFlexpart(object):
             # (but without 00/12 fields since these are
             # the initialisation times of the flux fields
             # and therefore are zero all the time)
-            self.types[c.type[1]] = {'times': '00/12', 'steps':
-                                     '{}/to/12/by/{}'.format(c.dtime, c.dtime)}
+            self.types[str(c.acctype)] = {'times': str(c.acctime),
+                                          'steps': '{}/to/{}/by/{}'.format(
+                                              c.dtime, c.accmaxstep, c.dtime)}
         else:
             for ty, st, ti in zip(c.type, c.step, c.time):
                 btlist = range(24)
@@ -164,7 +165,12 @@ class EcFlexpart(object):
                 if c.basetime == '00':
                     btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
 
-                if i % int(c.dtime) == 0 and (i in btlist or c.maxstep > 24):
+                if ((ty.upper() == 'AN' and
+                     int(c.time[i]) % int(c.dtime) ==0) or
+                    (ty.upper() != 'AN' and
+                     int(c.step[i]) % int(c.dtime) == 0 and
+                     int(c.step[i]) % int(c.dtime) == 0) ) and \
+                    (int(c.time[i]) in btlist or c.maxstep > 24):
 
                     if ty not in self.types.keys():
                         self.types[ty] = {'times': '', 'steps': ''}
@@ -190,11 +196,7 @@ class EcFlexpart(object):
         self.levelist = c.levelist
         # for gaussian grid retrieval
         self.glevelist = '1/to/' + c.level
-
-        if hasattr(c, 'gaussian') and c.gaussian:
-            self.gaussian = c.gaussian
-        else:
-            self.gaussian = ''
+        self.gaussian = c.gaussian
 
         if 'N' in c.grid:  # Gaussian output grid
             self.grid = c.grid
@@ -238,8 +240,12 @@ class EcFlexpart(object):
                     c.addpar = c.addpar[1:]
                 self.params['OG__SL'][0] += '/' + '/'.join(c.addpar)
 
-            self.params['OG_OROLSM__SL'] = ["160/27/28/173", \
-                                            'SFC', '1', self.grid]
+            if c.marsclass.upper() == 'EA' or c.marsclass.upper() == 'EP':
+                self.params['OG_OROLSM__SL'] = ["160/27/28/244",
+                                                'SFC', '1', self.grid]
+            else:
+                self.params['OG_OROLSM__SL'] = ["160/27/28/173", \
+                                                'SFC', '1', self.grid]
 
             self.params['OG__ML'] = ['T/Q', 'ML', self.levelist, self.grid]
 
@@ -542,7 +548,9 @@ class EcFlexpart(object):
                     pass
                 if pk == 'OG_OROLSM__SL' and not oro:
                     oro = True
-                    retr_param_dict['stream'] = 'OPER'
+                    # in CERA20C (class EP) there is no stream "OPER"!
+                    if self.marsclass.upper() != 'EP':
+                        retr_param_dict['stream'] = 'OPER'
                     retr_param_dict['type'] = 'AN'
                     retr_param_dict['time'] = '00'
                     retr_param_dict['step'] = '000'
@@ -833,7 +841,8 @@ class EcFlexpart(object):
 
                     values = (np.reshape(values, (nj, ni))).flatten() / fak
                     vdp.append(values[:])  # save the accumulated values
-                    if step <= int(c.dtime):
+                    if c.marsclass.upper() == 'EA' or \
+                       step <= int(c.dtime):
                         svdp.append(values[:] / int(c.dtime))
                     else:  # deaccumulate values
                         svdp.append((vdp[-1] - vdp[-2]) / int(c.dtime))

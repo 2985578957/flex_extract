@@ -112,11 +112,15 @@ class ControlFile(object):
         self.type = None
         self.time = None
         self.step = None
+        self.acctype = None
+        self.acctime = None
+        self.accmaxstep = None
         self.marsclass = None
         self.dataset = None
         self.stream = None
         self.number = 'OFF'
         self.expver = '1'
+        self.gaussian = ''
         self.grid = None
         self.area = ''
         self.left = None
@@ -345,7 +349,7 @@ class ControlFile(object):
 
         # check for having at least a starting date
         # otherwise program is not allowed to run
-        if self.start_date is None:
+        if not self.start_date:
             print('start_date specified neither in command line nor \
                    in CONTROL file ' +  self.controlfile)
             print('Try "' + sys.argv[0].split('/')[-1] +
@@ -353,7 +357,7 @@ class ControlFile(object):
             sys.exit(1)
 
         # retrieve just one day if end_date isn't set
-        if self.end_date is None:
+        if not self.end_date:
             self.end_date = self.start_date
 
         # basetime has only two possible values
@@ -364,17 +368,28 @@ class ControlFile(object):
                 sys.exit(1)
 
         # assure consistency of levelist and level
-        if self.levelist is None and self.level is None:
+        # up-to-date available maximum level numbers at ECMWF, 05.10.2018
+        max_level_list = [16, 19, 31, 40, 50, 60, 62, 91, 137]
+        if not self.levelist and not self.level:
             print('Warning: neither levelist nor level \
                                specified in CONTROL file')
             sys.exit(1)
-        elif self.levelist is None and self.level:
+        elif not self.levelist and self.level:
             self.levelist = '1/to/' + self.level
-        elif (self.levelist and self.level is None) or \
+        elif (self.levelist and not self.level) or \
              (self.levelist[-1] != self.level[-1]):
             self.level = self.levelist.split('/')[-1]
         else:
             pass
+
+        # check if max level is a valid level
+        if int(self.level) not in max_level_list:
+            print('ERROR: ')
+            print('LEVEL must be the maximum level of a specified '
+                  'level list from ECMWF, e.g.')
+            print('[16, 19, 31, 40, 50, 60, 62, 91 or 137]')
+            print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
+            sys.exit(1)
 
         # if area was provided (only from commandline)
         # decompose area into its 4 components
@@ -403,7 +418,7 @@ class ControlFile(object):
 
         # if maxstep wasn't provided
         # search for it in the "step" parameter
-        if self.maxstep is None:
+        if not self.maxstep:
             self.maxstep = 0
             for s in self.step:
                 if int(s) > self.maxstep:
@@ -460,6 +475,40 @@ class ControlFile(object):
             print('If public mars data wants to be retrieved, '
                   'the "dataset"-parameter has to be set in the control file!')
             sys.exit(1)
+
+        if not isinstance(self.type, list):
+            self.type = [self.type]
+
+        for i, val in enumerate(self.type):
+            if self.type[i] == 'AN' and int(self.step[i]) != 0:
+                print('Analysis retrievals must have STEP = 0 (is set to 0)')
+                self.type[i] = 0
+
+        if not isinstance(self.time, list):
+            self.time = [self.time]
+
+        if not isinstance(self.step, list):
+            self.step = [self.step]
+
+        if not self.acctype:
+            print('... Control paramter ACCTYPE was not defined.')
+            try:
+                if len(self.type) > 1 and self.type[1] != 'AN':
+                    print('Use old setting by using TYPE[1] for flux forecast!')
+                    self.acctype = self.type[1]
+            except:
+                print('Use default value "FC" for flux forecast!')
+                self.acctype='FC'
+
+        if not self.acctime:
+            print('... Control paramter ACCTIME was not defined.')
+            print('Use default value "00/12" for flux forecast!')
+            self.acctime='00/12'
+
+        if not self.accmaxstep:
+            print('... Control paramter ACCMAXSTEP was not defined.')
+            print('Use default value "12" for flux forecast!')
+            self.accmaxstep='12'
 
         return
 

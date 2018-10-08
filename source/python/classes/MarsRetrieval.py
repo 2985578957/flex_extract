@@ -462,7 +462,7 @@ class MarsRetrieval(object):
 
         # find all keys without a value and convert all other values to strings
         empty_keys = []
-        for key, value in attrs.itteritems():
+        for key, value in attrs.iteritems():
             if value == '':
                 empty_keys.append(str(key))
             else:
@@ -485,15 +485,16 @@ class MarsRetrieval(object):
                 e = sys.exc_info()[0]
                 print("ERROR: ", e)
                 print('MARS Request failed!')
-            if not self.public and os.stat(target).st_size == 0:
-                print('MARS Request returned no data - please check request')
-                raise IOError
-            elif self.public and os.stat(target).st_size == 0:
-                print('Public MARS Request returned no data - '
-                      'please check request')
-                raise IOError
-            else:
-                raise IOError
+                if not self.public and os.stat(target).st_size == 0:
+                    print('MARS Request returned no data - '
+                          'please check request')
+                    raise IOError
+                elif self.public and os.stat(target).st_size == 0:
+                    print('Public MARS Request returned no data - '
+                          'please check request')
+                    raise IOError
+                else:
+                    raise IOError
         # MARS request via extra process in shell
         else:
             request_str = 'ret'
@@ -514,7 +515,5 @@ class MarsRetrieval(object):
             elif os.stat(target).st_size == 0:
                 print('MARS Request returned no data - please check request')
                 raise IOError
-            else:
-                raise
 
         return

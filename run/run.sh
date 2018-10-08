@@ -22,15 +22,15 @@ BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
-INPUTDIR='/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace/test'
+INPUTDIR='/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace/test3'
 OUTPUTDIR=None
 FLEXPART_ROOT_SCRIPTS=None 
 PP_ID=None
 JOB_TEMPLATE='job.temp' 
-CONTROLFILE='CONTROL_EI.public' 
+CONTROLFILE='CONTROL_EA5' 
 DEBUG=1 
-REQUEST=1
-PUBLIC=1
+REQUEST=2
+PUBLIC=0
 
 # -----------------------------------------------------------------
 #
