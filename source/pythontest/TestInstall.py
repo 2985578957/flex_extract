@@ -10,7 +10,7 @@ import pytest
 sys.path.append('../python')
 import _config
 import install
-from mods.tools import make_dir
+from mods.tools import make_dir, silent_remove
 
 
 class TestTools():
@@ -23,7 +23,7 @@ class TestTools():
     #    - install_via_gateway
     #!    - mk_tarball
     #!    - un_tarball
-    #    - mk_env_vars
+    #!    - mk_env_vars
     #    - mk_compilejob
     #    - mk_job_template
     #    - delete_convert_build
@@ -115,3 +115,42 @@ class TestTools():
 
         # clean up temp test dir
         shutil.rmtree(test_dir)
+
+    def test_mk_env_vars(self):
+        import filecmp
+
+        # comparison file
+        testfile = os.path.join(_config.PATH_TEST_DIR,'TestData',
+                                'ECMWF_ENV.test')
+
+        # create test ECMWF_ENV file
+        install.mk_env_vars('testuser',
+                            'testgroup',
+                            'gateway.test.ac.at',
+                            'user@destination')
+
+        assert filecmp.cmp(testfile, _config.PATH_ECMWF_ENV, shallow=False)
+
+        # delte test file
+        silent_remove(_config.PATH_ECMWF_ENV)
+
+    def test_mk_compilejob(self):
+        import filecmp
+
+        # comparison file
+        testfile = os.path.join(_config.PATH_TEST_DIR,'TestData',
+                                    'compilejob.test')
+
+        # create
+        install.mk_compilejob('Makefile.TEST',
+                              '',
+                              'testuser',
+                              'testgroup',
+                              'fp_root_test_path')
+
+        finalfile = os.path.join(_config.PATH_JOBSCRIPTS,
+                              _config.FILE_INSTALL_COMPILEJOB)
+        assert filecmp.cmp(testfile, finalfile, shallow=False)
+
+        # delete test file
+        silent_remove(finalfile)

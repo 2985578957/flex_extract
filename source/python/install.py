@@ -319,6 +319,7 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
     @Description:
         Creates a file named ECMWF_ENV which contains the
         necessary environmental variables at ECMWF servers.
+        It is based on the template ECMWF_ENV.template.
 
     @Input:
         ecuid: string
@@ -337,12 +338,21 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
     @Return:
         <nothing>
     '''
+    from genshi.template.text import NewTextTemplate
+    from genshi.template import  TemplateLoader
 
-    with open(_config.PATH_REL_ECMWF_ENV, 'w') as fo:
-        fo.write('ECUID ' + ecuid + '\n')
-        fo.write('ECGID ' + ecgid + '\n')
-        fo.write('GATEWAY ' + gateway + '\n')
-        fo.write('DESTINATION ' + destination + '\n')
+    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+    ecmwfvars_template = loader.load(_config.TEMPFILE_USER_ENVVARS,
+                                     cls=NewTextTemplate)
+
+    stream = ecmwfvars_template.generate(user_name = ecuid,
+                                       user_group = ecgid,
+                                       gateway_name = gateway,
+                                       destination_name = destination
+                                       )
+
+    with open(_config.PATH_ECMWF_ENV, 'w') as f:
+        f.write(stream.render('text'))
 
     return
 
@@ -374,36 +384,60 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
     @Return:
         <nothing>
     '''
+    from genshi.template.text import NewTextTemplate
+    from genshi.template import  TemplateLoader
 
-    template = os.path.join(_config.PATH_REL_TEMPLATES,
-                            _config.TEMPFILE_INSTALL_COMPILEJOB)
-    with open(template) as f:
-        fdata = f.read().split('\n')
+    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+    compile_template = loader.load(_config.TEMPFILE_INSTALL_COMPILEJOB,
+                                   cls=NewTextTemplate)
 
-    compilejob = os.path.join(_config.PATH_REL_JOBSCRIPTS,
+    if fp_root == '../':
+        fp_root = '$HOME'
+
+    stream = compile_template.generate(
+        username = ecuid,
+        usergroup = ecgid,
+        version_number = _config._VERSION_STR,
+        fp_root_scripts = fp_root,
+        makefile = makefile,
+        fortran_program = _config.FORTRAN_EXECUTABLE
+    )
+
+    compilejob = os.path.join(_config.PATH_JOBSCRIPTS,
                               _config.FILE_INSTALL_COMPILEJOB)
-    with open(compilejob, 'w') as fo:
-        for data in fdata:
-            if 'MAKEFILE=' in data:
-                data = 'export MAKEFILE=' + makefile
-            elif 'FLEXPART_ROOT_SCRIPTS=' in data:
-                if fp_root != '../':
-                    data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
-                else:
-                    data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
-            elif target.lower() != 'local':
-                if '--workdir' in data:
-                    data = '#SBATCH --workdir=/scratch/ms/' + \
-                            ecgid + '/' + ecuid
-                elif '##PBS -o' in data:
-                    data = '##PBS -o /scratch/ms/' + ecgid + '/' + ecuid + \
-                           'flex_ecmwf.$Jobname.$Job_ID.out'
-                elif 'FLEXPART_ROOT_SCRIPTS=' in data:
-                    if fp_root != '../':
-                        data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
-                    else:
-                        data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
-            fo.write(data + '\n')
+
+    with open(compilejob, 'w') as f:
+        f.write(stream.render('text'))
+
+
+    # template = os.path.join(_config.PATH_REL_TEMPLATES,
+                            # _config.TEMPFILE_INSTALL_COMPILEJOB)
+    # with open(template) as f:
+        # fdata = f.read().split('\n')
+
+
+    # with open(compilejob, 'w') as fo:
+        # for data in fdata:
+            # if 'MAKEFILE=' in data:
+                # data = 'export MAKEFILE=' + makefile
+            # elif 'FLEXPART_ROOT_SCRIPTS=' in data:
+                # if fp_root != '../':
+                    # data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
+                # else:
+                    # data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
+            # elif target.lower() != 'local':
+                # if '--workdir' in data:
+                    # data = '#SBATCH --workdir=/scratch/ms/' + \
+                            # ecgid + '/' + ecuid
+                # elif '##PBS -o' in data:
+                    # data = '##PBS -o /scratch/ms/' + ecgid + '/' + ecuid + \
+                           # 'flex_ecmwf.$Jobname.$Job_ID.out'
+                # elif 'FLEXPART_ROOT_SCRIPTS=' in data:
+                    # if fp_root != '../':
+                        # data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
+                    # else:
+                        # data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
+            # fo.write(data + '\n')
 
     return
 
