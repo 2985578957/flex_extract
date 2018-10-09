@@ -80,9 +80,11 @@ import shutil
 import subprocess
 from datetime import datetime, timedelta
 import numpy as np
-from gribapi import grib_set, grib_index_select, grib_new_from_index, grib_get,\
-                    grib_write, grib_get_values, grib_set_values, grib_release,\
-                    grib_index_release, grib_index_get
+
+from eccodes import (codes_index_select, codes_new_from_index, codes_get,
+                     codes_get_values, codes_set_values, codes_set,
+                     codes_write, codes_release, codes_new_from_index,
+                     codes_index_release)
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
@@ -788,10 +790,10 @@ class EcFlexpart(object):
             print('current product: ', prod)
 
             for i in range(len(index_keys)):
-                grib_index_select(iid, index_keys[i], prod[i])
+                codes_index_select(iid, index_keys[i], prod[i])
 
             # get first id from current product
-            gid = grib_new_from_index(iid)
+            gid = codes_new_from_index(iid)
 
             # if there is no data for this specific time combination / product
             # skip the rest of the for loop and start with next timestep/product
@@ -799,9 +801,9 @@ class EcFlexpart(object):
                 continue
 
             # create correct timestamp from the three time informations
-            cdate = str(grib_get(gid, 'date'))
-            ctime = '{:0>2}'.format(grib_get(gid, 'time')/100)
-            cstep = '{:0>3}'.format(grib_get(gid, 'step'))
+            cdate = str(codes_get(gid, 'date'))
+            ctime = '{:0>2}'.format(codes_get(gid, 'time')/100)
+            cstep = '{:0>3}'.format(codes_get(gid, 'step'))
             t_date = datetime.strptime(cdate + ctime, '%Y%m%d%H')
             t_dt = t_date + timedelta(hours=int(cstep))
             t_m1dt = t_date + timedelta(hours=int(cstep)-int(c.dtime))
@@ -833,13 +835,13 @@ class EcFlexpart(object):
             while 1:
                 if not gid:
                     break
-                cparamId = str(grib_get(gid, 'paramId'))
-                step = grib_get(gid, 'step')
-                time = grib_get(gid, 'time')
-                ni = grib_get(gid, 'Ni')
-                nj = grib_get(gid, 'Nj')
+                cparamId = str(codes_get(gid, 'paramId'))
+                step = codes_get(gid, 'step')
+                time = codes_get(gid, 'time')
+                ni = codes_get(gid, 'Ni')
+                nj = codes_get(gid, 'Nj')
                 if cparamId in valsdict.keys():
-                    values = grib_get_values(gid)
+                    values = codes_get_values(gid)
                     vdp = valsdict[cparamId]
                     svdp = svalsdict[cparamId]
  #                   sd = stepsdict[cparamId]
@@ -878,17 +880,17 @@ class EcFlexpart(object):
                             else:
                                 values = svdp[0]
 
-                        grib_set_values(gid, values)
+                        codes_set_values(gid, values)
 
                         if c.maxstep > 12:
-                            grib_set(gid, 'step', max(0, step-2*int(c.dtime)))
+                            codes_set(gid, 'step', max(0, step-2*int(c.dtime)))
                         else:
-                            grib_set(gid, 'step', 0)
-                            grib_set(gid, 'time', t_m2dt.hour*100)
-                            grib_set(gid, 'date', int(t_m2dt.strftime('%Y%m%d')))
+                            codes_set(gid, 'step', 0)
+                            codes_set(gid, 'time', t_m2dt.hour*100)
+                            codes_set(gid, 'date', int(t_m2dt.strftime('%Y%m%d')))
 
                         with open(fnout, 'w') as f_handle:
-                            grib_write(gid, f_handle)
+                            codes_write(gid, f_handle)
 
                         if c.basetime:
                             t_enddate = datetime.strptime(c.end_date +
@@ -908,16 +910,16 @@ class EcFlexpart(object):
                            t_dt == t_enddate:
 
                             values = svdp[3]
-                            grib_set_values(gid, values)
-                            grib_set(gid, 'step', 0)
+                            codes_set_values(gid, values)
+                            codes_set(gid, 'step', 0)
                             truedatetime = t_m2dt + timedelta(hours=
-                                                             2*int(c.dtime))
-                            grib_set(gid, 'time', truedatetime.hour * 100)
-                            grib_set(gid, 'date', truedatetime.year * 10000 +
-                                     truedatetime.month * 100 +
-                                     truedatetime.day)
+                                                              2*int(c.dtime))
+                            codes_set(gid, 'time', truedatetime.hour * 100)
+                            codes_set(gid, 'date', truedatetime.year * 10000 +
+                                      truedatetime.month * 100 +
+                                      truedatetime.day)
                             with open(hnout, 'w') as h_handle:
-                                grib_write(gid, h_handle)
+                                codes_write(gid, h_handle)
 
                             #values = (svdp[1]+svdp[2])/2.
                             if cparamId == '142' or cparamId == '143':
@@ -925,21 +927,21 @@ class EcFlexpart(object):
                             else:
                                 values = disaggregation.dapoly(list(reversed(svdp)))
 
-                            grib_set(gid, 'step', 0)
+                            codes_set(gid, 'step', 0)
                             truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
-                            grib_set(gid, 'time', truedatetime.hour * 100)
-                            grib_set(gid, 'date', truedatetime.year * 10000 +
+                            codes_set(gid, 'time', truedatetime.hour * 100)
+                            codes_set(gid, 'date', truedatetime.year * 10000 +
                                      truedatetime.month * 100 +
                                      truedatetime.day)
-                            grib_set_values(gid, values)
+                            codes_set_values(gid, values)
                             with open(gnout, 'w') as g_handle:
-                                grib_write(gid, g_handle)
+                                codes_write(gid, g_handle)
 
-                grib_release(gid)
+                codes_release(gid)
 
-                gid = grib_new_from_index(iid)
+                gid = codes_new_from_index(iid)
 
-        grib_index_release(iid)
+        codes_index_release(iid)
 
         return
 
@@ -1013,10 +1015,10 @@ class EcFlexpart(object):
             print('current product: ', prod)
 
             for i in range(len(index_keys)):
-                grib_index_select(iid, index_keys[i], prod[i])
+                codes_index_select(iid, index_keys[i], prod[i])
 
             # get first id from current product
-            gid = grib_new_from_index(iid)
+            gid = codes_new_from_index(iid)
 
             # if there is no data for this specific time combination / product
             # skip the rest of the for loop and start with next timestep/product
@@ -1031,9 +1033,9 @@ class EcFlexpart(object):
                 fdict[k] = open(fortfile, 'w')
 
             # create correct timestamp from the three time informations
-            cdate = str(grib_get(gid, 'date'))
-            ctime = '{:0>2}'.format(grib_get(gid, 'time')/100)
-            cstep = '{:0>3}'.format(grib_get(gid, 'step'))
+            cdate = str(codes_get(gid, 'date'))
+            ctime = '{:0>2}'.format(codes_get(gid, 'time')/100)
+            cstep = '{:0>3}'.format(codes_get(gid, 'step'))
             timestamp = datetime.strptime(cdate + ctime, '%Y%m%d%H')
             timestamp += timedelta(hours=int(cstep))
             cdate_hour = datetime.strftime(timestamp, '%Y%m%d%H')
@@ -1061,34 +1063,34 @@ class EcFlexpart(object):
             while 1:
                 if not gid:
                     break
-                paramId = grib_get(gid, 'paramId')
-                gridtype = grib_get(gid, 'gridType')
-                levtype = grib_get(gid, 'typeOfLevel')
+                paramId = codes_get(gid, 'paramId')
+                gridtype = codes_get(gid, 'gridType')
+                levtype = codes_get(gid, 'typeOfLevel')
                 if paramId == 77: # ETADOT
-                    grib_write(gid, fdict['21'])
+                    codes_write(gid, fdict['21'])
                 elif paramId == 130: # T
-                    grib_write(gid, fdict['11'])
+                    codes_write(gid, fdict['11'])
                 elif paramId == 131 or paramId == 132: # U, V wind component
-                    grib_write(gid, fdict['10'])
+                    codes_write(gid, fdict['10'])
                 elif paramId == 133 and gridtype != 'reduced_gg': # Q
-                    grib_write(gid, fdict['17'])
+                    codes_write(gid, fdict['17'])
                 elif paramId == 133 and gridtype == 'reduced_gg': # Q, gaussian
-                    grib_write(gid, fdict['18'])
+                    codes_write(gid, fdict['18'])
                 elif paramId == 135: # W
-                    grib_write(gid, fdict['19'])
+                    codes_write(gid, fdict['19'])
                 elif paramId == 152: # LNSP
-                    grib_write(gid, fdict['12'])
+                    codes_write(gid, fdict['12'])
                 elif paramId == 155 and gridtype == 'sh': # D
-                    grib_write(gid, fdict['13'])
+                    codes_write(gid, fdict['13'])
                 elif paramId == 246 or paramId == 247: # CLWC, CIWC
                     # sum cloud liquid water and ice
                     if not scwc:
-                        scwc = grib_get_values(gid)
+                        scwc = codes_get_values(gid)
                     else:
-                        scwc += grib_get_values(gid)
-                        grib_set_values(gid, scwc)
-                        grib_set(gid, 'paramId', 201031)
-                        grib_write(gid, fdict['22'])
+                        scwc += codes_get_values(gid)
+                        codes_set_values(gid, scwc)
+                        codes_set(gid, 'paramId', 201031)
+                        codes_write(gid, fdict['22'])
                 elif c.wrf and paramId in [129, 138, 155] and \
                       levtype == 'hybrid': # Z, VO, D
                     # do not do anything right now
@@ -1098,7 +1100,7 @@ class EcFlexpart(object):
                     if paramId not in savedfields:
                         # SD/MSL/TCC/10U/10V/2T/2D/Z/LSM/SDOR/CVL/CVH/SR
                         # and all ADDPAR parameter
-                        grib_write(gid, fdict['16'])
+                        codes_write(gid, fdict['16'])
                         savedfields.append(paramId)
                     else:
                         print('duplicate ' + str(paramId) + ' not written')
@@ -1108,15 +1110,15 @@ class EcFlexpart(object):
                         # model layer
                         if levtype == 'hybrid' and \
                            paramId in [129, 130, 131, 132, 133, 138, 155]:
-                            grib_write(gid, fwrf)
+                            codes_write(gid, fwrf)
                         # sfc layer
                         elif paramId in wrfpars:
-                            grib_write(gid, fwrf)
+                            codes_write(gid, fwrf)
                 except AttributeError:
                     pass
 
-                grib_release(gid)
-                gid = grib_new_from_index(iid)
+                codes_release(gid)
+                gid = codes_new_from_index(iid)
 
             for f in fdict.values():
                 f.close()
@@ -1170,7 +1172,7 @@ class EcFlexpart(object):
         if c.wrf:
             fwrf.close()
 
-        grib_index_release(iid)
+        codes_index_release(iid)
 
         return
 
