@@ -395,8 +395,8 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
         fp_root = '$HOME'
 
     stream = compile_template.generate(
-        username = ecuid,
         usergroup = ecgid,
+        username = ecuid,
         version_number = _config._VERSION_STR,
         fp_root_scripts = fp_root,
         makefile = makefile,
@@ -408,36 +408,6 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
 
     with open(compilejob, 'w') as f:
         f.write(stream.render('text'))
-
-
-    # template = os.path.join(_config.PATH_REL_TEMPLATES,
-                            # _config.TEMPFILE_INSTALL_COMPILEJOB)
-    # with open(template) as f:
-        # fdata = f.read().split('\n')
-
-
-    # with open(compilejob, 'w') as fo:
-        # for data in fdata:
-            # if 'MAKEFILE=' in data:
-                # data = 'export MAKEFILE=' + makefile
-            # elif 'FLEXPART_ROOT_SCRIPTS=' in data:
-                # if fp_root != '../':
-                    # data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
-                # else:
-                    # data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
-            # elif target.lower() != 'local':
-                # if '--workdir' in data:
-                    # data = '#SBATCH --workdir=/scratch/ms/' + \
-                            # ecgid + '/' + ecuid
-                # elif '##PBS -o' in data:
-                    # data = '##PBS -o /scratch/ms/' + ecgid + '/' + ecuid + \
-                           # 'flex_ecmwf.$Jobname.$Job_ID.out'
-                # elif 'FLEXPART_ROOT_SCRIPTS=' in data:
-                    # if fp_root != '../':
-                        # data = 'export FLEXPART_ROOT_SCRIPTS=' + fp_root
-                    # else:
-                        # data = 'export FLEXPART_ROOT_SCRIPTS=$HOME'
-            # fo.write(data + '\n')
 
     return
 
@@ -469,27 +439,30 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
     @Return:
         <nothing>
     '''
-    fp_root_path_to_python = os.path.join(fp_root, _config.FLEXEXTRACT_DIRNAME,
-                         _config.PATH_REL_PYTHON)
+    from genshi.template.text import NewTextTemplate
+    from genshi.template import  TemplateLoader
 
-    template = os.path.join(_config.PATH_REL_TEMPLATES,
-                            _config.TEMPFILE_INSTALL_JOB)
-    with open(template) as f:
-        fdata = f.read().split('\n')
+    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+    compile_template = loader.load(_config.TEMPFILE_INSTALL_JOB,
+                                   cls=NewTextTemplate)
 
-    jobfile_temp = os.path.join(_config.PATH_REL_TEMPLATES,
-                                _config.TEMPFILE_JOB)
-    with open(jobfile_temp, 'w') as fo:
-        for data in fdata:
-            if '--workdir' in data:
-                data = '#SBATCH --workdir=/scratch/ms/' + ecgid + '/' + ecuid
-            elif '##PBS -o' in data:
-                data = '##PBS -o /scratch/ms/' + ecgid + '/' + \
-                        ecuid + 'flex_ecmwf.$Jobname.$Job_ID.out'
-            elif  'export PATH=${PATH}:' in data:
-                data += fp_root_path_to_python
+    fp_root_path_to_python = os.path.join(fp_root,
+                                          _config.FLEXEXTRACT_DIRNAME,
+                                          _config.PATH_REL_PYTHON)
 
-            fo.write(data + '\n')
+    stream = compile_template.generate(
+        usergroup = ecgid,
+        username = ecuid,
+        version_number = _config._VERSION_STR,
+        fp_root_path = fp_root_path_to_python,
+    )
+
+    tempjobfile = os.path.join(_config.PATH_TEMPLATES,
+                               _config.TEMPFILE_JOB)
+
+    with open(tempjobfile, 'w') as f:
+        f.write(stream.render('text'))
+
     return
 
 def delete_convert_build(src_path):

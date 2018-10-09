@@ -24,8 +24,8 @@ class TestTools():
     #!    - mk_tarball
     #!    - un_tarball
     #!    - mk_env_vars
-    #    - mk_compilejob
-    #    - mk_job_template
+    #!    - mk_compilejob
+    #!    - mk_job_template
     #    - delete_convert_build
     #    - make_convert_build
 
@@ -150,6 +150,28 @@ class TestTools():
 
         finalfile = os.path.join(_config.PATH_JOBSCRIPTS,
                               _config.FILE_INSTALL_COMPILEJOB)
+        assert filecmp.cmp(testfile, finalfile, shallow=False)
+
+        # delete test file
+        silent_remove(finalfile)
+
+    def test_mk_job_template(self):
+        import filecmp
+
+        # comparison file
+        testfile = os.path.join(_config.PATH_TEST_DIR,
+                                'TestData',
+                                'job.temp.test')
+
+        # create
+        install.mk_job_template('testuser',
+                                'testgroup',
+                                'gateway.test.ac.at',
+                                'dest@generic',
+                                'fp_root_test_path')
+
+        finalfile = os.path.join(_config.PATH_TEMPLATES,
+                                 _config.TEMPFILE_JOB)
         assert filecmp.cmp(testfile, finalfile, shallow=False)
 
         # delete test file

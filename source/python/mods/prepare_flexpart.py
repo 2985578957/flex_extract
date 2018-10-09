@@ -159,7 +159,7 @@ def prepare_flexpart(ppid, c):
 
     # deaccumulate the flux data
     flexpart = EcFlexpart(c, fluxes=True)
-    flexpart.write_namelist(c, _config.FILE_NAMELIST)
+    flexpart.write_namelist(c)
     flexpart.deacc_fluxes(inputfiles, c)
 
     # get a list of all files from the root inputdir

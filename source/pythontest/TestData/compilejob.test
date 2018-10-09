@@ -16,7 +16,7 @@
 ##PBS -N flex_ecmwf
 ##PBS -q ns
 ##PBS -S /usr/bin/ksh
-##PBS -o /scratch/ms/testgroup/testuser/flex_ecmwf.$Jobname.$Job_ID.out
+##PBS -o /scratch/ms/testgroup/testuser/flex_ecmwf.${Jobname}.${Job_ID}.out
 # job output is in .ecaccess_DO_NOT_REMOVE
 ##PBS -j oe
 ##PBS -V
@@ -25,7 +25,7 @@
 
 set -x
 export VERSION=7.1
-case $HOST in
+case ${HOST} in
   *ecg*)
   module load python
   module unload grib_api
@@ -42,27 +42,27 @@ case $HOST in
   module load python
   echo ${GROUP}
   echo ${HOME}
-  echo $HOME | awk -F / '{print $1, $2, $3, $4}'
-  export GROUP=`echo $HOME | awk -F / '{print $4}'`
+  echo ${HOME} | awk -F / '{print $1, $2, $3, $4}'
+  export GROUP=`echo ${HOME} | awk -F / '{print $4}'`
   export SCRATCH=/scratch/ms/${GROUP}/${USER}
-  export FLEXPART_ROOT_SCRIPTS=p_root_test_path
+  export FLEXPART_ROOT_SCRIPTS=fp_root_test_path
   export MAKEFILE=Makefile.TEST
   ;;
 esac
 
-mkdir -p $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION
-cd $FLEXPART_ROOT_SCRIPTS/flex_extract_v$VERSION   # if FLEXPART_ROOT is not set this means cd to the home directory
-tar -xvf $HOME/flex_extract_v$VERSION.tar
+mkdir -p ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}
+cd ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}   # if FLEXPART_ROOT is not set this means cd to the home directory
+tar -xvf ${HOME}/flex_extract_v${VERSION}.tar
 cd src
 \rm *.o *.mod CONVERT2 
-make -f $MAKEFILE >flexcompile 2>flexcompile
+make -f ${MAKEFILE} >flexcompile 2>flexcompile
 
 ls -l CONVERT2 >>flexcompile
 if [ $? -eq 0 ]; then
   echo 'SUCCESS!' >>flexcompile
-  mail -s flexcompile.$HOST.$$ $USER <flexcompile
+  mail -s flexcompile.${HOST}.$$ ${USER} <flexcompile
 else
   echo Environment: >>flexcompile
   env >> flexcompile
-  mail -s "ERROR! flexcompile.$HOST.$$" $USER <flexcompile
+  mail -s "ERROR! flexcompile.${HOST}.$$" ${USER} <flexcompile
 fi

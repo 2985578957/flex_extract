@@ -657,7 +657,7 @@ class EcFlexpart(object):
         return
 
 
-    def write_namelist(self, c, filename):
+    def write_namelist(self, c):
         '''
         @Description:
             Creates a namelist file in the temporary directory and writes
@@ -682,6 +682,13 @@ class EcFlexpart(object):
             <nothing>
         '''
 
+        from genshi.template.text import NewTextTemplate
+        from genshi.template import  TemplateLoader
+
+        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+        compile_template = loader.load(_config.TEMPFILE_NAMELIST,
+                                       cls=NewTextTemplate)
+
         self.inputdir = c.inputdir
         area = np.asarray(self.area.split('/')).astype(float)
         grid = np.asarray(self.grid.split('/')).astype(float)
@@ -691,27 +698,30 @@ class EcFlexpart(object):
         maxl = int((area[3] - area[1]) / grid[1]) + 1
         maxb = int((area[0] - area[2]) / grid[0]) + 1
 
-        with open(self.inputdir + '/' + filename, 'w') as f:
-            f.write('&NAMGEN\n')
-            f.write(',\n  '.join(['maxl = ' + str(maxl), 'maxb = ' + str(maxb),
-                                  'mlevel = ' + str(self.level),
-                                  'mlevelist = ' + '"' + str(self.levelist)
-                                                 + '"',
-                                  'mnauf = ' + str(self.resol),
-                                  'metapar = ' + '77',
-                                  'rlo0 = ' + str(area[1]),
-                                  'rlo1 = ' + str(area[3]),
-                                  'rla0 = ' + str(area[2]),
-                                  'rla1 = ' + str(area[0]),
-                                  'momega = ' + str(c.omega),
-                                  'momegadiff = ' + str(c.omegadiff),
-                                  'mgauss = ' + str(c.gauss),
-                                  'msmooth = ' + str(c.smooth),
-                                  'meta = ' + str(c.eta),
-                                  'metadiff = ' + str(c.etadiff),
-                                  'mdpdeta = ' + str(c.dpdeta)]))
+        stream = compile_template.generate(
+            maxl = str(maxl),
+            maxb = str(maxb),
+            mlevel = str(self.level),
+            mlevelist = str(self.levelist),
+            mnauf = str(self.resol),
+            metapar = '77',
+            rlo0 = str(area[1]),
+            rlo1 = str(area[3]),
+            rla0 = str(area[2]),
+            rla1 = str(area[0]),
+            momega = str(c.omega),
+            momegadiff = str(c.omegadiff),
+            mgauss = str(c.gauss),
+            msmooth = str(c.smooth),
+            meta = str(c.eta),
+            metadiff = str(c.etadiff),
+            mdpdeta = str(c.dpdeta)
+        )
 
-            f.write('\n/\n')
+        namelistfile = os.path.join(self.inputdir, _config.FILE_NAMELIST)
+
+        with open(namelistfile, 'w') as f:
+            f.write(stream.render('text'))
 
         return
 

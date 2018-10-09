@@ -3,23 +3,44 @@
 
 
 import sys
+import os
+import inspect
 import pytest
 
 sys.path.append('../python')
+import _config
 from classes.EcFlexpart import EcFlexpart
+from classes.ControlFile import ControlFile
+from mods.tools import silent_remove
 
 class TestEcFlexpart():
     '''
     '''
 
-    def test_init(self):
-        # create an instance of EcFlexpart and get a dictionary of the
-        # class attributes, compare this dict with an expected dict!
-        assert True == True
-
     def test_write_namelist(self):
-        # simple
-        assert True == True
+        import filecmp
+
+        control_file = os.path.join(_config.PATH_TEST_DIR,
+                                        'TestData',
+                                        'CONTROL.temp')
+        c = ControlFile(control_file)
+        flexpart = EcFlexpart(c)
+
+        c.inputdir = 'TestData'
+
+        # comparison file
+        testfile = os.path.join(_config.PATH_TEST_DIR,
+                                'TestData',
+                                'convert.nl.test')
+
+        # create
+        flexpart.write_namelist(c)
+
+        finalfile = os.path.join(c.inputdir, _config.FILE_NAMELIST)
+        assert filecmp.cmp(testfile, finalfile, shallow=False)
+
+        # delete test file
+        silent_remove(finalfile)
 
     def test_retrieve(self):
         # not sure how to check
