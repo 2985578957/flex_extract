@@ -11,11 +11,11 @@
            .s .s~ .sh .sh~ .h .h~ .C .C~ .a
 
 
-#GRIB_API_INCLUDE_DIR=/usr/local/gcc-4.9.3/grib_api-1.14.3//include
-#GRIB_API_LIB= -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
+GRIB_API_INCLUDE_DIR=/usr/local/gcc-4.9.3/grib_api-1.14.3//include
+GRIB_API_LIB= -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
 
-GRIB_API_INCLUDE_DIR=/home/srvx1/tmc/TestEnv/Libraries/eccodes-2.6.0_ifort/include
-GRIB_API_LIB=-L/home/srvx1/tmc/TestEnv/Libraries/eccodes-2.6.0_ifort/lib -Bstatic -leccodes_f90  -leccodes -Bdynamic -lm -ljasper -openmp
+#GRIB_API_INCLUDE_DIR=/home/srvx1/tmc/TestEnv/Libraries/eccodes-2.6.0_ifort/include
+#GRIB_API_LIB=-L/home/srvx1/tmc/TestEnv/Libraries/eccodes-2.6.0_ifort/lib -Bstatic -leccodes_f90  -leccodes -Bdynamic -lm -ljasper -openmp
 
 
 EMOSLIB=-lemosR64
