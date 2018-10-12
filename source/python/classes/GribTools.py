@@ -43,11 +43,16 @@
 # MODULES
 # ------------------------------------------------------------------------------
 import os
+from gribapi import grib_new_from_file, grib_is_defined, grib_get, \
+     grib_release, grib_set, grib_write, grib_index_read, \
+     grib_index_new_from_file, grib_index_add_file,  \
+     grib_index_write
 
-from eccodes import (codes_grib_new_from_file, codes_is_defined, codes_get,
-                     codes_release, codes_set, codes_write, codes_index_read,
-                     codes_index_new_from_file, codes_index_add_file,
-                     codes_index_write)
+
+# from eccodes import (codes_grib_new_from_file, codes_is_defined, codes_get,
+                     # codes_release, codes_set, codes_write, codes_index_read,
+                     # codes_index_new_from_file, codes_index_add_file,
+                     # codes_index_write)
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -104,7 +109,7 @@ class GribTools(object):
         return_list = []
 
         while 1:
-            gid = codes_new_from_file(fileid)
+            gid = grib_new_from_file(fileid)
 
             if gid is None:
                 break
@@ -116,20 +121,20 @@ class GribTools(object):
             select = True
             i = 0
             for wherekey in wherekeynames:
-                if not codes_is_defined(gid, wherekey):
+                if not grib_is_defined(gid, wherekey):
                     raise Exception("where key was not defined")
 
                 select = (select and (str(wherekeyvalues[i]) ==
-                                      str(codes_get(gid, wherekey))))
+                                      str(grib_get(gid, wherekey))))
                 i += 1
 
             if select:
                 llist = []
                 for key in keynames:
-                    llist.extend([str(codes_get(gid, key))])
+                    llist.extend([str(grib_get(gid, key))])
                 return_list.append(llist)
 
-            codes_release(gid)
+            grib_release(gid)
 
         fileid.close()
 
@@ -178,7 +183,7 @@ class GribTools(object):
         fin = open(fromfile)
 
         while 1:
-            gid = codes_new_from_file(fin)
+            gid = grib_new_from_file(fin)
 
             if gid is None:
                 break
@@ -189,22 +194,22 @@ class GribTools(object):
             select = True
             i = 0
             for wherekey in wherekeynames:
-                if not codes_is_defined(gid, wherekey):
+                if not grib_is_defined(gid, wherekey):
                     raise Exception("where Key was not defined")
 
                 select = (select and (str(wherekeyvalues[i]) ==
-                                      str(codes_get(gid, wherekey))))
+                                      str(grib_get(gid, wherekey))))
                 i += 1
 
             if select:
                 i = 0
                 for key in keynames:
-                    codes_set(gid, key, keyvalues[i])
+                    grib_set(gid, key, keyvalues[i])
                     i += 1
 
-            codes_write(gid, fout)
+            grib_write(gid, fout)
 
-            codes_release(gid)
+            grib_release(gid)
 
         fin.close()
         fout.close()
@@ -245,7 +250,7 @@ class GribTools(object):
         fout = open(self.filenames, filemode)
 
         while 1:
-            gid = codes_new_from_file(fin)
+            gid = grib_new_from_file(fin)
 
             if gid is None:
                 break
@@ -256,21 +261,21 @@ class GribTools(object):
             select = True
             i = 0
             for key in keynames:
-                if not codes_is_defined(gid, key):
+                if not grib_is_defined(gid, key):
                     raise Exception("Key was not defined")
 
                 if selectWhere:
                     select = (select and (str(keyvalues[i]) ==
-                                          str(codes_get(gid, key))))
+                                          str(grib_get(gid, key))))
                 else:
                     select = (select and (str(keyvalues[i]) !=
-                                          str(codes_get(gid, key))))
+                                          str(grib_get(gid, key))))
                 i += 1
 
             if select:
-                codes_write(gid, fout)
+                grib_write(gid, fout)
 
-            codes_release(gid)
+            grib_release(gid)
 
         fin.close()
         fout.close()
@@ -301,18 +306,18 @@ class GribTools(object):
         iid = None
 
         if os.path.exists(index_file):
-            iid = codes_index_read(index_file)
+            iid = grib_index_read(index_file)
             print("Use existing index file: %s " % (index_file))
         else:
             for filename in self.filenames:
                 print("Inputfile: %s " % (filename))
                 if iid is None:
-                    iid = codes_index_new_from_file(filename, index_keys)
+                    iid = grib_index_new_from_file(filename, index_keys)
                 else:
-                    codes_index_add_file(iid, filename)
+                    grib_index_add_file(iid, filename)
 
             if iid is not None:
-                codes_index_write(iid, index_file)
+                grib_index_write(iid, index_file)
 
         print('... index done')
 
