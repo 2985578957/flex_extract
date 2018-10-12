@@ -58,7 +58,9 @@ import sys
 import socket
 
 # software specific classes and modules from flex_extract
-sys.path.append('../')
+
+sys.path.append(os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
@@ -155,7 +157,7 @@ def prepare_flexpart(ppid, c):
         make_dir(c.outputdir)
 
     # get all files with flux data to be deaccumulated
-    inputfiles = UioFiles(c.inputdir, '*OG_acc_SL*.' + c.ppid + '.*')
+    inputfiles = UioFiles(c.inputdir, '*OG_acc_SL*.' + str(c.ppid) + '.*')
 
     # deaccumulate the flux data
     flexpart = EcFlexpart(c, fluxes=True)
@@ -163,7 +165,7 @@ def prepare_flexpart(ppid, c):
     flexpart.deacc_fluxes(inputfiles, c)
 
     # get a list of all files from the root inputdir
-    inputfiles = UioFiles(c.inputdir, '????__??.*' + c.ppid + '.*')
+    inputfiles = UioFiles(c.inputdir, '????__??.*' + str(c.ppid) + '.*')
 
     # produce FLEXPART-ready GRIB files and process them -
     # copy/transfer/interpolate them or make them GRIB2

@@ -27,6 +27,8 @@ import inspect
 
 _VERSION_STR = '7.1'
 
+QUEUES_LIST = ['ecgate', 'cca']
+
 # ------------------------------------------------------------------------------
 # FILENAMES
 # ------------------------------------------------------------------------------
@@ -75,11 +77,11 @@ PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')
 PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'fortran')
 PATH_TEST_DIR = os.path.join(PATH_SOURCES, 'pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
-if os.getenv('CONTROL') and '/' in os.getenv('CONTROL'):
+if os.getenv('CONTROL'):# and '/' in os.getenv('CONTROL'):
     # this is only needed if remote version with job script is used!
     # because job is directly submitted from SCRATCH and because the
     # CONTROL file is stored there, the normal path is not valid.
-    PATH_CONTROLFILES = os.getenv('CONTROL')
+    PATH_CONTROLFILES = '.'
 else:
     PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'control')
 #

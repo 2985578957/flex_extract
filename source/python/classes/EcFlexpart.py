@@ -84,7 +84,7 @@ import numpy as np
 from eccodes import (codes_index_select, codes_new_from_index, codes_get,
                      codes_get_values, codes_set_values, codes_set,
                      codes_write, codes_release, codes_new_from_index,
-                     codes_index_release)
+                     codes_index_release, codes_index_get)
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
@@ -135,7 +135,8 @@ class EcFlexpart(object):
         # different mars types for retrieving data for flexpart
         self.types = dict()
 
-        if c.maxstep > len(c.type):    # Pure forecast mode
+        # Pure forecast mode
+        if c.maxstep > len(c.type) and 'AN' not in c.type:
             c.type = [c.type[0]]
             c.step = ['{:0>3}'.format(int(c.step[0]))]
             c.time = [c.time[0]]
@@ -167,11 +168,9 @@ class EcFlexpart(object):
                 if c.basetime == '00':
                     btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
 
-                if ((ty.upper() == 'AN' and
-                     int(c.time[i]) % int(c.dtime) ==0) or
-                    (ty.upper() != 'AN' and
-                     int(c.step[i]) % int(c.dtime) == 0 and
-                     int(c.step[i]) % int(c.dtime) == 0) ) and \
+                if ((ty.upper() == 'AN' and (int(c.time[i]) % int(c.dtime)) == 0) or
+                    (ty.upper() != 'AN' and (int(c.step[i]) % int(c.dtime)) == 0 and
+                     (int(c.step[i]) % int(c.dtime) == 0)) ) and \
                     (int(c.time[i]) in btlist or c.maxstep > 24):
 
                     if ty not in self.types.keys():
@@ -433,7 +432,7 @@ class EcFlexpart(object):
         for key in index_keys:
             #index_vals.append(grib_index_get(iid, key))
             #print(index_vals[-1])
-            key_vals = grib_index_get(iid, key)
+            key_vals = codes_index_get(iid, key)
             print(key_vals)
             # have to sort the steps for disaggregation,
             # therefore convert to int first
@@ -531,13 +530,14 @@ class EcFlexpart(object):
                 #     [param, levtype, levelist, grid]
                 if isinstance(pv, str):
                     continue
-                retr_param_dict['type'] = '' + ftype
+                retr_param_dict['type'] = ftype
                 retr_param_dict['time'] = self.types[ftype]['times']
                 retr_param_dict['step'] = self.types[ftype]['steps']
                 retr_param_dict['date'] = self.dates
                 retr_param_dict['stream'] = self.stream
                 retr_param_dict['target'] = \
-                    self._mk_targetname(ftype, pk,
+                    self._mk_targetname(ftype,
+                                        pk,
                                         retr_param_dict['date'].split('/')[0])
                 retr_param_dict['param'] = pv[0]
                 retr_param_dict['levtype'] = pv[1]
@@ -688,7 +688,7 @@ class EcFlexpart(object):
         from genshi.template import  TemplateLoader
 
         loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
-        compile_template = loader.load(_config.TEMPFILE_NAMELIST,
+        namelist_template = loader.load(_config.TEMPFILE_NAMELIST,
                                        cls=NewTextTemplate)
 
         self.inputdir = c.inputdir
@@ -700,7 +700,7 @@ class EcFlexpart(object):
         maxl = int((area[3] - area[1]) / grid[1]) + 1
         maxb = int((area[0] - area[2]) / grid[0]) + 1
 
-        stream = compile_template.generate(
+        stream = namelist_template.generate(
             maxl = str(maxl),
             maxb = str(maxb),
             mlevel = str(self.level),
@@ -1215,26 +1215,25 @@ class EcFlexpart(object):
         print('Output filelist: ')
         print(self.outputfilelist)
 
-        if c.format.lower() == 'grib2':
-            for ofile in self.outputfilelist:
+        for ofile in self.outputfilelist:
+            ofile = os.path.join(self.inputdir, ofile)
+
+            if c.format.lower() == 'grib2':
                 p = subprocess.check_call(['grib_set', '-s', 'edition=2, \
                                            productDefinitionTemplateNumber=8',
                                            ofile, ofile + '_2'])
                 p = subprocess.check_call(['mv', ofile + '_2', ofile])
 
-        if c.ectrans and not c.ecapi:
-            for ofile in self.outputfilelist:
+            if c.ectrans and not c.ecapi:
                 p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
                                            c.gateway, '-remote', c.destination,
                                            '-source', ofile])
 
-        if c.ecstorage and not c.ecapi:
-            for ofile in self.outputfilelist:
+            if c.ecstorage and not c.ecapi:
                 p = subprocess.check_call(['ecp', '-o', ofile,
                                            os.path.expandvars(c.ecfsdir)])
 
-        if c.outputdir != c.inputdir:
-            for ofile in self.outputfilelist:
+            if c.outputdir != c.inputdir:
                 p = subprocess.check_call(['mv',
                                            os.path.join(c.inputdir, ofile),
                                            c.outputdir])

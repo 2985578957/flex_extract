@@ -417,7 +417,7 @@ class MarsRetrieval(object):
 
         # open a file to store all requests to
         with open(os.path.join(inputdir,
-                                   _config.FILE_MARS_REQUESTS), 'a') as f:
+                               _config.FILE_MARS_REQUESTS), 'a') as f:
             f.write(str(request_number) + ', ')
             f.write(', '.join(str(attrs[key])
                               for key in sorted(attrs.iterkeys())))

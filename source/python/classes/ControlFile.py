@@ -59,7 +59,7 @@ import inspect
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from mods.tools import my_error
+from mods.tools import my_error, silent_remove
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -187,11 +187,11 @@ class ControlFile(object):
         '''
 
         try:
-            with open(os.path.join(_config.PATH_CONTROLFILES,
-                                   self.controlfile)) as f:
+            cfile = os.path.join(_config.PATH_CONTROLFILES, self.controlfile)
+            with open(cfile) as f:
                 fdata = f.read().split('\n')
         except IOError:
-            print('Could not read CONTROL file "' + args.controlfile + '"')
+            print('Could not read CONTROL file "' + cfile + '"')
             print('Either it does not exist or its syntax is wrong.')
             print('Try "' + sys.argv[0].split('/')[-1] + \
                       ' -h" to print usage information')
@@ -449,7 +449,7 @@ class ControlFile(object):
             else:
                 self.mailops = [self.mailops]
 
-        if queue in ['ecgate', 'cca'] and \
+        if queue in _config.QUEUES_LIST and \
            not self.gateway or not self.destination or \
            not self.ecuid or not self.ecgid:
             print('\nEnvironment variables GATEWAY, DESTINATION, ECUID and \
@@ -462,7 +462,7 @@ class ControlFile(object):
             marsfile = os.path.join(self.inputdir,
                                     _config.FILE_MARS_REQUESTS)
             if os.path.isfile(marsfile):
-                os.remove(marsfile)
+                silent_remove(marsfile)
 
         # check all logical variables for data type
         # if its a string change to integer

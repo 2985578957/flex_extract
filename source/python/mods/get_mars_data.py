@@ -51,7 +51,8 @@ import inspect
 from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
-sys.path.append('../')
+sys.path.append(os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
 from tools import (my_error, normal_exit, get_cmdline_arguments,
                    read_ecenv, make_dir)
