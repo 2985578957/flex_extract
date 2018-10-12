@@ -19,8 +19,8 @@ ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
 DESTINATION='annep@genericSftp'
 FLEXPART_ROOT_SCRIPTS=""
-JOB_TEMPLATE="job.temp.o"
-CONTROLFILE="CONTROL.test"
+JOB_TEMPLATE="job.template"
+CONTROLFILE="CONTROL_EA5.testgrid"
 # -----------------------------------------------------------------
 #
 # AFTER THIS LINE THE USER DOES NOT HAVE TO CHANGE ANYTHING !!!

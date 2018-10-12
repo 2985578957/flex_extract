@@ -27,10 +27,10 @@ set -x
 export VERSION=$version_number
 case $${HOST} in
   *ecg*)
-  module load python
-  module unload grib_api
+#  module load python
+#  module unload grib_api
   module unload emos
-  module load grib_api/1.14.5
+#  module load grib_api/1.14.5
   module load emos/437-r64
   export FLEXPART_ROOT_SCRIPTS=$fp_root_scripts
   export MAKEFILE=$makefile
@@ -53,7 +53,7 @@ esac
 mkdir -p $${FLEXPART_ROOT_SCRIPTS}/flex_extract_v$${VERSION}
 cd $${FLEXPART_ROOT_SCRIPTS}/flex_extract_v$${VERSION}   # if FLEXPART_ROOT is not set this means cd to the home directory
 tar -xvf $${HOME}/flex_extract_v$${VERSION}.tar
-cd src
+cd source/fortran
 \rm *.o *.mod $fortran_program 
 make -f $${MAKEFILE} >flexcompile 2>flexcompile
 
