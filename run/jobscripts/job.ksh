@@ -51,27 +51,27 @@ cd python$$
 export CONTROL=CONTROL
 
 cat >${CONTROL}<<EOF
-accmaxstep 12
-acctime 06/18
+accmaxstep 24
+acctime 18
 acctype FC
 accuracy 24
-addpar 186 187 188 235 139 39 
+addpar 27 28 173 186 187 188 235 139 39 
 area 
 basetime None
-controlfile CONTROL_EA5.testgrid
-cwc 0
+controlfile CONTROL_CERA.testgrid
+cwc 1
 dataset None
 date_chunk 3
 debug 1
 destination annep@genericSftp
 dpdeta 1
-dtime 1
+dtime 3
 ecfsdir ectmp:/${USER}/econdemand/
 ecgid at
 ecstorage 0
 ectrans 1
 ecuid km4a
-end_date 20180108
+end_date 20090108
 eta 1
 etadiff 0
 etapar 77
@@ -81,37 +81,37 @@ gateway srvx8.img.univie.ac.at
 gauss 0
 gaussian 
 grib2flexpart 0
-grid 1000
+grid 2000
 inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
 install_target None
 job_template job.temp
-left -5000
-level 137
-levelist 100/to/137
+left -20000
+level 91
+levelist 1/to/91
 logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug request public 
-lower 10000
+lower 40000
 mailfail ${USER} 
 mailops ${USER} 
 makefile Makefile.gfortran
-marsclass EA
+marsclass EP
 maxstep 0
 number OFF
 omega 0
 omegadiff 0
 outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
-prefix EA
+prefix CE
 public 0
 queue ecgate
 request 2
-resol 159
-right 5000
+resol 106
+right 60000
 smooth 0
-start_date 20180108
-step 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-stream OPER
-time 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
-type AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN 
-upper 20000
+start_date 20090108
+step 00 00 00 00 00 00 00 00 
+stream ENDA
+time 00 03 06 09 12 15 18 21 
+type AN AN AN AN AN AN AN AN 
+upper 60000
 wrf 0
 EOF
 
