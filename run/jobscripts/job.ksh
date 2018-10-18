@@ -31,7 +31,8 @@ case ${HOST} in
   module unload grib_api
   module unload eccodes
   module unload emos
-  module load grib_api/1.27.0
+#  module load grib_api/1.27.0
+  module load grib_api/1.14.5
   module load emos/457-r64
   export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
   ;;

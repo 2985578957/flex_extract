@@ -45,7 +45,7 @@ EXE	=      CONVERT2
 all:	${EXE}
 
 clean:
-	rm *.o
+	rm *.o *.mod CONVERT2
 
 phgrreal.o: phgrreal.f
 	$(F90C) -c -g -O3 -fopenmp phgrreal.f
