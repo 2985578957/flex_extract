@@ -51,37 +51,41 @@
 # FUNCTIONS
 # ------------------------------------------------------------------------------
 def dapoly(alist):
-    '''
-    @Author: P. JAMES
+    """Cubic polynomial interpolation of deaccumulated fluxes.
 
-    @Date: 2000-03-29
+    Interpolation of deaccumulated fluxes of an ECMWF model FG field
+    using a cubic polynomial solution which conserves the integrals
+    of the fluxes within each timespan.
+    Disaggregation is done for 4 accumluated timespans which
+    generates a new, disaggregated value which is output at the
+    central point of the 4 accumulation timespans.
+    This new point is used for linear interpolation of the complete
+    timeseries afterwards.
 
-    @ChangeHistory:
-        June 2003     - A. BECK (2003-06-01)
-            adaptaions
-        November 2015 - Leopold Haimberger (University of Vienna)
-            migration from Fortran to Python
+    Parameters
+    ----------
+    alist : :obj:`list` of :obj:`array` of :obj:`float`
+        List of 4 timespans as 2-dimensional, horizontal fields.
+        E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
 
-    @Description:
-        Interpolation of deaccumulated fluxes of an ECMWF model FG field
-        using a cubic polynomial solution which conserves the integrals
-        of the fluxes within each timespan.
-        disaggregationregation is done for 4 accumluated timespans which generates
-        a new, disaggregated value which is output at the central point
-        of the 4 accumulation timespans. This new point is used for linear
-        interpolation of the complete timeseries afterwards.
+    Return
+    ------
+    nfield : :obj:`array` of :obj:`float`
+        Interpolated flux at central point of accumulation timespan.
 
-    @Input:
-        alist: list of size 4, array(2D), type=float
-            List of 4 timespans as 2-dimensional, horizontal fields.
-            E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
+    Note
+    ----
+    March 2000    : P. JAMES
+        Original author
 
-    @Return:
-        nfield: array(2D), type=float
-            New field which replaces the field at the second position
-            of the accumulation timespans.
+    June 2003     : A. BECK
+        Adaptations
 
-    '''
+    November 2015 : Leopold Haimberger (University of Vienna)
+        Migration from Fortran to Python
+
+    """
+
     pya = (alist[3] - alist[0] + 3. * (alist[1] - alist[2])) / 6.
     pyb = (alist[2] + alist[0]) / 2. - alist[1] - 9. * pya / 2.
     pyc = alist[1] - alist[0] - 7. * pya / 2. - 2. * pyb
@@ -92,36 +96,39 @@ def dapoly(alist):
 
 
 def darain(alist):
-    '''
-    @Author: P. JAMES
+    """Linear interpolation of deaccumulated fluxes.
 
-    @Date: 2000-03-29
+    Interpolation of deaccumulated fluxes of an ECMWF model FG rainfall
+    field using a modified linear solution which conserves the integrals
+    of the fluxes within each timespan.
+    Disaggregation is done for 4 accumluated timespans which generates
+    a new, disaggregated value which is output at the central point
+    of the 4 accumulation timespans. This new point is used for linear
+    interpolation of the complete timeseries afterwards.
 
-    @ChangeHistory:
-        June 2003     - A. BECK (2003-06-01)
-            adaptaions
-        November 2015 - Leopold Haimberger (University of Vienna)
-            migration from Fortran to Python
+    Parameters
+    ----------
+    alist : :obj:`list` of :obj:`array` of :obj:`float`
+        List of 4 timespans as 2-dimensional, horizontal fields.
+        E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
 
-    @Description:
-        Interpolation of deaccumulated fluxes of an ECMWF model FG rainfall
-        field using a modified linear solution which conserves the integrals
-        of the fluxes within each timespan.
-        disaggregationregation is done for 4 accumluated timespans which generates
-        a new, disaggregated value which is output at the central point
-        of the 4 accumulation timespans. This new point is used for linear
-        interpolation of the complete timeseries afterwards.
+    Return
+    ------
+    nfield : :obj:`array` of :obj:`float`
+        Interpolated flux at central point of accumulation timespan.
 
-    @Input:
-        alist: list of size 4, array(2D), type=float
-            List of 4 timespans as 2-dimensional, horizontal fields.
-            E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
+    Note
+    ----
+    March 2000    : P. JAMES
+        Original author
 
-    @Return:
-        nfield: array(2D), type=float
-            New field which replaces the field at the second position
-            of the accumulation timespans.
-    '''
+    June 2003     : A. BECK
+        Adaptations
+
+    November 2015 : Leopold Haimberger (University of Vienna)
+        Migration from Fortran to Python
+    """
+
     xa = alist[0]
     xb = alist[1]
     xc = alist[2]
@@ -142,42 +149,45 @@ def darain(alist):
     return nfield
 
 def IA3(g):
-    """
+    """ Interpolation with a non-negative geometric mean based algorithm.
 
-    ***************************************************************************
-    * Copyright 2017                                                          *
-    * Sabine Hittmeir, Anne Philipp, Petra Seibert                            *
-    *                                                                         *
-    * This work is licensed under the Creative Commons Attribution 4.0        *
-    * International License. To view a copy of this license, visit            *
-    * http://creativecommons.org/licenses/by/4.0/ or send a letter to         *
-    * Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.            *
-    ***************************************************************************
+    The original grid is reconstructed by adding two sampling points in each
+    data series interval. This subgrid is used to keep all information during
+    the interpolation within the associated interval. Additionally, an advanced
+    monotonicity filter is applied to improve the monotonicity properties of
+    the series.
 
-    @Description
-       The given data series will be interpolated with a non-negative geometric
-       mean based algorithm. The original grid is reconstructed by adding two
-       sampling points in each data series interval. This subgrid is used to
-       keep all information during the interpolation within the associated
-       interval. Additionally, an advanced monotonicity filter is applied to
-       improve the monotonicity properties of the series.
+    Note
+    ----
+    Copyright 2017
+    Sabine Hittmeir, Anne Philipp, Petra Seibert
 
-       For more information see article:
-       Hittmeir, S.; Philipp, A.; Seibert, P. (2017): A conservative
-       interpolation scheme for extensive quantities with application to the
-       Lagrangian particle dispersion model FLEXPART.,
-       Geoscientific Model Development
+    This work is licensed under the Creative Commons Attribution 4.0
+    International License. To view a copy of this license, visit
+    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
-    @Input
-       g: list of float values
-          A list of float values which represents the complete data series that
-          will be interpolated having the dimension of the original raw series.
+    Parameters
+    ----------
+    g : :obj:`list` of :obj:`float`
+        Complete data series that will be interpolated having
+        the dimension of the original raw series.
 
-    @Return
-       f: list of float values
-          The interpolated data series with additional subgrid points.
-          Its dimension is equal to the length of the input data series
-          times three.
+    Return
+    ------
+    f : :obj:`list` of :obj:`float`
+        The interpolated data series with additional subgrid points.
+        Its dimension is equal to the length of the input data series
+        times three.
+
+
+    References
+    ----------
+    For more information see article:
+    Hittmeir, S.; Philipp, A.; Seibert, P. (2017): A conservative
+    interpolation scheme for extensive quantities with application to the
+    Lagrangian particle dispersion model FLEXPART.,
+    Geoscientific Model Development
     """
 
     #######################  variable description #############################

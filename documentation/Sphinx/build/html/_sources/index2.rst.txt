@@ -1,0 +1,19 @@
+Welcome to flex_extract's documentation! (pure rest)
+====================================================
+
+    +----------------------------------------+-------------------------------------------+
+    | .. figure:: _static/download_icon.png  | .. figure:: _static/prog_icon.png         |
+    |     :width: 100px                      |     :width: 100px                         |
+    |     :align: center                     |     :align: center                        |  
+    |                                        |                                           |
+    | Download                               | Program Structure                         |
+    | --------                               | -----------------                         |
+    | * Tar-Ball                             | * Overview                                |
+    | * Git repository                       | * Overview                                |
+    +----------------------------------------+-------------------------------------------+
+    | Installation                           | User Guide                                |
+    |                                        |                                           |
+    | * :ref:`installation`                  |                                           |
+    +----------------------------------------+-------------------------------------------+
+    | API Index                              | Support                                   |
+    +----------------------------------------+-------------------------------------------+

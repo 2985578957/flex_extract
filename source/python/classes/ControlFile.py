@@ -66,20 +66,7 @@ from mods.tools import my_error, silent_remove
 # ------------------------------------------------------------------------------
 class ControlFile(object):
     '''
-    Class containing the information of the flex_extract CONTROL file.
-
-    Contains all the parameters of CONTROL file, which are e.g.:
-    DAY1(start_date), DAY2(end_date), DTIME, MAXSTEP, TYPE, TIME,
-    STEP, CLASS(marsclass), STREAM, NUMBER, EXPVER, GRID, LEFT,
-    LOWER, UPPER, RIGHT, LEVEL, LEVELIST, RESOL, GAUSS, ACCURACY,
-    OMEGA, OMEGADIFF, ETA, ETADIFF, DPDETA, SMOOTH, FORMAT,
-    ADDPAR, WRF, CWC, PREFIX, ECSTORAGE, ECTRANS, ECFSDIR,
-    MAILOPS, MAILFAIL, GRIB2FLEXPART, FLEXPARTDIR,
-    BASETIME, DATE_CHUNK, DEBUG, INPUTDIR, OUTPUTDIR, FLEXPART_ROOT_SCRIPTS
-
-    For more information about format and content of the parameter
-    see documentation.
-
+    Contains the information which are stored in the CONTROL files.
     '''
 
     def __init__(self, filename):

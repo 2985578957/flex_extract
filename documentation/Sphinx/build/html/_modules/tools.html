@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tools &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../downloads.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../program_structure.html">Program Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tools</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="c1"># @Author: Anne Philipp (University of Vienna)</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: May 2018</span>
+<span class="c1">#</span>
+<span class="c1"># @Change History:</span>
+<span class="c1">#    October 2014 - Anne Fouilloux (University of Oslo)</span>
+<span class="c1">#        - created functions silent_remove and product (taken from ECMWF)</span>
+<span class="c1">#</span>
+<span class="c1">#    November 2015 - Leopold Haimberger (University of Vienna)</span>
+<span class="c1">#        - created functions: interpret_args_and_control, clean_up</span>
+<span class="c1">#          my_error, normal_exit, init128, to_param_id</span>
+<span class="c1">#</span>
+<span class="c1">#    April 2018 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#        - applied PEP8 style guide</span>
+<span class="c1">#        - added documentation</span>
+<span class="c1">#        - moved all functions from file Flexparttools to this file tools</span>
+<span class="c1">#        - added function get_list_as_string</span>
+<span class="c1">#        - seperated args and control interpretation</span>
+<span class="c1">#</span>
+<span class="c1"># @License:</span>
+<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#</span>
+<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
+<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
+<span class="c1">#</span>
+<span class="c1"># @Modul Description:</span>
+<span class="c1">#    This module contains a couple of helpful functions which are</span>
+<span class="c1">#    used in different places in flex_extract.</span>
+<span class="c1">#</span>
+<span class="c1"># @Module Content:</span>
+<span class="c1">#    - get_cmdline_arguments</span>
+<span class="c1">#    - clean_up</span>
+<span class="c1">#    - my_error</span>
+<span class="c1">#    - normal_exit</span>
+<span class="c1">#    - product</span>
+<span class="c1">#    - silent_remove</span>
+<span class="c1">#    - init128</span>
+<span class="c1">#    - to_param_id</span>
+<span class="c1">#    - get_list_as_string</span>
+<span class="c1">#    - make_dir</span>
+<span class="c1">#</span>
+<span class="c1">#*******************************************************************************</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># MODULES</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># FUNCTIONS</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="none_or_str"><a class="viewcode-back" href="../code.html#tools.none_or_str">[docs]</a><span class="k">def</span> <span class="nf">none_or_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Converts the input string into pythons None-type if the string</span>
+<span class="sd">        contains &quot;None&quot;.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        value: string</span>
+<span class="sd">            String to be checked for the &quot;None&quot; word.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        None or value:</span>
+<span class="sd">            Return depends on the content of the input value. If it was &quot;None&quot;,</span>
+<span class="sd">            then the python type None is returned. Otherwise the string itself.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="none_or_int"><a class="viewcode-back" href="../code.html#tools.none_or_int">[docs]</a><span class="k">def</span> <span class="nf">none_or_int</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Converts the input string into pythons None-type if the string</span>
+<span class="sd">        contains &quot;None&quot;. Otherwise it is converted to an integer value.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        value: string</span>
+<span class="sd">            String to be checked for the &quot;None&quot; word.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        None or int(value):</span>
+<span class="sd">            Return depends on the content of the input value. If it was &quot;None&quot;,</span>
+<span class="sd">            then the python type None is returned. Otherwise the string is</span>
+<span class="sd">            converted into an integer value.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_cmdline_arguments"><a class="viewcode-back" href="../code.html#tools.get_cmdline_arguments">[docs]</a><span class="k">def</span> <span class="nf">get_cmdline_arguments</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Decomposes the command line arguments and assigns them to variables.</span>
+<span class="sd">        Apply default values for non mentioned arguments.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        args: instance of ArgumentParser</span>
+<span class="sd">            Contains the commandline arguments from script/program call.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Retrieve FLEXPART input from </span><span class="se">\</span>
+<span class="s1">                                ECMWF MARS archive&#39;</span><span class="p">,</span>
+                            <span class="n">formatter_class</span><span class="o">=</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">)</span>
+
+    <span class="c1"># the most important arguments</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--start_date&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;start_date&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;start date YYYYMMDD&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--end_date&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;end_date&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;end_date YYYYMMDD&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--date_chunk&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;date_chunk&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;# of days to be retrieved at once&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--controlfile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;controlfile&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CONTROL.temp&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;file with CONTROL parameters&quot;</span><span class="p">)</span>
+
+    <span class="c1"># parameter for extra output information</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--debug&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;debug mode - leave temporary files intact&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--request&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;request&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;list all mars request in file mars_requests.dat </span><span class="se">\</span>
+<span class="s2">                        and skip submission to mars&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--public&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;public&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;public mode - retrieves the public datasets&quot;</span><span class="p">)</span>
+
+    <span class="c1"># some arguments that override the default in the CONTROL file</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--basetime&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;basetime&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;base such as 00 or 12 (for half day retrievals)&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--step&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;steps such as 00/to/48&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--levelist&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;levelist&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Vertical levels to be retrieved, e.g. 30/to/60&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--area&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;area&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;area defined as north/west/south/east&quot;</span><span class="p">)</span>
+
+    <span class="c1"># set the working directories</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--inputdir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;inputdir&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;root directory for storing intermediate files&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--outputdir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;outputdir&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;root directory for storing output files&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--flexpart_root_scripts&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;flexpart_root_scripts&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;FLEXPART root directory (to find grib2flexpart </span><span class="se">\</span>
+<span class="s2">                        and COMMAND file)</span><span class="se">\n</span><span class="s2"> Normally flex_extract resides in </span><span class="se">\</span>
+<span class="s2">                        the scripts directory of the FLEXPART distribution&quot;</span><span class="p">)</span>
+
+    <span class="c1"># this is only used by prepare_flexpart.py to rerun a postprocessing step</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ppid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ppid&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;specify parent process id for </span><span class="se">\</span>
+<span class="s2">                        rerun of prepare_flexpart&quot;</span><span class="p">)</span>
+
+    <span class="c1"># arguments for job submission to ECMWF, only needed by submit.py</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--job_template&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;job_template&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;job.temp&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;job template file for submission to ECMWF&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--queue&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;queue&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;queue for submission to ECMWF </span><span class="se">\</span>
+<span class="s2">                        (e.g. ecgate or cca )&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="read_ecenv"><a class="viewcode-back" href="../code.html#tools.read_ecenv">[docs]</a><span class="k">def</span> <span class="nf">read_ecenv</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Reads the file into a dictionary where the key values are the parameter</span>
+<span class="sd">        names.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        filename: string</span>
+<span class="sd">            Path to file where the ECMWV environment parameters are stored.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        envs: dict</span>
+<span class="sd">            Contains the environment parameter ecuid, ecgid, gateway</span>
+<span class="sd">            and destination for ECMWF server environments.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">envs</span><span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">envs</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">envs</span></div>
+
+<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../code.html#tools.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Remove all files from intermediate directory</span>
+<span class="sd">        (inputdir from CONTROL file).</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        c: instance of class ControlFile</span>
+<span class="sd">            Contains all the parameters of CONTROL file and</span>
+<span class="sd">            command line.</span>
+<span class="sd">            For more information about format and content of the parameter</span>
+<span class="sd">            see documentation.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;clean_up&quot;</span><span class="p">)</span>
+
+    <span class="n">cleanlist</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">+</span> <span class="s2">&quot;/*&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">clist</span> <span class="ow">in</span> <span class="n">cleanlist</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">clist</span><span class="p">:</span>
+            <span class="n">silent_remove</span><span class="p">(</span><span class="n">clist</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ectrans</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">ecstorage</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">):</span>
+            <span class="n">silent_remove</span><span class="p">(</span><span class="n">clist</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="my_error"><a class="viewcode-back" href="../code.html#tools.my_error">[docs]</a><span class="k">def</span> <span class="nf">my_error</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Prints a specified error message which can be passed to the function</span>
+<span class="sd">        before exiting the program.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        user: list of strings</span>
+<span class="sd">            Contains all email addresses which should be notified.</span>
+<span class="sd">            It might also contain just the ecmwf user name which wil trigger</span>
+<span class="sd">            mailing to the associated email address for this user.</span>
+
+<span class="sd">        message: string, optional</span>
+<span class="sd">            Error message. Default value is &quot;ERROR&quot;.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="c1"># comment if user does not want email notification directly from python</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;$</span><span class="si">{USER}</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;USER&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;-s flex_extract_v7.1 ERROR&#39;</span><span class="p">,</span>
+                                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">user</span><span class="p">)],</span>
+                                 <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">trace</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_stack</span><span class="p">())</span>
+            <span class="n">pout</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">message</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">trace</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Email could not be sent!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Email sent to &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span>
+                  <span class="n">pout</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="normal_exit"><a class="viewcode-back" href="../code.html#tools.normal_exit">[docs]</a><span class="k">def</span> <span class="nf">normal_exit</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Done!&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Prints a specific exit message which can be passed to the function.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        user: list of strings</span>
+<span class="sd">            Contains all email addresses which should be notified.</span>
+<span class="sd">            It might also contain just the ecmwf user name which wil trigger</span>
+<span class="sd">            mailing to the associated email address for this user.</span>
+
+<span class="sd">        message: string, optional</span>
+<span class="sd">            Message for exiting program. Default value is &quot;Done!&quot;.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="c1"># comment if user does not want notification directly from python</span>
+    <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;$</span><span class="si">{USER}</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">user</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;USER&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mail&#39;</span><span class="p">,</span> <span class="s1">&#39;-s flex_extract_v7.1 normal exit&#39;</span><span class="p">,</span>
+                                  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">user</span><span class="p">)],</span>
+                                 <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                                 <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">pout</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">message</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Email could not be sent!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Email sent to &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span>
+                  <span class="n">pout</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="product"><a class="viewcode-back" href="../code.html#tools.product">[docs]</a><span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        This method is taken from an example at the ECMWF wiki website.</span>
+<span class="sd">        https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16</span>
+
+<span class="sd">        This method combines the single characters of the passed arguments</span>
+<span class="sd">        with each other. So that each character of each argument value</span>
+<span class="sd">        will be combined with each character of the other arguments as a tuple.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">        product(&#39;ABCD&#39;, &#39;xy&#39;) --&gt; Ax Ay Bx By Cx Cy Dx Dy</span>
+<span class="sd">        product(range(2), repeat = 3) --&gt; 000 001 010 011 100 101 110 111</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        *args: tuple</span>
+<span class="sd">            Positional arguments (arbitrary number).</span>
+
+<span class="sd">        **kwds: dictionary</span>
+<span class="sd">            Contains all the keyword arguments from *args.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        prod: tuple</span>
+<span class="sd">            Return will be done with &quot;yield&quot;. A tuple of combined arguments.</span>
+<span class="sd">            See example in description above.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">pools</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">*</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;repeat&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
+    <span class="k">for</span> <span class="n">pool</span> <span class="ow">in</span> <span class="n">pools</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="o">+</span> <span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">prod</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">prod</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="silent_remove"><a class="viewcode-back" href="../code.html#tools.silent_remove">[docs]</a><span class="k">def</span> <span class="nf">silent_remove</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Remove file if it exists.</span>
+<span class="sd">        The function does not fail if the file does not exist.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        filename: string</span>
+<span class="sd">            The name of the file to be removed without notification.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">ENOENT</span><span class="p">:</span>
+            <span class="c1"># errno.ENOENT  =  no such file or directory</span>
+            <span class="k">raise</span>  <span class="c1"># re-raise exception if a different error occured</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="init128"><a class="viewcode-back" href="../code.html#tools.init128">[docs]</a><span class="k">def</span> <span class="nf">init128</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Opens and reads the grib file with table 128 information.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        filepath: string</span>
+<span class="sd">            Path to file of ECMWF grib table number 128.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        table128: dictionary</span>
+<span class="sd">            Contains the ECMWF grib table 128 information.</span>
+<span class="sd">            The key is the parameter number and the value is the</span>
+<span class="sd">            short name of the parameter.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">table128</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">fdata</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">fdata</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;!&#39;</span><span class="p">:</span>
+            <span class="n">table128</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">59</span><span class="p">:</span><span class="mi">64</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">table128</span></div>
+
+
+<div class="viewcode-block" id="to_param_id"><a class="viewcode-back" href="../code.html#tools.to_param_id">[docs]</a><span class="k">def</span> <span class="nf">to_param_id</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Transform parameter names to parameter ids</span>
+<span class="sd">        with ECMWF grib table 128.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        pars: string</span>
+<span class="sd">            Addpar argument from CONTROL file in the format of</span>
+<span class="sd">            parameter names instead of ids. The parameter short</span>
+<span class="sd">            names are sepearted with &quot;/&quot; and they are passed as</span>
+<span class="sd">            one single string.</span>
+
+<span class="sd">        table: dictionary</span>
+<span class="sd">            Contains the ECMWF grib table 128 information.</span>
+<span class="sd">            The key is the parameter number and the value is the</span>
+<span class="sd">            short name of the parameter.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        ipar: list of integer</span>
+<span class="sd">            List of addpar parameters from CONTROL file transformed to</span>
+<span class="sd">            parameter ids in the format of integer.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cpar</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="n">ipar</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">cpar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">par</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">par</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
+                <span class="n">ipar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: par &#39;</span> <span class="o">+</span> <span class="n">par</span> <span class="o">+</span> <span class="s1">&#39; not found in table 128&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ipar</span></div>
+
+<div class="viewcode-block" id="get_list_as_string"><a class="viewcode-back" href="../code.html#tools.get_list_as_string">[docs]</a><span class="k">def</span> <span class="nf">get_list_as_string</span><span class="p">(</span><span class="n">list_obj</span><span class="p">,</span> <span class="n">concatenate_sign</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Converts a list of arbitrary content into a single string.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        list_obj: list</span>
+<span class="sd">            A list with arbitrary content.</span>
+
+<span class="sd">        concatenate_sign: string, optional</span>
+<span class="sd">            A string which is used to concatenate the single</span>
+<span class="sd">            list elements. Default value is &quot;, &quot;.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        str_of_list: string</span>
+<span class="sd">            The content of the list as a single string.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">str_of_list</span> <span class="o">=</span> <span class="n">concatenate_sign</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">list_obj</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">str_of_list</span></div>
+
+<div class="viewcode-block" id="make_dir"><a class="viewcode-back" href="../code.html#tools.make_dir">[docs]</a><span class="k">def</span> <span class="nf">make_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Creates a directory and gives a warning if the directory</span>
+<span class="sd">        already exists. The program stops only if there is another problem.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        directory: string</span>
+<span class="sd">            The directory name including the path which should be created.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+            <span class="c1"># errno.EEXIST = directory already exists</span>
+            <span class="k">raise</span> <span class="c1"># re-raise exception if a different error occured</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Directory </span><span class="si">{0}</span><span class="s1"> already exists!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">directory</span><span class="p">))</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="put_file_to_ecserver"><a class="viewcode-back" href="../code.html#tools.put_file_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">put_file_to_ecserver</span><span class="p">(</span><span class="n">ecd</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Uses the ecaccess-file-put command to send a file to the ECMWF servers.</span>
+
+<span class="sd">        NOTE:</span>
+<span class="sd">        The return value is just for testing reasons. It does not have</span>
+<span class="sd">        to be used from the calling function since the whole error handling</span>
+<span class="sd">        is done in here.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        ecd: string</span>
+<span class="sd">            The path were the file is stored.</span>
+
+<span class="sd">        filename: string</span>
+<span class="sd">            The name of the file to send to the ECMWF server.</span>
+
+<span class="sd">        target: string</span>
+<span class="sd">            The target queue where the file should be sent to.</span>
+
+<span class="sd">        ecuid: string</span>
+<span class="sd">            The user id on ECMWF server.</span>
+
+<span class="sd">        ecgid: string</span>
+<span class="sd">            The group id on ECMWF server.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        rcode: string</span>
+<span class="sd">            Resulting code of command execution. If successful the string</span>
+<span class="sd">            will be empty.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;ecaccess-file-put&#39;</span><span class="p">,</span>
+                                          <span class="n">ecd</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span>
+                                          <span class="n">target</span> <span class="o">+</span> <span class="s1">&#39;:/home/ms/&#39;</span> <span class="o">+</span>
+                                          <span class="n">ecgid</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">ecuid</span> <span class="o">+</span>
+                                          <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">],</span>
+                                         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE:</span><span class="se">\n</span><span class="s1"> ... &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> ... &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... Do you have a valid ecaccess certification key?&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;... ECACCESS-FILE-PUT FAILED!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rcode</span></div>
+
+<div class="viewcode-block" id="submit_job_to_ecserver"><a class="viewcode-back" href="../code.html#tools.submit_job_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">submit_job_to_ecserver</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">jobname</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    @Description:</span>
+<span class="sd">        Uses ecaccess-job-submit command to submit a job to the ECMWF server.</span>
+
+<span class="sd">        NOTE:</span>
+<span class="sd">        The return value is just for testing reasons. It does not have</span>
+<span class="sd">        to be used from the calling function since the whole error handling</span>
+<span class="sd">        is done in here.</span>
+
+<span class="sd">    @Input:</span>
+<span class="sd">        target: string</span>
+<span class="sd">            The target where the file should be sent to, e.g. the queue.</span>
+
+<span class="sd">        jobname: string</span>
+<span class="sd">            The name of the jobfile to be submitted to the ECMWF server.</span>
+
+<span class="sd">    @Return:</span>
+<span class="sd">        rcode: string</span>
+<span class="sd">            Resulting code of command execution. If successful the string</span>
+<span class="sd">            will contain an integer number, representing the id of the job</span>
+<span class="sd">            at the ecmwf server.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">([</span><span class="s1">&#39;ecaccess-job-submit&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;-queueName&#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span>
+                                         <span class="n">jobname</span><span class="p">])</span>
+    <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE:</span><span class="se">\n</span><span class="s1"> ... &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> ... &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... Do you have a valid ecaccess certification key?&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;... ECACCESS-JOB-SUBMIT FAILED!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rcode</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
