@@ -60,8 +60,7 @@ from mods.tools import silent_remove, get_list_as_string
 # ------------------------------------------------------------------------------
 
 class UioFiles(object):
-    '''
-    Class to manipulate files. At initialisation it has the pattern
+    '''Class to manipulate files. At initialisation it has the pattern
     which stores a regular expression pattern for the files, the path
     to the files and the files already.
     '''
@@ -69,22 +68,19 @@ class UioFiles(object):
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
     def __init__(self, path, pattern):
-        '''
-        @Description:
-            Assignes a specific pattern for these files.
+        '''Assignes a specific pattern for these files.
 
-        @Input:
-            self: instance of UioFiles
-                Description see class documentation.
+        Parameters
+        ----------
+        path : :obj:`string`
+            Directory where to list the files.
 
-            path: string
-                Directory where to list the files.
+        pattern : :obj:`string`
+            Regular expression pattern. For example: '\*.grb'
 
-            pattern: string
-                Regular expression pattern. For example: '*.grb'
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
 
         self.path = path
@@ -97,20 +93,17 @@ class UioFiles(object):
 
     #@profiling.timefn
     def __list_files__(self, path):
-        '''
-        @Description:
-            Lists all files in the directory with the matching
-            regular expression pattern.
+        '''Lists all files in the directory with the matching
+        regular expression pattern.
 
-        @Input:
-            self: instance of UioFiles
-                Description see class documentation.
+        Parameters
+        ----------
+        path : :obj:`string`
+            Path to the files.
 
-            path: string
-                Path to the files.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         # Get the absolute path
         path = os.path.abspath(path)
@@ -123,18 +116,16 @@ class UioFiles(object):
         return
 
     def __str__(self):
-        '''
-        @Description:
-            Converts the list of files into a single string.
-            The entries are sepereated by "," sign.
+        '''Converts the list of files into a single string.
+        The entries are sepereated by "," sign.
 
-        @Input:
-            self: instance of UioFiles
-                Description see class documentation.
+        Parameters
+        ----------
 
-        @Return:
-            files_string: string
-                The content of the list as a single string.
+        Return
+        ------
+        files_string : :obj:`string`
+            The content of the list as a single string.
         '''
 
         filenames = [os.path.basename(f) for f in self.files]
@@ -143,16 +134,14 @@ class UioFiles(object):
         return files_string
 
     def delete_files(self):
-        '''
-        @Description:
-            Deletes the files.
+        '''Deletes the files.
 
-        @Input:
-            self: instance of UioFiles
-                Description see class documentation.
+        Parameters
+        ----------
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         for old_file in self.files:

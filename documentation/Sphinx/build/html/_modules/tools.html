@@ -212,57 +212,56 @@
 <span class="c1"># FUNCTIONS</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="none_or_str"><a class="viewcode-back" href="../code.html#tools.none_or_str">[docs]</a><span class="k">def</span> <span class="nf">none_or_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Converts the input string into pythons None-type if the string</span>
-<span class="sd">        contains &quot;None&quot;.</span>
+<div class="viewcode-block" id="none_or_str"><a class="viewcode-back" href="../api.html#tools.none_or_str">[docs]</a><span class="k">def</span> <span class="nf">none_or_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Converts the input string into pythons None-type if the string</span>
+<span class="sd">    contains string &quot;None&quot;.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        value: string</span>
-<span class="sd">            String to be checked for the &quot;None&quot; word.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : :obj:`string`</span>
+<span class="sd">        String to be checked for the &quot;None&quot; word.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        None or value:</span>
-<span class="sd">            Return depends on the content of the input value. If it was &quot;None&quot;,</span>
-<span class="sd">            then the python type None is returned. Otherwise the string itself.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    None or value:</span>
+<span class="sd">        Return depends on the content of the input value. If it was &quot;None&quot;,</span>
+<span class="sd">        then the python type None is returned. Otherwise the string itself.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">value</span></div>
 
-<div class="viewcode-block" id="none_or_int"><a class="viewcode-back" href="../code.html#tools.none_or_int">[docs]</a><span class="k">def</span> <span class="nf">none_or_int</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Converts the input string into pythons None-type if the string</span>
-<span class="sd">        contains &quot;None&quot;. Otherwise it is converted to an integer value.</span>
+<div class="viewcode-block" id="none_or_int"><a class="viewcode-back" href="../api.html#tools.none_or_int">[docs]</a><span class="k">def</span> <span class="nf">none_or_int</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Converts the input string into pythons None-type if the string</span>
+<span class="sd">    contains string &quot;None&quot;. Otherwise it is converted to an integer value.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        value: string</span>
-<span class="sd">            String to be checked for the &quot;None&quot; word.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : :obj:`string`</span>
+<span class="sd">        String to be checked for the &quot;None&quot; word.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        None or int(value):</span>
-<span class="sd">            Return depends on the content of the input value. If it was &quot;None&quot;,</span>
-<span class="sd">            then the python type None is returned. Otherwise the string is</span>
-<span class="sd">            converted into an integer value.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    None or int(value):</span>
+<span class="sd">        Return depends on the content of the input value. If it was &quot;None&quot;,</span>
+<span class="sd">        then the python type None is returned. Otherwise the string is</span>
+<span class="sd">        converted into an integer value.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_cmdline_arguments"><a class="viewcode-back" href="../code.html#tools.get_cmdline_arguments">[docs]</a><span class="k">def</span> <span class="nf">get_cmdline_arguments</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Decomposes the command line arguments and assigns them to variables.</span>
-<span class="sd">        Apply default values for non mentioned arguments.</span>
+<div class="viewcode-block" id="get_cmdline_arguments"><a class="viewcode-back" href="../api.html#tools.get_cmdline_arguments">[docs]</a><span class="k">def</span> <span class="nf">get_cmdline_arguments</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Decomposes the command line arguments and assigns them to variables.</span>
+<span class="sd">    Apply default values for non mentioned arguments.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        args: instance of ArgumentParser</span>
-<span class="sd">            Contains the commandline arguments from script/program call.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    args : :obj:`Namespace`</span>
+<span class="sd">        Contains the commandline arguments from script/program call.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Retrieve FLEXPART input from </span><span class="se">\</span>
@@ -341,20 +340,20 @@
 
     <span class="k">return</span> <span class="n">args</span></div>
 
-<div class="viewcode-block" id="read_ecenv"><a class="viewcode-back" href="../code.html#tools.read_ecenv">[docs]</a><span class="k">def</span> <span class="nf">read_ecenv</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Reads the file into a dictionary where the key values are the parameter</span>
-<span class="sd">        names.</span>
+<div class="viewcode-block" id="read_ecenv"><a class="viewcode-back" href="../api.html#tools.read_ecenv">[docs]</a><span class="k">def</span> <span class="nf">read_ecenv</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Reads the file into a dictionary where the key values are the parameter</span>
+<span class="sd">    names.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        filename: string</span>
-<span class="sd">            Path to file where the ECMWV environment parameters are stored.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : :obj:`string`</span>
+<span class="sd">        Path to file where the ECMWF environment parameters are stored.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        envs: dict</span>
-<span class="sd">            Contains the environment parameter ecuid, ecgid, gateway</span>
-<span class="sd">            and destination for ECMWF server environments.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    envs : :obj:`dictionary`</span>
+<span class="sd">        Contains the environment parameter ecuid, ecgid, gateway</span>
+<span class="sd">        and destination for ECMWF server environments.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">envs</span><span class="o">=</span> <span class="p">{}</span>
 
@@ -365,21 +364,18 @@
 
     <span class="k">return</span> <span class="n">envs</span></div>
 
-<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../code.html#tools.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Remove all files from intermediate directory</span>
-<span class="sd">        (inputdir from CONTROL file).</span>
+<div class="viewcode-block" id="clean_up"><a class="viewcode-back" href="../api.html#tools.clean_up">[docs]</a><span class="k">def</span> <span class="nf">clean_up</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Remove all files from intermediate directory (inputdir).</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        c: instance of class ControlFile</span>
-<span class="sd">            Contains all the parameters of CONTROL file and</span>
-<span class="sd">            command line.</span>
-<span class="sd">            For more information about format and content of the parameter</span>
-<span class="sd">            see documentation.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : :obj:`ControlFile`</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;clean_up&quot;</span><span class="p">)</span>
@@ -396,23 +392,23 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="my_error"><a class="viewcode-back" href="../code.html#tools.my_error">[docs]</a><span class="k">def</span> <span class="nf">my_error</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Prints a specified error message which can be passed to the function</span>
-<span class="sd">        before exiting the program.</span>
+<div class="viewcode-block" id="my_error"><a class="viewcode-back" href="../api.html#tools.my_error">[docs]</a><span class="k">def</span> <span class="nf">my_error</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;ERROR&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prints a specified error message which can be passed to the function</span>
+<span class="sd">    before exiting the program.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        user: list of strings</span>
-<span class="sd">            Contains all email addresses which should be notified.</span>
-<span class="sd">            It might also contain just the ecmwf user name which wil trigger</span>
-<span class="sd">            mailing to the associated email address for this user.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user : :obj:`list` of :obj:`string`</span>
+<span class="sd">        Contains all email addresses which should be notified.</span>
+<span class="sd">        It might also contain just the ecmwf user name which wil trigger</span>
+<span class="sd">        mailing to the associated email address for this user.</span>
 
-<span class="sd">        message: string, optional</span>
-<span class="sd">            Error message. Default value is &quot;ERROR&quot;.</span>
+<span class="sd">    message : :obj:`string`, optional</span>
+<span class="sd">        Error message. Default value is &quot;ERROR&quot;.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -442,22 +438,21 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="normal_exit"><a class="viewcode-back" href="../code.html#tools.normal_exit">[docs]</a><span class="k">def</span> <span class="nf">normal_exit</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Done!&#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Prints a specific exit message which can be passed to the function.</span>
+<div class="viewcode-block" id="normal_exit"><a class="viewcode-back" href="../api.html#tools.normal_exit">[docs]</a><span class="k">def</span> <span class="nf">normal_exit</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;Done!&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prints a specific exit message which can be passed to the function.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        user: list of strings</span>
-<span class="sd">            Contains all email addresses which should be notified.</span>
-<span class="sd">            It might also contain just the ecmwf user name which wil trigger</span>
-<span class="sd">            mailing to the associated email address for this user.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    user : :obj:`list` of :obj:`string`</span>
+<span class="sd">        Contains all email addresses which should be notified.</span>
+<span class="sd">        It might also contain just the ecmwf user name which wil trigger</span>
+<span class="sd">        mailing to the associated email address for this user.</span>
 
-<span class="sd">        message: string, optional</span>
-<span class="sd">            Message for exiting program. Default value is &quot;Done!&quot;.</span>
+<span class="sd">    message : :obj:`string`, optional</span>
+<span class="sd">        Message for exiting program. Default value is &quot;Done!&quot;.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -484,31 +479,35 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="product"><a class="viewcode-back" href="../code.html#tools.product">[docs]</a><span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        This method is taken from an example at the ECMWF wiki website.</span>
-<span class="sd">        https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16</span>
+<div class="viewcode-block" id="product"><a class="viewcode-back" href="../api.html#tools.product">[docs]</a><span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;This method combines the single characters of the passed arguments</span>
+<span class="sd">    with each other. So that each character of each argument value</span>
+<span class="sd">    will be combined with each character of the other arguments as a tuple.</span>
 
-<span class="sd">        This method combines the single characters of the passed arguments</span>
-<span class="sd">        with each other. So that each character of each argument value</span>
-<span class="sd">        will be combined with each character of the other arguments as a tuple.</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    This method is taken from an example at the ECMWF wiki website.</span>
+<span class="sd">    https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16</span>
 
-<span class="sd">        Example:</span>
-<span class="sd">        product(&#39;ABCD&#39;, &#39;xy&#39;) --&gt; Ax Ay Bx By Cx Cy Dx Dy</span>
-<span class="sd">        product(range(2), repeat = 3) --&gt; 000 001 010 011 100 101 110 111</span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    product(&#39;ABCD&#39;, &#39;xy&#39;) --&gt; Ax Ay Bx By Cx Cy Dx Dy</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        *args: tuple</span>
-<span class="sd">            Positional arguments (arbitrary number).</span>
+<span class="sd">    product(range(2), repeat = 3) --&gt; 000 001 010 011 100 101 110 111</span>
 
-<span class="sd">        **kwds: dictionary</span>
-<span class="sd">            Contains all the keyword arguments from *args.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    \*args : :obj:`tuple`</span>
+<span class="sd">        Positional arguments (arbitrary number).</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        prod: tuple</span>
-<span class="sd">            Return will be done with &quot;yield&quot;. A tuple of combined arguments.</span>
-<span class="sd">            See example in description above.</span>
+<span class="sd">    \*\*kwds : :obj:`dictionary`</span>
+<span class="sd">        Contains all the keyword arguments from \*args.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    prod : :obj:`tuple`</span>
+<span class="sd">        Return will be done with &quot;yield&quot;. A tuple of combined arguments.</span>
+<span class="sd">        See example in description above.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">pools</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="o">*</span> <span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;repeat&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
@@ -520,18 +519,18 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="silent_remove"><a class="viewcode-back" href="../code.html#tools.silent_remove">[docs]</a><span class="k">def</span> <span class="nf">silent_remove</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Remove file if it exists.</span>
-<span class="sd">        The function does not fail if the file does not exist.</span>
+<div class="viewcode-block" id="silent_remove"><a class="viewcode-back" href="../api.html#tools.silent_remove">[docs]</a><span class="k">def</span> <span class="nf">silent_remove</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Remove file if it exists.</span>
+<span class="sd">    The function does not fail if the file does not exist.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        filename: string</span>
-<span class="sd">            The name of the file to be removed without notification.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : :obj:`string`</span>
+<span class="sd">        The name of the file to be removed without notification.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
@@ -543,20 +542,20 @@
     <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="init128"><a class="viewcode-back" href="../code.html#tools.init128">[docs]</a><span class="k">def</span> <span class="nf">init128</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Opens and reads the grib file with table 128 information.</span>
+<div class="viewcode-block" id="init128"><a class="viewcode-back" href="../api.html#tools.init128">[docs]</a><span class="k">def</span> <span class="nf">init128</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Opens and reads the grib file with table 128 information.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        filepath: string</span>
-<span class="sd">            Path to file of ECMWF grib table number 128.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filepath : :obj:`string`</span>
+<span class="sd">        Path to file of ECMWF grib table number 128.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        table128: dictionary</span>
-<span class="sd">            Contains the ECMWF grib table 128 information.</span>
-<span class="sd">            The key is the parameter number and the value is the</span>
-<span class="sd">            short name of the parameter.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    table128 : :obj:`dictionary`</span>
+<span class="sd">        Contains the ECMWF grib table 128 information.</span>
+<span class="sd">        The key is the parameter number and the value is the</span>
+<span class="sd">        short name of the parameter.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">table128</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -568,28 +567,27 @@
     <span class="k">return</span> <span class="n">table128</span></div>
 
 
-<div class="viewcode-block" id="to_param_id"><a class="viewcode-back" href="../code.html#tools.to_param_id">[docs]</a><span class="k">def</span> <span class="nf">to_param_id</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Transform parameter names to parameter ids</span>
-<span class="sd">        with ECMWF grib table 128.</span>
+<div class="viewcode-block" id="to_param_id"><a class="viewcode-back" href="../api.html#tools.to_param_id">[docs]</a><span class="k">def</span> <span class="nf">to_param_id</span><span class="p">(</span><span class="n">pars</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Transform parameter names to parameter ids with ECMWF grib table 128.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        pars: string</span>
-<span class="sd">            Addpar argument from CONTROL file in the format of</span>
-<span class="sd">            parameter names instead of ids. The parameter short</span>
-<span class="sd">            names are sepearted with &quot;/&quot; and they are passed as</span>
-<span class="sd">            one single string.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pars : :obj:`string`</span>
+<span class="sd">        Addpar argument from CONTROL file in the format of</span>
+<span class="sd">        parameter names instead of ids. The parameter short</span>
+<span class="sd">        names are sepearted with &quot;/&quot; and they are passed as</span>
+<span class="sd">        one single string.</span>
 
-<span class="sd">        table: dictionary</span>
-<span class="sd">            Contains the ECMWF grib table 128 information.</span>
-<span class="sd">            The key is the parameter number and the value is the</span>
-<span class="sd">            short name of the parameter.</span>
+<span class="sd">    table : :obj:`dictionary`</span>
+<span class="sd">        Contains the ECMWF grib table 128 information.</span>
+<span class="sd">        The key is the parameter number and the value is the</span>
+<span class="sd">        short name of the parameter.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        ipar: list of integer</span>
-<span class="sd">            List of addpar parameters from CONTROL file transformed to</span>
-<span class="sd">            parameter ids in the format of integer.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    ipar : :obj:`list` of :obj:`integer`</span>
+<span class="sd">        List of addpar parameters from CONTROL file transformed to</span>
+<span class="sd">        parameter ids in the format of integer.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">cpar</span> <span class="o">=</span> <span class="n">pars</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
     <span class="n">ipar</span> <span class="o">=</span> <span class="p">[]</span>
@@ -603,40 +601,40 @@
 
     <span class="k">return</span> <span class="n">ipar</span></div>
 
-<div class="viewcode-block" id="get_list_as_string"><a class="viewcode-back" href="../code.html#tools.get_list_as_string">[docs]</a><span class="k">def</span> <span class="nf">get_list_as_string</span><span class="p">(</span><span class="n">list_obj</span><span class="p">,</span> <span class="n">concatenate_sign</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Converts a list of arbitrary content into a single string.</span>
+<div class="viewcode-block" id="get_list_as_string"><a class="viewcode-back" href="../api.html#tools.get_list_as_string">[docs]</a><span class="k">def</span> <span class="nf">get_list_as_string</span><span class="p">(</span><span class="n">list_obj</span><span class="p">,</span> <span class="n">concatenate_sign</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Converts a list of arbitrary content into a single string.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        list_obj: list</span>
-<span class="sd">            A list with arbitrary content.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    list_obj : :obj:`list`</span>
+<span class="sd">        A list with arbitrary content.</span>
 
-<span class="sd">        concatenate_sign: string, optional</span>
-<span class="sd">            A string which is used to concatenate the single</span>
-<span class="sd">            list elements. Default value is &quot;, &quot;.</span>
+<span class="sd">    concatenate_sign : :obj:`string`, optional</span>
+<span class="sd">        A string which is used to concatenate the single</span>
+<span class="sd">        list elements. Default value is &quot;, &quot;.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        str_of_list: string</span>
-<span class="sd">            The content of the list as a single string.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    str_of_list : :obj:`string`</span>
+<span class="sd">        The content of the list as a single string.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">str_of_list</span> <span class="o">=</span> <span class="n">concatenate_sign</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">list_obj</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">str_of_list</span></div>
 
-<div class="viewcode-block" id="make_dir"><a class="viewcode-back" href="../code.html#tools.make_dir">[docs]</a><span class="k">def</span> <span class="nf">make_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Creates a directory and gives a warning if the directory</span>
-<span class="sd">        already exists. The program stops only if there is another problem.</span>
+<div class="viewcode-block" id="make_dir"><a class="viewcode-back" href="../api.html#tools.make_dir">[docs]</a><span class="k">def</span> <span class="nf">make_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates a directory and gives a warning if the directory</span>
+<span class="sd">    already exists. The program stops only if there is another problem.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        directory: string</span>
-<span class="sd">            The directory name including the path which should be created.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    directory : :obj:`string`</span>
+<span class="sd">        The directory name including the path which should be created.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        &lt;nothing&gt;</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
@@ -649,36 +647,37 @@
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="put_file_to_ecserver"><a class="viewcode-back" href="../code.html#tools.put_file_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">put_file_to_ecserver</span><span class="p">(</span><span class="n">ecd</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Uses the ecaccess-file-put command to send a file to the ECMWF servers.</span>
+<div class="viewcode-block" id="put_file_to_ecserver"><a class="viewcode-back" href="../api.html#tools.put_file_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">put_file_to_ecserver</span><span class="p">(</span><span class="n">ecd</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses the ecaccess-file-put command to send a file to the ECMWF servers.</span>
 
-<span class="sd">        NOTE:</span>
-<span class="sd">        The return value is just for testing reasons. It does not have</span>
-<span class="sd">        to be used from the calling function since the whole error handling</span>
-<span class="sd">        is done in here.</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The return value is just for testing reasons. It does not have</span>
+<span class="sd">    to be used from the calling function since the whole error handling</span>
+<span class="sd">    is done in here.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        ecd: string</span>
-<span class="sd">            The path were the file is stored.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ecd : :obj:`string`</span>
+<span class="sd">        The path were the file is stored.</span>
 
-<span class="sd">        filename: string</span>
-<span class="sd">            The name of the file to send to the ECMWF server.</span>
+<span class="sd">    filename : :obj:`string`</span>
+<span class="sd">        The name of the file to send to the ECMWF server.</span>
 
-<span class="sd">        target: string</span>
-<span class="sd">            The target queue where the file should be sent to.</span>
+<span class="sd">    target : :obj:`string`</span>
+<span class="sd">        The target queue where the file should be sent to.</span>
 
-<span class="sd">        ecuid: string</span>
-<span class="sd">            The user id on ECMWF server.</span>
+<span class="sd">    ecuid : :obj:`string`</span>
+<span class="sd">        The user id on ECMWF server.</span>
 
-<span class="sd">        ecgid: string</span>
-<span class="sd">            The group id on ECMWF server.</span>
+<span class="sd">    ecgid : :obj:`string`</span>
+<span class="sd">        The group id on ECMWF server.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        rcode: string</span>
-<span class="sd">            Resulting code of command execution. If successful the string</span>
-<span class="sd">            will be empty.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    rcode : :obj:`string`</span>
+<span class="sd">        Resulting code of command execution. If successful the string</span>
+<span class="sd">        will be empty.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -697,28 +696,29 @@
 
     <span class="k">return</span> <span class="n">rcode</span></div>
 
-<div class="viewcode-block" id="submit_job_to_ecserver"><a class="viewcode-back" href="../code.html#tools.submit_job_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">submit_job_to_ecserver</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">jobname</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    @Description:</span>
-<span class="sd">        Uses ecaccess-job-submit command to submit a job to the ECMWF server.</span>
+<div class="viewcode-block" id="submit_job_to_ecserver"><a class="viewcode-back" href="../api.html#tools.submit_job_to_ecserver">[docs]</a><span class="k">def</span> <span class="nf">submit_job_to_ecserver</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">jobname</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Uses ecaccess-job-submit command to submit a job to the ECMWF server.</span>
 
-<span class="sd">        NOTE:</span>
-<span class="sd">        The return value is just for testing reasons. It does not have</span>
-<span class="sd">        to be used from the calling function since the whole error handling</span>
-<span class="sd">        is done in here.</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The return value is just for testing reasons. It does not have</span>
+<span class="sd">    to be used from the calling function since the whole error handling</span>
+<span class="sd">    is done in here.</span>
 
-<span class="sd">    @Input:</span>
-<span class="sd">        target: string</span>
-<span class="sd">            The target where the file should be sent to, e.g. the queue.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : :obj:`string`</span>
+<span class="sd">        The target where the file should be sent to, e.g. the queue.</span>
 
-<span class="sd">        jobname: string</span>
-<span class="sd">            The name of the jobfile to be submitted to the ECMWF server.</span>
+<span class="sd">    jobname : :obj:`string`</span>
+<span class="sd">        The name of the jobfile to be submitted to the ECMWF server.</span>
 
-<span class="sd">    @Return:</span>
-<span class="sd">        rcode: string</span>
-<span class="sd">            Resulting code of command execution. If successful the string</span>
-<span class="sd">            will contain an integer number, representing the id of the job</span>
-<span class="sd">            at the ecmwf server.</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    rcode : :obj:`string`</span>
+<span class="sd">        Resulting code of command execution. If successful the string</span>
+<span class="sd">        will contain an integer number, representing the id of the job</span>
+<span class="sd">        at the ecmwf server.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>

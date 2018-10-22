@@ -65,16 +65,14 @@ from mods.tools import make_dir, put_file_to_ecserver, submit_job_to_ecserver
 # FUNCTIONS
 # ------------------------------------------------------------------------------
 def main():
-    '''
-    @Description:
-        Controls the installation process. Calls the installation function
-        if target is specified.
+    '''Controls the installation process. Calls the installation function
+    if target is specified.
 
-    @Intput:
-        <nothing>
+    Parameters
+    ----------
 
-    @Return:
-        <nothing>
+    Return
+    ------
     '''
 
     args = get_install_cmdline_arguments()
@@ -87,17 +85,16 @@ def main():
     return
 
 def get_install_cmdline_arguments():
-    '''
-    @Description:
-        Decomposes the command line arguments and assigns them to variables.
-        Apply default values for non mentioned arguments.
+    '''Decomposes the command line arguments and assigns them to variables.
+    Apply default values for non mentioned arguments.
 
-    @Input:
-        <nothing>
+    Parameters
+    ----------
 
-    @Return:
-        args: instance of ArgumentParser
-            Contains the commandline arguments from script/program call.
+    Return
+    ------
+    args : :obj:`Namespace`
+        Contains the commandline arguments from script/program call.
     '''
     parser = ArgumentParser(description='Install flex_extract software locally or \
                             on ECMWF machines',
@@ -138,21 +135,19 @@ def get_install_cmdline_arguments():
 
 
 def install_via_gateway(c):
-    '''
-    @Description:
-        Perform the actual installation on local machine or prepare data
-        transfer to remote gate and submit a job script which will
-        install everything on the remote gate.
+    '''Perform the actual installation on local machine or prepare data
+    transfer to remote gate and submit a job script which will
+    install everything on the remote gate.
 
-    @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     import tarfile
 
@@ -223,25 +218,25 @@ def install_via_gateway(c):
     return
 
 def mk_tarball(tarball_path, target):
-    '''
-    @Description:
-        Creates a tarball with all necessary files which need to be sent to the
-        installation directory.
-        It does not matter if this is local or remote.
-        Collects all python files, the Fortran source and makefiles,
-        the ECMWF_ENV file, the CONTROL files as well as the
-        template files.
+    '''Creates a tarball with all necessary files which need to be sent to the
+    installation directory.
+    It does not matter if this is local or remote.
+    Collects all python files, the Fortran source and makefiles,
+    the ECMWF_ENV file, the CONTROL files as well as the
+    template files.
 
-    @Input:
-        tarball_path: string
-            The complete path to the tar file which will contain all
-            relevant data for flex_extract.
+    Parameters
+    ----------
+    tarball_path : :obj:`string`
+        The complete path to the tar file which will contain all
+        relevant data for flex_extract.
 
-        target: string
-            The queue where the job is submitted to.
+    target : :obj:`string`
+        The queue where the job is submitted to.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     import tarfile
     from glob import glob
@@ -293,17 +288,17 @@ def mk_tarball(tarball_path, target):
 
 
 def un_tarball(tarball_path):
-    '''
-    @Description:
-        Extracts the given tarball into current directory.
+    '''Extracts the given tarball into current directory.
 
-    @Input:
-        tarball_path: string
-            The complete path to the tar file which will contain all
-            relevant data for flex_extract.
+    Parameters
+    ----------
+    tarball_path : :obj:`string`
+        The complete path to the tar file which will contain all
+        relevant data for flex_extract.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     import tarfile
 
@@ -315,28 +310,28 @@ def un_tarball(tarball_path):
     return
 
 def mk_env_vars(ecuid, ecgid, gateway, destination):
-    '''
-    @Description:
-        Creates a file named ECMWF_ENV which contains the
-        necessary environmental variables at ECMWF servers.
-        It is based on the template ECMWF_ENV.template.
+    '''Creates a file named ECMWF_ENV which contains the
+    necessary environmental variables at ECMWF servers.
+    It is based on the template ECMWF_ENV.template.
 
-    @Input:
-        ecuid: string
-            The user id on ECMWF server.
+    Parameters
+    ----------
+    ecuid : :obj:`string`
+        The user id on ECMWF server.
 
-        ecgid: string
-            The group id on ECMWF server.
+    ecgid : :obj:`string`
+        The group id on ECMWF server.
 
-        gateway: string
-            The gateway server the user is using.
+    gateway : :obj:`string`
+        The gateway server the user is using.
 
-        destination: string
-            The remote destination which is used to transfer files
-            from ECMWF server to local gateway server.
+    destination : :obj:`string`
+        The remote destination which is used to transfer files
+        from ECMWF server to local gateway server.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
@@ -357,32 +352,32 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
     return
 
 def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
-    '''
-    @Description:
-        Modifies the original job template file so that it is specified
-        for the user and the environment were it will be applied. Result
-        is stored in a new file "job.temp" in the python directory.
+    '''Modifies the original job template file so that it is specified
+    for the user and the environment were it will be applied. Result
+    is stored in a new file "job.temp" in the python directory.
 
-    @Input:
-        makefile: string
-            Name of the makefile which should be used to compile FORTRAN
-            CONVERT2 program.
+    Parameters
+    ----------
+    makefile : :obj:`string`
+        Name of the makefile which should be used to compile FORTRAN
+        CONVERT2 program.
 
-        target: string
-            The target where the installation should be done, e.g. the queue.
+    target : :obj:`string`
+        The target where the installation should be done, e.g. the queue.
 
-        ecuid: string
-            The user id on ECMWF server.
+    ecuid : :obj:`string`
+        The user id on ECMWF server.
 
-        ecgid: string
-            The group id on ECMWF server.
+    ecgid : :obj:`string`
+        The group id on ECMWF server.
 
-        fp_root: string
-           Path to the root directory of FLEXPART environment or flex_extract
-           environment.
+    fp_root : :obj:`string`
+       Path to the root directory of FLEXPART environment or flex_extract
+       environment.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
@@ -412,32 +407,32 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
     return
 
 def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
-    '''
-    @Description:
-        Modifies the original job template file so that it is specified
-        for the user and the environment were it will be applied. Result
-        is stored in a new file.
+    '''Modifies the original job template file so that it is specified
+    for the user and the environment were it will be applied. Result
+    is stored in a new file.
 
-    @Input:
-        ecuid: string
-            The user id on ECMWF server.
+    Parameters
+    ----------
+    ecuid : :obj:`string`
+        The user id on ECMWF server.
 
-        ecgid: string
-            The group id on ECMWF server.
+    ecgid : :obj:`string`
+        The group id on ECMWF server.
 
-        gateway: string
-            The gateway server the user is using.
+    gateway : :obj:`string`
+        The gateway server the user is using.
 
-        destination: string
-            The remote destination which is used to transfer files
-            from ECMWF server to local gateway server.
+    destination : :obj:`string`
+        The remote destination which is used to transfer files
+        from ECMWF server to local gateway server.
 
-        fp_root: string
-           Path to the root directory of FLEXPART environment or flex_extract
-           environment.
+    fp_root : :obj:`string`
+       Path to the root directory of FLEXPART environment or flex_extract
+       environment.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
@@ -466,17 +461,17 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
     return
 
 def delete_convert_build(src_path):
-    '''
-    @Description:
-        Clean up the Fortran source directory and remove all
-        build files (e.g. *.o, *.mod and CONVERT2)
+    '''Clean up the Fortran source directory and remove all
+    build files (e.g. \*.o, \*.mod and CONVERT2)
 
-    @Input:
-        src_path: string
-            Path to the fortran source directory.
+    Parameters
+    ----------
+    src_path : :obj:`string`
+        Path to the fortran source directory.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     modfiles = UioFiles(src_path, '*.mod')
@@ -490,19 +485,19 @@ def delete_convert_build(src_path):
     return
 
 def make_convert_build(src_path, makefile):
-    '''
-    @Description:
-        Compiles the Fortran code and generates the executable.
+    '''Compiles the Fortran code and generates the executable.
 
-    @Input:
-        src_path: string
-            Path to the fortran source directory.
+    Parameters
+    ----------
+    src_path : :obj:`string`
+        Path to the fortran source directory.
 
-        makefile: string
-            The name of the makefile which should be used.
+    makefile : :obj:`string`
+        The name of the makefile which should be used.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     try:

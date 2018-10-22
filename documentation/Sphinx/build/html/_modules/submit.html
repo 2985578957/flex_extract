@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>submit &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../downloads.html">Downloads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../program_structure.html">Program Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>submit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for submit</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="c1"># @Author: Anne Fouilloux (University of Oslo)</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: October 2014</span>
+<span class="c1">#</span>
+<span class="c1"># @Change History:</span>
+<span class="c1">#</span>
+<span class="c1">#    November 2015 - Leopold Haimberger (University of Vienna):</span>
+<span class="c1">#        - job submission on ecgate and cca</span>
+<span class="c1">#        - job templates suitable for twice daily operational dissemination</span>
+<span class="c1">#</span>
+<span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#        - applied PEP8 style guide</span>
+<span class="c1">#        - added documentation</span>
+<span class="c1">#        - minor changes in programming style (for consistence)</span>
+<span class="c1">#        - changed path names to variables from config file</span>
+<span class="c1">#        - added option for writing mars requests to extra file</span>
+<span class="c1">#          additionally,as option without submitting the mars jobs</span>
+<span class="c1">#</span>
+<span class="c1"># @License:</span>
+<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#</span>
+<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
+<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
+<span class="c1">#</span>
+<span class="c1"># @Program Functionality:</span>
+<span class="c1">#    This program is the main program of flex_extract and controls the</span>
+<span class="c1">#    program flow.</span>
+<span class="c1">#    If it is supposed to work locally then it works through the necessary</span>
+<span class="c1">#    functions get_mars_data and prepareFlexpart. Otherwise it prepares</span>
+<span class="c1">#    a shell job script which will do the necessary work on the</span>
+<span class="c1">#    ECMWF server and is submitted via ecaccess-job-submit.</span>
+<span class="c1">#</span>
+<span class="c1"># @Program Content:</span>
+<span class="c1">#    - main</span>
+<span class="c1">#    - submit</span>
+<span class="c1">#</span>
+<span class="c1">#*******************************************************************************</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># MODULES</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_arguments</span><span class="p">,</span>
+                        <span class="n">submit_job_to_ecserver</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">mods.get_mars_data</span> <span class="k">import</span> <span class="n">get_mars_data</span>
+<span class="kn">from</span> <span class="nn">mods.prepare_flexpart</span> <span class="k">import</span> <span class="n">prepare_flexpart</span>
+<span class="kn">from</span> <span class="nn">classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># FUNCTIONS</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../api.html#submit.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Get the arguments from script call and from CONTROL file.</span>
+<span class="sd">    Decides from the argument &quot;queue&quot; if the local version</span>
+<span class="sd">    is done &quot;queue=None&quot; or the gateway version with &quot;queue=ecgate&quot;</span>
+<span class="sd">    or &quot;queue=cca&quot;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_arguments</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
+
+    <span class="n">env_parameter</span> <span class="o">=</span> <span class="n">read_ecenv</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">assign_args_to_control</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">assign_envs_to_control</span><span class="p">(</span><span class="n">env_parameter</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">check_conditions</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+
+    <span class="c1"># on local side</span>
+    <span class="c1"># on ECMWF server this would also be the local side</span>
+    <span class="n">called_from_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">called_from_dir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">called_from_dir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">)</span>
+        <span class="n">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">prepare_flexpart</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="n">normal_exit</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="s1">&#39;FLEX_EXTRACT IS DONE!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">normal_exit</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="s1">&#39;PRINTING MARS_REQUESTS DONE!&#39;</span><span class="p">)</span>
+    <span class="c1"># send files to ECMWF server and install there</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">submit</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">job_template</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="submit"><a class="viewcode-back" href="../api.html#submit.submit">[docs]</a><span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="n">jtemplate</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prepares the job script and submit it to the specified queue.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    jtemplate : :obj:`string`</span>
+<span class="sd">        Job template file from sub-directory &quot;_templates&quot; for</span>
+<span class="sd">        submission to ECMWF. It contains all necessary</span>
+<span class="sd">        module and variable settings for the ECMWF environment as well as</span>
+<span class="sd">        the job call and mail report instructions.</span>
+<span class="sd">        Default is &quot;job.temp&quot;.</span>
+
+<span class="sd">    c : :obj:`ControlFile`</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    queue : :obj:`string`</span>
+<span class="sd">        Name of queue for submission to ECMWF (e.g. ecgate or cca )</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># read template file and get index for CONTROL input</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span> <span class="n">jtemplate</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">lftext</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">insert_point</span> <span class="o">=</span> <span class="n">lftext</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;EOF&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
+    <span class="c1"># --------- create on demand job script ------------------------------------</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&gt;</span> <span class="mi">24</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- Pure forecast mode! ----&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- On-demand mode! ----&#39;</span><span class="p">)</span>
+        <span class="n">job_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_JOBSCRIPTS</span><span class="p">,</span>
+                                <span class="n">jtemplate</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;ksh&#39;</span><span class="p">)</span>
+        <span class="n">clist</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+        <span class="n">lftextondemand</span> <span class="o">=</span> <span class="n">lftext</span><span class="p">[:</span><span class="n">insert_point</span><span class="p">]</span> <span class="o">+</span> <span class="n">clist</span> <span class="o">+</span> <span class="n">lftext</span><span class="p">[</span><span class="n">insert_point</span><span class="p">:]</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">job_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lftextondemand</span><span class="p">))</span>
+
+        <span class="n">submit_job_to_ecserver</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">job_file</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+    <span class="c1"># --------- create operational job script ----------------------------------</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- Operational mode! ----&#39;</span><span class="p">)</span>
+        <span class="n">job_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_JOBSCRIPTS</span><span class="p">,</span>
+                                <span class="n">jtemplate</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;oper.ksh&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span><span class="p">:</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mt</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">c</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_YEAR}</span><span class="s1">$</span><span class="si">{MSJ_MONTH}</span><span class="s1">$</span><span class="si">{MSJ_DAY}</span><span class="s1">&#39;</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_YEAR}</span><span class="s1">$</span><span class="si">{MSJ_MONTH}</span><span class="s1">$</span><span class="si">{MSJ_DAY}</span><span class="s1">&#39;</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">base_time</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_BASETIME}</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">mt</span> <span class="o">&gt;</span> <span class="mi">24</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_BASETIME}</span><span class="s1"> </span><span class="si">{MSJ_BASETIME}</span><span class="s1">&#39;</span>
+
+        <span class="n">colist</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+        <span class="n">lftextoper</span> <span class="o">=</span> <span class="n">lftext</span><span class="p">[:</span><span class="n">insert_point</span><span class="p">]</span> <span class="o">+</span> <span class="n">colist</span> <span class="o">+</span> <span class="n">lftext</span><span class="p">[</span><span class="n">insert_point</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:]</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">job_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lftextoper</span><span class="p">))</span>
+
+        <span class="n">submit_job_to_ecserver</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">job_file</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;You should get an email with subject flex.hostname.pid&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

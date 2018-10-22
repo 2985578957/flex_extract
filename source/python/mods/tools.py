@@ -60,56 +60,55 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 # ------------------------------------------------------------------------------
 
 def none_or_str(value):
-    '''
-    @Description:
-        Converts the input string into pythons None-type if the string
-        contains "None".
+    '''Converts the input string into pythons None-type if the string
+    contains string "None".
 
-    @Input:
-        value: string
-            String to be checked for the "None" word.
+    Parameters
+    ----------
+    value : :obj:`string`
+        String to be checked for the "None" word.
 
-    @Return:
-        None or value:
-            Return depends on the content of the input value. If it was "None",
-            then the python type None is returned. Otherwise the string itself.
+    Return
+    ------
+    None or value:
+        Return depends on the content of the input value. If it was "None",
+        then the python type None is returned. Otherwise the string itself.
     '''
     if value == 'None':
         return None
     return value
 
 def none_or_int(value):
-    '''
-    @Description:
-        Converts the input string into pythons None-type if the string
-        contains "None". Otherwise it is converted to an integer value.
+    '''Converts the input string into pythons None-type if the string
+    contains string "None". Otherwise it is converted to an integer value.
 
-    @Input:
-        value: string
-            String to be checked for the "None" word.
+    Parameters
+    ----------
+    value : :obj:`string`
+        String to be checked for the "None" word.
 
-    @Return:
-        None or int(value):
-            Return depends on the content of the input value. If it was "None",
-            then the python type None is returned. Otherwise the string is
-            converted into an integer value.
+    Return
+    ------
+    None or int(value):
+        Return depends on the content of the input value. If it was "None",
+        then the python type None is returned. Otherwise the string is
+        converted into an integer value.
     '''
     if value == 'None':
         return None
     return int(value)
 
 def get_cmdline_arguments():
-    '''
-    @Description:
-        Decomposes the command line arguments and assigns them to variables.
-        Apply default values for non mentioned arguments.
+    '''Decomposes the command line arguments and assigns them to variables.
+    Apply default values for non mentioned arguments.
 
-    @Input:
-        <nothing>
+    Parameters
+    ----------
 
-    @Return:
-        args: instance of ArgumentParser
-            Contains the commandline arguments from script/program call.
+    Return
+    ------
+    args : :obj:`Namespace`
+        Contains the commandline arguments from script/program call.
     '''
 
     parser = ArgumentParser(description='Retrieve FLEXPART input from \
@@ -189,19 +188,19 @@ def get_cmdline_arguments():
     return args
 
 def read_ecenv(filename):
-    '''
-    @Description:
-        Reads the file into a dictionary where the key values are the parameter
-        names.
+    '''Reads the file into a dictionary where the key values are the parameter
+    names.
 
-    @Input:
-        filename: string
-            Path to file where the ECMWV environment parameters are stored.
+    Parameters
+    ----------
+    filename : :obj:`string`
+        Path to file where the ECMWF environment parameters are stored.
 
-    @Return:
-        envs: dict
-            Contains the environment parameter ecuid, ecgid, gateway
-            and destination for ECMWF server environments.
+    Return
+    ------
+    envs : :obj:`dictionary`
+        Contains the environment parameter ecuid, ecgid, gateway
+        and destination for ECMWF server environments.
     '''
     envs= {}
 
@@ -213,20 +212,17 @@ def read_ecenv(filename):
     return envs
 
 def clean_up(c):
-    '''
-    @Description:
-        Remove all files from intermediate directory
-        (inputdir from CONTROL file).
+    '''Remove all files from intermediate directory (inputdir).
 
-    @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     print("clean_up")
@@ -244,22 +240,22 @@ def clean_up(c):
 
 
 def my_error(users, message='ERROR'):
-    '''
-    @Description:
-        Prints a specified error message which can be passed to the function
-        before exiting the program.
+    '''Prints a specified error message which can be passed to the function
+    before exiting the program.
 
-    @Input:
-        user: list of strings
-            Contains all email addresses which should be notified.
-            It might also contain just the ecmwf user name which wil trigger
-            mailing to the associated email address for this user.
+    Parameters
+    ----------
+    user : :obj:`list` of :obj:`string`
+        Contains all email addresses which should be notified.
+        It might also contain just the ecmwf user name which wil trigger
+        mailing to the associated email address for this user.
 
-        message: string, optional
-            Error message. Default value is "ERROR".
+    message : :obj:`string`, optional
+        Error message. Default value is "ERROR".
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     print(message)
@@ -290,21 +286,20 @@ def my_error(users, message='ERROR'):
 
 
 def normal_exit(users, message='Done!'):
-    '''
-    @Description:
-        Prints a specific exit message which can be passed to the function.
+    '''Prints a specific exit message which can be passed to the function.
 
-    @Input:
-        user: list of strings
-            Contains all email addresses which should be notified.
-            It might also contain just the ecmwf user name which wil trigger
-            mailing to the associated email address for this user.
+    Parameters
+    ----------
+    user : :obj:`list` of :obj:`string`
+        Contains all email addresses which should be notified.
+        It might also contain just the ecmwf user name which wil trigger
+        mailing to the associated email address for this user.
 
-        message: string, optional
-            Message for exiting program. Default value is "Done!".
+    message : :obj:`string`, optional
+        Message for exiting program. Default value is "Done!".
 
-    @Return:
-        <nothing>
+    Return
+    ------
 
     '''
     print(message)
@@ -332,30 +327,34 @@ def normal_exit(users, message='Done!'):
 
 
 def product(*args, **kwds):
-    '''
-    @Description:
-        This method is taken from an example at the ECMWF wiki website.
-        https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16
+    '''This method combines the single characters of the passed arguments
+    with each other. So that each character of each argument value
+    will be combined with each character of the other arguments as a tuple.
 
-        This method combines the single characters of the passed arguments
-        with each other. So that each character of each argument value
-        will be combined with each character of the other arguments as a tuple.
+    Note
+    ----
+    This method is taken from an example at the ECMWF wiki website.
+    https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16
 
-        Example:
-        product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
-        product(range(2), repeat = 3) --> 000 001 010 011 100 101 110 111
+    Example
+    -------
+    product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
 
-    @Input:
-        *args: tuple
-            Positional arguments (arbitrary number).
+    product(range(2), repeat = 3) --> 000 001 010 011 100 101 110 111
 
-        **kwds: dictionary
-            Contains all the keyword arguments from *args.
+    Parameters
+    ----------
+    \*args : :obj:`tuple`
+        Positional arguments (arbitrary number).
 
-    @Return:
-        prod: tuple
-            Return will be done with "yield". A tuple of combined arguments.
-            See example in description above.
+    \*\*kwds : :obj:`dictionary`
+        Contains all the keyword arguments from \*args.
+
+    Return
+    ------
+    prod : :obj:`tuple`
+        Return will be done with "yield". A tuple of combined arguments.
+        See example in description above.
     '''
     pools = map(tuple, args) * kwds.get('repeat', 1)
     result = [[]]
@@ -368,17 +367,17 @@ def product(*args, **kwds):
 
 
 def silent_remove(filename):
-    '''
-    @Description:
-        Remove file if it exists.
-        The function does not fail if the file does not exist.
+    '''Remove file if it exists.
+    The function does not fail if the file does not exist.
 
-    @Input:
-        filename: string
-            The name of the file to be removed without notification.
+    Parameters
+    ----------
+    filename : :obj:`string`
+        The name of the file to be removed without notification.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     try:
         os.remove(filename)
@@ -391,19 +390,19 @@ def silent_remove(filename):
 
 
 def init128(filepath):
-    '''
-    @Description:
-        Opens and reads the grib file with table 128 information.
+    '''Opens and reads the grib file with table 128 information.
 
-    @Input:
-        filepath: string
-            Path to file of ECMWF grib table number 128.
+    Parameters
+    ----------
+    filepath : :obj:`string`
+        Path to file of ECMWF grib table number 128.
 
-    @Return:
-        table128: dictionary
-            Contains the ECMWF grib table 128 information.
-            The key is the parameter number and the value is the
-            short name of the parameter.
+    Return
+    ------
+    table128 : :obj:`dictionary`
+        Contains the ECMWF grib table 128 information.
+        The key is the parameter number and the value is the
+        short name of the parameter.
     '''
     table128 = dict()
     with open(filepath) as f:
@@ -416,27 +415,26 @@ def init128(filepath):
 
 
 def to_param_id(pars, table):
-    '''
-    @Description:
-        Transform parameter names to parameter ids
-        with ECMWF grib table 128.
+    '''Transform parameter names to parameter ids with ECMWF grib table 128.
 
-    @Input:
-        pars: string
-            Addpar argument from CONTROL file in the format of
-            parameter names instead of ids. The parameter short
-            names are sepearted with "/" and they are passed as
-            one single string.
+    Parameters
+    ----------
+    pars : :obj:`string`
+        Addpar argument from CONTROL file in the format of
+        parameter names instead of ids. The parameter short
+        names are sepearted with "/" and they are passed as
+        one single string.
 
-        table: dictionary
-            Contains the ECMWF grib table 128 information.
-            The key is the parameter number and the value is the
-            short name of the parameter.
+    table : :obj:`dictionary`
+        Contains the ECMWF grib table 128 information.
+        The key is the parameter number and the value is the
+        short name of the parameter.
 
-    @Return:
-        ipar: list of integer
-            List of addpar parameters from CONTROL file transformed to
-            parameter ids in the format of integer.
+    Return
+    ------
+    ipar : :obj:`list` of :obj:`integer`
+        List of addpar parameters from CONTROL file transformed to
+        parameter ids in the format of integer.
     '''
     cpar = pars.upper().split('/')
     ipar = []
@@ -451,21 +449,21 @@ def to_param_id(pars, table):
     return ipar
 
 def get_list_as_string(list_obj, concatenate_sign=', '):
-    '''
-    @Description:
-        Converts a list of arbitrary content into a single string.
+    '''Converts a list of arbitrary content into a single string.
 
-    @Input:
-        list_obj: list
-            A list with arbitrary content.
+    Parameters
+    ----------
+    list_obj : :obj:`list`
+        A list with arbitrary content.
 
-        concatenate_sign: string, optional
-            A string which is used to concatenate the single
-            list elements. Default value is ", ".
+    concatenate_sign : :obj:`string`, optional
+        A string which is used to concatenate the single
+        list elements. Default value is ", ".
 
-    @Return:
-        str_of_list: string
-            The content of the list as a single string.
+    Return
+    ------
+    str_of_list : :obj:`string`
+        The content of the list as a single string.
     '''
 
     str_of_list = concatenate_sign.join(str(l) for l in list_obj)
@@ -473,17 +471,17 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
     return str_of_list
 
 def make_dir(directory):
-    '''
-    @Description:
-        Creates a directory and gives a warning if the directory
-        already exists. The program stops only if there is another problem.
+    '''Creates a directory and gives a warning if the directory
+    already exists. The program stops only if there is another problem.
 
-    @Input:
-        directory: string
-            The directory name including the path which should be created.
+    Parameters
+    ----------
+    directory : :obj:`string`
+        The directory name including the path which should be created.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
     try:
         os.makedirs(directory)
@@ -497,35 +495,36 @@ def make_dir(directory):
     return
 
 def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
-    '''
-    @Description:
-        Uses the ecaccess-file-put command to send a file to the ECMWF servers.
+    '''Uses the ecaccess-file-put command to send a file to the ECMWF servers.
 
-        NOTE:
-        The return value is just for testing reasons. It does not have
-        to be used from the calling function since the whole error handling
-        is done in here.
+    Note
+    ----
+    The return value is just for testing reasons. It does not have
+    to be used from the calling function since the whole error handling
+    is done in here.
 
-    @Input:
-        ecd: string
-            The path were the file is stored.
+    Parameters
+    ----------
+    ecd : :obj:`string`
+        The path were the file is stored.
 
-        filename: string
-            The name of the file to send to the ECMWF server.
+    filename : :obj:`string`
+        The name of the file to send to the ECMWF server.
 
-        target: string
-            The target queue where the file should be sent to.
+    target : :obj:`string`
+        The target queue where the file should be sent to.
 
-        ecuid: string
-            The user id on ECMWF server.
+    ecuid : :obj:`string`
+        The user id on ECMWF server.
 
-        ecgid: string
-            The group id on ECMWF server.
+    ecgid : :obj:`string`
+        The group id on ECMWF server.
 
-    @Return:
-        rcode: string
-            Resulting code of command execution. If successful the string
-            will be empty.
+    Return
+    ------
+    rcode : :obj:`string`
+        Resulting code of command execution. If successful the string
+        will be empty.
     '''
 
     try:
@@ -545,27 +544,28 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
     return rcode
 
 def submit_job_to_ecserver(target, jobname):
-    '''
-    @Description:
-        Uses ecaccess-job-submit command to submit a job to the ECMWF server.
+    '''Uses ecaccess-job-submit command to submit a job to the ECMWF server.
 
-        NOTE:
-        The return value is just for testing reasons. It does not have
-        to be used from the calling function since the whole error handling
-        is done in here.
+    Note
+    ----
+    The return value is just for testing reasons. It does not have
+    to be used from the calling function since the whole error handling
+    is done in here.
 
-    @Input:
-        target: string
-            The target where the file should be sent to, e.g. the queue.
+    Parameters
+    ----------
+    target : :obj:`string`
+        The target where the file should be sent to, e.g. the queue.
 
-        jobname: string
-            The name of the jobfile to be submitted to the ECMWF server.
+    jobname : :obj:`string`
+        The name of the jobfile to be submitted to the ECMWF server.
 
-    @Return:
-        rcode: string
-            Resulting code of command execution. If successful the string
-            will contain an integer number, representing the id of the job
-            at the ecmwf server.
+    Return
+    ------
+    rcode : :obj:`string`
+        Resulting code of command execution. If successful the string
+        will contain an integer number, representing the id of the job
+        at the ecmwf server.
     '''
 
     try:

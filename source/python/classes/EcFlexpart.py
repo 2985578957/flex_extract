@@ -110,28 +110,23 @@ class EcFlexpart(object):
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
     def __init__(self, c, fluxes=False):
-        '''
-        @Description:
-            Creates an object/instance of EcFlexpart with the
-            associated settings of its attributes for the retrieval.
+        '''Creates an object/instance of EcFlexpart with the associated
+        settings of its attributes for the retrieval.
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters:
+        -----------
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
+        fluxes : :obj:`boolean`, optional
+            Decides if the flux parameter settings are stored or
+            the rest of the parameter list.
+            Default value is False.
 
-            fluxes: boolean, optional
-                Decides if the flux parameter settings are stored or
-                the rest of the parameter list.
-                Default value is False.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         # set a counter for the number of mars requests generated
         self.mreq_count = 0
@@ -305,25 +300,25 @@ class EcFlexpart(object):
 
 
     def _mk_targetname(self, ftype, param, date):
-        '''
-        @Description:
-            Creates the filename for the requested grib data to be stored in.
-            This name is passed as the "target" parameter in the request.
+        '''Creates the filename for the requested grib data to be stored in.
+        This name is passed as the "target" parameter in the request.
 
-        @Input:
-            ftype: string
-                Shortcut name of the type of the field. E.g. AN, FC, PF, ...
+        Parameters
+        ----------
+        ftype : :obj:`string`
+            Shortcut name of the type of the field. E.g. AN, FC, PF, ...
 
-            param: string
-                Shortcut of the grid type. E.g. SH__ML, SH__SL, GG__ML,
-                GG__SL, OG__ML, OG__SL, OG_OROLSM_SL, OG_acc_SL
+        param : :obj:`string`
+            Shortcut of the grid type. E.g. SH__ML, SH__SL, GG__ML,
+            GG__SL, OG__ML, OG__SL, OG_OROLSM_SL, OG_acc_SL
 
-            date: string
-                The date period of the grib data to be stored in this file.
+        date : :obj:`string`
+            The date period of the grib data to be stored in this file.
 
-        @Return:
-            targetname: string
-                The target filename for the grib data.
+        Return
+        ------
+        targetname : :obj:`string`
+            The target filename for the grib data.
         '''
         targetname = (self.inputdir + '/' + ftype + param + '.' + date + '.' +
                       str(os.getppid()) + '.' + str(os.getpid()) + '.grb')
@@ -332,30 +327,27 @@ class EcFlexpart(object):
 
 
     def _start_retrievement(self, request, par_dict):
-        '''
-        @Description:
-            Creates the Mars Retrieval and prints or submits the request
-            depending on the status of the request variable.
+        '''Creates the Mars Retrieval and prints or submits the request
+        depending on the status of the request variable.
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        request : :obj:`integer`
+            Selects the mode of retrieval.
+            0: Retrieves the data from ECMWF.
+            1: Prints the mars requests to an output file.
+            2: Retrieves the data and prints the mars request.
 
-            request: integer
-                Selects the mode of retrieval.
-                0: Retrieves the data from ECMWF.
-                1: Prints the mars requests to an output file.
-                2: Retrieves the data and prints the mars request.
+        par_dict : :obj:`dictionary`
+            Contains all parameter which have to be set for creating the
+            Mars Retrievals. The parameter are:
+            marsclass, dataset, stream, type, levtype, levelist, resol,
+            gaussian, accuracy, grid, target, area, date, time, number,
+            step, expver, param
 
-            par_dict: dictionary
-                Contains all parameter which have to be set for creating the
-                Mars Retrievals. The parameter are:
-                marsclass, dataset, stream, type, levtype, levelist, resol,
-                gaussian, accuracy, grid, target, area, date, time, number,
-                step, expver, param
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         # increase number of mars requests
         self.mreq_count += 1
@@ -397,30 +389,30 @@ class EcFlexpart(object):
 
 
     def _mk_index_values(self, inputdir, inputfiles, keys):
-        '''
-        @Description:
-            Creates an index file for a set of grib parameter keys.
-            The values from the index keys are returned in a list.
+        '''Creates an index file for a set of grib parameter keys.
+        The values from the index keys are returned in a list.
 
-        @Input:
-            keys: dictionary
-                List of parameter names which serves as index.
+        Parameters
+        ----------
+        keys : :obj:`dictionary`
+            List of parameter names which serves as index.
 
-            inputfiles: instance of UioFiles
-                Contains a list of files.
+        inputfiles : :obj:`UioFiles`
+            Contains a list of files.
 
-        @Return:
-            iid: grib_index
-                This is a grib specific index structure to access
-                messages in a file.
+        Return
+        ------
+        iid : :obj:`grib_index`
+            This is a grib specific index structure to access
+            messages in a file.
 
-            index_vals: list
-                Contains the values from the keys used for a distinct selection
-                of grib messages in processing  the grib files.
-                Content looks like e.g.:
-                index_vals[0]: ('20171106', '20171107', '20171108') ; date
-                index_vals[1]: ('0', '1200', '1800', '600') ; time
-                index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
+        index_vals : :obj:`list`
+            Contains the values from the keys used for a distinct selection
+            of grib messages in processing  the grib files.
+            Content looks like e.g.:
+            index_vals[0]: ('20171106', '20171107', '20171108') ; date
+            index_vals[1]: ('0', '1200', '1800', '600') ; time
+            index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
         '''
         iid = None
         index_keys = keys
@@ -454,40 +446,37 @@ class EcFlexpart(object):
 
 
     def retrieve(self, server, dates, public, request, inputdir='.'):
-        '''
-        @Description:
-            Finalizing the retrieval information by setting final details
-            depending on grid type.
-            Prepares MARS retrievals per grid type and submits them.
+        '''Finalizing the retrieval information by setting final details
+        depending on grid type.
+        Prepares MARS retrievals per grid type and submits them.
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        server : :obj:`ECMWFService` or :obj:`ECMWFDataServer`
+            The connection to the ECMWF server. This is different
+            for member state users which have full access and non
+            member state users which have only access to the public
+            data sets. The decision is made from command line argument
+            "public"; for public access its True (ECMWFDataServer)
+            for member state users its False (ECMWFService)
 
-            server: instance of ECMWFService or ECMWFDataServer
-                The connection to the ECMWF server. This is different
-                for member state users which have full access and non
-                member state users which have only access to the public
-                data sets. The decision is made from command line argument
-                "public"; for public access its True (ECMWFDataServer)
-                for member state users its False (ECMWFService)
+        dates : :obj:`string`
+            Contains start and end date of the retrieval in the format
+            "YYYYMMDD/to/YYYYMMDD"
 
-            dates: string
-                Contains start and end date of the retrieval in the format
-                "YYYYMMDD/to/YYYYMMDD"
+        request : :obj:`integer`
+            Selects the mode of retrieval.
+            0: Retrieves the data from ECMWF.
+            1: Prints the mars requests to an output file.
+            2: Retrieves the data and prints the mars request.
 
-            request: integer
-                Selects the mode of retrieval.
-                0: Retrieves the data from ECMWF.
-                1: Prints the mars requests to an output file.
-                2: Retrieves the data and prints the mars request.
+        inputdir : :obj:`string`, optional
+            Path to the directory where the retrieved data is about
+            to be stored. The default is the current directory ('.').
 
-            inputdir: string, optional
-                Path to the directory where the retrieved data is about
-                to be stored. The default is the current directory ('.').
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         self.dates = dates
         self.server = server
@@ -664,28 +653,23 @@ class EcFlexpart(object):
 
 
     def write_namelist(self, c):
-        '''
-        @Description:
-            Creates a namelist file in the temporary directory and writes
-            the following values to it: maxl, maxb, mlevel,
-            mlevelist, mnauf, metapar, rlo0, rlo1, rla0, rla1,
-            momega, momegadiff, mgauss, msmooth, meta, metadiff, mdpdeta
+        '''Creates a namelist file in the temporary directory and writes
+        the following values to it: maxl, maxb, mlevel,
+        mlevelist, mnauf, metapar, rlo0, rlo1, rla0, rla1,
+        momega, momegadiff, mgauss, msmooth, meta, metadiff, mdpdeta
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
-
-            filename: string
+        filename : :obj:`string`
                 Name of the namelist file.
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         from genshi.template.text import NewTextTemplate
@@ -733,29 +717,24 @@ class EcFlexpart(object):
 
 
     def deacc_fluxes(self, inputfiles, c):
-        '''
-        @Description:
-            Goes through all flux fields in ordered time and de-accumulate
-            the fields. Afterwards the fields are disaggregated in time.
-            Different versions of disaggregation is provided for rainfall
-            data (darain, modified linear) and the surface fluxes and
-            stress data (dapoly, cubic polynomial).
+        '''Goes through all flux fields in ordered time and de-accumulate
+        the fields. Afterwards the fields are disaggregated in time.
+        Different versions of disaggregation is provided for rainfall
+        data (darain, modified linear) and the surface fluxes and
+        stress data (dapoly, cubic polynomial).
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        inputfiles : :obj:`UioFiles`
+            Contains a list of files.
 
-            inputfiles: instance of UioFiles
-                Contains a list of files.
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
 
         table128 = init128(_config.PATH_GRIBTABLE)
@@ -951,35 +930,32 @@ class EcFlexpart(object):
 
 
     def create(self, inputfiles, c):
-        '''
-        @Description:
-            This method is based on the ECMWF example index.py
-            https://software.ecmwf.int/wiki/display/GRIB/index.py
+        '''An index file will be created which depends on the combination
+        of "date", "time" and "stepRange" values. This is used to iterate
+        over all messages in each grib file which were passed through the
+        parameter "inputfiles" to seperate specific parameters into fort.*
+        files. Afterwards the FORTRAN program is called to convert
+        the data fields all to the same grid and put them in one file
+        per unique time step (combination of "date", "time" and
+        "stepRange").
 
-            An index file will be created which depends on the combination
-            of "date", "time" and "stepRange" values. This is used to iterate
-            over all messages in each grib file which were passed through the
-            parameter "inputfiles" to seperate specific parameters into fort.*
-            files. Afterwards the FORTRAN program is called to convert
-            the data fields all to the same grid and put them in one file
-            per unique time step (combination of "date", "time" and
-            "stepRange").
+        Note
+        ----
+        This method is based on the ECMWF example index.py
+        https://software.ecmwf.int/wiki/display/GRIB/index.py
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        inputfiles : :obj:`UioFiles`
+            Contains a list of files.
 
-            inputfiles: instance of UioFiles
-                Contains a list of files.
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
 
         if c.wrf:
@@ -1182,29 +1158,23 @@ class EcFlexpart(object):
 
 
     def process_output(self, c):
-        '''
-        @Description:
-            The grib files are postprocessed depending on the selection in
-            CONTROL file. The resulting files are moved to the output
-            directory if its not equal to the input directory.
-            The following modifications might be done if
-            properly switched in CONTROL file:
-            GRIB2 - Conversion to GRIB2
-            ECTRANS - Transfer of files to gateway server
-            ECSTORAGE - Storage at ECMWF server
+        '''The grib files are postprocessed depending on the selection in
+        CONTROL file. The resulting files are moved to the output
+        directory if its not equal to the input directory.
+        The following modifications might be done if
+        properly switched in CONTROL file:
+        GRIB2 - Conversion to GRIB2
+        ECTRANS - Transfer of files to gateway server
+        ECSTORAGE - Storage at ECMWF server
 
-        @Input:
-            self: instance of EcFlexpart
-                The current object of the class.
+        Parameters
+        ----------
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
-
-        @Return:
-            <nothing>
+        Return
+        ------
 
         '''
 
@@ -1246,20 +1216,17 @@ class EcFlexpart(object):
 
 
     def prepare_fp_files(self, c):
-        '''
-        @Description:
-            Conversion of GRIB files to FLEXPART binary format.
+        '''Conversion of GRIB files to FLEXPART binary format.
 
-        @Input:
-            c: instance of class ControlFile
-                Contains all the parameters of CONTROL file and
-                command line.
-                For more information about format and content of the parameter
-                see documentation.
+        Parameters
+        ----------
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
 
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         # generate AVAILABLE file
         # Example of AVAILABLE file data:

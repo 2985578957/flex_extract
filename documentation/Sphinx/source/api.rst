@@ -1,5 +1,82 @@
 Auto Generated Documentation
 ============================
 
+.. contents::
+    :local:
+    
+Porgrams
+--------
+
+install
+*******
+
+.. automodule:: install
+    :members:
+    
+submit
+******
+
+.. automodule:: submit
+    :members:
+    
+Classes
+-------
+
+ControlFile
+***********
+
+.. automodule:: ControlFile
+    :members:
+    
+EcFlexpart
+**********
+
+.. automodule:: EcFlexpart
+    :members:
+    
+GribTools
+*********
+
+.. automodule:: GribTools
+    :members:
+
+MarsRetrieval
+*************
+
+.. automodule:: MarsRetrieval
+    :members:
+
+UioFiles
+********
+
+.. automodule:: UioFiles
+    :members:
+
+
+
+Modules
+-------
+
+get_mars_data
+*************
+
+.. automodule:: get_mars_data
+    :members:
+ 
+prepare_flexpart
+****************
+
+.. automodule:: prepare_flexpart
+    :members:    
+    
+tools
+*****
+
+.. automodule:: tools
+    :members:
+
+disaggregation
+**************    
+    
 .. automodule:: disaggregation
     :members:

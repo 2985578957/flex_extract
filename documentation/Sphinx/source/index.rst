@@ -3,8 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to flex_extract's documentation!
-========================================
+Welcome to flex_extract's user documentation!
+=============================================
+
+flex_extract is a software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to server as input files for the FLEXTRA/FLEXPART Atmospheric Transport Modelling system. 
+
+
+.. The scripts can be 1) executed locally using the ECMWF WebMARS interface, or 2) on the ECMWF member
+.. state gateway server or HPC facility using the ecaccess software package. As another option the scripts can 3)
+.. also be triggered using ecflow scheduling software used by ECMWF for data dissemination.
+
+All required second party software and libraries used within flex_extract is open source and free of charge. 
+
 .. raw:: html
 
     <table style="width:100%;">
@@ -86,7 +96,7 @@ Welcome to flex_extract's documentation!
    License text put in here! Which one?
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Table of Contents:
 
    downloads

@@ -65,17 +65,16 @@ class GribTools(object):
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
     def __init__(self, filenames):
-        '''
-        @Description:
-            Initialise an object of GribTools and assign a list
-            of filenames.
+        '''Initialise an object of GribTools and assign a list of filenames.
 
-        @Input:
-            filenames: list of strings
-                A list of filenames.
+        Parameters
+        ----------
+        filenames : :obj:`list` of :obj:`strings`
+             A list of filenames.
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         self.filenames = filenames
@@ -84,24 +83,24 @@ class GribTools(object):
 
 
     def get_keys(self, keynames, wherekeynames=[], wherekeyvalues=[]):
-        '''
-        @Description:
-            get keyvalues for a given list of keynames
-            a where statement can be given (list of key and list of values)
+        '''Get keyvalues for a given list of keynames a where statement
+        can be given (list of key and list of values)
 
-        @Input:
-            keynames: list of strings
-                List of keynames.
+        Parameters
+        ----------
+        keynames : :obj:`list` of :obj:`string`
+            List of keynames.
 
-            wherekeynames: list of strings, optional
-                Default value is an empty list.
+        wherekeynames : :obj:`list` of :obj:`string`, optional
+            Default value is an empty list.
 
-            wherekeyvalues: list of strings, optional
-                Default value is an empty list.
+        wherekeyvalues : :obj:`list` of :obj:`string`, optional
+            Default value is an empty list.
 
-        @Return:
-            return_list: list of strings
-                List of keyvalues for given keynames.
+        Return
+        ------
+        return_list : :obj:`list` of :obj:`string`
+            List of keyvalues for given keynames.
         '''
 
         fileid = open(self.filenames, 'r')
@@ -143,40 +142,39 @@ class GribTools(object):
 
     def set_keys(self, fromfile, keynames, keyvalues, wherekeynames=[],
                  wherekeyvalues=[], strict=False, filemode='w'):
-        '''
-        @Description:
-            Opens the file to read the grib messages and then write
-            them to a new output file. By default all messages are
-            written out. Also, the keyvalues of the passed list of
-            keynames are set or only those meeting the where statement.
-            (list of key and list of values).
+        '''Opens the file to read the grib messages and then write
+        them to a new output file. By default all messages are
+        written out. Also, the keyvalues of the passed list of
+        keynames are set or only those meeting the where statement.
+        (list of key and list of values).
 
-        @Input:
-            fromfile: string
-                Filename of the input file to read the grib messages from.
+        Parameters
+        ----------
+        fromfile : :obj:`string`
+            Filename of the input file to read the grib messages from.
 
-            keynames: list of strings
-                List of keynames. Default is an empty list.
+        keynames : :obj:`list` of :obj:`string`
+            List of keynames. Default is an empty list.
 
-            keyvalues: list of strings
-                List of keynames. Default is an empty list.
+        keyvalues : :obj:`list` of :obj:`string`
+            List of keynames. Default is an empty list.
 
-            wherekeynames: list of strings, optional
-                Default value is an empty list.
+        wherekeynames : :obj:`list` of :obj:`string`, optional
+            Default value is an empty list.
 
-            wherekeyvalues: list of strings, optional
-                Default value is an empty list.
+        wherekeyvalues : :obj:`list` of :obj:`string`, optional
+            Default value is an empty list.
 
-            strict: boolean, optional
-                Decides if everything from keynames and keyvalues
-                is written out the grib file (False) or only those
-                meeting the where statement (True). Default is False.
+        strict : :obj:`boolean`, optional
+            Decides if everything from keynames and keyvalues
+            is written out the grib file (False) or only those
+            meeting the where statement (True). Default is False.
 
-            filemode: string, optional
-                Sets the mode for the output file. Default is "w".
+        filemode : :obj:`string`, optional
+            Sets the mode for the output file. Default is "w".
 
-        @Return:
-            <nothing>
+        Return
+        ------
 
         '''
         fout = open(self.filenames, filemode)
@@ -218,32 +216,33 @@ class GribTools(object):
 
     def copy(self, filename_in, selectWhere=True,
              keynames=[], keyvalues=[], filemode='w'):
-        '''
-        Add the content of another input grib file to the objects file but
+        '''Add the content of another input grib file to the objects file but
         only messages corresponding to keys/values passed to the function.
         The selectWhere switch decides if to copy the keys equal to (True) or
         different to (False) the keynames/keyvalues list passed to the function.
 
-        @Input:
-            filename_in: string
-                Filename of the input file to read the grib messages from.
+        Parameters
+        ----------
+        filename_in : :obj:`string`
+            Filename of the input file to read the grib messages from.
 
-            selectWhere: boolean, optional
-                Decides if to copy the keynames and values equal to (True) or
-                different to (False) the keynames/keyvalues list passed to the
-                function. Default is True.
+        selectWhere : :obj:`boolean`, optional
+            Decides if to copy the keynames and values equal to (True) or
+            different to (False) the keynames/keyvalues list passed to the
+            function. Default is True.
 
-            keynames: list of strings, optional
-                List of keynames. Default is an empty list.
+        keynames : :obj:`list` of :obj:`string`, optional
+            List of keynames. Default is an empty list.
 
-            keyvalues: list of strings, optional
-                List of keynames. Default is an empty list.
+        keyvalues : :obj:`list` of :obj:`string`, optional
+            List of keynames. Default is an empty list.
 
-            filemode: string, optional
-                Sets the mode for the output file. Default is "w".
+        filemode : :obj:`string`, optional
+            Sets the mode for the output file. Default is "w".
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         fin = open(filename_in)
@@ -283,24 +282,24 @@ class GribTools(object):
         return
 
     def index(self, index_keys=["mars"], index_file="my.idx"):
-        '''
-        @Description:
-            Create index file from a list of files if it does not exist or
-            read an index file.
+        '''Create index file from a list of files if it does not exist or
+        read an index file.
 
-        @Input:
-            index_keys: list of strings, optional
-                Contains the list of key parameter names from
-                which the index is to be created.
-                Default is a list with a single entry string "mars".
+        Parameters
+        ----------
+        index_keys: :obj:`list` of :obj:`string`, optional
+            Contains the list of key parameter names from
+            which the index is to be created.
+            Default is a list with a single entry string "mars".
 
-            index_file: string, optional
-                Filename where the indices are stored.
-                Default is "my.idx".
+        index_file: :obj:`string`, optional
+            Filename where the indices are stored.
+            Default is "my.idx".
 
-        @Return:
-            iid: integer
-                Grib index id.
+        Return
+        ------
+        iid: :obj:`integer`
+            Grib index id.
         '''
         print("... index will be done")
         iid = None

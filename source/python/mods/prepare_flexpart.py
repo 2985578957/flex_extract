@@ -78,17 +78,17 @@ except ImportError:
 # FUNCTION
 # ------------------------------------------------------------------------------
 def main():
-    '''
-    @Description:
-        If prepare_flexpart is called from command line, this function controls
-        the program flow and calls the argumentparser function and
-        the prepare_flexpart function for preparation of GRIB data for FLEXPART.
+    '''Controls the program to prepare flexpart input files from mars data.
 
-    @Input:
-        <nothing>
+    This is done if it is called directly from command line.
+    Then it also takes program call arguments and control file input.
 
-    @Return:
-        <nothing>
+    Parameters
+    ----------
+
+    Return
+    ------
+
     '''
 
     args = get_cmdline_arguments()
@@ -104,27 +104,26 @@ def main():
     return
 
 def prepare_flexpart(ppid, c):
-    '''
-    @Description:
-        Lists all grib files retrieved from MARS with get_mars_data and
-        uses prepares data for the use in FLEXPART. Specific data fields
-        are converted to a different grid and the flux data are going to be
-        disaggregated. The data fields are collected by hour and stored in
-        a file with a specific FLEXPART relevant naming convention.
+    '''Converts the mars data into flexpart ready input files.
 
-    @Input:
-        ppid: int
-            Contains the ppid number of the current ECMWF job. If it is called
-            from this script, it is "None".
+    Specific data fields are converted to a different grid and the flux
+    data are going to be disaggregated. The data fields are collected by
+    hour and stored in a file with a specific FLEXPART relevant naming
+    convention.
 
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    Parameters
+    ----------
+    ppid : :obj:`int`
+        Contains the ppid number of the current ECMWF job. It will be None if
+        the method was called within this module.
 
-    @Return:
-        <nothing>
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    Return
+    ------
+
     '''
 
     if not ppid:

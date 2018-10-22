@@ -70,22 +70,18 @@ class ControlFile(object):
     '''
 
     def __init__(self, filename):
-        '''
-        @Description:
-            Initialises the instance of ControlFile class and defines
-            all class attributes with default values. Afterwards calls
-            function __read_controlfile__ to read parameter from
-            Control file.
+        '''Initialises the instance of ControlFile class and defines
+        all class attributes with default values. Afterwards calls
+        function __read_controlfile__ to read parameter from Control file.
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
+        filename : :obj:`string`
+            Name of CONTROL file.
 
-            filename: string
-                Name of CONTROL file.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
 
         # list of all possible class attributes and their default values
@@ -161,16 +157,14 @@ class ControlFile(object):
         return
 
     def __read_controlfile__(self):
-        '''
-        @Description:
-            Read CONTROL file and assign all CONTROL file variables.
+        '''Read CONTROL file and assign all CONTROL file variables.
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         try:
@@ -234,27 +228,27 @@ class ControlFile(object):
         return
 
     def __str__(self):
-        '''
-        @Description:
-            Prepares a string which have all the ControlFile
-            class attributes with its associated values.
-            Each attribute is printed in one line and in
-            alphabetical order.
+        '''Prepares a string which have all the ControlFile class attributes
+        with its associated values. Each attribute is printed in one line and
+        in alphabetical order.
 
-            Example:
-            'age': 10
-            'color': 'Spotted'
-            'kids': 0
-            'legs': 2
-            'name': 'Dog'
-            'smell': 'Alot'
+        Example
+        -------
+        'age': 10
+        'color': 'Spotted'
+        'kids': 0
+        'legs': 2
+        'name': 'Dog'
+        'smell': 'Alot'
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
 
-        @Return:
-            string of ControlFile class attributes with their values
+        Return
+        ------
+        string
+            Single string of concatenated ControlFile class attributes
+            with their values
         '''
         import collections
 
@@ -264,20 +258,17 @@ class ControlFile(object):
         return '\n'.join("%s: %s" % item for item in attrs.items())
 
     def assign_args_to_control(self, args):
-        '''
-        @Description:
-            Overwrites the existing ControlFile instance attributes with
-            the command line arguments.
+        '''Overwrites the existing ControlFile instance attributes with
+        the command line arguments.
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
+        args : :obj:`Namespace`
+            Contains the commandline arguments from script/program call.
 
-            args: instance of ArgumentParser
-                Contains the commandline arguments from script/program call.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
 
         # get dictionary of command line parameters and eliminate all
@@ -293,18 +284,18 @@ class ControlFile(object):
         return
 
     def assign_envs_to_control(self, envs):
-        '''
-        @Description:
-            Assigns the ECMWF environment parameter.
+        '''Assigns the ECMWF environment parameter.
 
-        @Input:
-            envs: dict of strings
-                Contains the ECMWF environment parameternames "ECUID", "ECGID",
-                "DESTINATION" and "GATEWAY" with its corresponding values.
-                They were read from the file "ECMWF_ENV".
+        Parameters
+        ----------
+        envs : :obj:`dictionary` of :obj:`strings`
+            Contains the ECMWF environment parameternames "ECUID", "ECGID",
+            "DESTINATION" and "GATEWAY" with its corresponding values.
+            They were read from the file "ECMWF_ENV".
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         for k, v in envs.iteritems():
@@ -313,23 +304,20 @@ class ControlFile(object):
         return
 
     def check_conditions(self, queue):
-        '''
-        @Description:
-            Checks a couple of necessary attributes and conditions,
-            such as if they exist and contain values.
-            Otherwise set default values.
+        '''Checks a couple of necessary attributes and conditions,
+        such as if they exist and contain values.
+        Otherwise set default values.
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
+        queue : :obj:`string`
+            Name of the queue if submitted to the ECMWF servers.
+            Used to check if ecuid, ecgid, gateway and destination
+            are set correctly and are not empty.
 
-            queue: string
-                Name of the queue if submitted to the ECMWF servers.
-                Used to check if ecuid, ecgid, gateway and destination
-                are set correctly and are not empty.
+        Return
+        ------
 
-        @Return:
-            <nothing>
         '''
         from mods.tools import my_error
         import numpy as np
@@ -500,18 +488,16 @@ class ControlFile(object):
         return
 
     def check_install_conditions(self):
-        '''
-        @Description:
-            Checks a couple of necessary attributes and conditions
-            for the installation such as if they exist and contain values.
-            Otherwise set default values.
+        '''Checks a couple of necessary attributes and conditions
+        for the installation such as if they exist and contain values.
+        Otherwise set default values.
 
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
+        Parameters
+        ----------
 
-        @Return:
-            <nothing>
+        Return
+        ------
+
         '''
 
         if self.install_target and \
@@ -548,21 +534,19 @@ class ControlFile(object):
         return
 
     def to_list(self):
-        '''
-        @Description:
-            Just generates a list of strings containing the attributes and
-            assigned values except the attributes "_expanded", "exedir",
+        '''Just generates a list of strings containing the attributes and
+        assigned values except the attributes "_expanded", "exedir",
+        "ecmwfdatadir" and "flexpart_root_scripts".
+
+        Parameters
+        ----------
+
+        Return
+        ------
+        l : :obj:`list`
+            A sorted list of the all ControlFile class attributes with
+            their values except the attributes "_expanded", "exedir",
             "ecmwfdatadir" and "flexpart_root_scripts".
-
-        @Input:
-            self: instance of ControlFile class
-                Description see class documentation.
-
-        @Return:
-            l: list
-                A sorted list of the all ControlFile class attributes with
-                their values except the attributes "_expanded", "exedir",
-                "ecmwfdatadir" and "flexpart_root_scripts".
         '''
 
         import collections

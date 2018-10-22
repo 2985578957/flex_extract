@@ -61,18 +61,17 @@ from classes.ControlFile import ControlFile
 # ------------------------------------------------------------------------------
 
 def main():
-    '''
-    @Description:
-        Get the arguments from script call and from CONTROL file.
-        Decides from the argument "queue" if the local version
-        is done "queue=None" or the gateway version with "queue=ecgate"
-        or "queue=cca".
+    '''Get the arguments from script call and from CONTROL file.
+    Decides from the argument "queue" if the local version
+    is done "queue=None" or the gateway version with "queue=ecgate"
+    or "queue=cca".
 
-    @Input:
-        <nothing>
+    Parameters
+    ----------
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     args = get_cmdline_arguments()
@@ -104,29 +103,27 @@ def main():
     return
 
 def submit(jtemplate, c, queue):
-    '''
-    @Description:
-        Prepares the job script and submit it to the specified queue.
+    '''Prepares the job script and submit it to the specified queue.
 
-    @Input:
-        jtemplate: string
-            Job template file from sub-directory "_templates" for
-            submission to ECMWF. It contains all necessary
-            module and variable settings for the ECMWF environment as well as
-            the job call and mail report instructions.
-            Default is "job.temp".
+    Parameters
+    ----------
+    jtemplate : :obj:`string`
+        Job template file from sub-directory "_templates" for
+        submission to ECMWF. It contains all necessary
+        module and variable settings for the ECMWF environment as well as
+        the job call and mail report instructions.
+        Default is "job.temp".
 
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
 
-        queue: string
-            Name of queue for submission to ECMWF (e.g. ecgate or cca )
+    queue : :obj:`string`
+        Name of queue for submission to ECMWF (e.g. ecgate or cca )
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     # read template file and get index for CONTROL input

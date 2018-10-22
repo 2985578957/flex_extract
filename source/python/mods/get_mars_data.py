@@ -68,18 +68,17 @@ except ImportError:
 # FUNCTION
 # ------------------------------------------------------------------------------
 def main():
-    '''
-    @Description:
-        If get_mars_data is called directly from command line,
+    '''Controls the program to get data out of mars.
 
-        the program flow and calls the argumentparser function and
-        the get_mars_data function for retrieving EC data.
+    This is done if it is called directly from command line.
+    Then it also takes program call arguments and control file input.
 
-    @Input:
-        <nothing>
+    Parameters
+    ----------
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     args = get_cmdline_arguments()
@@ -96,22 +95,21 @@ def main():
     return
 
 def get_mars_data(c):
-    '''
-    @Description:
-        Retrieves the EC data needed for a FLEXPART simulation.
-        Start and end dates for retrieval period is set. Retrievals
-        are divided into smaller periods if necessary and datechunk parameter
-        is set.
+    '''Retrieves the EC data needed for a FLEXPART simulation.
 
-    @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    Start and end dates for retrieval period is set. Retrievals
+    are divided into smaller periods if necessary and datechunk parameter
+    is set.
 
-    @Return:
-        <nothing>
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    Return
+    ------
+
     '''
 
     if not os.path.exists(c.inputdir):
@@ -205,38 +203,36 @@ def get_mars_data(c):
     return
 
 def do_retrievement(c, server, start, end, delta_t, fluxes=False):
-    '''
-    @Description:
-        Divides the complete retrieval period in smaller chunks and
-        retrieves the data from MARS.
+    '''Divides the complete retrieval period in smaller chunks and
+    retrieves the data from MARS.
 
-    @Input:
-        c: instance of class ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-            For more information about format and content of the parameter
-            see documentation.
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
 
-        server: instance of ECMWFService
-            The server connection to ECMWF
+    server : :obj:`ECMWFService`
+            The server connection to ECMWF.
 
-        start: instance of datetime
-            The start date of the retrieval.
+    start : :obj:`datetime`
+        The start date of the retrieval.
 
-        end: instance of datetime
-            The end date of the retrieval.
+    end : :obj:`datetime`
+        The end date of the retrieval.
 
-        delta_t: instance of datetime
-            Delta_t +1 is the maximal time period of a single
-            retrieval.
+    delta_t : :obj:`datetime`
+        Delta_t + 1 is the maximal time period of a single
+        retrieval.
 
-        fluxes: boolean, optional
-            Decides if the flux parameters are to be retrieved or
-            the rest of the parameter list.
-            Default value is False.
+    fluxes : :obj:`boolean`, optional
+        Decides if the flux parameters are to be retrieved or
+        the rest of the parameter list.
+        Default value is False.
 
-    @Return:
-        <nothing>
+    Return
+    ------
+
     '''
 
     # since actual day also counts as one day,
