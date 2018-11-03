@@ -20,7 +20,9 @@
    real,dimension(maxl,maxb,mlevel)   ::  feld  
    integer:: maxl,maxb,mlevel,mstride,mpar(:),irest,div,level
    integer :: l(size(mpar))
-   character*(*):: filename                             
+   character*(*):: filename   
+   
+   feld=0.                          
 
    call grib_open_file(ifile, TRIM(FILENAME),'r')
  
