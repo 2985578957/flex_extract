@@ -1,22 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#*******************************************************************************
-# @Author: Anne Philipp (University of Vienna)
-#
-# @Date: August 2018
-#
-# @Change History:
-#
-# @License:
-#    (C) Copyright 2014-2018.
-#
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Description:
-#    Contains constant value parameter for flex_extract.
-#
-#*******************************************************************************
+'''
+*******************************************************************************
+ @Author: Anne Philipp (University of Vienna)
+
+ @Date: August 2018
+
+ @Change History:
+
+ @License:
+    (C) Copyright 2014-2018.
+
+    This software is licensed under the terms of the Apache Licence Version 2.0
+    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+
+ @Description:
+    Contains constant value parameter for flex_extract.
+
+*******************************************************************************
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -77,8 +79,8 @@ PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')
 PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'fortran')
 PATH_TEST_DIR = os.path.join(PATH_SOURCES, 'pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
-if os.getenv('CONTROL'):# and '/' in os.getenv('CONTROL'):
-    # this is only needed if remote version with job script is used!
+if os.getenv('CONTROL'):
+    # this is only needed if gateway version with job script is used!
     # because job is directly submitted from SCRATCH and because the
     # CONTROL file is stored there, the normal path is not valid.
     PATH_CONTROLFILES = '.'
