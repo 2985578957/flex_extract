@@ -20,8 +20,6 @@ for_developers/DOCUFPEXTRACT.txt
 for_developers/FLEXEXTRACT_CONTENT.txt
 for_developers/NewDocu.odt
 for_developers/dokuECMWFDATA
-run/jobscripts/compilejob.ksh
-run/jobscripts/job.ksh
-run/run.sh
 setup.sh
 source/fortran/Makefile*
+
