@@ -44,6 +44,11 @@ class TestTools(object):
     def test_anystr_none_or_str(self):
         assert 'test' == none_or_str('test')
 
+    def test_fail_get_cmdline_arguments(self):
+        sys.argv = ['dummy.py', '--wrong=1']
+        with pytest.raises(SystemExit):
+            results = get_cmdline_arguments()
+
     def test_default_get_cmdline_arguments(self):
         cmd_dict_control = {'start_date':None,
                             'end_date':None,
@@ -68,7 +73,6 @@ class TestTools(object):
         results = get_cmdline_arguments()
 
         assert cmd_dict_control == vars(results)
-
 
     def test_input_get_cmdline_arguments(self):
         cmd_dict_control = {'start_date':'20180101',
