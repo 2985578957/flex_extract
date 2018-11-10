@@ -147,6 +147,7 @@ class ControlFile(object):
         self.debug = 0
         self.request = 0
         self.public = 0
+        self.ecapi = None
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
                          'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',

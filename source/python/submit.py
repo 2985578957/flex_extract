@@ -93,12 +93,14 @@ def main():
         get_mars_data(c)
         if c.request == 0 or c.request == 2:
             prepare_flexpart(args.ppid, c)
-            normal_exit(c.mailfail, 'FLEX_EXTRACT IS DONE!')
+            exit_message = 'FLEX_EXTRACT IS DONE!'
         else:
-            normal_exit(c.mailfail, 'PRINTING MARS_REQUESTS DONE!')
-    # send files to ECMWF server and install there
+            exit_message = 'PRINTING MARS_REQUESTS DONE!'
+    # send files to ECMWF server
     else:
         submit(args.job_template, c, args.queue)
+
+    normal_exit(c.mailops, c.queue, exit_message)
 
     return
 
@@ -146,7 +148,7 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextondemand))
 
-        submit_job_to_ecserver(queue, job_file)
+        job_id = submit_job_to_ecserver(queue, job_file)
 
     else:
     # --------- create operational job script ----------------------------------
@@ -172,9 +174,10 @@ def submit(jtemplate, c, queue):
         with open(job_file, 'w') as f:
             f.write('\n'.join(lftextoper))
 
-        submit_job_to_ecserver(queue, job_file)
+        job_id = submit_job_to_ecserver(queue, job_file)
 
     # --------------------------------------------------------------------------
+    print('The job id is: ' + str(job_id.strip()))
     print('You should get an email with subject flex.hostname.pid')
 
     return

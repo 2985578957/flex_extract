@@ -41,7 +41,22 @@
 #    - do_retrievement
 #
 #*******************************************************************************
+"""ToDo: Name of litte program
 
+ToDo: Add desccription
+
+ToDo: Add Conditions
+
+This script requires that `...` be installed within the Python
+environment you are running this script in.
+
+This file can also be imported as a module and contains the following
+functions:
+
+    * get_mars_data -
+    * do_retrievement -
+    * main - the main function of the script
+"""
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -90,7 +105,7 @@ def main():
     c.check_conditions(args.queue)
 
     get_mars_data(c)
-    normal_exit(c.mailfail, 'Done!')
+    normal_exit(c.mailops, c.queue, 'Done!')
 
     return
 

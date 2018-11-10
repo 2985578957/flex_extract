@@ -1,0 +1,34 @@
+C
+C     Parameters
+C
+      INTEGER JP32, JPLONO, J2NFFT, JPFFT, JPLOOK, JPMAX, JPMAXITER
+      INTEGER JPMXTRY, JPTRNC, JPK, JPTRP1
+      PARAMETER ( JP32 = 32 )
+C
+C     The following value for JPLONO (2560) will handle regular grids 
+C     from N1 to N720 derived from spectral truncations from T1 to
+C     T639.
+C
+Cjdc  PARAMETER ( JPLONO = 2560 , J2NFFT = 2 + JPLONO, JPFFT = 12000)
+      PARAMETER ( JPLONO = 6000 , J2NFFT = 2 + JPLONO, JPFFT = 12000)
+      PARAMETER ( JPLOOK = 50)
+      PARAMETER ( JPMAX = 2048 )
+      PARAMETER ( JPMAXITER = 10)
+      PARAMETER ( JPMXTRY = 3 )
+      PARAMETER ( JPTRNC = 2047, JPK = (JPTRNC + 1)*(JPTRNC + 4) )
+      PARAMETER ( JPTRP1 = (JPTRNC + 1) )
+C
+      REAL PPEPSA, PPQUART, PPHALF, PPTWO, PP90
+      PARAMETER ( PPEPSA = 1.0E-6)
+      PARAMETER ( PPQUART = 0.25E0)
+      PARAMETER ( PPHALF = 0.5E0)
+      PARAMETER ( PPTWO = 2.0E0)
+      PARAMETER ( PP90 = 90.0E0)
+C
+      REAL PPI
+      PARAMETER ( PPI = 3.14159265358979 )
+C
+C     Debug parameters
+C
+      INTEGER NDBG, NDBGLP
+      COMMON /JDCNDBG/ NDBG, NDBGLP

@@ -29,7 +29,7 @@ import inspect
 
 _VERSION_STR = '7.1'
 
-QUEUES_LIST = ['ecgate', 'cca']
+QUEUES_LIST = ['ecgate', 'cca', 'ccb']
 
 # ------------------------------------------------------------------------------
 # FILENAMES
@@ -77,7 +77,7 @@ PATH_ECMWF_ENV = os.path.join(PATH_RUN_DIR, FILE_USER_ENVVARS)
 PATH_GRIBTABLE = os.path.join(PATH_TEMPLATES, FILE_GRIBTABLE)
 PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')
 PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'fortran')
-PATH_TEST_DIR = os.path.join(PATH_SOURCES, 'pythontest')
+PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
 if os.getenv('CONTROL'):
     # this is only needed if gateway version with job script is used!

@@ -754,15 +754,12 @@ class EcFlexpart(object):
         # index_vals[1]: ('0', '1200', '1800', '600') ; time
         # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
+        # initialize dictionaries
         valsdict = {}
         svalsdict = {}
-#        stepsdict = {}
         for p in pars:
             valsdict[str(p)] = []
             svalsdict[str(p)] = []
-#            stepsdict[str(p)] = []
-
-        print('maxstep: ', c.maxstep)
 
         # "product" genereates each possible combination between the
         # values of the index keys
@@ -827,7 +824,6 @@ class EcFlexpart(object):
                     values = grib_get_values(gid)
                     vdp = valsdict[cparamId]
                     svdp = svalsdict[cparamId]
- #                   sd = stepsdict[cparamId]
 
                     if cparamId == '142' or cparamId == '143':
                         fak = 1. / 1000.
@@ -1193,8 +1189,8 @@ class EcFlexpart(object):
             ofile = os.path.join(self.inputdir, ofile)
 
             if c.format.lower() == 'grib2':
-                p = subprocess.check_call(['grib_set', '-s', 'edition=2, \
-                                           productDefinitionTemplateNumber=8',
+                p = subprocess.check_call(['grib_set', '-s', 'edition=2,',
+                                           'productDefinitionTemplateNumber=8',
                                            ofile, ofile + '_2'])
                 p = subprocess.check_call(['mv', ofile + '_2', ofile])
 

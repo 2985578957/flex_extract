@@ -53,6 +53,7 @@ import sys
 import glob
 import subprocess
 import traceback
+import exceptions
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # ------------------------------------------------------------------------------
@@ -187,13 +188,13 @@ def get_cmdline_arguments():
 
     return args
 
-def read_ecenv(filename):
+def read_ecenv(filepath):
     '''Reads the file into a dictionary where the key values are the parameter
     names.
 
     Parameters
     ----------
-    filename : :obj:`string`
+    filepath : :obj:`string`
         Path to file where the ECMWF environment parameters are stored.
 
     Return
@@ -203,16 +204,25 @@ def read_ecenv(filename):
         and destination for ECMWF server environments.
     '''
     envs= {}
+    try:
+        with open(filepath, 'r') as f:
+            for line in f:
+                data = line.strip().split()
+                envs[str(data[0])] = str(data[1])
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
-    with open(filename, 'r') as f:
-        for line in f:
-            data = line.strip().split()
-            envs[str(data[0])] = str(data[1])
+        sys.exit('\n... Error occured while trying to read ECMWF_ENV '
+                     'file: ' + str(filepath))
 
     return envs
 
 def clean_up(c):
-    '''Remove all files from intermediate directory (inputdir).
+    '''Remove files from the intermediate directory (inputdir).
+
+    It keeps the final FLEXPART input files if program runs without
+    ECMWF Api and keywords "ectrans" or "ecstorage" are set to "1".
 
     Parameters
     ----------
@@ -225,16 +235,19 @@ def clean_up(c):
 
     '''
 
-    print("clean_up")
+    print("... clean inputdir!")
 
-    cleanlist = glob.glob(c.inputdir + "/*")
-    for clist in cleanlist:
-        if c.prefix not in clist:
-            silent_remove(clist)
-        if c.ecapi is False and (c.ectrans == '1' or c.ecstorage == '1'):
-            silent_remove(clist)
+    cleanlist = glob.glob(os.path.join(c.inputdir, "*"))
 
-    print("Done")
+    if cleanlist:
+        for element in cleanlist:
+            if c.prefix not in element:
+                silent_remove(element)
+            if c.ecapi is False and (c.ectrans == 1 or c.ecstorage == 1):
+                silent_remove(element)
+        print("... done!")
+    else:
+        print("... nothing to clean!")
 
     return
 
@@ -258,42 +271,31 @@ def my_error(users, message='ERROR'):
 
     '''
 
-    print(message)
+    trace = '\n'.join(traceback.format_stack())
+    full_message = message + '\n\n' + trace
 
-    # comment if user does not want email notification directly from python
-    for user in users:
-        if '${USER}' in user:
-            user = os.getenv('USER')
-        try:
-            p = subprocess.Popen(['mail', '-s flex_extract_v7.1 ERROR',
-                                  os.path.expandvars(user)],
-                                 stdin=subprocess.PIPE,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 bufsize=1)
-            trace = '\n'.join(traceback.format_stack())
-            pout = p.communicate(input=message + '\n\n' + trace)[0]
-        except ValueError as e:
-            print('ERROR: ', e)
-            sys.exit('Email could not be sent!')
-        else:
-            print('Email sent to ' + os.path.expandvars(user) + ' ' +
-                  pout.decode())
+    print(full_message)
+
+    send_mail(users, 'ERROR', full_message)
 
     sys.exit(1)
 
     return
 
 
-def normal_exit(users, message='Done!'):
+def send_mail(users, success_mode, message):
     '''Prints a specific exit message which can be passed to the function.
 
     Parameters
     ----------
-    user : :obj:`list` of :obj:`string`
+    users : :obj:`list` of :obj:`string`
         Contains all email addresses which should be notified.
         It might also contain just the ecmwf user name which wil trigger
         mailing to the associated email address for this user.
+
+    success_mode : :obj:``string`
+        States the exit mode of the program to put into
+        the mail subject line.
 
     message : :obj:`string`, optional
         Message for exiting program. Default value is "Done!".
@@ -302,32 +304,53 @@ def normal_exit(users, message='Done!'):
     ------
 
     '''
-    print(message)
 
-    # comment if user does not want notification directly from python
     for user in users:
         if '${USER}' in user:
             user = os.getenv('USER')
         try:
-            p = subprocess.Popen(['mail', '-s flex_extract_v7.1 normal exit',
-                                  os.path.expandvars(user)],
+            p = subprocess.Popen(['mail', '-s flex_extract_v7.1 ' +
+                                  success_mode, os.path.expandvars(user)],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  bufsize=1)
-            pout = p.communicate(input=message+'\n\n')[0]
+            pout = p.communicate(input=message + '\n\n')[0]
         except ValueError as e:
-            print('ERROR: ', e)
-            print('Email could not be sent!')
+            print('... ERROR: ' + str(e))
+            sys.exit('... Email could not be sent!')
+        except OSError as e:
+            print('... ERROR CODE: ' + str(e.errno))
+            print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+            sys.exit('... Email could not be sent!')
         else:
-            print('Email sent to ' + os.path.expandvars(user) + ' ' +
-                  pout.decode())
+            print('Email sent to ' + os.path.expandvars(user))
+
+    return
+
+
+def normal_exit(message='Done!'):
+    '''Prints a specific exit message which can be passed to the function.
+
+    Parameters
+    ----------
+    message : :obj:`string`, optional
+        Message for exiting program. Default value is "Done!".
+
+    Return
+    ------
+
+    '''
+
+    print(str(message))
 
     return
 
 
 def product(*args, **kwds):
-    '''This method combines the single characters of the passed arguments
+    '''Creates combinations of all passed arguments.
+
+    This method combines the single characters of the passed arguments
     with each other. So that each character of each argument value
     will be combined with each character of the other arguments as a tuple.
 
@@ -344,7 +367,7 @@ def product(*args, **kwds):
 
     Parameters
     ----------
-    \*args : :obj:`tuple`
+    \*args : :obj:`list` or :obj:`string`
         Positional arguments (arbitrary number).
 
     \*\*kwds : :obj:`dictionary`
@@ -356,12 +379,15 @@ def product(*args, **kwds):
         Return will be done with "yield". A tuple of combined arguments.
         See example in description above.
     '''
-    pools = map(tuple, args) * kwds.get('repeat', 1)
-    result = [[]]
-    for pool in pools:
-        result = [x + [y] for x in result for y in pool]
-    for prod in result:
-        yield tuple(prod)
+    try:
+        pools = map(tuple, args) * kwds.get('repeat', 1)
+        result = [[]]
+        for pool in pools:
+            result = [x + [y] for x in result for y in pool]
+        for prod in result:
+            yield tuple(prod)
+    except TypeError as e:
+        sys.exit('... PRODUCT GENERATION FAILED!')
 
     return
 
@@ -382,8 +408,10 @@ def silent_remove(filename):
     try:
         os.remove(filename)
     except OSError as e:
-        if e.errno != errno.ENOENT:
-            # errno.ENOENT  =  no such file or directory
+        # errno.ENOENT  =  no such file or directory
+        if e.errno == errno.ENOENT:
+            pass
+        else:
             raise  # re-raise exception if a different error occured
 
     return
@@ -405,11 +433,19 @@ def init128(filepath):
         short name of the parameter.
     '''
     table128 = dict()
-    with open(filepath) as f:
-        fdata = f.read().split('\n')
-    for data in fdata:
-        if data[0] != '!':
-            table128[data[0:3]] = data[59:64].strip()
+    try:
+        with open(filepath) as f:
+            fdata = f.read().split('\n')
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... Error occured while trying to read parameter '
+                 'table file: ' + str(filepath))
+    else:
+        for data in fdata:
+            if data[0] != '!':
+                table128[data[0:3]] = data[59:64].strip()
 
     return table128
 
@@ -436,6 +472,11 @@ def to_param_id(pars, table):
         List of addpar parameters from CONTROL file transformed to
         parameter ids in the format of integer.
     '''
+    if not pars:
+        return []
+    if not isinstance(pars, str):
+        pars=str(pars)
+
     cpar = pars.upper().split('/')
     ipar = []
     for par in cpar:
@@ -466,18 +507,22 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
         The content of the list as a single string.
     '''
 
+    if not isinstance(list_obj, list):
+        list_obj = list(list_obj)
     str_of_list = concatenate_sign.join(str(l) for l in list_obj)
 
     return str_of_list
 
 def make_dir(directory):
-    '''Creates a directory and gives a warning if the directory
-    already exists. The program stops only if there is another problem.
+    '''Creates a directory.
+
+    It gives a warning if the directory already exists and skips process.
+    The program stops only if there is another problem.
 
     Parameters
     ----------
     directory : :obj:`string`
-        The directory name including the path which should be created.
+        The path to directory which should be created.
 
     Return
     ------
@@ -486,11 +531,11 @@ def make_dir(directory):
     try:
         os.makedirs(directory)
     except OSError as e:
-        if e.errno != errno.EEXIST:
-            # errno.EEXIST = directory already exists
-            raise # re-raise exception if a different error occured
-        else:
+        # errno.EEXIST = directory already exists
+        if e.errno == errno.EEXIST:
             print('WARNING: Directory {0} already exists!'.format(directory))
+        else:
+            raise # re-raise exception if a different error occured
 
     return
 
@@ -522,26 +567,30 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
 
     Return
     ------
-    rcode : :obj:`string`
-        Resulting code of command execution. If successful the string
-        will be empty.
+
     '''
 
     try:
-        rcode = subprocess.check_output(['ecaccess-file-put',
-                                          ecd + '/' + filename,
-                                          target + ':/home/ms/' +
-                                          ecgid + '/' + ecuid +
-                                          '/' + filename],
-                                         stderr=subprocess.STDOUT)
+        subprocess.check_output(['ecaccess-file-put',
+                                 ecd + '/' + filename,
+                                 target + ':/home/ms/' +
+                                 ecgid + '/' + ecuid +
+                                 '/' + filename],
+                                stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
-        print('... ERROR CODE:\n ... ' + str(e.returncode))
-        print('... ERROR MESSAGE:\n ... ' + str(e))
+        print('... ERROR CODE: ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n \t ' + str(e))
 
         print('\n... Do you have a valid ecaccess certification key?')
         sys.exit('... ECACCESS-FILE-PUT FAILED!')
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
-    return rcode
+        print('\n... Most likely the ECACCESS library is not available!')
+        sys.exit('... ECACCESS-FILE-PUT FAILED!')
+
+    return
 
 def submit_job_to_ecserver(target, jobname):
     '''Uses ecaccess-job-submit command to submit a job to the ECMWF server.
@@ -562,22 +611,25 @@ def submit_job_to_ecserver(target, jobname):
 
     Return
     ------
-    rcode : :obj:`string`
-        Resulting code of command execution. If successful the string
-        will contain an integer number, representing the id of the job
-        at the ecmwf server.
+    job_id : :obj:`int`
+        The id number of the job as a reference at the ecmwf server.
     '''
 
     try:
-        rcode = subprocess.check_output(['ecaccess-job-submit',
-                                         '-queueName', target,
-                                         jobname])
-    except subprocess.CalledProcessError as e:
-        print('... ERROR CODE:\n ... ' + str(e.returncode))
-        print('... ERROR MESSAGE:\n ... ' + str(e))
+        job_id = subprocess.check_output(['ecaccess-job-submit', '-queueName',
+                                          target, jobname])
 
+    except subprocess.CalledProcessError as e:
+        print('... ERROR CODE: ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n \t ' + str(e))
 
         print('\n... Do you have a valid ecaccess certification key?')
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
-    return rcode
+        print('\n... Most likely the ECACCESS library is not available!')
+        sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
+
+    return job_id
