@@ -22,6 +22,8 @@
    integer :: l(size(mpar))
    character*(*):: filename                             
 
+   feld = 0.
+   
    call grib_open_file(ifile, TRIM(FILENAME),'r')
  
    ! count the messages in the file
