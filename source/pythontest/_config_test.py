@@ -39,10 +39,10 @@ import _config
 # ------------------------------------------------------------------------------
 TEST_DIR = 'test'
 TESTFILES_DIR = 'Testfiles'
-
+TESTINSTALL_DIR = 'InstallTar'
 # ------------------------------------------------------------------------------
 #  PATHES
 # ------------------------------------------------------------------------------
 PATH_TEST_DIR = os.path.join(_config.PATH_FLEXEXTRACT_DIR, TEST_DIR)
 PATH_TESTFILES_DIR = os.path.join(PATH_TEST_DIR, TESTFILES_DIR)
-
+PATH_TESTINSTALL_DIR = os.path.join(PATH_TEST_DIR, TESTINSTALL_DIR)

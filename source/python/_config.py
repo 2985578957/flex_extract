@@ -92,7 +92,8 @@ else:
 # flex_extract root directory are needed
 # ------------------------------------------------------------------------------
 
-PATH_REL_PYTHON = os.path.relpath(PATH_LOCAL_PYTHON, PATH_FLEXEXTRACT_DIR)
+PATH_REL_PYTHON_SRC = os.path.relpath(PATH_LOCAL_PYTHON, PATH_FLEXEXTRACT_DIR)
+PATH_REL_PYTHONTEST_SRC = os.path.relpath(PATH_PYTHONTEST_SRC, PATH_FLEXEXTRACT_DIR)
 PATH_REL_CONTROLFILES = os.path.relpath(PATH_CONTROLFILES, PATH_FLEXEXTRACT_DIR)
 PATH_REL_TEMPLATES = os.path.relpath(PATH_TEMPLATES, PATH_FLEXEXTRACT_DIR)
 PATH_REL_ECMWF_ENV = os.path.relpath(PATH_ECMWF_ENV, PATH_FLEXEXTRACT_DIR)

@@ -53,6 +53,7 @@ import sys
 import glob
 import subprocess
 import inspect
+import tarfile
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # software specific classes and modules from flex_extract
@@ -238,7 +239,6 @@ def mk_tarball(tarball_path, target):
     ------
 
     '''
-    import tarfile
     from glob import glob
 
     print('Create tarball ...')
@@ -251,38 +251,63 @@ def mk_tarball(tarball_path, target):
     # get lists of the files to be added to the tar file
     if target == 'local':
         ECMWF_ENV_FILE = []
+        runfile = [os.path.relpath(x, ecd)
+                   for x in UioFiles(_config.PATH_REL_RUN_DIR,
+                                     'run_local.sh').files]
     else:
         ECMWF_ENV_FILE = [_config.PATH_REL_ECMWF_ENV]
+        runfile = [os.path.relpath(x, ecd)
+                       for x in UioFiles(_config.PATH_REL_RUN_DIR,
+                                         'run.sh').files]
 
     pyfiles = [os.path.relpath(x, ecd)
-               for x in UioFiles(_config.PATH_LOCAL_PYTHON, '*py').files]
+               for x in UioFiles(_config.PATH_REL_PYTHON_SRC, '*py').files]
+    pytestfiles = [os.path.relpath(x, ecd)
+               for x in UioFiles(_config.PATH_REL_PYTHONTEST_SRC, '*py').files]
     controlfiles = [os.path.relpath(x, ecd)
-                    for x in UioFiles(_config.PATH_CONTROLFILES,
+                    for x in UioFiles(_config.PATH_REL_CONTROLFILES,
                                       'CONTROL*').files]
     tempfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_TEMPLATES , '*').files]
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*.temp').files]
+    nlfiles = [os.path.relpath(x, ecd)
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*.nl').files]
+    gribtable = [os.path.relpath(x, ecd)
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*grib*').files]
     ffiles = [os.path.relpath(x, ecd)
-              for x in UioFiles(_config.PATH_FORTRAN_SRC, '*.f*').files]
+              for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.f*').files]
     hfiles = [os.path.relpath(x, ecd)
-              for x in UioFiles(_config.PATH_FORTRAN_SRC, '*.h').files]
+              for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.h').files]
     makefiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_FORTRAN_SRC, 'Makefile*').files]
+                 for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, 'Makefile*').files]
+    jobdir = [_config.PATH_REL_JOBSCRIPTS]
 
     # concatenate single lists to one for a better looping
-    filelist = pyfiles + controlfiles + tempfiles + ffiles + hfiles + \
-               makefiles + ECMWF_ENV_FILE
+    filelist = pyfiles + pytestfiles + controlfiles + tempfiles + nlfiles + \
+               ffiles + gribtable + hfiles + makefiles + ECMWF_ENV_FILE + \
+               runfile + jobdir + \
+               ['CODE_OF_CONDUCT.md', 'LICENSE.md', 'README.md']
 
     # create installation tar-file
+    exclude_files = [".ksh"]
     try:
         with tarfile.open(tarball_path, "w:gz") as tar_handle:
             for file in filelist:
-                tar_handle.add(file)
-
+                tar_handle.add(file, recursive=False,
+                               filter=lambda tarinfo: None
+                                      if os.path.splitext(tarinfo.name)[1]
+                                         in exclude_files
+                                      else tarinfo)
     except subprocess.CalledProcessError as e:
         print('... ERROR CODE:\n ... ' + str(e.returncode))
         print('... ERROR MESSAGE:\n ... ' + str(e))
 
-        sys.exit('... could not make installation tar ball!')
+        sys.exit('\n... could not make installation tar ball!')
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to read tar-file ' +
+                 str(tarball_path))
 
     return
 
@@ -300,12 +325,21 @@ def un_tarball(tarball_path):
     ------
 
     '''
-    import tarfile
 
     print('Untar ...')
 
-    with tarfile.open(tarball_path) as tar_handle:
-        tar_handle.extractall()
+    try:
+        with tarfile.open(tarball_path) as tar_handle:
+            tar_handle.extractall()
+    except tarfile.TarError as e:
+        sys.exit('\n... error occured while trying to read tar-file ' +
+                     str(tarball_path))
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to read tar-file ' +
+                 str(tarball_path))
 
     return
 
@@ -335,19 +369,39 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
+    from genshi.template.eval import UndefinedError
 
-    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
-    ecmwfvars_template = loader.load(_config.TEMPFILE_USER_ENVVARS,
-                                     cls=NewTextTemplate)
+    try:
+        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+        ecmwfvars_template = loader.load(_config.TEMPFILE_USER_ENVVARS,
+                                         cls=NewTextTemplate)
 
-    stream = ecmwfvars_template.generate(user_name = ecuid,
-                                       user_group = ecgid,
-                                       gateway_name = gateway,
-                                       destination_name = destination
-                                       )
+        stream = ecmwfvars_template.generate(user_name = ecuid,
+                                             user_group = ecgid,
+                                             gateway_name = gateway,
+                                             destination_name = destination
+                                             )
+    except UndefinedError as e:
+        print('... ERROR ' + str(e))
 
-    with open(_config.PATH_ECMWF_ENV, 'w') as f:
-        f.write(stream.render('text'))
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.PATH_ECMWF_ENV)
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.PATH_ECMWF_ENV)
+
+    try:
+        with open(_config.PATH_ECMWF_ENV, 'w') as f:
+            f.write(stream.render('text'))
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to write ' +
+                 _config.PATH_ECMWF_ENV)
 
     return
 
@@ -381,28 +435,48 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
-
-    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
-    compile_template = loader.load(_config.TEMPFILE_INSTALL_COMPILEJOB,
-                                   cls=NewTextTemplate)
+    from genshi.template.eval import  UndefinedError
 
     if fp_root == '../':
         fp_root = '$HOME'
 
-    stream = compile_template.generate(
-        usergroup = ecgid,
-        username = ecuid,
-        version_number = _config._VERSION_STR,
-        fp_root_scripts = fp_root,
-        makefile = makefile,
-        fortran_program = _config.FORTRAN_EXECUTABLE
-    )
+    try:
+        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+        compile_template = loader.load(_config.TEMPFILE_INSTALL_COMPILEJOB,
+                                       cls=NewTextTemplate)
 
-    compilejob = os.path.join(_config.PATH_JOBSCRIPTS,
-                              _config.FILE_INSTALL_COMPILEJOB)
+        stream = compile_template.generate(
+            usergroup = ecgid,
+            username = ecuid,
+            version_number = _config._VERSION_STR,
+            fp_root_scripts = fp_root,
+            makefile = makefile,
+            fortran_program = _config.FORTRAN_EXECUTABLE
+        )
+    except UndefinedError as e:
+        print('... ERROR ' + str(e))
 
-    with open(compilejob, 'w') as f:
-        f.write(stream.render('text'))
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.TEMPFILE_INSTALL_COMPILEJOB)
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.TEMPFILE_INSTALL_COMPILEJOB)
+
+    try:
+        compilejob = os.path.join(_config.PATH_JOBSCRIPTS,
+                                  _config.FILE_INSTALL_COMPILEJOB)
+
+        with open(compilejob, 'w') as f:
+            f.write(stream.render('text'))
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to write ' +
+                 compilejob)
 
     return
 
@@ -436,27 +510,48 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
     '''
     from genshi.template.text import NewTextTemplate
     from genshi.template import  TemplateLoader
-
-    loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
-    compile_template = loader.load(_config.TEMPFILE_INSTALL_JOB,
-                                   cls=NewTextTemplate)
+    from genshi.template.eval import  UndefinedError
 
     fp_root_path_to_python = os.path.join(fp_root,
                                           _config.FLEXEXTRACT_DIRNAME,
-                                          _config.PATH_REL_PYTHON)
+                                          _config.PATH_REL_PYTHON_SRC)
 
-    stream = compile_template.generate(
-        usergroup = ecgid,
-        username = ecuid,
-        version_number = _config._VERSION_STR,
-        fp_root_path = fp_root_path_to_python,
-    )
+    try:
+        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+        compile_template = loader.load(_config.TEMPFILE_INSTALL_JOB,
+                                       cls=NewTextTemplate)
 
-    tempjobfile = os.path.join(_config.PATH_TEMPLATES,
-                               _config.TEMPFILE_JOB)
+        stream = compile_template.generate(
+            usergroup = ecgid,
+            username = ecuid,
+            version_number = _config._VERSION_STR,
+            fp_root_path = fp_root_path_to_python,
+        )
+    except UndefinedError as e:
+        print('... ERROR ' + str(e))
 
-    with open(tempjobfile, 'w') as f:
-        f.write(stream.render('text'))
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.TEMPFILE_INSTALL_JOB)
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to generate template ' +
+                 _config.TEMPFILE_INSTALL_JOB)
+
+
+    try:
+        tempjobfile = os.path.join(_config.PATH_TEMPLATES,
+                                   _config.TEMPFILE_JOB)
+
+        with open(tempjobfile, 'w') as f:
+            f.write(stream.render('text'))
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to write ' +
+                 tempjobfile)
 
     return
 
