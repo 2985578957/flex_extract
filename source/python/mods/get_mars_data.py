@@ -73,6 +73,7 @@ from tools import (my_error, normal_exit, get_cmdline_arguments,
                    read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
 from classes.UioFiles import UioFiles
+from classes.MarsRetrieval import MarsRetrieval
 
 try:
     ecapi = True
@@ -130,10 +131,24 @@ def get_mars_data(c):
     if not os.path.exists(c.inputdir):
         make_dir(c.inputdir)
 
-    if c.request == 0 or c.request == 2:
+    if c.request == 0:
         print("Retrieving EC data!")
-    elif c.request == 1:
-        print("Printing mars requests!")
+    else:
+        if c.request == 1:
+            print("Printing mars requests!")
+        elif c.request == 2:
+            print("Retrieving EC data and printing mars request!")
+        # first, write header with the mars parameter to file
+        # create a dummy MarsRetrieval to get parameter
+        MR = MarsRetrieval(None, None)
+        attrs = vars(MR).copy()
+        del attrs['server']
+        del attrs['public']
+        marsfile = os.path.join(c.inputdir, _config.FILE_MARS_REQUESTS)
+        with open(marsfile, 'w') as f:
+            f.write('request_number' + ', ')
+            f.write(', '.join(str(key) for key in sorted(attrs.iterkeys())))
+            f.write('\n')
 
     print("start date %s " % (c.start_date))
     print("end date %s " % (c.end_date))

@@ -100,7 +100,7 @@ def main():
     else:
         submit(args.job_template, c, args.queue)
 
-    normal_exit(c.mailops, c.queue, exit_message)
+    normal_exit(exit_message)
 
     return
 
