@@ -1,0 +1,19 @@
+&NAMGEN
+  maxl = 61,
+  maxb = 46,
+  mlevel = 60,
+  mlevelist = "55/to/60",
+  mnauf = 63,
+  metapar = 77,
+  rlo0 = -15.0,
+  rlo1 = 45.0,
+  rla0 = 30.0,
+  rla1 = 75.0,
+  momega = 0,
+  momegadiff = 0,
+  mgauss = 1,
+  msmooth = 0,
+  meta = 0,
+  metadiff = 0,
+  mdpdeta = 1
+/
