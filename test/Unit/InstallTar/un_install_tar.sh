@@ -9,16 +9,16 @@
 
 tarname='flex_extract_v7.1_local.tar'
 dirname='flex_extract_v7.1_local'
-path=../../test/InstallTar/
+path=../../test/Unit/InstallTar/
 mkdir $path$dirname
 cd $path$dirname
 tar xvf ../$tarname 
-cd ../../../source/pythontest
+cd ../../../../source/pythontest
 
 tarname='flex_extract_v7.1_ecgate.tar'
 dirname='flex_extract_v7.1_ecgate'
-path=../../test/InstallTar/
+path=../../test/Unit/InstallTar/
 mkdir $path$dirname
 cd $path$dirname
 tar xvf ../$tarname 
-cd ../../../source/pythontest
+cd ../../../../source/pythontest

@@ -12,7 +12,7 @@ path=../../
 
 tarname='flex_extract_v7.1_local.tar'
 
-tar -cvf ../../test/InstallTar/$tarname \
+tar -cvf ../../test/Unit/InstallTar/$tarname \
         ${path}source/python/classes/*py \
         ${path}source/python/mods/*py \
         ${path}source/python/*py \
@@ -36,7 +36,7 @@ tar -cvf ../../test/InstallTar/$tarname \
                   
 tarname='flex_extract_v7.1_ecgate.tar'
 
-tar -cvf ../../test/InstallTar/$tarname \
+tar -cvf ../../test/Unit/InstallTar/$tarname \
         ${path}source/python/classes/*py \
         ${path}source/python/mods/*py \
         ${path}source/python/*py \
