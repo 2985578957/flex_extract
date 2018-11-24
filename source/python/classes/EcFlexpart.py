@@ -423,13 +423,11 @@ class EcFlexpart(object):
         index_vals = []
         for key in index_keys:
             key_vals = codes_index_get(iid, key)
-            print(key_vals)
-            # have to sort the steps for disaggregation,
+            # have to sort the key values for correct disaggregation,
             # therefore convert to int first
-            if key == 'step':
-                key_vals = [int(k) for k in key_vals]
-                key_vals.sort()
-                key_vals = [str(k) for k in key_vals]
+            key_vals = [int(k) for k in key_vals]
+            key_vals.sort()
+            key_vals = [str(k) for k in key_vals]
             index_vals.append(key_vals)
             # index_vals looks for example like:
             # index_vals[0]: ('20171106', '20171107', '20171108') ; date
@@ -761,7 +759,7 @@ class EcFlexpart(object):
             # e.g. prod = ('20170505', '0', '12')
             #             (  date    ,time, step)
 
-            print('current product: ', prod)
+            print('CURRENT PRODUCT: ', prod)
 
             for i in range(len(index_keys)):
                 codes_index_select(iid, index_keys[i], prod[i])
@@ -859,9 +857,9 @@ class EcFlexpart(object):
                         codes_set_values(gid, values)
 
                         if c.maxstep > 12:
-                            codes_set(gid, 'step', max(0, step-2*int(c.dtime)))
+                            codes_set(gid, 'stepRange', max(0, step-2*int(c.dtime)))
                         else:
-                            codes_set(gid, 'step', 0)
+                            codes_set(gid, 'stepRange', 0)
                             codes_set(gid, 'time', t_m2dt.hour*100)
                             codes_set(gid, 'date', int(t_m2dt.strftime('%Y%m%d')))
 
@@ -886,7 +884,7 @@ class EcFlexpart(object):
 
                             values = svdp[3]
                             codes_set_values(gid, values)
-                            codes_set(gid, 'step', 0)
+                            codes_set(gid, 'stepRange', 0)
                             truedatetime = t_m2dt + timedelta(hours=
                                                               2*int(c.dtime))
                             codes_set(gid, 'time', truedatetime.hour * 100)
@@ -901,7 +899,7 @@ class EcFlexpart(object):
                             else:
                                 values = disaggregation.dapoly(list(reversed(svdp)))
 
-                            codes_set(gid, 'step', 0)
+                            codes_set(gid, 'stepRange', 0)
                             truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
                             codes_set(gid, 'time', truedatetime.hour * 100)
                             codes_set(gid, 'date', truedatetime.year * 10000 +
