@@ -196,7 +196,7 @@ def interpret_args_and_control(*args,**kwargs):
         c.request=args.request
 
     if c.request != '0':
-        marsfile = os.path.join(c.inputdir, 'mars_request.csv')
+        marsfile = os.path.join(c.inputdir, 'mars_requests.csv')
         if os.path.isfile(marsfile):
             os.remove(marsfile)
 
@@ -577,6 +577,11 @@ class Control:
 
             if not hasattr(self,'request'):
                 self.request='0'
+            elif self.request != 0:
+                marsfile = os.path.join(self.inputdir,
+                                        'mars_requests.csv')
+                if os.path.isfile(marsfile):
+                    silentremove(marsfile)
 
         return
     def __str__(self):
@@ -674,11 +679,12 @@ class MARSretrieval:
         '''
 
         # Get all class attributes and their values as a dictionary
-        attrs = vars(self)
+        attrs = vars(self).copy()
         del attrs['server']
+        del attrs['public']
 
         # open a file to store all requests to
-        with open(os.path.join(inputdir, 'mars_request.csv'), 'a') as f:
+        with open(os.path.join(inputdir, 'mars_requests.csv'), 'a') as f:
             f.write(str(request_number) + ', ')
             f.write(', '.join(str(attrs[key])
                         for key in sorted(attrs.iterkeys())))
@@ -1474,8 +1480,8 @@ class EIFlexpart:
                 key_vals=[]
                 for k in l:
                     key_vals.append(str(k))
-
-            index_vals.append(key_vals)
+    
+                index_vals.append(key_vals)
 
 
         valsdict={}
