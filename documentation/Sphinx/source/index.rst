@@ -93,7 +93,11 @@ All third-party software and libraries required by flex_extract are open source 
     
 .. note::
  
-   License text put in here! Which one?
+   ![][/documentation/Sphinx/source/_static/cc-by-40.png]
+   This work is licensed under the Creative Commons Attribution 4.0
+   International License. To view a copy of this license, visit
+   http://creativecommons.org/licenses/by/4.0/ or send a letter to
+   Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 .. toctree::
    :maxdepth: 3
