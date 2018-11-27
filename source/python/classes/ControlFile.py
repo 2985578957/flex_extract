@@ -344,8 +344,6 @@ class ControlFile(object):
                 sys.exit(1)
 
         # assure consistency of levelist and level
-        # up-to-date available maximum level numbers at ECMWF, 05.10.2018
-        max_level_list = [16, 19, 31, 40, 50, 60, 62, 91, 137]
         if not self.levelist and not self.level:
             print('Warning: neither levelist nor level \
                                specified in CONTROL file')
@@ -359,11 +357,11 @@ class ControlFile(object):
             pass
 
         # check if max level is a valid level
-        if int(self.level) not in max_level_list:
+        if int(self.level) not in _config.MAX_LEVEL_LIST:
             print('ERROR: ')
             print('LEVEL must be the maximum level of a specified '
                   'level list from ECMWF, e.g.')
-            print('[16, 19, 31, 40, 50, 60, 62, 91 or 137]')
+            print(_config.MAX_LEVEL_LIST)
             print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
             sys.exit(1)
 
