@@ -12,16 +12,14 @@
 
 OPT	= -g
 DEBUG	= -g
-LIB     =  $(GRIB_API_LIB) $(EMOSLIB)  
-#$(ECCODES_LIB) 
+LIB     =  $(ECCODES_LIB) $(EMOSLIB)   
 
 FC=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  
 F90C=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian 
 
-FFLAGS =  $(OPT) -I. -I$(GRIB_API_INCLUDE_DIR)  
-#-I$(ECCODES_INCLUDE_DIR)
-F90FLAGS =  $(OPT) -I. -I$(GRIB_API_INCLUDE_DIR) 
-#-I$(ECCODES_INCLUDE_DIR)
+FFLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR) 
+
+F90FLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR)
 
 LDFLAGS =  $(OPT)
 
@@ -38,7 +36,7 @@ EXE	=      CONVERT2
 all:	${EXE}
 
 clean:
-	rm *.o
+	rm *.o *.mod ${EXE}
 
 phgrreal.o: phgrreal.f
 	$(F90C) -c -g -O3 -fopenmp phgrreal.f
