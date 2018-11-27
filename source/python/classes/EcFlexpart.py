@@ -193,17 +193,8 @@ class EcFlexpart(object):
         # for gaussian grid retrieval
         self.glevelist = '1/to/' + c.level
         self.gaussian = c.gaussian
-
-        if 'N' in c.grid:  # Gaussian output grid
-            self.grid = c.grid
-            self.area = 'G'
-        else:
-            self.grid = '{}/{}'.format(int(c.grid) / 1000., int(c.grid) / 1000.)
-            self.area = '{}/{}/{}/{}'.format(int(c.upper) / 1000.,
-                                             int(c.left) / 1000.,
-                                             int(c.lower) / 1000.,
-                                             int(c.right) / 1000.)
-
+        self.grid = c.grid
+        self.area = c.area
         self.outputfilelist = []
 
 
@@ -1105,6 +1096,9 @@ class EcFlexpart(object):
                 print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
                 my_error(c.mailfail, 'fort.21 is empty while parameter eta \
                          is set to 1 in CONTROL file')
+
+            # write out all output to log file before starting fortran programm
+            sys.stdout.flush()
 
             # Fortran program creates file fort.15 (with u,v,etadot,t,sp,q)
             p = subprocess.check_call([os.path.join(

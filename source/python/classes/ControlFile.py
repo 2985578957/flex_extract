@@ -326,8 +326,8 @@ class ControlFile(object):
         # check for having at least a starting date
         # otherwise program is not allowed to run
         if not self.start_date:
-            print('start_date specified neither in command line nor \
-                   in CONTROL file ' +  self.controlfile)
+            print('start_date specified neither in command line nor '
+                  'in CONTROL file ' +  self.controlfile)
             print('Try "' + sys.argv[0].split('/')[-1] +
                   ' -h" to print usage information')
             sys.exit(1)
@@ -365,16 +365,6 @@ class ControlFile(object):
             print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
             sys.exit(1)
 
-        # if area was provided (only from commandline)
-        # decompose area into its 4 components
-        if self.area:
-            components = self.area.split('/')
-            # convert float to integer coordinates
-            if '.' in self.area:
-                components = [str(int(float(item) * 1000))
-                              for i, item in enumerate(components)]
-            self.upper, self.left, self.lower, self.right = components
-
         # prepare step list if "/" signs are found
         if '/' in self.step:
             steps = self.step.split('/')
@@ -385,8 +375,8 @@ class ControlFile(object):
                 self.step = ['{:0>3}'.format(i) for i in ilist]
             elif 'to' in self.step.lower() and 'by' not in self.step.lower():
                 my_error(self.mailfail, self.step + ':\n' +
-                         'if "to" is used in steps parameter, \
-                         please use "by" as well')
+                         'if "to" is used in steps parameter, '
+                         'please use "by" as well')
             else:
                 self.step = steps
 
@@ -426,10 +416,10 @@ class ControlFile(object):
         if queue in _config.QUEUES_LIST and \
            not self.gateway or not self.destination or \
            not self.ecuid or not self.ecgid:
-            print('\nEnvironment variables GATEWAY, DESTINATION, ECUID and \
-                   ECGID were not set properly!')
-            print('Please check for existence of file "ECMWF_ENV" in the \
-                   python directory!')
+            print('\nEnvironment variables GATEWAY, DESTINATION, ECUID and '
+                  'ECGID were not set properly!')
+            print('Please check for existence of file "ECMWF_ENV" in the '
+                  'python directory!')
             sys.exit(1)
 
         if self.request != 0:
@@ -483,6 +473,33 @@ class ControlFile(object):
             print('... Control paramter ACCMAXSTEP was not defined.')
             print('Use default value "12" for flux forecast!')
             self.accmaxstep='12'
+
+        # if area was provided (only from commandline)
+        # decompose area into its 4 components
+        if self.area:
+            components = self.area.split('/')
+            self.upper, self.left, self.lower, self.right = components
+
+        # convert grid and area components to correct format and input
+        if 'N' in self.grid:  # Gaussian output grid
+            self.area = 'G'
+        else:
+            # check on grid format
+            if float(self.grid) / 100. >= 0.5:
+                # grid is defined in 1/1000 degrees; old method
+                self.grid = '{}/{}'.format(float(self.grid) / 1000.,
+                                           float(self.grid) / 1000.)
+                self.area = '{}/{}/{}/{}'.format(float(self.upper) / 1000.,
+                                                 float(self.left) / 1000.,
+                                                 float(self.lower) / 1000.,
+                                                 float(self.right) / 1000.)
+            elif float(self.grid) / 100. < 0.5:
+                # grid is defined in normal degree; new method
+                self.grid = '{}/{}'.format(float(self.grid), float(self.grid))
+                self.area = '{}/{}/{}/{}'.format(float(self.upper),
+                                                 float(self.left),
+                                                 float(self.lower),
+                                                 float(self.right))
 
         return
 

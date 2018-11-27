@@ -106,8 +106,6 @@ def check_filepattern(filename):
         return True
     return False
 
-
-
 def get_cmdline_arguments():
     '''Decomposes the command line arguments and assigns them to variables.
     Apply default values for non mentioned arguments.
