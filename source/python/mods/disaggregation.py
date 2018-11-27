@@ -209,27 +209,27 @@ def IA3(g):
     import numpy as np
 
     # time step
-    dt=1.0
+    dt = 1.0
 
     ############### Non-negative Geometric Mean Based Algorithm ###############
 
     # for the left boundary the following boundary condition is valid:
     # the value at t=0 of the interpolation algorithm coincides with the
     # first data value according to the persistence hypothesis
-    f=[g[0]]
+    f = [g[0]]
 
     # compute two first sub-grid intervals without monotonicity check
     # go through the data series and extend each interval by two sub-grid
     # points and interpolate the corresponding data values
     # except for the last interval due to boundary conditions
-    for i in range(0,2):
+    for i in range(0, 2):
 
         # as a requirement:
         # if there is a zero data value such that g[i]=0, then the whole
         # interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0
         # according to Eq. (6)
-        if g[i]==0.:
-            f.extend([0.,0.,0.])
+        if g[i] == 0.:
+            f.extend([0., 0., 0.])
 
         # otherwise the sub-grid values are calculated and added to the list
         else:
@@ -244,11 +244,11 @@ def IA3(g):
 
             # the function value at the first sub-grid point (fi1) is determined
             # according to the equal area condition with Eq. (19)
-            fi1=3./2.*g[i]-5./12.*fip1-1./12.*fi
+            fi1 = 3./2.*g[i]-5./12.*fip1-1./12.*fi
 
             # the function value at the second sub-grid point (fi2) is determined
             # according Eq. (18)
-            fi2=fi1+1./3.*(fip1-fi)
+            fi2 = fi1+1./3.*(fip1-fi)
 
             # add next interval of interpolated (sub-)grid values
             f.append(fi1)
@@ -259,18 +259,18 @@ def IA3(g):
     # go through the data series and extend each interval by two sub-grid
     # points and interpolate the corresponding data values
     # except for the last interval due to boundary conditions
-    for i in range(2,len(g)-1):
+    for i in range(2, len(g)-1):
 
         # as a requirement:
         # if there is a zero data value such that g[i]=0, then the whole
         # interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0
         # according to Eq. (6)
-        if g[i]==0.:
+        if g[i] == 0.:
             # apply monotonicity filter for interval before
             # check if there is "M" or "W" shape
-            if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5])==-1 \
-               and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4])==-1 \
-               and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3])==-1:
+            if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5]) == -1 \
+               and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4]) == -1 \
+               and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3]) == -1:
 
                 # the monotonicity filter corrects the value at (fim1) by
                 # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
@@ -282,11 +282,11 @@ def IA3(g):
                 # recomputation of the sub-grid interval values while the
                 # interval boundaries (fi) and (fip2) remains unchanged
                 # see Eq. (18) and (19)
-                f[-4]=fmon
-                f[-6]=3./2.*g[i-2]-5./12.*fmon-1./12.*f[-7]
-                f[-5]=f[-6]+(fmon-f[-7])/3.
-                f[-3]=3./2.*g[i-1]-5./12.*f[-1]-1./12.*fmon
-                f[-2]=f[-3]+(f[-1]-fmon)/3.
+                f[-4] = fmon
+                f[-6] = 3./2.*g[i-2]-5./12.*fmon-1./12.*f[-7]
+                f[-5] = f[-6]+(fmon-f[-7])/3.
+                f[-3] = 3./2.*g[i-1]-5./12.*f[-1]-1./12.*fmon
+                f[-2] = f[-3]+(f[-1]-fmon)/3.
 
             f.extend([0.,0.,0.])
 
@@ -299,21 +299,21 @@ def IA3(g):
             # the value at the end of the interval (fip1) is prescribed by the
             # geometric mean, restricted such that non-negativity is guaranteed
             # according to Eq. (25)
-            fip1=min( 3.*g[i] , 3.*g[i+1] , np.sqrt(g[i+1]*g[i]) )
+            fip1 = min( 3.*g[i] , 3.*g[i+1] , np.sqrt(g[i+1]*g[i]) )
 
             # the function value at the first sub-grid point (fi1) is determined
             # according to the equal area condition with Eq. (19)
-            fi1=3./2.*g[i]-5./12.*fip1-1./12.*fi
+            fi1 = 3./2.*g[i]-5./12.*fip1-1./12.*fi
 
             # the function value at the second sub-grid point (fi2) is determined
             # according Eq. (18)
-            fi2=fi1+1./3.*(fip1-fi)
+            fi2 = fi1+1./3.*(fip1-fi)
 
             # apply monotonicity filter for interval before
             # check if there is "M" or "W" shape
-            if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5])==-1 \
-               and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4])==-1 \
-               and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3])==-1:
+            if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5]) == -1 \
+               and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4]) == -1 \
+               and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3]) == -1:
 
                 # the monotonicity filter corrects the value at (fim1) by
                 # substituting (fim1) with fmon, see Eq. (27), (28) and (29)
@@ -325,11 +325,11 @@ def IA3(g):
                 # recomputation of the sub-grid interval values while the
                 # interval boundaries (fi) and (fip2) remains unchanged
                 # see Eq. (18) and (19)
-                f[-4]=fmon
-                f[-6]=3./2.*g[i-2]-5./12.*fmon-1./12.*f[-7]
-                f[-5]=f[-6]+(fmon-f[-7])/3.
-                f[-3]=3./2.*g[i-1]-5./12.*f[-1]-1./12.*fmon
-                f[-2]=f[-3]+(f[-1]-fmon)/3.
+                f[-4] = fmon
+                f[-6] = 3./2.*g[i-2]-5./12.*fmon-1./12.*f[-7]
+                f[-5] = f[-6]+(fmon-f[-7])/3.
+                f[-3] = 3./2.*g[i-1]-5./12.*f[-1]-1./12.*fmon
+                f[-2] = f[-3]+(f[-1]-fmon)/3.
 
             # add next interval of interpolated (sub-)grid values
             f.append(fi1)
@@ -342,12 +342,12 @@ def IA3(g):
     # if there is a zero data value such that g[i]=0, then the whole
     # interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0
     # according to Eq. (6)
-    if g[-1]==0.:
+    if g[-1] == 0.:
         # apply monotonicity filter for interval before
         # check if there is "M" or "W" shape
-        if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5])==-1 \
-           and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4])==-1 \
-           and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3])==-1:
+        if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5]) == -1 \
+           and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4]) == -1 \
+           and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3]) == -1:
 
             # the monotonicity filter corrects the value at (fim1) by
             # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
@@ -359,11 +359,11 @@ def IA3(g):
             # recomputation of the sub-grid interval values while the
             # interval boundaries (fi) and (fip2) remains unchanged
             # see Eq. (18) and (19)
-            f[-4]=fmon
-            f[-6]=3./2.*g[-3]-5./12.*fmon-1./12.*f[-7]
-            f[-5]=f[-6]+(fmon-f[-7])/3.
-            f[-3]=3./2.*g[-2]-5./12.*f[-1]-1./12.*fmon
-            f[-2]=f[-3]+(f[-1]-fmon)/3.
+            f[-4] = fmon
+            f[-6] = 3./2.*g[-3]-5./12.*fmon-1./12.*f[-7]
+            f[-5] = f[-6]+(fmon-f[-7])/3.
+            f[-3] = 3./2.*g[-2]-5./12.*f[-1]-1./12.*fmon
+            f[-2] = f[-3]+(f[-1]-fmon)/3.
 
         f.extend([0.,0.,0.])
 
@@ -384,9 +384,9 @@ def IA3(g):
 
         # apply monotonicity filter for interval before
         # check if there is "M" or "W" shape
-        if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5])==-1 \
-           and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4])==-1 \
-           and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3])==-1:
+        if     np.sign(f[-5]-f[-6]) * np.sign(f[-4]-f[-5]) == -1 \
+           and np.sign(f[-4]-f[-5]) * np.sign(f[-3]-f[-4]) == -1 \
+           and np.sign(f[-3]-f[-4]) * np.sign(f[-2]-f[-3]) == -1:
 
             # the monotonicity filter corrects the value at (fim1) by
             # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
@@ -398,11 +398,11 @@ def IA3(g):
             # recomputation of the sub-grid interval values while the
             # interval boundaries (fi) and (fip2) remains unchanged
             # see Eq. (18) and (19)
-            f[-4]=fmon
-            f[-6]=3./2.*g[-3]-5./12.*fmon-1./12.*f[-7]
-            f[-5]=f[-6]+(fmon-f[-7])/3.
-            f[-3]=3./2.*g[-2]-5./12.*f[-1]-1./12.*fmon
-            f[-2]=f[-3]+(f[-1]-fmon)/3.
+            f[-4] = fmon
+            f[-6] = 3./2.*g[-3]-5./12.*fmon-1./12.*f[-7]
+            f[-5] = f[-6]+(fmon-f[-7])/3.
+            f[-3] = 3./2.*g[-2]-5./12.*f[-1]-1./12.*fmon
+            f[-2] = f[-3]+(f[-1]-fmon)/3.
 
         # add next interval of interpolated (sub-)grid values
         f.append(fi1)
