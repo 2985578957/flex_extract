@@ -180,7 +180,7 @@ def get_cmdline_arguments():
 
     # this is only used by prepare_flexpart.py to rerun a postprocessing step
     parser.add_argument("--ppid", dest="ppid",
-                        type=none_or_int, default=None,
+                        type=none_or_str, default=None,
                         help="specify parent process id for \
                         rerun of prepare_flexpart")
 
