@@ -503,52 +503,6 @@ class ControlFile(object):
 
         return
 
-    def check_install_conditions(self):
-        '''Checks a couple of necessary attributes and conditions
-        for the installation such as if they exist and contain values.
-        Otherwise set default values.
-
-        Parameters
-        ----------
-
-        Return
-        ------
-
-        '''
-
-        if self.install_target and \
-           self.install_target not in ['local', 'ecgate', 'cca']:
-            print('ERROR: unknown or missing installation target ')
-            print('target: ', self.install_target)
-            print('please specify correct installation target ' +
-                  '(local | ecgate | cca)')
-            print('use -h or --help for help')
-            sys.exit(1)
-
-        if self.install_target and self.install_target != 'local':
-            if not self.ecgid or not self.ecuid or \
-               not self.gateway or not self.destination:
-                print('Please enter your ECMWF user id and group id as well ' +
-                      'as the \nname of the local gateway and the ectrans ' +
-                      'destination ')
-                print('with command line options --ecuid --ecgid \
-                       --gateway --destination')
-                print('Try "' + sys.argv[0].split('/')[-1] + \
-                      ' -h" to print usage information')
-                print('Please consult ecaccess documentation or ECMWF user \
-                       support for further details')
-                sys.exit(1)
-
-            if not self.flexpart_root_scripts:
-                self.flexpart_root_scripts = '${HOME}'
-            else:
-                self.flexpart_root_scripts = self.flexpart_root_scripts
-        else: # local
-            if not self.flexpart_root_scripts:
-                self.flexpart_root_scripts = _config.PATH_FLEXEXTRACT_DIR
-
-        return
-
     def to_list(self):
         '''Just generates a list of strings containing the attributes and
         assigned values except the attributes "_expanded", "exedir",

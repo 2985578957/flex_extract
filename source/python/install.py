@@ -79,7 +79,7 @@ def main():
     args = get_install_cmdline_arguments()
     c = ControlFile(args.controlfile)
     c.assign_args_to_control(args)
-    c.check_install_conditions()
+    check_install_conditions(c)
 
     install_via_gateway(c)
 
@@ -217,6 +217,57 @@ def install_via_gateway(c):
             os.remove(tar_file)
 
     return
+
+def check_install_conditions(c):
+    '''Checks a couple of necessary attributes and conditions
+    for the installation such as if they exist and contain values.
+    Otherwise set default values.
+
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+
+    Return
+    ------
+
+    '''
+
+    if c.install_target and \
+       c.install_target not in _config.INSTALL_TARGETS:
+        print('ERROR: unknown or missing installation target ')
+        print('target: ', c.install_target)
+        print('please specify correct installation target ' +
+              str(INSTALL_TARGETS))
+        print('use -h or --help for help')
+        sys.exit(1)
+
+    if c.install_target and c.install_target != 'local':
+        if not c.ecgid or not c.ecuid or \
+           not c.gateway or not c.destination:
+            print('Please enter your ECMWF user id and group id as well ' +
+                  'as the \nname of the local gateway and the ectrans ' +
+                  'destination ')
+            print('with command line options --ecuid --ecgid \
+                   --gateway --destination')
+            print('Try "' + sys.argv[0].split('/')[-1] + \
+                  ' -h" to print usage information')
+            print('Please consult ecaccess documentation or ECMWF user \
+                   support for further details')
+            sys.exit(1)
+
+        if not c.flexpart_root_scripts:
+            c.flexpart_root_scripts = '${HOME}'
+        else:
+            c.flexpart_root_scripts = c.flexpart_root_scripts
+    else: # local
+        if not c.flexpart_root_scripts:
+            c.flexpart_root_scripts = _config.PATH_FLEXEXTRACT_DIR
+
+    return
+
 
 def mk_tarball(tarball_path, target):
     '''Creates a tarball with all necessary files which need to be sent to the

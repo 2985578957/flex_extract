@@ -31,6 +31,8 @@ _VERSION_STR = '7.1'
 
 QUEUES_LIST = ['ecgate', 'cca', 'ccb']
 
+INSTALL_TARGETS = ['local', 'ecgate', 'cca']
+
 # up-to-date available maximum level numbers at ECMWF, 05.10.2018
 MAX_LEVEL_LIST = [16, 19, 31, 40, 50, 60, 62, 91, 137]
 
