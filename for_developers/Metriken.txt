@@ -1,0 +1,27 @@
+_____________________________________________________________________________________________
+
+Metrics:
+________
+
+Code Metrics:
+
+Performance Metrics:
+
+
+_____________________________________________________________________________________________
+
+Testcases:
+__________
+
+- unit tests of each function
+- Compare the parameter lists passed to the mars requests! (Regression)
+- Complete installation test with local sample webapi request before sending email 
+- test imports of gribapi, eccodes, webapi
+- test the types of parameters after controlfile /args reading and the checks
+- test complete extractions of a specific selection of cases -> are they fully extracted? 
+    * all final files in destination dir?
+    * contains each file the specified parameter?
+    * compare numerically....field per field?
+    * plot comparison? manually
+    
+_____________________________________________________________________________________________

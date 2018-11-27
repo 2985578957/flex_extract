@@ -1,0 +1,48 @@
+
+ Datensets: od, ei, ea, cera 
+ (je nach verfügbarkeit eta / gauss / omega )
+ -  jeweils: minimal grid (zb 1d, 1°), global, über Datumsgrenze
+ -  jeweils: grob/high resolution soweit möglich
+ - jeweils pro Datenstream!!!
+ - verschiedene zeitliche Auflösung
+ - public vs memberstate access
+ - 
+
+ - realistisches Datenset: OP, 0.1°, 60-137 , 20°N - 90°N, -180° - + 180°, jeweils eta und gauss
+ 
+
+
+
+Testdatensätze:
+- ERA5
+  - full resolution vs minimal resolution, testgrid
+  - 1h / 3h / 6h
+  - public vs member state
+  - eta
+
+- CERA
+  - full resolution vs minimal resolution, testgrid
+  - 3h / 6h
+  - public vs member state
+  - eta
+
+- ERA-Interim
+  - full resolution vs minimal resolution, testgrid
+  - 3h / 6h
+  - public vs member state
+  - gauss
+
+- Operational
+  - full resolution vs minimal resolution
+  - area: e.g. atm challenge2016 transition over 180°, europe, testgrid
+  - basetime 00/12
+  - maxstep > 24
+  - type: AN/FC/CF/CV/PF
+  - 1h/3h/6h
+  - eta vs gauss
+  - 
+  
+  
+  
+  mars_requests: 
+    all controlfiles from old and new to be compared!

@@ -1,7 +1,20 @@
 Abhängigkeiten: 
+---------------
 pytest
 pytest-cov  (https://pypi.org/project/pytest-cov/  ;  https://pytest-cov.readthedocs.io/en/latest/)
 coverage
+mock
+
+
+Markers für testzusammenstellun:
+(für die tests muss ein aktuelles certificate eingerichtet sein!)
+---------------------------------
+msuser_pw
+gateway (für diese Variante müssen kurzfristig die Umgebungsvariablen ECUID und ECGID für den User gesetzt werden!)
+
+
+
+
 
 #Grundsätzlicher Befehl die Coverage des Testens zu überprüfen
 pytest --cov=PATH_TO_PROJECT_SRC PATH_TO_TEST_SRC
