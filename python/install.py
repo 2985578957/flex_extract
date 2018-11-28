@@ -105,7 +105,7 @@ def install_via_gateway(c,target):
             if '##PBS -o' in data:
                 data='##PBS -o /scratch/ms/'+c.ecgid+'/'+c.ecuid+'flex_ecmwf.$Jobname.$Job_ID.out'
             if  'export PATH=${PATH}:' in data:
-                data+=c.ec_flexpart_root_scripts+'/flex_extract_v7.0.3/python'
+                data+=c.ec_flexpart_root_scripts+'/flex_extract_v7.0.4/python'
 
             if 'cat>>' in data or 'cat >>' in data:
                 i=data.index('>')
@@ -136,17 +136,17 @@ def install_via_gateway(c,target):
             c.flexpart_root_scripts=os.path.expandvars(os.path.expanduser(c.flexpart_root_scripts))
             if os.path.abspath(ecd)!=os.path.abspath(c.flexpart_root_scripts):
                 os.chdir('/')
-                p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.3.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
+                p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.4.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
                 try:
-                    os.makedirs(c.flexpart_root_scripts+'/flex_extract_v7.0.3')
+                    os.makedirs(c.flexpart_root_scripts+'/flex_extract_v7.0.4')
                 except:
                     pass
-                os.chdir(c.flexpart_root_scripts+'/flex_extract_v7.0.3')
-                p=subprocess.check_call(['tar','-xvf',ecd+'../flex_extract_v7.0.3.tar'])
-                os.chdir(c.flexpart_root_scripts+'/flex_extract_v7.0.3/src')
+                os.chdir(c.flexpart_root_scripts+'/flex_extract_v7.0.4')
+                p=subprocess.check_call(['tar','-xvf',ecd+'../flex_extract_v7.0.4.tar'])
+                os.chdir(c.flexpart_root_scripts+'/flex_extract_v7.0.4/src')
 
         os.chdir('../src')
-        print 'install flex_extract_v7.0.3 software on '+target+' in directory '+os.getcwd()
+        print 'install flex_extract_v7.0.4 software on '+target+' in directory '+os.getcwd()
         if c.makefile==None:
             makefile='Makefile.local.ifort'
         else:
@@ -166,26 +166,26 @@ def install_via_gateway(c,target):
 
     elif target.lower()=='ecgate':
         os.chdir('/')
-        p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.3.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
+        p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.4.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
         try:
-            p=subprocess.check_call(['ecaccess-file-put',ecd+'../flex_extract_v7.0.3.tar','ecgate:/home/ms/'+c.ecgid+'/'+c.ecuid+'/flex_extract_v7.0.3.tar'])
+            p=subprocess.check_call(['ecaccess-file-put',ecd+'../flex_extract_v7.0.4.tar','ecgate:/home/ms/'+c.ecgid+'/'+c.ecuid+'/flex_extract_v7.0.4.tar'])
         except:
             print 'ecaccess-file-put failed! Probably the eccert key has expired.'
             exit(1)
         p=subprocess.check_call(['ecaccess-job-submit','-queueName',target,ecd+'python/compilejob.ksh'])
-        print 'compilejob.ksh has been submitted to ecgate for installation in '+c.ec_flexpart_root_scripts+'/flex_extract_v7.0.3'
+        print 'compilejob.ksh has been submitted to ecgate for installation in '+c.ec_flexpart_root_scripts+'/flex_extract_v7.0.4'
         print 'You should get an email with subject flexcompile within the next few minutes'
     elif target.lower()=='cca':
         os.chdir('/')
-        p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.3.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
+        p=subprocess.check_call(['tar','-cvf',ecd+'../flex_extract_v7.0.4.tar',ecd+'python',ecd+'grib_templates',ecd+'src'])
         try:
-            p=subprocess.check_call(['ecaccess-file-put',ecd+'../flex_extract_v7.0.3.tar','cca:/home/ms/'+c.ecgid+'/'+c.ecuid+'/flex_extract_v7.0.3.tar'])
+            p=subprocess.check_call(['ecaccess-file-put',ecd+'../flex_extract_v7.0.4.tar','cca:/home/ms/'+c.ecgid+'/'+c.ecuid+'/flex_extract_v7.0.4.tar'])
         except:
             print 'ecaccess-file-put failed! Probably the eccert key has expired.'
             exit(1)
 
         p=subprocess.check_call(['ecaccess-job-submit','-queueName',target,ecd+'python/compilejob.ksh'])
-        print 'compilejob.ksh has been submitted to cca for installation in '+c.ec_flexpart_root_scripts+'/flex_extract_v7.0.3'
+        print 'compilejob.ksh has been submitted to cca for installation in '+c.ec_flexpart_root_scripts+'/flex_extract_v7.0.4'
         print 'You should get an email with subject flexcompile within the next few minutes'
     else:
         print 'ERROR: unknown installation target ',target

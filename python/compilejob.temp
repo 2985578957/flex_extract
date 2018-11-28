@@ -24,7 +24,7 @@
 ##PBS -l EC_memory_per_task=3200MB
 
 set -x
-export VERSION=7.0.3
+export VERSION=7.0.4
 case $HOST in
   *ecg*)
   module load python

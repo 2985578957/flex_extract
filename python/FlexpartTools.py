@@ -302,7 +302,7 @@ def myerror(c,message='ERROR'):
     print message
     # uncomment if user wants email notification directly from python
     #for t in target:
-        #p=subprocess.Popen(['mail','-s flex_extract v7.0.3 ERROR', os.path.expandvars(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,bufsize=1)
+        #p=subprocess.Popen(['mail','-s flex_extract v7.0.4 ERROR', os.path.expandvars(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,bufsize=1)
         #tr='\n'.join(traceback.format_stack())
         #pout=p.communicate(input=message+'\n\n'+tr)[0]
         #print 'Email sent to '+os.path.expandvars(t) # +' '+pout.decode()
@@ -319,7 +319,7 @@ def normalexit(c,message='Done!'):
             target=[target]
         # Uncomment if user wants notification directly from python
         #for t in target:
-            #p=subprocess.Popen(['mail','-s flex_extract v7.0.3 normal exit', os.path.expandvars(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,bufsize=1)
+            #p=subprocess.Popen(['mail','-s flex_extract v7.0.4 normal exit', os.path.expandvars(t)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,bufsize=1)
             #pout=p.communicate(input=message+'\n\n')[0]
             #print pout.decode()
 
@@ -1031,14 +1031,14 @@ class EIFlexpart:
                                   date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
                     if request == "0":
-                        MR.display_info()
-                        MR.data_retrieve()
+                        MR.displayInfo()
+                        MR.dataRetrieve()
                     elif request == "1":
                         MR.print_infodata_csv(self.inputdir, self.mreq_count)
                     elif request == "2":
                         MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                        MR.display_info()
-                        MR.data_retrieve()
+                        MR.displayInfo()
+                        MR.dataRetrieve()
 # The whole else section is only necessary for operational scripts. It could be removed
                 else: # check if mars job requests fields beyond basetime. If yes eliminate those fields since they may not
                         # be accessible with user's credentials
@@ -1070,14 +1070,14 @@ class EIFlexpart:
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
                             if request == "0":
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                             elif request == "1":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             elif request == "2":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
 
                             maxtime=elimit-datetime.timedelta(hours=12)
                             mfdate=datetime.datetime.strftime(maxtime,'%Y%m%d')
@@ -1090,14 +1090,14 @@ class EIFlexpart:
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
                             if request == "0":
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                             elif request == "1":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             elif request == "2":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                         else:
                             # increase number of mars requests
                             self.mreq_count += 1
@@ -1107,14 +1107,14 @@ class EIFlexpart:
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
                             if request == "0":
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                             elif request == "1":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             elif request == "2":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                     else:
                         maxtime=elimit-datetime.timedelta(hours=24)
                         mfdate=datetime.datetime.strftime(maxtime,'%Y%m%d')
@@ -1137,14 +1137,14 @@ class EIFlexpart:
                                       date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
                         if request == "0":
-                            MR.display_info()
-                            MR.data_retrieve()
+                            MR.displayInfo()
+                            MR.dataRetrieve()
                         elif request == "1":
                             MR.print_infodata_csv(self.inputdir, self.mreq_count)
                         elif request == "2":
                             MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            MR.display_info()
-                            MR.data_retrieve()
+                            MR.displayInfo()
+                            MR.dataRetrieve()
 
                         if int(mftimesave.split('/')[0])==0 and int(mfstep.split('/')[0])==0 and pk!='OG_OROLSM__SL':
                             mfdate=datetime.datetime.strftime(elimit,'%Y%m%d')
@@ -1159,14 +1159,14 @@ class EIFlexpart:
                                           date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
                             if request == "0":
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
                             elif request == "1":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             elif request == "2":
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                                MR.display_info()
-                                MR.data_retrieve()
+                                MR.displayInfo()
+                                MR.dataRetrieve()
 
 
         if request == "0" or request == "2":
@@ -1472,16 +1472,16 @@ class EIFlexpart:
         for key in index_keys:
             key_vals = grib_index_get(iid,key)
             print key_vals
-            if key=='step':
-                l=[]
-                for k in key_vals:
-                    l.append(int(k))
-                l.sort()
-                key_vals=[]
-                for k in l:
-                    key_vals.append(str(k))
-    
-                index_vals.append(key_vals)
+
+            l=[]
+            for k in key_vals:
+                l.append(int(k))
+            l.sort()
+            key_vals=[]
+            for k in l:
+                key_vals.append(str(k))
+
+            index_vals.append(key_vals)
 
 
         valsdict={}
