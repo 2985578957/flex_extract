@@ -29,7 +29,7 @@ LDFLAGS =  $(OPT)
 
 BINDIR  =      .
 
-EXE	=      CONVERT2
+EXE	=     CONVERT2
 
 
 .f.o:
@@ -37,10 +37,10 @@ EXE	=      CONVERT2
 .f90.o:
 	$(F90C) -c $(F90FLAGS) $(DEBUG) $*.f90
 
-all:	${EXE}
+all:	$(EXE)
 
 clean:
-	rm *.o
+	rm *.o *.mod ${EXE}
 
 phgrreal.o: phgrreal.f
 	$(F90C) -c -g -O3 -fopenmp phgrreal.f
@@ -51,8 +51,8 @@ grphreal.o: grphreal.f
 ftrafo.o: ftrafo.f
 	$(F90C) -c -g -O3 -fopenmp ftrafo.f
 
-$(BINDIR)/CONVERT2:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
-	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
+$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
+	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
 
 
 ###############################################################################

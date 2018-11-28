@@ -11,15 +11,15 @@
            .s .s~ .sh .sh~ .h .h~ .C .C~ .a
 
 
-GRIB_API_INCLUDE_DIR=/usr/local/ifort/grib_api-1.14.3//include
-GRIB_API_LIB=-openmp -L/usr/local/ifort/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper #-lopenjpeg
+GRIB_API_INCLUDE_DIR=/home/srvx1/tmc/TestEnv/Libraries/grib_api-1.12.3_ifort/include
+GRIB_API_LIB=-openmp -L/home/srvx1/tmc/TestEnv/Libraries/grib_api-1.12.3_ifort/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
 
 OPT	= -g
 DEBUG	= -g
 LIB     =  $(GRIB_API_LIB) -lemosR64 -lgfortran
 
-FC=ifort -132  -traceback -r8
-F90C=ifort -132  -traceback -r8
+FC=/opt/intel/bin/ifort -132  -traceback -r8
+F90C=/opt/intel/bin/ifort -132  -traceback -r8
 
 FFLAGS =  $(OPT) -I. -I$(GRIB_API_INCLUDE_DIR)
 F90FLAGS =  $(OPT) -I. -I$(GRIB_API_INCLUDE_DIR)
@@ -39,7 +39,7 @@ EXE	=      CONVERT2
 all:	${EXE}
 
 clean:
-	rm *.o
+	rm *.o *.mod ${EXE}
 
 phgrreal.o: phgrreal.f
 	$(F90C) -c -g -O3 -fopenmp phgrreal.f
@@ -50,8 +50,8 @@ grphreal.o: grphreal.f
 ftrafo.o: ftrafo.f
 	$(F90C) -c -g -O3 -fopenmp ftrafo.f
 
-$(BINDIR)/CONVERT2:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
-	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
+$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
+	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
 
 
 ###############################################################################
