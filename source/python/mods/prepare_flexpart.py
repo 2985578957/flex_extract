@@ -125,7 +125,7 @@ def prepare_flexpart(ppid, c):
     ------
 
     '''
-
+    # necessary only if script is running by itself
     if not ppid:
         c.ppid = str(os.getppid())
     else:
@@ -142,8 +142,9 @@ def prepare_flexpart(ppid, c):
                         month=int(c.end_date[4:6]),
                         day=int(c.end_date[6:]))
 
+    # if basetime is 00
     # assign starting date minus 1 day
-    # since for basetime 00 we need the 12 hours upfront
+    # since we need the 12 hours upfront
     # (the day before from 12 UTC to current day 00 UTC)
     if c.basetime == '00':
         start = start - datetime.timedelta(days=1)
@@ -163,7 +164,7 @@ def prepare_flexpart(ppid, c):
     flexpart.write_namelist(c)
     flexpart.deacc_fluxes(inputfiles, c)
 
-    # get a list of all files from the root inputdir
+    # get a list of all other files
     inputfiles = UioFiles(c.inputdir, '????__??.*' + str(c.ppid) + '.*')
 
     # produce FLEXPART-ready GRIB files and process them -
@@ -171,9 +172,10 @@ def prepare_flexpart(ppid, c):
     flexpart = EcFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
     flexpart.process_output(c)
+
+    # make use of a possible conversion to a
+    # specific flexpart binary format
     if c.grib2flexpart:
-        # prepare environment for a FLEXPART run
-        # to convert grib to flexpart binary format
         flexpart.prepare_fp_files(c)
 
     # check if in debugging mode, then store all files
