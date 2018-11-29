@@ -106,7 +106,7 @@ def main():
     return
 
 def submit(jtemplate, c, queue):
-    '''Prepares the job script and submit it to the specified queue.
+    '''Prepares the job script and submits it to the specified queue.
 
     Parameters
     ----------
@@ -129,57 +129,96 @@ def submit(jtemplate, c, queue):
 
     '''
 
-    # read template file and get index for CONTROL input
-    with open(os.path.join(_config.PATH_TEMPLATES, jtemplate)) as f:
-        lftext = f.read().split('\n')
-    insert_point = lftext.index('EOF')
-
     if not c.basetime:
     # --------- create on demand job script ------------------------------------
         if c.maxstep > 24:
             print('---- Pure forecast mode! ----')
         else:
             print('---- On-demand mode! ----')
+
         job_file = os.path.join(_config.PATH_JOBSCRIPTS,
-                                jtemplate[:-4] + 'ksh')
+                                jtemplate[:-5] + '.ksh')
+
         clist = c.to_list()
 
-        lftextondemand = lftext[:insert_point] + clist + lftext[insert_point:]
-
-        with open(job_file, 'w') as f:
-            f.write('\n'.join(lftextondemand))
-
-        job_id = submit_job_to_ecserver(queue, job_file)
+        mk_jobscript(jtemplate, job_file, clist)
 
     else:
     # --------- create operational job script ----------------------------------
         print('---- Operational mode! ----')
+
         job_file = os.path.join(_config.PATH_JOBSCRIPTS,
                                 jtemplate[:-5] + 'oper.ksh')
-
-        if c.maxstep:
-            mt = int(c.maxstep)
-        else:
-            mt = 0
 
         c.start_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
         c.end_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
         c.base_time = '${MSJ_BASETIME}'
-        if mt > 24:
+        if c.maxstep > 24:
             c.time = '${MSJ_BASETIME} {MSJ_BASETIME}'
 
-        colist = c.to_list()
+        clist = c.to_list()
 
-        lftextoper = lftext[:insert_point] + colist + lftext[insert_point + 2:]
+        mk_jobscript(jtemplate, job_file, clist)
 
-        with open(job_file, 'w') as f:
-            f.write('\n'.join(lftextoper))
-
-        job_id = submit_job_to_ecserver(queue, job_file)
-
-    # --------------------------------------------------------------------------
+    # --------- submit the job_script to the ECMWF server
+    job_id = submit_job_to_ecserver(queue, job_file)
     print('The job id is: ' + str(job_id.strip()))
     print('You should get an email with subject flex.hostname.pid')
+
+    return
+
+def mk_jobscript(jtemplate, job_file, clist):
+    '''Creates the job script from template.
+
+    Parameters
+    ----------
+    jtemplate : :obj:`string`
+        Job template file from sub-directory "_templates" for
+        submission to ECMWF. It contains all necessary
+        module and variable settings for the ECMWF environment as well as
+        the job call and mail report instructions.
+        Default is "job.temp".
+
+    job_file : :obj:`string`
+        Path to the job script file.
+
+    clist : :obj:`list` of :obj:`string`
+        Contains all necessary parameters for ECMWF CONTROL file.
+
+    Return
+    ------
+
+    '''
+    from genshi.template.text import NewTextTemplate
+    from genshi.template import  TemplateLoader
+    from genshi.template.eval import UndefinedError
+
+    # load template and insert control content as list
+    try:
+        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+        control_template = loader.load(jtemplate,
+                                       cls=NewTextTemplate)
+
+        stream = control_template.generate(control_content=clist)
+    except UndefinedError as e:
+        print('... ERROR ' + str(e))
+
+        sys.exit('\n... error occured while trying to generate jobscript')
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to generate jobscript')
+
+    # create jobscript file
+    try:
+        with open(job_file, 'w') as f:
+            f.write(stream.render('text'))
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('\n... error occured while trying to write ' + job_file)
 
     return
 

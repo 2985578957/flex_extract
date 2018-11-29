@@ -540,9 +540,9 @@ class ControlFile(object):
                     for s in item[1]:
                         stot += s + ' '
 
-                    l.append("%s %s" % (item[0], stot))
+                    l.append("%s %s\n" % (item[0], stot))
                 else:
-                    l.append("%s %s" % item)
+                    l.append("%s %s\n" % item)
 
         return sorted(l)
 

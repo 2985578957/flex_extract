@@ -566,6 +566,10 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
     fp_root_path_to_python = os.path.join(fp_root,
                                           _config.FLEXEXTRACT_DIRNAME,
                                           _config.PATH_REL_PYTHON_SRC)
+    if '$' in fp_root_path_to_python:
+        ind = fp_root_path_to_python.index('$')
+        fp_root_path_to_python = fp_root_path_to_python[0:ind] + '$' + \
+                                 fp_root_path_to_python[ind:]
 
     try:
         loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
