@@ -127,6 +127,7 @@ def get_mars_data(c):
     ------
 
     '''
+    c.ecapi = ecapi
 
     if not os.path.exists(c.inputdir):
         make_dir(c.inputdir)
@@ -138,22 +139,66 @@ def get_mars_data(c):
             print("Printing mars requests!")
         elif c.request == 2:
             print("Retrieving EC data and printing mars request!")
-        # first, write header with the mars parameter to file
-        # create a dummy MarsRetrieval to get parameter
-        MR = MarsRetrieval(None, None)
-        attrs = vars(MR).copy()
-        del attrs['server']
-        del attrs['public']
-        marsfile = os.path.join(c.inputdir, _config.FILE_MARS_REQUESTS)
-        with open(marsfile, 'w') as f:
-            f.write('request_number' + ', ')
-            f.write(', '.join(str(key) for key in sorted(attrs.iterkeys())))
-            f.write('\n')
+        write_reqheader(os.path.join(c.inputdir, _config.FILE_MARS_REQUESTS))
 
     print("start date %s " % (c.start_date))
     print("end date %s " % (c.end_date))
 
-    if ecapi:
+    server = mk_server(c)
+
+    # if data are to be retrieved, clean up any old grib files
+    if c.request == 0 or c.request == 2:
+        remove_old('*grb')
+
+    # --------------  flux data ------------------------------------------------
+    start, end, chunk = mk_dates(c, fluxes=True)
+    do_retrievement(c, server, start, end, datechunk, fluxes=True)
+
+    # --------------  non flux data --------------------------------------------
+    start, end, chunk = mk_dates(c, fluxes=False)
+    do_retrievement(c, server, start, end, datechunk, fluxes=False)
+
+    return
+
+def write_reqheader(marsfile):
+    '''Writes header with column names into mars request file.
+
+    Parameters
+    ----------
+    marsfile : :obj:`string`
+        Path to the mars request file.
+
+    Return
+    ------
+
+    '''
+    MR = MarsRetrieval(None, None)
+    attrs = vars(MR).copy()
+    del attrs['server']
+    del attrs['public']
+    with open(marsfile, 'w') as f:
+        f.write('request_number' + ', ')
+        f.write(', '.join(str(key) for key in sorted(attrs.iterkeys())))
+        f.write('\n')
+
+    return
+
+def mk_server(c):
+    '''Creates server connection if ECMWF WebAPI is available.
+
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    Return
+    ------
+    server : :obj:`ECMWFDataServer` or :obj:`ECMWFService`
+        Connection to ECMWF server via python interface ECMWF WebAPI.
+
+    '''
+    if c.ecapi:
         if c.public:
             server = ecmwfapi.ECMWFDataServer()
         else:
@@ -161,76 +206,83 @@ def get_mars_data(c):
     else:
         server = False
 
-    c.ecapi = ecapi
     print('Using ECMWF WebAPI: ' + str(c.ecapi))
 
-    # basetime geht rückwärts
+    return server
 
-    # if basetime 00
-    # dann wird von 12 am vortag bis 00 am start tag geholt
-    # aber ohne 12 selbst sondern 12 + step
 
-    # if basetime 12
-    # dann wird von 00 + step bis 12 am start tag geholt
+def mk_dates(c, fluxes):
+    '''Prepares start and end date depending on flux or non flux data.
 
-    # purer forecast wird vorwärts bestimmt.
-    # purer forecast mode ist dann wenn  größer 24 stunden
-    # wie kann das noch festgestellt werden ????
-    # nur FC und steps mehr als 24 ?
-    # die einzige problematik beim reinen forecast ist die benennung der files!
-    # also sobald es Tagesüberschneidungen gibt
-    # allerdings ist das relevant und ersichtlich an den NICHT FLUSS DATEN
+    If forecast for maximum one day (upto 24h) are to be retrieved, then
+    collect accumulation data (flux data) with additional days in the
+    beginning and at the end (used for complete disaggregation of
+    original period)
 
+    If forecast data longer than 24h are to be retrieved, then
+    collect accumulation data (flux data) with the exact start and end date
+    (disaggregation will be done for the exact time period with
+    boundary conditions)
+
+    Since for basetime the extraction contains the 12 hours upfront,
+    if basetime is 0, the starting date has to be the day before and
+
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    fluxes : :obj:`boolean`, optional
+        Decides if the flux parameter settings are stored or
+        the rest of the parameter list.
+        Default value is False.
+
+    Return
+    ------
+    start : :obj:`datetime`
+        The start date of the retrieving data set.
+
+    end : :obj:`datetime`
+        The end date of the retrieving data set.
+
+    chunk : :obj:`datetime`
+        Time period in days for one single mars retrieval.
+
+    '''
     start = datetime.strptime(c.start_date, '%Y%m%d')
     end = datetime.strptime(c.end_date, '%Y%m%d')
-    # time period for one single retrieval
-    datechunk = timedelta(days=int(c.date_chunk))
+    chunk = timedelta(days=int(c.date_chunk))
 
-    if c.basetime == '00':
+    if c.basetime:
+        if c.basetime == '00':
+            start = start - timedelta(days=1)
+
+    if c.maxstep <= 24 and fluxes:
         start = start - timedelta(days=1)
+        end = end + timedelta(days=1)
 
-    if c.maxstep <= 24:
-        startm1 = start - timedelta(days=1)
+    return start, end, chunk
 
-    if c.basetime == '00' or c.basetime == '12':
-        # endp1 = end + timedelta(days=1)
-        endp1 = end
-    else:
-        # endp1 = end + timedelta(days=2)
-        endp1 = end + timedelta(days=1)
+def remove_old(pattern):
+    '''Deletes old retrieval files matching the pattern.
 
-    # --------------  flux data ------------------------------------------------
-    if c.request == 0 or c.request == 2:
-        print('... removing old flux content of ' + c.inputdir)
-        tobecleaned = UioFiles(c.inputdir,
-                               '*_acc_*.' + str(os.getppid()) + '.*.grb')
-        tobecleaned.delete_files()
+    Parameters
+    ----------
+    pattern : :obj:`string`
+        The sub string pattern which identifies the files to be deleted.
 
-    # if forecast for maximum one day (upto 24h) are to be retrieved,
-    # collect accumulation data (flux data)
-    # with additional days in the beginning and at the end
-    # (used for complete disaggregation of original period)
-    if c.maxstep <= 24:
-        do_retrievement(c, server, startm1, endp1, datechunk, fluxes=True)
+    Return
+    ------
 
-    # if forecast data longer than 24h are to be retrieved,
-    # collect accumulation data (flux data)
-    # with the exact start and end date
-    # (disaggregation will be done for the
-    # exact time period with boundary conditions)
-    else:
-        do_retrievement(c, server, start, end, datechunk, fluxes=True)
+    '''
+    print('... removing old content of ' + c.inputdir)
 
-    # --------------  non flux data --------------------------------------------
-    if c.request == 0 or c.request == 2:
-        print('... removing old non flux content of ' + c.inputdir)
-        tobecleaned = UioFiles(c.inputdir,
-                               '*__*.' + str(os.getppid()) + '.*.grb')
-        tobecleaned.delete_files()
-
-    do_retrievement(c, server, start, end, datechunk, fluxes=False)
+    tobecleaned = UioFiles(c.inputdir, pattern)
+    tobecleaned.delete_files()
 
     return
+
 
 def do_retrievement(c, server, start, end, delta_t, fluxes=False):
     '''Divides the complete retrieval period in smaller chunks and

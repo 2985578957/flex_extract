@@ -546,3 +546,23 @@ class ControlFile(object):
 
         return sorted(l)
 
+    def check_ppid(self, ppid):
+        '''Sets the current PPID.
+
+        Parameters
+        ----------
+        ppid : :obj:`int` or :obj:`None`
+            Contains the ppid number provided by the command line parameter
+            of is None otherwise.
+
+        Return
+        ------
+
+        '''
+
+        if not ppid:
+            self.ppid = str(os.getppid())
+        else:
+            self.ppid = ppid
+
+        return

@@ -125,11 +125,7 @@ def prepare_flexpart(ppid, c):
     ------
 
     '''
-    # necessary only if script is running by itself
-    if not ppid:
-        c.ppid = str(os.getppid())
-    else:
-        c.ppid = ppid
+    c.check_ppid(ppid)
 
     c.ecapi = ecapi
 
