@@ -151,11 +151,11 @@ def get_mars_data(c):
         remove_old('*grb')
 
     # --------------  flux data ------------------------------------------------
-    start, end, chunk = mk_dates(c, fluxes=True)
+    start, end, datechunk = mk_dates(c, fluxes=True)
     do_retrievement(c, server, start, end, datechunk, fluxes=True)
 
     # --------------  non flux data --------------------------------------------
-    start, end, chunk = mk_dates(c, fluxes=False)
+    start, end, datechunk = mk_dates(c, fluxes=False)
     do_retrievement(c, server, start, end, datechunk, fluxes=False)
 
     return
