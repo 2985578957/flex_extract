@@ -148,7 +148,7 @@ def get_mars_data(c):
 
     # if data are to be retrieved, clean up any old grib files
     if c.request == 0 or c.request == 2:
-        remove_old('*grb')
+        remove_old('*grb', c.inputdir)
 
     # --------------  flux data ------------------------------------------------
     start, end, datechunk = mk_dates(c, fluxes=True)
@@ -264,7 +264,7 @@ def mk_dates(c, fluxes):
 
     return start, end, chunk
 
-def remove_old(pattern):
+def remove_old(pattern, inputdir):
     '''Deletes old retrieval files matching the pattern.
 
     Parameters
@@ -272,13 +272,16 @@ def remove_old(pattern):
     pattern : :obj:`string`
         The sub string pattern which identifies the files to be deleted.
 
+    inputdir : :obj:`string`, optional
+        Path to the directory where the retrieved data is stored.
+
     Return
     ------
 
     '''
-    print('... removing old content of ' + c.inputdir)
+    print('... removing old content of ' + inputdir)
 
-    tobecleaned = UioFiles(c.inputdir, pattern)
+    tobecleaned = UioFiles(inputdir, pattern)
     tobecleaned.delete_files()
 
     return
