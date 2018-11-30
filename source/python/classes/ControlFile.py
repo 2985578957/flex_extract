@@ -60,6 +60,7 @@ import inspect
 sys.path.append('../')
 import _config
 from mods.tools import my_error, silent_remove
+from mods.checks import check_grid_area
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -474,32 +475,39 @@ class ControlFile(object):
             print('Use default value "12" for flux forecast!')
             self.accmaxstep='12'
 
-        # if area was provided (only from commandline)
-        # decompose area into its 4 components
-        if self.area:
-            components = self.area.split('/')
-            self.upper, self.left, self.lower, self.right = components
+
+        self.grid, self.area = check_grid_area(self.grid, self.area,
+                                               self.upper, self.lower,
+                                               self.left, self.right)
+
+
 
         # convert grid and area components to correct format and input
-        if 'N' in self.grid:  # Gaussian output grid
-            self.area = 'G'
-        else:
-            # check on grid format
-            if float(self.grid) / 100. >= 0.5:
-                # grid is defined in 1/1000 degrees; old method
-                self.grid = '{}/{}'.format(float(self.grid) / 1000.,
-                                           float(self.grid) / 1000.)
-                self.area = '{}/{}/{}/{}'.format(float(self.upper) / 1000.,
-                                                 float(self.left) / 1000.,
-                                                 float(self.lower) / 1000.,
-                                                 float(self.right) / 1000.)
-            elif float(self.grid) / 100. < 0.5:
-                # grid is defined in normal degree; new method
-                self.grid = '{}/{}'.format(float(self.grid), float(self.grid))
-                self.area = '{}/{}/{}/{}'.format(float(self.upper),
-                                                 float(self.left),
-                                                 float(self.lower),
-                                                 float(self.right))
+        #if 'N' in self.grid:  # Gaussian output grid
+        #    self.area = 'G'
+        # else:
+            # if '/' in self.grid:
+                # gridx, gridy = self.grid.split('/')
+                # if gridx == gridy:
+                    # self.grid = gridx
+
+
+            # # check on grid format
+            # if float(self.grid) / 100. >= 0.5:
+                # # grid is defined in 1/1000 degrees; old format
+                # self.grid = '{}/{}'.format(float(self.grid) / 1000.,
+                                           # float(self.grid) / 1000.)
+                # self.area = '{}/{}/{}/{}'.format(float(self.upper) / 1000.,
+                                                 # float(self.left) / 1000.,
+                                                 # float(self.lower) / 1000.,
+                                                 # float(self.right) / 1000.)
+            # elif float(self.grid) / 100. < 0.5:
+                # # grid is defined in normal degree; new format
+                # self.grid = '{}/{}'.format(float(self.grid), float(self.grid))
+                # self.area = '{}/{}/{}/{}'.format(float(self.upper),
+                                                 # float(self.left),
+                                                 # float(self.lower),
+                                                 # float(self.right))
 
         return
 

@@ -99,7 +99,6 @@ def none_or_int(value):
         return None
     return int(value)
 
-
 def get_cmdline_arguments():
     '''Decomposes the command line arguments and assigns them to variables.
     Apply default values for non mentioned arguments.
