@@ -60,7 +60,8 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import _config
 from classes.ControlFile import ControlFile
 from classes.UioFiles import UioFiles
-from mods.tools import make_dir, put_file_to_ecserver, submit_job_to_ecserver
+from mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
+                        silent_remove)
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -177,6 +178,8 @@ def install_via_gateway(c):
         submit_job_to_ecserver(c.install_target,
                                os.path.join(_config.PATH_REL_JOBSCRIPTS,
                                             _config.FILE_INSTALL_COMPILEJOB))
+
+        silent_remove(tar_file)
 
         print('job compilation script has been submitted to ecgate for ' +
               'installation in ' + c.flexpart_root_scripts +
