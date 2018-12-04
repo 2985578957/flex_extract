@@ -62,6 +62,7 @@ import socket
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
+from checks import check_ppid
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
 from tools import clean_up, get_cmdline_arguments, read_ecenv, make_dir
@@ -125,7 +126,7 @@ def prepare_flexpart(ppid, c):
     ------
 
     '''
-    c.check_ppid(ppid)
+    check_ppid(c, ppid)
 
     c.ecapi = ecapi
 

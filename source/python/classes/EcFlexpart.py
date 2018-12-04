@@ -146,12 +146,6 @@ class EcFlexpart(object):
         self.dtime = c.dtime
         i = 0
         if fluxes and c.maxstep <= 24:
-            # no forecast beyond one day is needed!
-            # Thus, prepare flux data manually as usual
-            # with only forecast fields with start times at 00/12
-            # (but without 00/12 fields since these are
-            # the initialisation times of the flux fields
-            # and therefore are zero all the time)
             self.types[str(c.acctype)] = {'times': str(c.acctime),
                                           'steps': '{}/to/{}/by/{}'.format(
                                               c.dtime, c.accmaxstep, c.dtime)}
@@ -522,8 +516,6 @@ class EcFlexpart(object):
                 retr_param_dict['area'] = self.area
                 retr_param_dict['gaussian'] = self.gaussian
 
-                if pk == 'OG__SL':
-                    pass
                 if pk == 'OG_OROLSM__SL' and not oro:
                     oro = True
                     # in CERA20C (class EP) there is no stream "OPER"!
@@ -657,50 +649,72 @@ class EcFlexpart(object):
 
         from genshi.template.text import NewTextTemplate
         from genshi.template import  TemplateLoader
+        from genshi.template.eval import  UndefinedError
 
-        loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
-        namelist_template = loader.load(_config.TEMPFILE_NAMELIST,
-                                       cls=NewTextTemplate)
+        try:
+            loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
+            namelist_template = loader.load(_config.TEMPFILE_NAMELIST,
+                                            cls=NewTextTemplate)
 
-        self.inputdir = c.inputdir
-        area = np.asarray(self.area.split('/')).astype(float)
-        grid = np.asarray(self.grid.split('/')).astype(float)
+            self.inputdir = c.inputdir
+            area = np.asarray(self.area.split('/')).astype(float)
+            grid = np.asarray(self.grid.split('/')).astype(float)
 
-        if area[1] > area[3]:
-            area[1] -= 360
-        maxl = int((area[3] - area[1]) / grid[1]) + 1
-        maxb = int((area[0] - area[2]) / grid[0]) + 1
+            if area[1] > area[3]:
+                area[1] -= 360
+            maxl = int((area[3] - area[1]) / grid[1]) + 1
+            maxb = int((area[0] - area[2]) / grid[0]) + 1
 
-        stream = namelist_template.generate(
-            maxl = str(maxl),
-            maxb = str(maxb),
-            mlevel = str(self.level),
-            mlevelist = str(self.levelist),
-            mnauf = str(self.resol),
-            metapar = '77',
-            rlo0 = str(area[1]),
-            rlo1 = str(area[3]),
-            rla0 = str(area[2]),
-            rla1 = str(area[0]),
-            momega = str(c.omega),
-            momegadiff = str(c.omegadiff),
-            mgauss = str(c.gauss),
-            msmooth = str(c.smooth),
-            meta = str(c.eta),
-            metadiff = str(c.etadiff),
-            mdpdeta = str(c.dpdeta)
-        )
+            stream = namelist_template.generate(
+                maxl = str(maxl),
+                maxb = str(maxb),
+                mlevel = str(self.level),
+                mlevelist = str(self.levelist),
+                mnauf = str(self.resol),
+                metapar = '77',
+                rlo0 = str(area[1]),
+                rlo1 = str(area[3]),
+                rla0 = str(area[2]),
+                rla1 = str(area[0]),
+                momega = str(c.omega),
+                momegadiff = str(c.omegadiff),
+                mgauss = str(c.gauss),
+                msmooth = str(c.smooth),
+                meta = str(c.eta),
+                metadiff = str(c.etadiff),
+                mdpdeta = str(c.dpdeta)
+            )
+        except UndefinedError as e:
+            print('... ERROR ' + str(e))
 
-        namelistfile = os.path.join(self.inputdir, _config.FILE_NAMELIST)
+            sys.exit('\n... error occured while trying to generate namelist ' +
+                     _config.TEMPFILE_NAMELIST)
+        except OSError as e:
+            print('... ERROR CODE: ' + str(e.errno))
+            print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
-        with open(namelistfile, 'w') as f:
-            f.write(stream.render('text'))
+            sys.exit('\n... error occured while trying to generate template ' +
+                     _config.TEMPFILE_NAMELIST)
+
+        try:
+            namelistfile = os.path.join(self.inputdir, _config.FILE_NAMELIST)
+
+            with open(namelistfile, 'w') as f:
+                f.write(stream.render('text'))
+        except OSError as e:
+            print('... ERROR CODE: ' + str(e.errno))
+            print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+            sys.exit('\n... error occured while trying to write ' +
+                     namelistfile)
 
         return
 
 
     def deacc_fluxes(self, inputfiles, c):
-        '''Goes through all flux fields in ordered time and de-accumulate
+        '''De-accumulate and disaggregate flux data.
+
+        Goes through all flux fields in ordered time and de-accumulate
         the fields. Afterwards the fields are disaggregated in time.
         Different versions of disaggregation is provided for rainfall
         data (darain, modified linear) and the surface fluxes and
@@ -987,14 +1001,14 @@ class EcFlexpart(object):
             # skip the rest of the for loop and start with next timestep/product
             if not gid:
                 continue
-
+#============================================================================================
             # remove old fort.* files and open new ones
             # they are just valid for a single product
             for k, f in fdict.iteritems():
                 fortfile = os.path.join(c.inputdir, 'fort.' + k)
                 silent_remove(fortfile)
                 fdict[k] = open(fortfile, 'w')
-
+#============================================================================================
             # create correct timestamp from the three time informations
             cdate = str(codes_get(gid, 'date'))
             ctime = '{:0>2}'.format(codes_get(gid, 'time')/100)
@@ -1018,7 +1032,7 @@ class EcFlexpart(object):
                     fwrf = open(os.path.join(c.outputdir,
                                 'WRF' + cdate + '.' + ctime + '.000.grb2'), 'w')
                     olddate = cdate[:]
-
+#============================================================================================
             # savedfields remembers which fields were already used.
             savedfields = []
             # sum of cloud liquid and ice water content
@@ -1082,10 +1096,10 @@ class EcFlexpart(object):
 
                 codes_release(gid)
                 gid = codes_new_from_index(iid)
-
+#============================================================================================
             for f in fdict.values():
                 f.close()
-
+#============================================================================================
             # call for Fortran program to convert e.g. reduced_gg grids to
             # regular_ll and calculate detadot/dp
             pwd = os.getcwd()
@@ -1096,7 +1110,7 @@ class EcFlexpart(object):
                 print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
                 my_error(c.mailfail, 'fort.21 is empty while parameter eta \
                          is set to 1 in CONTROL file')
-
+#============================================================================================
             # write out all output to log file before starting fortran programm
             sys.stdout.flush()
 
@@ -1104,7 +1118,7 @@ class EcFlexpart(object):
             p = subprocess.check_call([os.path.join(
                 c.exedir, _config.FORTRAN_EXECUTABLE)], shell=True)
             os.chdir(pwd)
-
+#============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
             if c.maxstep > 12:
                 suffix = cdate[2:8] + '.' + ctime + '.' + cstep
@@ -1114,7 +1128,7 @@ class EcFlexpart(object):
             print("outputfile = " + fnout)
             # collect for final processing
             self.outputfilelist.append(os.path.basename(fnout))
-
+#============================================================================================
             # create outputfile and copy all data from intermediate files
             # to the outputfile (final GRIB input files for FLEXPART)
             orolsm = os.path.basename(glob.glob(c.inputdir +
@@ -1134,7 +1148,7 @@ class EcFlexpart(object):
                 with open(os.path.join(c.outputdir, 'OMEGA'), 'wb') as fout:
                     shutil.copyfileobj(open(os.path.join(c.inputdir, 'fort.25'),
                                             'rb'), fout)
-
+#============================================================================================
         if c.wrf:
             fwrf.close()
 
@@ -1144,7 +1158,9 @@ class EcFlexpart(object):
 
 
     def process_output(self, c):
-        '''The grib files are postprocessed depending on the selection in
+        '''Postprocessing of FLEXPART input files.
+
+        The grib files are postprocessed depending on the selection in
         CONTROL file. The resulting files are moved to the output
         directory if its not equal to the input directory.
         The following modifications might be done if
@@ -1179,7 +1195,7 @@ class EcFlexpart(object):
             ofile = os.path.join(self.inputdir, ofile)
 
             if c.format.lower() == 'grib2':
-                p = subprocess.check_call(['codes_set', '-s', 'edition=2,',
+                p = subprocess.check_call(['grib_set', '-s', 'edition=2,',
                                            'productDefinitionTemplateNumber=8',
                                            ofile, ofile + '_2'])
                 p = subprocess.check_call(['mv', ofile + '_2', ofile])

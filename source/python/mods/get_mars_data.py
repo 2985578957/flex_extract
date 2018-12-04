@@ -265,7 +265,8 @@ def mk_dates(c, fluxes):
     return start, end, chunk
 
 def remove_old(pattern, inputdir):
-    '''Deletes old retrieval files matching the pattern.
+    '''Deletes old retrieval files from current input directory
+    matching the pattern.
 
     Parameters
     ----------

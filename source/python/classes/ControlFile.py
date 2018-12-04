@@ -60,7 +60,7 @@ import inspect
 sys.path.append('../')
 import _config
 from mods.tools import my_error, silent_remove
-from mods.checks import check_grid_area
+from mods.checks import check_grid, check_area, check_levels
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -344,27 +344,29 @@ class ControlFile(object):
                 print('Basetime = ' + str(self.basetime))
                 sys.exit(1)
 
-        # assure consistency of levelist and level
-        if not self.levelist and not self.level:
-            print('Warning: neither levelist nor level \
-                               specified in CONTROL file')
-            sys.exit(1)
-        elif not self.levelist and self.level:
-            self.levelist = '1/to/' + self.level
-        elif (self.levelist and not self.level) or \
-             (self.levelist[-1] != self.level[-1]):
-            self.level = self.levelist.split('/')[-1]
-        else:
-            pass
+        self.levelist, self.level = check_levels(self.levelist, self.level)
 
-        # check if max level is a valid level
-        if int(self.level) not in _config.MAX_LEVEL_LIST:
-            print('ERROR: ')
-            print('LEVEL must be the maximum level of a specified '
-                  'level list from ECMWF, e.g.')
-            print(_config.MAX_LEVEL_LIST)
-            print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
-            sys.exit(1)
+        # # assure consistency of levelist and level
+        # if not self.levelist and not self.level:
+            # print('Warning: neither levelist nor level \
+                               # specified in CONTROL file')
+            # sys.exit(1)
+        # elif not self.levelist and self.level:
+            # self.levelist = '1/to/' + self.level
+        # elif (self.levelist and not self.level) or \
+             # (self.levelist[-1] != self.level[-1]):
+            # self.level = self.levelist.split('/')[-1]
+        # else:
+            # pass
+
+        # # check if max level is a valid level
+        # if int(self.level) not in _config.MAX_LEVEL_LIST:
+            # print('ERROR: ')
+            # print('LEVEL must be the maximum level of a specified '
+                  # 'level list from ECMWF, e.g.')
+            # print(_config.MAX_LEVEL_LIST)
+            # print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
+            # sys.exit(1)
 
         # prepare step list if "/" signs are found
         if '/' in self.step:
@@ -476,38 +478,11 @@ class ControlFile(object):
             self.accmaxstep='12'
 
 
-        self.grid, self.area = check_grid_area(self.grid, self.area,
-                                               self.upper, self.lower,
-                                               self.left, self.right)
+        self.grid = check_grid(self.grid)
 
+        self.area = check_area(self.grid, self.area, self.upper, self.lower,
+                               self.left, self.right)
 
-
-        # convert grid and area components to correct format and input
-        #if 'N' in self.grid:  # Gaussian output grid
-        #    self.area = 'G'
-        # else:
-            # if '/' in self.grid:
-                # gridx, gridy = self.grid.split('/')
-                # if gridx == gridy:
-                    # self.grid = gridx
-
-
-            # # check on grid format
-            # if float(self.grid) / 100. >= 0.5:
-                # # grid is defined in 1/1000 degrees; old format
-                # self.grid = '{}/{}'.format(float(self.grid) / 1000.,
-                                           # float(self.grid) / 1000.)
-                # self.area = '{}/{}/{}/{}'.format(float(self.upper) / 1000.,
-                                                 # float(self.left) / 1000.,
-                                                 # float(self.lower) / 1000.,
-                                                 # float(self.right) / 1000.)
-            # elif float(self.grid) / 100. < 0.5:
-                # # grid is defined in normal degree; new format
-                # self.grid = '{}/{}'.format(float(self.grid), float(self.grid))
-                # self.area = '{}/{}/{}/{}'.format(float(self.upper),
-                                                 # float(self.left),
-                                                 # float(self.lower),
-                                                 # float(self.right))
 
         return
 
@@ -554,23 +529,3 @@ class ControlFile(object):
 
         return sorted(l)
 
-    def check_ppid(self, ppid):
-        '''Sets the current PPID.
-
-        Parameters
-        ----------
-        ppid : :obj:`int` or :obj:`None`
-            Contains the ppid number provided by the command line parameter
-            of is None otherwise.
-
-        Return
-        ------
-
-        '''
-
-        if not ppid:
-            self.ppid = str(os.getppid())
-        else:
-            self.ppid = ppid
-
-        return
