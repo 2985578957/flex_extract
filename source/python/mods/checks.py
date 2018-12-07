@@ -154,6 +154,29 @@ def check_ppid(c, ppid):
 
     return
 
+
+def check_purefc(type):
+    '''Check for a pure forecast mode.
+
+    Parameters
+    ----------
+    type : :obj:`list` of :obj:`string`
+        List of field types.
+
+    Return
+    ------
+    True or False:
+        True if pure forecasts are to be retrieved. False if there are
+        analysis fields in between.
+    '''
+
+    if 'AN' not in type and '4V' not in type:
+        # pure forecast
+        return True
+
+    return False
+
+
 def check_():
     '''
 

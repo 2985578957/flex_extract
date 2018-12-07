@@ -149,11 +149,13 @@ class ControlFile(object):
         self.request = 0
         self.public = 0
         self.ecapi = None
+        self.purefc = 0
         self.rrint = 0
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
                          'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
-                         'ectrans', 'debug', 'request', 'public', 'rrint']
+                         'ectrans', 'debug', 'request', 'public', 'purefc',
+                         'rrint']
 
         self.__read_controlfile__()
 
@@ -477,6 +479,8 @@ class ControlFile(object):
             print('... Control paramter ACCMAXSTEP was not defined.')
             print('Use default value "12" for flux forecast!')
             self.accmaxstep='12'
+
+        self.purefc = check_purefc(self.type)
 
         self.grid = check_grid(self.grid)
 
