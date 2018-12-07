@@ -91,7 +91,7 @@ sys.path.append('../')
 import _config
 from GribTools import GribTools
 from mods.tools import (init128, to_param_id, silent_remove, product,
-                        my_error, make_dir)
+                        my_error, make_dir, get_informations, get_dimensions)
 from MarsRetrieval import MarsRetrieval
 import mods.disaggregation as disaggregation
 
@@ -723,7 +723,7 @@ class EcFlexpart(object):
         Parameters
         ----------
         inputfiles : :obj:`UioFiles`
-            Contains a list of files.
+            Contains the list of files that contain flux data.
 
         c : :obj:`ControlFile`
             Contains all the parameters of CONTROL file and
@@ -751,12 +751,24 @@ class EcFlexpart(object):
         # index_vals[1]: ('0', '1200', '1800', '600') ; time
         # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
-        # initialize dictionaries
-        valsdict = {}
-        svalsdict = {}
+        if c.rrint:
+            start_date = datetime.strptime(c.start_date + '00', '%Y%m%d%H')
+            end_date = datetime.strptime(c.end_date + '23', '%Y%m%d%H')
+            info = get_informations(os.path.join(c.inputdir,
+                                                 inputfiles.files[0]))
+            dims = get_dimensions(c, info)
+            # create numpy array
+            lsp_np = np.zeros((dims[1] * dims[0], dims[2]), dtype=np.float64)
+            cp_np = np.zeros((dims[1] * dims[0], dims[2]), dtype=np.float64)
+            it_lsp = 0
+            it_cp = 0
+
+        # initialize dictionaries to store values
+        orig_vals = {}
+        deac_vals = {}
         for p in pars:
-            valsdict[str(p)] = []
-            svalsdict[str(p)] = []
+            orig_vals[p] = []
+            deac_vals[p] = []
 
         # "product" genereates each possible combination between the
         # values of the index keys
@@ -812,53 +824,81 @@ class EcFlexpart(object):
 
             # read message for message and store relevant data fields
             # data keywords are stored in pars
-            while 1:
+            while True:
                 if not gid:
                     break
-                cparamId = str(codes_get(gid, 'paramId'))
+                parId = codes_get(gid, 'paramId')
                 step = codes_get(gid, 'step')
                 time = codes_get(gid, 'time')
                 ni = codes_get(gid, 'Ni')
                 nj = codes_get(gid, 'Nj')
-                if cparamId in valsdict.keys():
-                    values = codes_get_values(gid)
-                    vdp = valsdict[cparamId]
-                    svdp = svalsdict[cparamId]
+                if parId not in orig_vals.keys():
+                    # parameter is not a flux, find next one
+                    continue
 
-                    if cparamId == '142' or cparamId == '143':
-                        fak = 1. / 1000.
-                    else:
-                        fak = 3600.
+                # define conversion factor
+                if parId == 142 or parId == 143:
+                    fak = 1. / 1000.
+                else:
+                    fak = 3600.
 
-                    values = (np.reshape(values, (nj, ni))).flatten() / fak
-                    vdp.append(values[:])  # save the accumulated values
-                    if c.marsclass.upper() == 'EA' or \
-                       step <= int(c.dtime):
-                        svdp.append(values[:] / int(c.dtime))
-                    else:  # deaccumulate values
-                        svdp.append((vdp[-1] - vdp[-2]) / int(c.dtime))
+                # get parameter values and reshape
+                values = codes_get_values(gid)
+                values = (np.reshape(values, (nj, ni))).flatten() / fak
 
-                    print(cparamId, time, step, len(values),
-                          values[0], np.std(values))
+                # save the original and accumulated values
+                orig_vals[parId].append(values[:])
 
-                    # len(svdp) corresponds to the time
-                    if len(svdp) >= 3:
-                        if len(svdp) > 3:
-                            if cparamId == '142' or cparamId == '143':
-                                values = disaggregation.darain(svdp)
-                            else:
-                                values = disaggregation.dapoly(svdp)
+                if c.marsclass.upper() == 'EA' or step <= int(c.dtime):
+                    # no de-accumulation needed
+                    deac_vals[parId].append(values[:] / int(c.dtime))
+                else:
+                    # do de-accumulation
+                    deac_vals[parId].append(
+                        (orig_vals[parId][-1] - orig_vals[parId][-2]) /
+                         int(c.dtime))
 
-                            if not (step == c.maxstep and c.maxstep > 12 \
-                                    or t_dt == t_enddate):
-                                vdp.pop(0)
-                                svdp.pop(0)
+                # store precipitation if new disaggregation method is selected
+                # only the exact days are needed
+                if start_date <= t_dt <= end_date:
+                    print 'DATE: ', t_dt
+                    if c.rrint and parId == 142:
+                        print len(deac_vals[parId])
+                        lsp_np[:,it_lsp] = deac_vals[parId][-1][:]
+                        it_lsp += 1
+                    elif c.rrint and parId == 143:
+                        cp_np[:,it_cp] = deac_vals[parId][-1][:]
+                        it_cp += 1
+
+                # information printout
+                print(parId, time, step, len(values), values[0], np.std(values))
+
+                # length of deac_vals[parId] corresponds to the
+                # number of time steps (max. 4)
+                # run over all grib messages and perform
+                # shifting in time for old disaggegration method
+                if len(deac_vals[parId]) >= 3:
+                    if len(deac_vals[parId]) > 3:
+                        if not c.rrint and (parId == 142 or parId == 143):
+                            values = disaggregation.darain(deac_vals[parId])
                         else:
-                            if c.maxstep > 12:
-                                values = svdp[1]
-                            else:
-                                values = svdp[0]
+                            values = disaggregation.dapoly(deac_vals[parId])
 
+                        if not (step == c.maxstep and c.maxstep > 12 \
+                                or t_dt == t_enddate):
+                            # remove first time step in list to shift
+                            # time line
+                            orig_vals[parId].pop(0)
+                            deac_vals[parId].pop(0)
+                    else:
+                        # if the third time step is read (per parId),
+                        # write out the first one as a boundary value
+                        if c.maxstep > 12:
+                            values = deac_vals[parId][1]
+                        else:
+                            values = deac_vals[parId][0]
+
+                    if not (c.rrint and (parId == 142 or parId == 143)):
                         codes_set_values(gid, values)
 
                         if c.maxstep > 12:
@@ -871,47 +911,46 @@ class EcFlexpart(object):
                         codes_write(gid, f_handle)
 
                         if c.basetime:
-                            t_enddate = datetime.strptime(c.end_date +
-                                                          c.basetime,
+                            t_enddate = datetime.strptime(c.end_date + c.basetime,
                                                           '%Y%m%d%H')
                         else:
                             t_enddate = t_date + timedelta(2*int(c.dtime))
 
-                        # squeeze out information of last two steps contained
-                        # in svdp
-                        # if step+int(c.dtime) == c.maxstep and c.maxstep>12
-                        # or t_dt+timedelta(hours = int(c.dtime))
-                        # >= t_enddate:
-                        # Note that svdp[0] has not been popped in this case
+                            # squeeze out information of last two steps contained
+                            # in deac_vals[parId]
+                            # if step+int(c.dtime) == c.maxstep and c.maxstep>12
+                            # or t_dt+timedelta(hours = int(c.dtime))
+                            # >= t_enddate:
+                            # Note that deac_vals[parId][0] has not been popped in this case
 
-                        if step == c.maxstep and c.maxstep > 12 or \
-                           t_dt == t_enddate:
+                            if step == c.maxstep and c.maxstep > 12 or \
+                               t_dt == t_enddate:
 
-                            values = svdp[3]
-                            codes_set_values(gid, values)
-                            codes_set(gid, 'stepRange', 0)
-                            truedatetime = t_m2dt + timedelta(hours=
-                                                              2*int(c.dtime))
-                            codes_set(gid, 'time', truedatetime.hour * 100)
-                            codes_set(gid, 'date', truedatetime.year * 10000 +
-                                      truedatetime.month * 100 +
-                                      truedatetime.day)
-                            codes_write(gid, h_handle)
+                                values = deac_vals[parId][3]
+                                codes_set_values(gid, values)
+                                codes_set(gid, 'stepRange', 0)
+                                truedatetime = t_m2dt + timedelta(hours=
+                                                                  2*int(c.dtime))
+                                codes_set(gid, 'time', truedatetime.hour * 100)
+                                codes_set(gid, 'date', truedatetime.year * 10000 +
+                                          truedatetime.month * 100 +
+                                          truedatetime.day)
+                                codes_write(gid, h_handle)
 
-                            #values = (svdp[1]+svdp[2])/2.
-                            if cparamId == '142' or cparamId == '143':
-                                values = disaggregation.darain(list(reversed(svdp)))
-                            else:
-                                values = disaggregation.dapoly(list(reversed(svdp)))
+                                #values = (deac_vals[parId][1]+deac_vals[parId][2])/2.
+                                if parId == 142 or parId == 143:
+                                    values = disaggregation.darain(list(reversed(deac_vals[parId])))
+                                else:
+                                    values = disaggregation.dapoly(list(reversed(deac_vals[parId])))
 
-                            codes_set(gid, 'stepRange', 0)
-                            truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
-                            codes_set(gid, 'time', truedatetime.hour * 100)
-                            codes_set(gid, 'date', truedatetime.year * 10000 +
-                                      truedatetime.month * 100 +
-                                      truedatetime.day)
-                            codes_set_values(gid, values)
-                            codes_write(gid, g_handle)
+                                codes_set(gid, 'stepRange', 0)
+                                truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
+                                codes_set(gid, 'time', truedatetime.hour * 100)
+                                codes_set(gid, 'date', truedatetime.year * 10000 +
+                                          truedatetime.month * 100 +
+                                          truedatetime.day)
+                                codes_set_values(gid, values)
+                                codes_write(gid, g_handle)
 
                 codes_release(gid)
 
@@ -922,6 +961,17 @@ class EcFlexpart(object):
             h_handle.close()
 
         codes_index_release(iid)
+
+        # disaggregation.IA3(lsp_np)
+        # pro gitterpunkt die zeitserie disagg, oder geht es auch mit feld
+        # wenn zurück dann über zeitschritte itterieren und rausschreiben.
+        # original in die flux
+        # subgrid wohin? extrafiles die beide oder jeweils einen subgrid beinhalten?
+        # kann time hh und mm fassen?
+
+        print lsp_np.shape
+        print lsp_np
+
 
         return
 
