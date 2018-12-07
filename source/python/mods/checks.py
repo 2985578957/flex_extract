@@ -32,6 +32,21 @@ import _config
 
 
 def check_grid(grid):
+    '''Convert grid into correct Lat/Lon format. E.g. '0.5/0.5'
+
+    Checks on format of original grid. Wether it is in the order of 1000 or 1.
+    Convert to correct grid format and substitute into "Lat/Lon" format string.
+
+    Parameters
+    ----------
+    grid : :obj:`string`
+        Contains grid information
+
+    Return
+    ------
+    grid : :obj:``string`
+        Contains grid in format Lat/lon. E.g. 0.1/0.1
+    '''
 
     if 'N' in grid:
         return grid
@@ -54,9 +69,24 @@ def check_grid(grid):
     return grid
 
 def check_area(grid, area, upper, lower, left , right):
-    '''
+    '''Defines the correct area string.
 
+    Checks on the format of the four area components. Wether it is of
+    the order of 1000 or 1. Also checks wether area was already set by command
+    line, then the four components are overwritten.
+    Convert to correct format of the order of magnitude "1" and sets the
+    area parameter (North/West/South/East).
+    E.g.: -5./20./10./10.
 
+    Parameters
+    ----------
+    grid : :obj:`string`
+        Contains grid information
+
+    Return
+    ------
+    grid : :obj:``string`
+        Contains grid in format Lat/lon. E.g. 0.1/0.1
     '''
     if 'N' in grid:  # Gaussian output grid
         area = 'G'
@@ -95,15 +125,29 @@ def check_area(grid, area, upper, lower, left , right):
     return area
 
 def check_levels(levelist, level):
-    '''
+    '''Defines correct level list and guarantees that the maximum level is
+    one of the available maximum levels.
 
     Parameters
     ----------
-    par : :obj:``
-        ...
+    levelist : :obj:`string`
+        Specifies the level list.
+        Examples: model level: 1/to/137, pressure levels: 500/to/1000
+
+    level : :obj:`string`
+        Specifies the maximum level.
 
     Return
     ------
+    levelist : :obj:`string`
+        Specifies the required levels. It has to have a valid
+        correspondence to the selected levtype.
+        Examples: model level: 1/to/137, pressure levels: 500/to/1000
+
+    level : :obj:`string`
+        Specifies the maximum level. It has to be one of the
+        available maximum level number as contained in the variable
+        MAX_LEVEL_LIST in "_config". E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]
 
     '''
     # assure consistency of levelist and level
