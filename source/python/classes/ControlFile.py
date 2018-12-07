@@ -60,7 +60,7 @@ import inspect
 sys.path.append('../')
 import _config
 from mods.tools import my_error, silent_remove
-from mods.checks import check_grid, check_area, check_levels
+from mods.checks import check_grid, check_area, check_levels, check_purefc
 
 # ------------------------------------------------------------------------------
 # CLASS

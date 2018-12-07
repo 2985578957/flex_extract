@@ -916,12 +916,10 @@ class EcFlexpart(object):
                         else:
                             t_enddate = t_date + timedelta(2*int(c.dtime))
 
-                            # squeeze out information of last two steps contained
-                            # in deac_vals[parId]
-                            # if step+int(c.dtime) == c.maxstep and c.purefc
-                            # or t_dt+timedelta(hours = int(c.dtime))
-                            # >= t_enddate:
-                            # Note that deac_vals[parId][0] has not been popped in this case
+                            # squeeze out information of last two steps
+                            # contained in deac_vals[parId]
+                            # Note that deac_vals[parId][0] has not been popped
+                            # in this case
 
                             if step == c.maxstep and c.purefc or \
                                t_dt == t_enddate:
