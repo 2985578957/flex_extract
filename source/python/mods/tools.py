@@ -54,6 +54,7 @@ import glob
 import subprocess
 import traceback
 import exceptions
+from datetime import datetime
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # ------------------------------------------------------------------------------
@@ -116,7 +117,7 @@ def get_cmdline_arguments():
                                 ECMWF MARS archive',
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
-    # the most important arguments
+    # control parameters that override control file values
     parser.add_argument("--start_date", dest="start_date",
                         type=none_or_str, default=None,
                         help="start date YYYYMMDD")
@@ -129,20 +130,6 @@ def get_cmdline_arguments():
     parser.add_argument("--controlfile", dest="controlfile",
                         type=none_or_str, default='CONTROL.temp',
                         help="file with CONTROL parameters")
-
-    # parameter for extra output information
-    parser.add_argument("--debug", dest="debug",
-                        type=none_or_int, default=None,
-                        help="debug mode - leave temporary files intact")
-    parser.add_argument("--request", dest="request",
-                        type=none_or_int, default=None,
-                        help="list all mars request in file mars_requests.dat \
-                        and skip submission to mars")
-    parser.add_argument("--public", dest="public",
-                        type=none_or_int, default=None,
-                        help="public mode - retrieves the public datasets")
-
-    # some arguments that override the default in the CONTROL file
     parser.add_argument("--basetime", dest="basetime",
                         type=none_or_int, default=None,
                         help="base such as 00 or 12 (for half day retrievals)")
@@ -156,7 +143,23 @@ def get_cmdline_arguments():
                         type=none_or_str, default=None,
                         help="area defined as north/west/south/east")
 
-    # set the working directories
+    # some switches
+    parser.add_argument("--debug", dest="debug",
+                        type=none_or_int, default=None,
+                        help="debug mode - leave temporary files intact")
+    parser.add_argument("--request", dest="request",
+                        type=none_or_int, default=None,
+                        help="list all mars requests in file mars_requests.dat")
+    parser.add_argument("--public", dest="public",
+                        type=none_or_int, default=None,
+                        help="public mode - retrieves the public datasets")
+    parser.add_argument("--rrint", dest="rrint",
+                        type=none_or_int, default=None,
+                        help="select old or new precipitation interpolation \
+                        0 - old method\
+                        1 - new method (additional subgrid points)")
+
+    # set directories
     parser.add_argument("--inputdir", dest="inputdir",
                         type=none_or_str, default=None,
                         help="root directory for storing intermediate files")
@@ -633,3 +636,92 @@ def submit_job_to_ecserver(target, jobname):
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
 
     return job_id
+
+
+def get_informations(filename):
+    '''Gets basic information from an example grib file.
+
+    These information are important for later use and the
+    initialization of numpy arrays for data storing.
+
+    Parameters
+    ----------
+    filename : :obj:`string`
+            Name of the file which will be opened to extract basic information.
+
+    Return
+    ------
+    data : :obj:`dictionary`
+        Contains basic informations of the ECMWF grib files, e.g.
+        'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
+        'longitudeOfFirstGridPointInDegrees', 'latitudeOfLastGridPointInDegrees',
+        'longitudeOfLastGridPointInDegrees', 'jDirectionIncrementInDegrees',
+        'iDirectionIncrementInDegrees', 'missingValue'
+    '''
+    from eccodes import *
+
+    data = {}
+
+    # --- open file ---
+    print("Opening file for getting information data --- %s" % filename)
+    with open(filename) as f:
+        # load first message from file
+        gid = codes_grib_new_from_file(f)
+
+        # information needed from grib message
+        keys = [
+                'Ni',
+                'Nj',
+                'latitudeOfFirstGridPointInDegrees',
+                'longitudeOfFirstGridPointInDegrees',
+                'latitudeOfLastGridPointInDegrees',
+                'longitudeOfLastGridPointInDegrees',
+                'jDirectionIncrementInDegrees',
+                'iDirectionIncrementInDegrees',
+                'missingValue',
+               ]
+
+        print('\nInformations are: ')
+        for key in keys:
+            # Get the value of the key in a grib message.
+            data[key] = codes_get(gid,key)
+            print("%s = %s" % (key,data[key]))
+
+        # Free the memory for the message referred as gribid.
+        codes_release(gid)
+
+    return data
+
+
+def get_dimensions(c, info):
+    '''This function specifies the correct dimensions for x, y and t.
+
+    Parameters
+    ----------
+    c : :obj:`ControlFile`
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    info : :obj:`dictionary`
+        Contains basic informations of the ECMWF grib files, e.g.
+        'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
+        'longitudeOfFirstGridPointInDegrees', 'latitudeOfLastGridPointInDegrees',
+        'longitudeOfLastGridPointInDegrees', 'jDirectionIncrementInDegrees',
+        'iDirectionIncrementInDegrees', 'missingValue'
+
+    Return
+    ------
+    (ix, jy, it) : :obj:`tuple` of :obj:`integer`
+        Dimension in x-direction, y-direction and in time.
+    '''
+
+    ix = info['Ni']
+
+    jy = info['Nj']
+
+    start = datetime.strptime(c.start_date, '%Y%m%d')
+    end = datetime.strptime(c.end_date, '%Y%m%d')
+    it = ((end - start).days + 1) * 24/int(c.dtime)
+    print 'it', it, (end - start).days, 24/int(c.dtime)
+
+    return (ix, jy, it)
