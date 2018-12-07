@@ -68,19 +68,19 @@ def check_area(grid, area, upper, lower, left , right):
         upper, left, lower, right = components
 
     # determine area format
-    if (float(upper) / 1000. >= 0.05 and
-        float(lower) / 1000. >= 0.05 and
-        float(left) / 1000. >= 0.05 and
-        float(right) / 1000. >= 0.05):
+    if (abs(float(upper) / 1000.) >= 0.05 and
+        abs(float(lower) / 1000.) >= 0.05 and
+        abs(float(left) / 1000.) >= 0.05 and
+        abs(float(right) / 1000.) >= 0.05):
         # area is defined in 1/1000 degrees; old format
         area = '{}/{}/{}/{}'.format(float(upper) / 1000.,
                                     float(left) / 1000.,
                                     float(lower) / 1000.,
                                     float(right) / 1000.)
-    elif (float(upper) / 1000. < 0.05 and
-          float(lower) / 1000. < 0.05 and
-          float(left) / 1000. < 0.05 and
-          float(right) / 1000. < 0.05):
+    elif (abs(float(upper) / 1000.) < 0.05 and
+          abs(float(lower) / 1000.) < 0.05 and
+          abs(float(left) / 1000.) < 0.05 and
+          abs(float(right) / 1000.) < 0.05):
         # area is already in new format
         area = '{}/{}/{}/{}'.format(float(upper),
                                     float(left),
@@ -88,7 +88,9 @@ def check_area(grid, area, upper, lower, left , right):
                                     float(right))
     else:
         raise ValueError('The area components have different '
-                         'formats: %s ' (area))
+                         'formats (upper, lower, left, right): '
+                         '{}/{}/{}/{}'.format(str(upper), str(lower),
+                                              str(left) , str(right)))
 
     return area
 
@@ -151,7 +153,6 @@ def check_ppid(c, ppid):
         c.ppid = ppid
 
     return
-
 
 def check_():
     '''
