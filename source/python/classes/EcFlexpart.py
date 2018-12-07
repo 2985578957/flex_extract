@@ -131,7 +131,7 @@ class EcFlexpart(object):
         self.types = dict()
 
         # Pure forecast mode
-        if c.maxstep > len(c.type) and 'AN' not in c.type:
+        if c.purefc:
             c.type = [c.type[0]]
             c.step = ['{:0>3}'.format(int(c.step[0]))]
             c.time = [c.time[0]]
@@ -145,7 +145,7 @@ class EcFlexpart(object):
         self.basetime = c.basetime
         self.dtime = c.dtime
         i = 0
-        if fluxes and c.maxstep <= 24:
+        if fluxes and not c.purefc:
             self.types[str(c.acctype)] = {'times': str(c.acctime),
                                           'steps': '{}/to/{}/by/{}'.format(
                                               c.dtime, c.accmaxstep, c.dtime)}
@@ -160,7 +160,7 @@ class EcFlexpart(object):
                 if ((ty.upper() == 'AN' and (int(c.time[i]) % int(c.dtime)) == 0) or
                     (ty.upper() != 'AN' and (int(c.step[i]) % int(c.dtime)) == 0 and
                      (int(c.step[i]) % int(c.dtime) == 0)) ) and \
-                    (int(c.time[i]) in btlist or c.maxstep > 24):
+                    (int(c.time[i]) in btlist or c.purefc):
 
                     if ty not in self.types.keys():
                         self.types[ty] = {'times': '', 'steps': ''}
@@ -799,7 +799,7 @@ class EcFlexpart(object):
             t_m2dt = t_date + timedelta(hours=int(cstep)-2*int(c.dtime))
             t_enddate = None
 
-            if c.maxstep > 12:
+            if c.purefc:
                 fnout = os.path.join(c.inputdir, 'flux' +
                                      t_date.strftime('%Y%m%d.%H') +
                                      '.{:0>3}'.format(step-2*int(c.dtime)))
@@ -884,7 +884,7 @@ class EcFlexpart(object):
                         else:
                             values = disaggregation.dapoly(deac_vals[parId])
 
-                        if not (step == c.maxstep and c.maxstep > 12 \
+                        if not (step == c.maxstep and c.purefc \
                                 or t_dt == t_enddate):
                             # remove first time step in list to shift
                             # time line
@@ -893,7 +893,7 @@ class EcFlexpart(object):
                     else:
                         # if the third time step is read (per parId),
                         # write out the first one as a boundary value
-                        if c.maxstep > 12:
+                        if c.purefc:
                             values = deac_vals[parId][1]
                         else:
                             values = deac_vals[parId][0]
@@ -901,7 +901,7 @@ class EcFlexpart(object):
                     if not (c.rrint and (parId == 142 or parId == 143)):
                         codes_set_values(gid, values)
 
-                        if c.maxstep > 12:
+                        if c.purefc:
                             codes_set(gid, 'stepRange', max(0, step-2*int(c.dtime)))
                         else:
                             codes_set(gid, 'stepRange', 0)
@@ -918,12 +918,12 @@ class EcFlexpart(object):
 
                             # squeeze out information of last two steps contained
                             # in deac_vals[parId]
-                            # if step+int(c.dtime) == c.maxstep and c.maxstep>12
+                            # if step+int(c.dtime) == c.maxstep and c.purefc
                             # or t_dt+timedelta(hours = int(c.dtime))
                             # >= t_enddate:
                             # Note that deac_vals[parId][0] has not been popped in this case
 
-                            if step == c.maxstep and c.maxstep > 12 or \
+                            if step == c.maxstep and c.purefc or \
                                t_dt == t_enddate:
 
                                 values = deac_vals[parId][3]
@@ -1170,7 +1170,7 @@ class EcFlexpart(object):
             os.chdir(pwd)
 #============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
-            if c.maxstep > 12:
+            if c.purefc:
                 suffix = cdate[2:8] + '.' + ctime + '.' + cstep
             else:
                 suffix = cdate_hour[2:10]
