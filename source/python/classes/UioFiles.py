@@ -87,12 +87,12 @@ class UioFiles(object):
         self.pattern = pattern
         self.files = []
 
-        self.__list_files__(self.path)
+        self._list_files(self.path)
 
         return
 
     #@profiling.timefn
-    def __list_files__(self, path):
+    def _list_files(self, path):
         '''Lists all files in the directory with the matching
         regular expression pattern.
 
