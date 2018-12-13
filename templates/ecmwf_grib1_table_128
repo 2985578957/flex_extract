@@ -59,7 +59,8 @@
 063 Start time for skin temp. diff.   s                    TSDIFS           0  -9999.00
 064 Finish time for skin temp. diff.  s                    TSDIFE           0  -9999.00
 065 Skin temperature difference       K                    TSDIF            0  -9999.00
-!66 to 77 Unused
+!66 to 76 Unused
+077 Eta-coordinate vertical velocity  s**-1                ETADOT           0  -9999.00
 078 Total column liquid water         kg m**-2             TCLW             0  -9999.00
 079 Total column ice water            kg m**-2             TCIW             0  -9999.00
 !80 to 120 Experimental products (contents may vary)
