@@ -164,11 +164,11 @@ class ControlFile(object):
                          'ectrans', 'debug', 'request', 'public', 'purefc',
                          'rrint']
 
-        self.__read_controlfile__()
+        self._read_controlfile()
 
         return
 
-    def __read_controlfile__(self):
+    def _read_controlfile(self):
         '''Read CONTROL file and assign all CONTROL file variables.
 
         Parameters
