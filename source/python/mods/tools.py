@@ -166,7 +166,7 @@ def get_cmdline_arguments():
     parser.add_argument("--outputdir", dest="outputdir",
                         type=none_or_str, default=None,
                         help="root directory for storing output files")
-    parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
+    parser.add_argument("--flexpartdir", dest="flexpartdir",
                         type=none_or_str, default=None,
                         help="FLEXPART root directory (to find grib2flexpart \
                         and COMMAND file)\n Normally flex_extract resides in \
@@ -658,7 +658,7 @@ def get_informations(filename):
         'longitudeOfLastGridPointInDegrees', 'jDirectionIncrementInDegrees',
         'iDirectionIncrementInDegrees', 'missingValue'
     '''
-    from eccodes import *
+    from eccodes import codes_grib_new_from_file, codes_get, codes_release
 
     data = {}
 
@@ -693,21 +693,37 @@ def get_informations(filename):
     return data
 
 
-def get_dimensions(c, info):
+def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
     '''This function specifies the correct dimensions for x, y and t.
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
-        Contains all the parameters of CONTROL file and
-        command line.
-
     info : :obj:`dictionary`
         Contains basic informations of the ECMWF grib files, e.g.
         'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
         'longitudeOfFirstGridPointInDegrees', 'latitudeOfLastGridPointInDegrees',
         'longitudeOfLastGridPointInDegrees', 'jDirectionIncrementInDegrees',
         'iDirectionIncrementInDegrees', 'missingValue'
+
+    purefc : :obj:`integer`
+        Switch for definition of pure forecast mode or not.
+
+    dtime : :obj:`string`
+        Time step in hours.
+
+    index_vals : :obj:`list`
+        Contains the values from the keys used for a distinct selection
+        of grib messages in processing  the grib files.
+        Content looks like e.g.:
+        index_vals[0]: ('20171106', '20171107', '20171108') ; date
+        index_vals[1]: ('0', '1200', '1800', '600') ; time
+        index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
+
+    start_date : :obj:`string`
+        The start date of the retrieval job.
+
+    end_date : :obj:`string`
+        The end date of the retrieval job.
 
     Return
     ------
@@ -719,9 +735,10 @@ def get_dimensions(c, info):
 
     jy = info['Nj']
 
-    start = datetime.strptime(c.start_date, '%Y%m%d')
-    end = datetime.strptime(c.end_date, '%Y%m%d')
-    it = ((end - start).days + 1) * 24/int(c.dtime)
-    print 'it', it, (end - start).days, 24/int(c.dtime)
+    if not purefc:
+        it = ((end_date - start_date).days + 1) * 24/int(dtime)
+    else:
+        # #no of step * #no of times * #no of days
+        it = len(index_vals[2]) * len(index_vals[1]) * len(index_vals[0])
 
     return (ix, jy, it)
