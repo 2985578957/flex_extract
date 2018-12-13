@@ -55,12 +55,19 @@ import os
 import re
 import sys
 import inspect
+import numpy as np
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
 from mods.tools import my_error, silent_remove
-from mods.checks import check_grid, check_area, check_levels, check_purefc
+from mods.checks import (check_grid, check_area, check_levels, check_purefc,
+                         check_step, check_mail, check_queue, check_pathes,
+                         check_dates, check_maxstep, check_type, check_request,
+                         check_basetime, check_public, check_acctype,
+                         check_acctime, check_accmaxstep, check_time,
+                         check_logicals_type, check_len_type_time_step,
+                         check_addpar)
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -136,9 +143,9 @@ class ControlFile(object):
         self.ectrans = 0
         self.inputdir = _config.PATH_INPUT_DIR
         self.outputdir = None
-        self.ecmwfdatadir = _config.PATH_FLEXEXTRACT_DIR
+        self.flexextractdir = _config.PATH_FLEXEXTRACT_DIR
         self.exedir = _config.PATH_FORTRAN_SRC
-        self.flexpart_root_scripts = None
+        self.flexpartdir = None
         self.makefile = 'Makefile.gfortran'
         self.destination = None
         self.gateway = None
@@ -195,15 +202,6 @@ class ControlFile(object):
                     data[0] = 'start_date'
                 if data[0].lower() == 'day2':
                     data[0] = 'end_date'
-                if data[0].lower() == 'addpar':
-                    if '/' in data[1]:
-                        # remove leading '/' sign from addpar content
-                        if data[1][0] == '/':
-                            data[1] = data[1][1:]
-                        dd = data[1].split('/')
-                        data = [data[0]]
-                        for d in dd:
-                            data.append(d)
                 if len(data) == 2:
                     if '$' in data[1]:
                         setattr(self, data[0].lower(), data[1])
@@ -324,161 +322,50 @@ class ControlFile(object):
         ------
 
         '''
-        from mods.tools import my_error
-        import numpy as np
+        check_logicals_type(self, self.logicals)
 
-        # check for having at least a starting date
-        # otherwise program is not allowed to run
-        if not self.start_date:
-            print('start_date specified neither in command line nor '
-                  'in CONTROL file ' +  self.controlfile)
-            print('Try "' + sys.argv[0].split('/')[-1] +
-                  ' -h" to print usage information')
-            sys.exit(1)
+        self.mailfail = check_mail(self.mailfail)
 
-        # retrieve just one day if end_date isn't set
-        if not self.end_date:
-            self.end_date = self.start_date
+        self.mailops = check_mail(self.mailops)
 
-        # basetime has only two possible values
-        if self.basetime:
-            if int(self.basetime) != 0 and int(self.basetime) != 12:
-                print('Basetime has an invalid value!')
-                print('Basetime = ' + str(self.basetime))
-                sys.exit(1)
+        check_queue(queue, self.gateway, self.destination,
+                    self.ecuid, self.ecgid)
+
+        self.outputdir, self.flexpartdir = check_pathes(self.inputdir,
+             self.outputdir, self.flexpartdir, self.flexextractdir)
+
+        self.start_date, self.end_date = check_dates(self.start_date,
+                                                     self.end_date)
+
+        check_basetime(self.basetime)
 
         self.levelist, self.level = check_levels(self.levelist, self.level)
 
-        # # assure consistency of levelist and level
-        # if not self.levelist and not self.level:
-            # print('Warning: neither levelist nor level \
-                               # specified in CONTROL file')
-            # sys.exit(1)
-        # elif not self.levelist and self.level:
-            # self.levelist = '1/to/' + self.level
-        # elif (self.levelist and not self.level) or \
-             # (self.levelist[-1] != self.level[-1]):
-            # self.level = self.levelist.split('/')[-1]
-        # else:
-            # pass
+        self.step = check_step(self.step, self.mailfail)
 
-        # # check if max level is a valid level
-        # if int(self.level) not in _config.MAX_LEVEL_LIST:
-            # print('ERROR: ')
-            # print('LEVEL must be the maximum level of a specified '
-                  # 'level list from ECMWF, e.g.')
-            # print(_config.MAX_LEVEL_LIST)
-            # print('Check parameter "LEVEL" or the max level of "LEVELIST"!')
-            # sys.exit(1)
+        self.maxstep = check_maxstep(self.maxstep, self.step)
 
-        # prepare step list if "/" signs are found
-        if '/' in self.step:
-            steps = self.step.split('/')
-            if 'to' in self.step.lower() and 'by' in self.step.lower():
-                ilist = np.arange(int(steps[0]),
-                                  int(steps[2]) + 1,
-                                  int(steps[4]))
-                self.step = ['{:0>3}'.format(i) for i in ilist]
-            elif 'to' in self.step.lower() and 'by' not in self.step.lower():
-                my_error(self.mailfail, self.step + ':\n' +
-                         'if "to" is used in steps parameter, '
-                         'please use "by" as well')
-            else:
-                self.step = steps
+        check_request(self.request,
+                      os.path.join(self.inputdir, _config.FILE_MARS_REQUESTS))
 
-        # if maxstep wasn't provided
-        # search for it in the "step" parameter
-        if not self.maxstep:
-            self.maxstep = 0
-            for s in self.step:
-                if int(s) > self.maxstep:
-                    self.maxstep = int(s)
-        else:
-            self.maxstep = int(self.maxstep)
+        check_public(self.public, self.dataset)
 
-        # set root scripts since it is needed later on
-        if not self.flexpart_root_scripts:
-            self.flexpart_root_scripts = self.ecmwfdatadir
+        self.type = check_type(self.type, self.step)
 
-        if not self.outputdir:
-            self.outputdir = self.inputdir
+        self.time = check_time(self.time)
 
-        if not isinstance(self.mailfail, list):
-            if ',' in self.mailfail:
-                self.mailfail = self.mailfail.split(',')
-            elif ' ' in self.mailfail:
-                self.mailfail = self.mailfail.split()
-            else:
-                self.mailfail = [self.mailfail]
+        self.type, self.time, self.step = check_len_type_time_step(self.type,
+                                                                   self.time,
+                                                                   self.step,
+                                                                   self.maxstep,
+                                                                   self.purefc)
 
-        if not isinstance(self.mailops, list):
-            if ',' in self.mailops:
-                self.mailops = self.mailops.split(',')
-            elif ' ' in self.mailops:
-                self.mailops = self.mailops.split()
-            else:
-                self.mailops = [self.mailops]
+        self.acctype = check_acctype(self.acctype, self.type)
 
-        if queue in _config.QUEUES_LIST and \
-           not self.gateway or not self.destination or \
-           not self.ecuid or not self.ecgid:
-            print('\nEnvironment variables GATEWAY, DESTINATION, ECUID and '
-                  'ECGID were not set properly!')
-            print('Please check for existence of file "ECMWF_ENV" in the '
-                  'python directory!')
-            sys.exit(1)
+        self.acctime = check_acctime(self.acctime, self.acctype, self.purefc)
 
-        if self.request != 0:
-            marsfile = os.path.join(self.inputdir,
-                                    _config.FILE_MARS_REQUESTS)
-            if os.path.isfile(marsfile):
-                silent_remove(marsfile)
-
-        # check all logical variables for data type
-        # if its a string change to integer
-        for var in self.logicals:
-            if not isinstance(getattr(self, var), int):
-                setattr(self, var, int(getattr(self, var)))
-
-        if self.public and not self.dataset:
-            print('ERROR: ')
-            print('If public mars data wants to be retrieved, '
-                  'the "dataset"-parameter has to be set in the control file!')
-            sys.exit(1)
-
-        if not isinstance(self.type, list):
-            self.type = [self.type]
-
-        for i, val in enumerate(self.type):
-            if self.type[i] == 'AN' and int(self.step[i]) != 0:
-                print('Analysis retrievals must have STEP = 0 (is set to 0)')
-                self.type[i] = 0
-
-        if not isinstance(self.time, list):
-            self.time = [self.time]
-
-        if not isinstance(self.step, list):
-            self.step = [self.step]
-
-        if not self.acctype:
-            print('... Control paramter ACCTYPE was not defined.')
-            try:
-                if len(self.type) > 1 and self.type[1] != 'AN':
-                    print('Use old setting by using TYPE[1] for flux forecast!')
-                    self.acctype = self.type[1]
-            except:
-                print('Use default value "FC" for flux forecast!')
-                self.acctype='FC'
-
-        if not self.acctime:
-            print('... Control paramter ACCTIME was not defined.')
-            print('Use default value "00/12" for flux forecast!')
-            self.acctime='00/12'
-
-        if not self.accmaxstep:
-            print('... Control paramter ACCMAXSTEP was not defined.')
-            print('Use default value "12" for flux forecast!')
-            self.accmaxstep='12'
+        self.accmaxstep = check_accmaxstep(self.accmaxstep, self.acctype,
+                                           self.purefc, self.maxstep)
 
         self.purefc = check_purefc(self.type)
 
@@ -487,13 +374,15 @@ class ControlFile(object):
         self.area = check_area(self.grid, self.area, self.upper, self.lower,
                                self.left, self.right)
 
+        self.addpar = check_addpar(self.addpar)
+
 
         return
 
     def to_list(self):
         '''Just generates a list of strings containing the attributes and
         assigned values except the attributes "_expanded", "exedir",
-        "ecmwfdatadir" and "flexpart_root_scripts".
+        "flexextractdir" and "flexpartdir".
 
         Parameters
         ----------
@@ -503,7 +392,7 @@ class ControlFile(object):
         l : :obj:`list`
             A sorted list of the all ControlFile class attributes with
             their values except the attributes "_expanded", "exedir",
-            "ecmwfdatadir" and "flexpart_root_scripts".
+            "flexextractdir" and "flexpartdir".
         '''
 
         import collections
@@ -517,9 +406,9 @@ class ControlFile(object):
                 pass
             elif 'exedir' in item[0]:
                 pass
-            elif 'flexpart_root_scripts' in item[0]:
+            elif 'flexpartdir' in item[0]:
                 pass
-            elif 'ecmwfdatadir' in item[0]:
+            elif 'flexextractdir' in item[0]:
                 pass
             else:
                 if isinstance(item[1], list):
