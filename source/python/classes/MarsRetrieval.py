@@ -346,41 +346,6 @@ class MarsRetrieval(object):
         return
 
 
-    def print_info(self, inputdir, request_number):
-        '''Prints all mars requests to an extra file for debugging and
-        information.
-
-        Parameters
-        ----------
-        inputdir : :obj:`string`
-            The path where all data from the retrievals are stored.
-
-        request_number : :obj:`integer`
-            Number of mars requests for flux and non-flux data.
-
-        Return
-        ------
-
-        '''
-        # Get all class attributes and their values as a dictionary
-        attrs = vars(self).copy()
-
-        # open a file to store all requests to
-        with open(os.path.join(inputdir,
-                               _config.FILE_MARS_REQUESTS), 'a') as f:
-            f.write('mars_request #' + str(request_number) + '\n')
-            # iterate through all attributes and print them
-            # with their corresponding values
-            for item in attrs.items():
-                if item[0] in ['server', 'public']:
-                    pass
-                else:
-                    f.write(item[0] + ': ' + str(item[1]) + '\n')
-            f.write('\n\n')
-
-        return
-
-
     def print_infodata_csv(self, inputdir, request_number):
         '''Write all request parameter in alpabetical order into a "csv" file.
 
