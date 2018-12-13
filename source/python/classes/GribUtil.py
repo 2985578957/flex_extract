@@ -31,7 +31,7 @@
 #    - __init__
 #    - get_keys
 #    - set_keys
-#    - copy
+#    - copy_dummy_msg
 #    - index
 #
 # @Class Attributes:
@@ -47,12 +47,12 @@ import os
 from eccodes import (codes_grib_new_from_file, codes_is_defined, codes_get,
                      codes_release, codes_set, codes_write, codes_index_read,
                      codes_index_new_from_file, codes_index_add_file,
-                     codes_index_write)
+                     codes_index_write, codes_set_values)
 
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
-class GribTools(object):
+class GribUtil(object):
     '''
     Class for GRIB utilities (new methods) based on GRIB API
     '''
@@ -60,7 +60,7 @@ class GribTools(object):
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
     def __init__(self, filenames):
-        '''Initialise an object of GribTools and assign a list of filenames.
+        '''Initialise an object of GribUtil and assign a list of filenames.
 
         Parameters
         ----------
@@ -138,10 +138,8 @@ class GribTools(object):
     def set_keys(self, fromfile, keynames, keyvalues, wherekeynames=[],
                  wherekeyvalues=[], strict=False, filemode='w'):
         '''Opens the file to read the grib messages and then write
-        them to a new output file. By default all messages are
-        written out. Also, the keyvalues of the passed list of
-        keynames are set or only those meeting the where statement.
-        (list of key and list of values).
+        the selected messages (with wherekeys) to a new output file.
+        Also, the keyvalues of the passed list of keynames are set.
 
         Parameters
         ----------
@@ -149,15 +147,19 @@ class GribTools(object):
             Filename of the input file to read the grib messages from.
 
         keynames : :obj:`list` of :obj:`string`
-            List of keynames. Default is an empty list.
+            List of keynames to set in the selected messages.
+            Default is an empty list.
 
         keyvalues : :obj:`list` of :obj:`string`
-            List of keynames. Default is an empty list.
+            List of keyvalues to set in the selected messages.
+            Default is an empty list.
 
         wherekeynames : :obj:`list` of :obj:`string`, optional
+            List of keynames to select correct message.
             Default value is an empty list.
 
         wherekeyvalues : :obj:`list` of :obj:`string`, optional
+            List of keyvalues for keynames to select correct message.
             Default value is an empty list.
 
         strict : :obj:`boolean`, optional
@@ -172,23 +174,23 @@ class GribTools(object):
         ------
 
         '''
+        if len(wherekeynames) != len(wherekeyvalues):
+            raise Exception("Give a value for each keyname!")
+
         fout = open(self.filenames, filemode)
         fin = open(fromfile)
 
         while 1:
-            gid = codes_new_from_file(fin)
+            gid = codes_grib_new_from_file(fin)
 
             if gid is None:
                 break
-
-            if len(wherekeynames) != len(wherekeyvalues):
-                raise Exception("Give a value for each keyname!")
 
             select = True
             i = 0
             for wherekey in wherekeynames:
                 if not codes_is_defined(gid, wherekey):
-                    raise Exception("where Key was not defined")
+                    raise Exception("wherekey was not defined")
 
                 select = (select and (str(wherekeyvalues[i]) ==
                                       str(codes_get(gid, wherekey))))
@@ -197,10 +199,13 @@ class GribTools(object):
             if select:
                 i = 0
                 for key in keynames:
-                    codes_set(gid, key, keyvalues[i])
+                    if key == 'values':
+                        codes_set_values(gid, keyvalues[i])
+                    else:
+                        codes_set(gid, key, keyvalues[i])
                     i += 1
 
-            codes_write(gid, fout)
+                codes_write(gid, fout)
 
             codes_release(gid)
 
@@ -209,8 +214,8 @@ class GribTools(object):
 
         return
 
-    def copy(self, filename_in, selectWhere=True,
-             keynames=[], keyvalues=[], filemode='w'):
+    def copy_dummy_msg(self, filename_in, selectWhere=True,
+                 keynames=[], keyvalues=[], filemode='w'):
         '''Add the content of another input grib file to the objects file but
         only messages corresponding to keys/values passed to the function.
         The selectWhere switch decides if to copy the keys equal to (True) or
@@ -230,7 +235,7 @@ class GribTools(object):
             List of keynames. Default is an empty list.
 
         keyvalues : :obj:`list` of :obj:`string`, optional
-            List of keynames. Default is an empty list.
+            List of keyvalues. Default is an empty list.
 
         filemode : :obj:`string`, optional
             Sets the mode for the output file. Default is "w".
@@ -239,18 +244,19 @@ class GribTools(object):
         ------
 
         '''
+        if len(keynames) != len(keyvalues):
+            raise Exception("Give a value for each keyname!")
 
         fin = open(filename_in)
         fout = open(self.filenames, filemode)
 
-        while 1:
-            gid = codes_new_from_file(fin)
+        fields = 0
+
+        while fields < 1:
+            gid = codes_grib_new_from_file(fin)
 
             if gid is None:
                 break
-
-            if len(keynames) != len(keyvalues):
-                raise Exception("Give a value for each keyname!")
 
             select = True
             i = 0
@@ -267,6 +273,7 @@ class GribTools(object):
                 i += 1
 
             if select:
+                fields = fields + 1
                 codes_write(gid, fout)
 
             codes_release(gid)
