@@ -258,7 +258,7 @@ def mk_dates(c, fluxes):
         if c.basetime == '00':
             start = start - timedelta(days=1)
 
-    if not purefc and fluxes:
+    if not c.purefc and fluxes:
         start = start - timedelta(days=1)
         end = end + timedelta(days=1)
 
