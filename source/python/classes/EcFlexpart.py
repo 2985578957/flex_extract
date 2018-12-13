@@ -89,7 +89,7 @@ from eccodes import (codes_index_select, codes_new_from_index, codes_get,
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from GribTools import GribTools
+from GribUtil import GribUtil
 from mods.tools import (init128, to_param_id, silent_remove, product,
                         my_error, make_dir, get_informations, get_dimensions)
 from MarsRetrieval import MarsRetrieval
@@ -124,43 +124,85 @@ class EcFlexpart(object):
         ------
 
         '''
-        # set a counter for the number of mars requests generated
+        # set a counter for the number of generated mars requests
         self.mreq_count = 0
-
-        # different mars types for retrieving data for flexpart
-        self.types = dict()
-
-        # Pure forecast mode
-        if c.purefc:
-            c.type = [c.type[0]]
-            c.step = ['{:0>3}'.format(int(c.step[0]))]
-            c.time = [c.time[0]]
-            for i in range(1, c.maxstep + 1):
-                c.type.append(c.type[0])
-                c.step.append('{:0>3}'.format(i))
-                c.time.append(c.time[0])
 
         self.inputdir = c.inputdir
         self.dataset = c.dataset
         self.basetime = c.basetime
         self.dtime = c.dtime
-        i = 0
-        if fluxes and not c.purefc:
-            self.types[str(c.acctype)] = {'times': str(c.acctime),
-                                          'steps': '{}/to/{}/by/{}'.format(
-                                              c.dtime, c.accmaxstep, c.dtime)}
-        else:
-            for ty, st, ti in zip(c.type, c.step, c.time):
-                btlist = range(24)
-                if c.basetime == '12':
-                    btlist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                if c.basetime == '00':
-                    btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
+        self.acctype = c.acctype
+        self.acctime = c.acctime
+        self.accmaxstep = c.accmaxstep
+        self.marsclass = c.marsclass
+        self.stream = c.stream
+        self.number = c.number
+        self.resol = c.resol
+        self.accuracy = c.accuracy
+        self.addpar = c.addpar
+        self.level = c.level
+        self.expver = c.expver
+        self.levelist = c.levelist
+        self.glevelist = '1/to/' + c.level # in case of gaussian grid
+        self.gaussian = c.gaussian
+        self.grid = c.grid
+        self.area = c.area
+        self.purefc = c.purefc
+        self.outputfilelist = []
 
-                if ((ty.upper() == 'AN' and (int(c.time[i]) % int(c.dtime)) == 0) or
-                    (ty.upper() != 'AN' and (int(c.step[i]) % int(c.dtime)) == 0 and
-                     (int(c.step[i]) % int(c.dtime) == 0)) ) and \
-                    (int(c.time[i]) in btlist or c.purefc):
+        # Define the different types of field combinations (type, time, step)
+        self.types = {}
+        # Define the parameters and their level types, level list and
+        # grid resolution for the retrieval job
+        self.params = {}
+
+        if fluxes:
+            self._create_params_fluxes()
+        else:
+            self._create_params(c.gauss, c.eta, c.omega, c.cwc, c.wrf)
+
+        if fluxes and not c.purefc:
+            self._create_field_types_fluxes()
+        else:
+            self._create_field_types(c.type, c.time, c.step)
+        return
+
+    def _create_field_types(self, ftype, ftime, fstep):
+        '''Create the combination of field type, time and forecast step.
+
+        Parameters:
+        -----------
+        ftype : :obj:`list` of :obj:`string`
+            List of field types.
+
+        ftime : :obj:`list` of :obj:`string`
+            The time in hours of the field.
+
+        fstep : :obj:`string`
+            Specifies the forecast time step from forecast base time.
+            Valid values are hours (HH) from forecast base time.
+
+        Return
+        ------
+
+        '''
+        i = 0
+        for ty, st, ti in zip(ftype, fstep, ftime):
+            btlist = range(24)
+            if self.basetime == '12':
+                btlist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            if self.basetime == '00':
+                btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
+
+            # if ((ty.upper() == 'AN' and (int(c.time[i]) % int(c.dtime)) == 0) or
+                # (ty.upper() != 'AN' and (int(c.step[i]) % int(c.dtime)) == 0 and
+                 # (int(c.step[i]) % int(c.dtime) == 0)) ) and \
+                 # (int(c.time[i]) in btlist or c.purefc):
+
+            if (int(ti) in btlist) or self.purefc:
+
+                if ((ty.upper() == 'AN' and (int(ti) % int(self.dtime)) == 0) or
+                    (ty.upper() != 'AN' and (int(st) % int(self.dtime)) == 0)):
 
                     if ty not in self.types.keys():
                         self.types[ty] = {'times': '', 'steps': ''}
@@ -174,109 +216,153 @@ class EcFlexpart(object):
                         if self.types[ty]['steps']:
                             self.types[ty]['steps'] += '/'
                         self.types[ty]['steps'] += st
-                i += 1
+            i += 1
+        return
 
-        self.marsclass = c.marsclass
-        self.stream = c.stream
-        self.number = c.number
-        self.resol = c.resol
-        self.accuracy = c.accuracy
-        self.level = c.level
-        self.expver = c.expver
-        self.levelist = c.levelist
-        # for gaussian grid retrieval
-        self.glevelist = '1/to/' + c.level
-        self.gaussian = c.gaussian
-        self.grid = c.grid
-        self.area = c.area
-        self.outputfilelist = []
+    def _create_field_types_fluxes(self):
+        '''Create the combination of field type, time and forecast step
+        for the flux data.
 
+        Parameters:
+        -----------
 
-        # Now comes the nasty part that deals with the different
-        # scenarios we have:
-        # 1) Calculation of etadot on
-        #    a) Gaussian grid
-        #    b) Output grid
-        #    c) Output grid using parameter 77 retrieved from MARS
-        # 3) Calculation/Retrieval of omega
-        # 4) Download also data for WRF
+        Return
+        ------
 
-        # Different grids need different retrievals
-        # SH = Spherical Harmonics, GG = Gaussian Grid,
-        # OG = Output Grid, ML = MultiLevel, SL = SingleLevel
-        self.params = {'SH__ML': '', 'SH__SL': '',
-                       'GG__ML': '', 'GG__SL': '',
-                       'OG__ML': '', 'OG__SL': '',
-                       'OG_OROLSM_SL': '', 'OG_acc_SL': ''}
-        # the self.params dictionary stores a list of
-        # [param, levtype, levelist, grid] per key
+        '''
+        self.types[str(self.acctype)] = {'times': str(self.acctime),
+                                         'steps': '{}/to/{}/by/{}'.format(
+                                             self.dtime,
+                                             self.accmaxstep,
+                                             self.dtime)}
+        return
 
-        if fluxes is False:
-            self.params['SH__SL'] = ['LNSP', 'ML', '1', 'OFF']
-            #                        "SD/MSL/TCC/10U/10V/2T/2D/129/172"
-            self.params['OG__SL'] = ["141/151/164/165/166/167/168/129/172", \
-                                     'SFC', '1', self.grid]
-            if c.addpar:
-                if c.addpar[0] == '/':
-                    c.addpar = c.addpar[1:]
-                self.params['OG__SL'][0] += '/' + '/'.join(c.addpar)
+    def _create_params(self, gauss, eta, omega, cwc, wrf):
+        '''Define the specific parameter settings for retrievment.
 
-            if c.marsclass.upper() == 'EA' or c.marsclass.upper() == 'EP':
-                self.params['OG_OROLSM__SL'] = ["160/27/28/244",
-                                                'SFC', '1', self.grid]
-            else:
-                self.params['OG_OROLSM__SL'] = ["160/27/28/173", \
-                                                'SFC', '1', self.grid]
+        The different parameters need specific grid types and level types
+        for retrievement. We might get following combination of types
+        (depending on selection and availability):
+        (These are short cuts for the grib file names (leading sequence)
+        SH__ML, OG__ML, GG__ML, SH__SL, OG__SL, GG__SL, OG_OROLSM_SL
+        where:
+            SH = Spherical Harmonics, GG = Gaussian Grid, OG = Output Grid,
+            ML = Model Level, SL = Surface Level
 
-            self.params['OG__ML'] = ['T/Q', 'ML', self.levelist, self.grid]
+        For each of this combination there is a list of parameter names,
+        the level type, the level list and the grid resolution.
 
-            #if c.gauss == '0' and c.eta == '1':
-            if not c.gauss and c.eta:
-                # the simplest case
-                self.params['OG__ML'][0] += '/U/V/77'
-            #elif c.gauss == '0' and c.eta == '0':
-            elif not c.gauss and not c.eta:
-            # this is not recommended (inaccurate)
-                self.params['OG__ML'][0] += '/U/V'
-            #elif c.gauss == '1' and c.eta == '0':
-            elif c.gauss and not c.eta:
-                # this is needed for data before 2008, or for reanalysis data
-                self.params['GG__SL'] = ['Q', 'ML', '1', \
-                                         '{}'.format((int(self.resol) + 1) / 2)]
-                self.params['SH__ML'] = ['U/V/D', 'ML', self.glevelist, 'OFF']
-            else:
-                print('Warning: This is a very costly parameter combination, \
-                      use only for debugging!')
-                self.params['GG__SL'] = ['Q', 'ML', '1', \
-                                         '{}'.format((int(self.resol) + 1) / 2)]
-                self.params['GG__ML'] = ['U/V/D/77', 'ML', self.glevelist, \
-                                         '{}'.format((int(self.resol) + 1) / 2)]
+        There are different scenarios for data extraction from MARS:
+        1) Retrieval of etadot
+           eta=1, gauss=0, omega=0
+        2) Calculation of etadot from divergence
+           eta=0, gauss=1, omega=0
+        3) Calculation of etadot from omega (for makes sense for debugging)
+           eta=0, gauss=0, omega=1
+        4) Retrieval and Calculation of etadot (only for debugging)
+           eta=1, gauss=1, omega=0
+        5) Download also specific model and surface level data for FLEXPART-WRF
 
-            if c.omega:
-                self.params['OG__ML'][0] += '/W'
+        Parameters:
+        -----------
+        gauss : :obj:`integer`
+            Gaussian grid is retrieved.
 
-            # add cloud water content if necessary
-            if c.cwc:
-                self.params['OG__ML'][0] += '/CLWC/CIWC'
+        eta : :obj:`integer`
+            Etadot parameter will be directly retrieved.
 
-            # add vorticity and geopotential height for WRF if necessary
-            if c.wrf:
-                self.params['OG__ML'][0] += '/Z/VO'
-                if '/D' not in self.params['OG__ML'][0]:
-                    self.params['OG__ML'][0] += '/D'
-                #wrf_sfc = 'sp/msl/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/stl1/ /
-                #           stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4'.upper()
-                wrf_sfc = '134/235/167/165/166/168/129/172/34/31/141/ \
-                           139/170/183/236/39/40/41/42'
-                lwrt_sfc = wrf_sfc.split('/')
-                for par in lwrt_sfc:
-                    if par not in self.params['OG__SL'][0]:
-                        self.params['OG__SL'][0] += '/' + par
+        omega : :obj:`integer`
+            The omega paramterwill be retrieved.
 
+        cwc : :obj:`integer`
+            The cloud liquid and ice water content will be retrieved.
+
+        wrf : :obj:`integer`
+            Additional model level and surface level data will be retrieved for
+            WRF/FLEXPART-WRF simulations.
+
+        Return
+        ------
+
+        '''
+        # SURFACE FIELDS
+        #-----------------------------------------------------------------------
+        self.params['SH__SL'] = ['LNSP', 'ML', '1', 'OFF']
+        self.params['OG__SL'] = ['SD/MSL/TCC/10U/10V/2T/2D/Z/LSM', \
+                                 'SFC', '1', self.grid]
+        if self.addpar:
+            self.params['OG__SL'][0] += self.addpar
+
+        if self.marsclass.upper() == 'EA' or self.marsclass.upper() == 'EP':
+            self.params['OG_OROLSM__SL'] = ["SDOR/CVL/CVH/FSR",
+                                            'SFC', '1', self.grid]
         else:
-            self.params['OG_acc_SL'] = ["LSP/CP/SSHF/EWSS/NSSS/SSR", \
-                                        'SFC', '1', self.grid]
+            self.params['OG_OROLSM__SL'] = ["SDOR/CVL/CVH/SR", \
+                                            'SFC', '1', self.grid]
 
+        # MODEL LEVEL FIELDS
+        #-----------------------------------------------------------------------
+        self.params['OG__ML'] = ['T/Q', 'ML', self.levelist, self.grid]
+
+        if not gauss and eta:
+            self.params['OG__ML'][0] += '/U/V/ETADOT'
+        elif gauss and not eta:
+            self.params['GG__SL'] = ['Q', 'ML', '1', \
+                                     '{}'.format((int(self.resol) + 1) / 2)]
+            self.params['SH__ML'] = ['U/V/D', 'ML', self.glevelist, 'OFF']
+        elif not gauss and not eta:
+            self.params['OG__ML'][0] += '/U/V'
+        else:
+            print('Warning: Collecting etadot and parameters for gaussian grid \
+                            is a very costly parameter combination, \
+                            use this combination only for debugging!')
+            self.params['GG__SL'] = ['Q', 'ML', '1', \
+                                     '{}'.format((int(self.resol) + 1) / 2)]
+            self.params['GG__ML'] = ['U/V/D/77', 'ML', self.glevelist, \
+                                     '{}'.format((int(self.resol) + 1) / 2)]
+
+        if omega:
+            self.params['OG__ML'][0] += '/W'
+
+        if cwc:
+            self.params['OG__ML'][0] += '/CLWC/CIWC'
+
+        # ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)
+        #-----------------------------------------------------------------------
+        if wrf:
+            self.params['OG__ML'][0] += '/Z/VO'
+            if '/D' not in self.params['OG__ML'][0]:
+                self.params['OG__ML'][0] += '/D'
+            wrf_sfc = ['SP','SKT','SST','CI','STL1','STL2', 'STL3','STL4',
+                       'SWVL1','SWVL2','SWVL3','SWVL4']
+            for par in wrf_sfc:
+                if par not in self.params['OG__SL'][0]:
+                    self.params['OG__SL'][0] += '/' + par
+
+        return
+
+
+    def _create_params_fluxes(self):
+        '''Define the parameter setting for flux data.
+
+        Flux data are accumulated fields in time and are stored on the
+        surface level. The leading short cut name for the grib files is:
+        "OG_acc_SL" with OG for Regular Output Grid, SL for Surface Level, and
+        acc for Accumulated Grid.
+        The params dictionary stores a list of parameter names, the level type,
+        the level list and the grid resolution.
+
+        The flux data are: LSP/CP/SSHF/EWSS/NSSS/SSR
+
+        Parameters:
+        -----------
+
+        Return
+        ------
+
+        '''
+        self.params['OG_acc_SL'] = ["LSP/CP/SSHF/EWSS/NSSS/SSR", \
+                                    'SFC', '1', self.grid]
         return
 
 
@@ -400,7 +486,7 @@ class EcFlexpart(object):
 
         indexfile = os.path.join(inputdir, _config.FILE_GRIB_INDEX)
         silent_remove(indexfile)
-        grib = GribTools(inputfiles.files)
+        grib = GribUtil(inputfiles.files)
         # creates new index file
         iid = grib.index(index_keys=index_keys, index_file=indexfile)
 
@@ -748,20 +834,31 @@ class EcFlexpart(object):
                                                 index_keys)
         # index_vals looks like e.g.:
         # index_vals[0]: ('20171106', '20171107', '20171108') ; date
-        # index_vals[1]: ('0', '1200', '1800', '600') ; time
+        # index_vals[1]: ('0', '600', '1200', '1800') ; time
         # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
         if c.rrint:
-            start_date = datetime.strptime(c.start_date + '00', '%Y%m%d%H')
-            end_date = datetime.strptime(c.end_date + '23', '%Y%m%d%H')
+            if not c.purefc:
+                start_date = datetime.strptime(c.start_date + '00', '%Y%m%d%H')
+                end_date = datetime.strptime(c.end_date + '23', '%Y%m%d%H')
+            else:
+                sdate_str = c.start_date + '{:0>2}'.format(index_vals[1][0])
+                start_date = datetime.strptime(sdate_str, '%Y%m%d%H')
+                edate_str = c.end_date + '{:0>2}'.format(index_vals[1][-1])
+                end_date = datetime.strptime(edate_str, '%Y%m%d%H')
+                end_date = end_date + timedelta(hours=c.maxstep)
+
             info = get_informations(os.path.join(c.inputdir,
                                                  inputfiles.files[0]))
-            dims = get_dimensions(c, info)
+            dims = get_dimensions(info, c.purefc, c.dtime, index_vals,
+                                  start_date, end_date)
             # create numpy array
             lsp_np = np.zeros((dims[1] * dims[0], dims[2]), dtype=np.float64)
             cp_np = np.zeros((dims[1] * dims[0], dims[2]), dtype=np.float64)
             it_lsp = 0
             it_cp = 0
+            date_list = []
+            step_list = []
 
         # initialize dictionaries to store values
         orig_vals = {}
@@ -791,12 +888,15 @@ class EcFlexpart(object):
 
             # create correct timestamp from the three time informations
             cdate = str(codes_get(gid, 'date'))
-            ctime = '{:0>2}'.format(codes_get(gid, 'time')/100)
-            cstep = '{:0>3}'.format(codes_get(gid, 'step'))
+            time = codes_get(gid, 'time')/100 # integer
+            step = codes_get(gid, 'step') # integer
+            ctime = '{:0>2}'.format(time)
+            cstep = '{:0>3}'.format(step)
+
             t_date = datetime.strptime(cdate + ctime, '%Y%m%d%H')
-            t_dt = t_date + timedelta(hours=int(cstep))
-            t_m1dt = t_date + timedelta(hours=int(cstep)-int(c.dtime))
-            t_m2dt = t_date + timedelta(hours=int(cstep)-2*int(c.dtime))
+            t_dt = t_date + timedelta(hours=step)
+            t_m1dt = t_date + timedelta(hours=step-int(c.dtime))
+            t_m2dt = t_date + timedelta(hours=step-2*int(c.dtime))
             t_enddate = None
 
             if c.purefc:
@@ -822,16 +922,16 @@ class EcFlexpart(object):
             h_handle = open(hnout, 'w')
             g_handle = open(gnout, 'w')
 
-            # read message for message and store relevant data fields
+            # read message for message and store relevant data fields, where
             # data keywords are stored in pars
             while True:
                 if not gid:
                     break
-                parId = codes_get(gid, 'paramId')
-                step = codes_get(gid, 'step')
-                time = codes_get(gid, 'time')
-                ni = codes_get(gid, 'Ni')
-                nj = codes_get(gid, 'Nj')
+                parId = codes_get(gid, 'paramId') # integer
+                step = codes_get(gid, 'step') # integer
+                time = codes_get(gid, 'time') # integer
+                ni = codes_get(gid, 'Ni') # integer
+                nj = codes_get(gid, 'Nj') # integer
                 if parId not in orig_vals.keys():
                     # parameter is not a flux, find next one
                     continue
@@ -860,23 +960,32 @@ class EcFlexpart(object):
 
                 # store precipitation if new disaggregation method is selected
                 # only the exact days are needed
-                if start_date <= t_dt <= end_date:
-                    print 'DATE: ', t_dt
-                    if c.rrint and parId == 142:
-                        print len(deac_vals[parId])
-                        lsp_np[:,it_lsp] = deac_vals[parId][-1][:]
-                        it_lsp += 1
-                    elif c.rrint and parId == 143:
-                        cp_np[:,it_cp] = deac_vals[parId][-1][:]
-                        it_cp += 1
+                if c.rrint:
+                    if start_date <= t_dt <= end_date:
+                        if not c.purefc:
+                            if t_dt not in date_list:
+                                date_list.append(t_dt)
+                                step_list = [0]
+                        else:
+                            if t_date not in date_list:
+                                date_list.append(t_date)
+                            if step not in step_list:
+                                step_list.append(step)
+                        if c.rrint and parId == 142:
+                            lsp_np[:,it_lsp] = deac_vals[parId][-1][:]
+                            it_lsp += 1
+                        elif c.rrint and parId == 143:
+                            cp_np[:,it_cp] = deac_vals[parId][-1][:]
+                            it_cp += 1
 
                 # information printout
                 print(parId, time, step, len(values), values[0], np.std(values))
 
                 # length of deac_vals[parId] corresponds to the
-                # number of time steps (max. 4)
+                # number of time steps, max. 4 are needed for disaggegration
+                # with the old and original method
                 # run over all grib messages and perform
-                # shifting in time for old disaggegration method
+                # shifting in time
                 if len(deac_vals[parId]) >= 3:
                     if len(deac_vals[parId]) > 3:
                         if not c.rrint and (parId == 142 or parId == 143):
@@ -923,32 +1032,40 @@ class EcFlexpart(object):
 
                             if step == c.maxstep and c.purefc or \
                                t_dt == t_enddate:
+                                # last step
+                                if c.purefc:
+                                    values = deac_vals[parId][3]
+                                    codes_set_values(gid, values)
+                                    codes_set(gid, 'stepRange', step)
+                                    #truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
+                                    codes_write(gid, h_handle)
+                                else:
+                                    values = deac_vals[parId][3]
+                                    codes_set_values(gid, values)
+                                    codes_set(gid, 'stepRange', 0)
+                                    truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
+                                    codes_set(gid, 'time', truedatetime.hour * 100)
+                                    codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
+                                    codes_write(gid, h_handle)
 
-                                values = deac_vals[parId][3]
-                                codes_set_values(gid, values)
-                                codes_set(gid, 'stepRange', 0)
-                                truedatetime = t_m2dt + timedelta(hours=
-                                                                  2*int(c.dtime))
-                                codes_set(gid, 'time', truedatetime.hour * 100)
-                                codes_set(gid, 'date', truedatetime.year * 10000 +
-                                          truedatetime.month * 100 +
-                                          truedatetime.day)
-                                codes_write(gid, h_handle)
-
-                                #values = (deac_vals[parId][1]+deac_vals[parId][2])/2.
                                 if parId == 142 or parId == 143:
                                     values = disaggregation.darain(list(reversed(deac_vals[parId])))
                                 else:
                                     values = disaggregation.dapoly(list(reversed(deac_vals[parId])))
 
-                                codes_set(gid, 'stepRange', 0)
-                                truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
-                                codes_set(gid, 'time', truedatetime.hour * 100)
-                                codes_set(gid, 'date', truedatetime.year * 10000 +
-                                          truedatetime.month * 100 +
-                                          truedatetime.day)
-                                codes_set_values(gid, values)
-                                codes_write(gid, g_handle)
+                                # step before last step
+                                if c.purefc:
+                                    codes_set(gid, 'stepRange', step-int(c.dtime))
+                                    #truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
+                                    codes_set_values(gid, values)
+                                    codes_write(gid, g_handle)
+                                else:
+                                    codes_set(gid, 'stepRange', 0)
+                                    truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
+                                    codes_set(gid, 'time', truedatetime.hour * 100)
+                                    codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
+                                    codes_set_values(gid, values)
+                                    codes_write(gid, g_handle)
 
                 codes_release(gid)
 
@@ -960,19 +1077,164 @@ class EcFlexpart(object):
 
         codes_index_release(iid)
 
-        # disaggregation.IA3(lsp_np)
-        # pro gitterpunkt die zeitserie disagg, oder geht es auch mit feld
-        # wenn zurück dann über zeitschritte itterieren und rausschreiben.
-        # original in die flux
-        # subgrid wohin? extrafiles die beide oder jeweils einen subgrid beinhalten?
-        # kann time hh und mm fassen?
+        if c.rrint:
+            self._create_rr_grib_dummy(inputfiles.files[0], c.inputdir)
 
-        print lsp_np.shape
-        print lsp_np
-
+            self._prep_new_rrint(ni, nj, lsp_np.shape[1], lsp_np,
+                                 cp_np, date_list, step_list, c)
 
         return
 
+    def _prep_new_rrint(self, ni, nj, nt, lsp_np, cp_np, date_list, step_list, c):
+        '''Calculates and writes out the disaggregated precipitation fields.
+
+        Disaggregation is done in time and original times are written to the
+        flux files, while the additional subgrid times are written to
+        extra files.
+
+        Parameters
+        ----------
+        ni : :obj:`integer`
+            Amount of zonal grid points.
+
+        nj : :obj:`integer`
+            Amount of meridional grid points.
+
+        nt : :obj:`integer`
+            Number of time steps.
+
+        lsp_np : :obj:`numpy array` of :obj:`float`
+            The large scale precipitation fields for each time step.
+            Shape (ni * nj, nt).
+
+        cp_np : :obj:`numpy array` of :obj:`float`
+            The convective precipitation fields for each time step.
+            Shape (ni * nj, nt).
+
+        date_list : :obj:`list` of :obj:`datetime`
+            The list of dates for which the disaggregation is to be done.
+
+        step_list : :obj:`list` of :obj:`integer`
+            The list of steps for a single forecast time.
+            Only necessary for pure forecasts.
+
+        c : :obj:`ControlFile`
+            Contains all the parameters of CONTROL file and
+            command line.
+
+        Return
+        ------
+
+        '''
+        print('... disaggregation or precipitation with new method.')
+        lsp_new_np = np.zeros((ni * nj, nt * 3), dtype=np.float64)
+        cp_new_np = np.zeros((ni * nj, nt * 3), dtype=np.float64)
+
+        # do the disaggregation, but neglect the last value of the
+        # time series. This one corresponds for example to 24 hour,
+        # which we don't need.
+        for ix in range(ni*nj):
+            lsp_new_np[ix,:] = disaggregation.IA3(lsp_np[ix,:])[:-1]
+            cp_new_np[ix,:] = disaggregation.IA3(cp_np[ix,:])[:-1]
+
+        # write to grib files (full/orig times to flux file and inbetween
+        # times into seperate end files)
+        print('... write disaggregated precipitation to files.')
+        it = 0
+        for date in date_list:
+            for step in step_list:
+                tmpfile = os.path.join(c.inputdir, 'rr_grib_dummy.grb')
+
+                if c.purefc:
+                    fluxfilename = 'flux' + date.strftime('%Y%m%d.%H') + \
+                                   '.{:0>3}'.format(step)
+                    filename1 = c.prefix + date.strftime('%y%m%d.%H') + \
+                                '.{:0>3}'.format(step) + '_1'
+                    filename2 = c.prefix + date.strftime('%y%m%d.%H') + \
+                                '.{:0>3}'.format(step) + '_2'
+                else:
+                    fluxfilename = 'flux' + date.strftime('%Y%m%d%H')
+                    filename1 = c.prefix + date.strftime('%y%m%d%H') + '_1'
+                    filename2 = c.prefix + date.strftime('%y%m%d%H') + '_2'
+
+                # collect for final processing
+                self.outputfilelist.append(os.path.basename(fluxfilename))
+                self.outputfilelist.append(os.path.basename(filename1))
+                self.outputfilelist.append(os.path.basename(filename2))
+
+                # write original time step to flux file as usual
+                fluxfile = GribUtil(os.path.join(c.inputdir, fluxfilename))
+                fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[142],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, lsp_new_np[:,it]],
+                                 )
+                fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[143],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, cp_new_np[:,it]]
+                                 )
+
+                # write first subgrid time step
+                endfile1 = GribUtil(os.path.join(c.inputdir, filename1))
+                endfile1.set_keys(tmpfile, filemode='w', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[142],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, lsp_new_np[:,it+1]]
+                                  )
+                endfile1.set_keys(tmpfile, filemode='a', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[143],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, cp_new_np[:,it+1]]
+                                 )
+
+                # write second subgrid time step
+                endfile2 = GribUtil(os.path.join(c.inputdir, filename2))
+                endfile2.set_keys(tmpfile, filemode='w', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[142],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, lsp_new_np[:,it+2]]
+                                 )
+                endfile2.set_keys(tmpfile, filemode='a', strict=True,
+                                  wherekeynames=['paramId'], wherekeyvalues=[143],
+                                  keynames=['date','time','stepRange','values'],
+                                  keyvalues=[int(date.strftime('%Y%m%d')),
+                                             date.hour*100, step, cp_new_np[:,it+2]]
+                                 )
+                it = it + 3 # jump to next original time step
+        return
+
+    def _create_rr_grib_dummy(self, ifile, inputdir):
+        '''Creates a grib file with a dummy message for the two precipitation
+        types lsp and cp each.
+
+        Parameters
+        ----------
+        ifile : :obj:`string`
+            Filename of the input file to read the grib messages from.
+
+        inputdir : :obj:`string`, optional
+            Path to the directory where the retrieved data is stored.
+
+        Return
+        ------
+
+        '''
+
+        gribfile = GribUtil(os.path.join(inputdir,'rr_grib_dummy.grb'))
+
+        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
+                      keyvalues=[142], filemode='w')
+
+        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
+                      keyvalues=[143], filemode='a')
+
+        return
 
     def create(self, inputfiles, c):
         '''An index file will be created which depends on the combination
@@ -1028,7 +1290,7 @@ class EcFlexpart(object):
                                                 index_keys)
         # index_vals looks like e.g.:
         # index_vals[0]: ('20171106', '20171107', '20171108') ; date
-        # index_vals[1]: ('0', '1200', '1800', '600') ; time
+        # index_vals[1]: ('0', '600', '1200', '1800') ; time
         # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
         # "product" genereates each possible combination between the
@@ -1116,6 +1378,7 @@ class EcFlexpart(object):
                         codes_set_values(gid, scwc)
                         codes_set(gid, 'paramId', 201031)
                         codes_write(gid, fdict['22'])
+                        scwc = None
                 elif c.wrf and paramId in [129, 138, 155] and \
                       levtype == 'hybrid': # Z, VO, D
                     # do not do anything right now
@@ -1315,7 +1578,7 @@ class EcFlexpart(object):
 
         # read template COMMAND file
         with open(os.path.expandvars(os.path.expanduser(
-            c.flexpart_root_scripts)) + '/../Options/COMMAND', 'r') as f:
+            c.flexpartdir)) + '/../Options/COMMAND', 'r') as f:
             lflist = f.read().split('\n')
 
         # find index of list where to put in the
@@ -1341,7 +1604,7 @@ class EcFlexpart(object):
         # afterwards switch back to the working dir
         os.chdir(c.outputdir)
         p = subprocess.check_call([
-            os.path.expandvars(os.path.expanduser(c.flexpart_root_scripts))
+            os.path.expandvars(os.path.expanduser(c.flexpartdir))
             + '/../FLEXPART_PROGRAM/grib2flexpart', 'useAvailable', '.'])
         os.chdir(pwd)
 
