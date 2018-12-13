@@ -18,7 +18,7 @@ ECUID='km4a'
 ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
 DESTINATION='annep@genericSftp'
-FLEXPART_ROOT_SCRIPTS=""
+FLEXPARTDIR=""
 JOB_TEMPLATE="job.template"
 CONTROLFILE="CONTROL_EA5.testgrid"
 # -----------------------------------------------------------------
@@ -56,8 +56,8 @@ fi
 if [ -n "$MAKEFILE" ]; then
   parameterlist+=" --makefile=$MAKEFILE"
 fi
-if [ -n "$FLEXPART_ROOT_SCRIPTS" ]; then # not empty
-  parameterlist+=" --flexpart_root_scripts=$FLEXPART_ROOT_SCRIPTS"
+if [ -n "$FLEXPARTDIR" ]; then # not empty
+  parameterlist+=" --flexpartdir=$FLEXPARTDIR"
 fi
 if [ -n "$JOB_TEMPLATE" ]; then
   parameterlist+=" --job_template=$JOB_TEMPLATE"
