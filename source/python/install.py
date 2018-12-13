@@ -116,7 +116,7 @@ def get_install_cmdline_arguments():
     parser.add_argument("--destination", dest="destination", default=None,
                         help='ecaccess destination, e.g. leo@genericSftp')
 
-    parser.add_argument("--flexpart_root_scripts", dest="flexpart_root_scripts",
+    parser.add_argument("--flexpartdir", dest="flexpartdir",
                         default=None, help="FLEXPART root directory on ECMWF \
                         servers (to find grib2flexpart and COMMAND file)\n\
                         Normally flex_extract resides in the scripts directory \
@@ -163,10 +163,10 @@ def install_via_gateway(c):
     if c.install_target.lower() != 'local': # ecgate or cca
 
         mk_compilejob(c.makefile, c.install_target, c.ecuid, c.ecgid,
-                      c.flexpart_root_scripts)
+                      c.flexpartdir)
 
         mk_job_template(c.ecuid, c.ecgid, c.gateway,
-                        c.destination, c.flexpart_root_scripts)
+                        c.destination, c.flexpartdir)
 
         mk_env_vars(c.ecuid, c.ecgid, c.gateway, c.destination)
 
@@ -182,35 +182,35 @@ def install_via_gateway(c):
         silent_remove(tar_file)
 
         print('job compilation script has been submitted to ecgate for ' +
-              'installation in ' + c.flexpart_root_scripts +
+              'installation in ' + c.flexpartdir +
                '/' + target_dirname)
         print('You should get an email with subject "flexcompile" within ' +
               'the next few minutes!')
 
     else: #local
-        if c.flexpart_root_scripts == _config.PATH_FLEXEXTRACT_DIR :
-            print('WARNING: FLEXPART_ROOT_SCRIPTS has not been specified')
+        if c.flexpartdir == _config.PATH_FLEXEXTRACT_DIR :
+            print('WARNING: FLEXPARTDIR has not been specified')
             print('flex_extract will be installed in here by compiling the ' +
                   'Fortran source in ' + _config.PATH_FORTRAN_SRC)
             os.chdir(_config.PATH_FORTRAN_SRC)
         else: # creates the target working directory for flex_extract
-            c.flexpart_root_scripts = os.path.expandvars(os.path.expanduser(
-                                        c.flexpart_root_scripts))
-            if os.path.abspath(ecd) != os.path.abspath(c.flexpart_root_scripts):
+            c.flexpartdir = os.path.expandvars(os.path.expanduser(
+                                        c.flexpartdir))
+            if os.path.abspath(ecd) != os.path.abspath(c.flexpartdir):
                 mk_tarball(tar_file, c.install_target)
-                make_dir(os.path.join(c.flexpart_root_scripts,
+                make_dir(os.path.join(c.flexpartdir,
                                       target_dirname))
-                os.chdir(os.path.join(c.flexpart_root_scripts,
+                os.chdir(os.path.join(c.flexpartdir,
                                       target_dirname))
                 un_tarball(tar_file)
-                os.chdir(os.path.join(c.flexpart_root_scripts,
+                os.chdir(os.path.join(c.flexpartdir,
                                       target_dirname,
                                       _config.PATH_REL_FORTRAN_SRC))
 
         # Create Fortran executable - CONVERT2
         print('Install ' + target_dirname + ' software at ' +
               c.install_target + ' in directory ' +
-              os.path.abspath(c.flexpart_root_scripts) + '\n')
+              os.path.abspath(c.flexpartdir) + '\n')
 
         delete_convert_build('.')
         make_convert_build('.', c.makefile)
@@ -261,13 +261,13 @@ def check_install_conditions(c):
                    support for further details')
             sys.exit(1)
 
-        if not c.flexpart_root_scripts:
-            c.flexpart_root_scripts = '${HOME}'
+        if not c.flexpartdir:
+            c.flexpartdir = '${HOME}'
         else:
-            c.flexpart_root_scripts = c.flexpart_root_scripts
+            c.flexpartdir = c.flexpartdir
     else: # local
-        if not c.flexpart_root_scripts:
-            c.flexpart_root_scripts = _config.PATH_FLEXEXTRACT_DIR
+        if not c.flexpartdir:
+            c.flexpartdir = _config.PATH_FLEXEXTRACT_DIR
 
     return
 
