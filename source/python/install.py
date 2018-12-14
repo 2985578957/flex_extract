@@ -33,15 +33,15 @@
 #
 # @Program Content:
 #    - main
-#    - get_install_cmdline_arguments
+#    - get_install_cmdline_args
 #    - install_via_gateway
 #    - mk_tarball
 #    - un_tarball
 #    - mk_env_vars
 #    - mk_compilejob
 #    - mk_job_template
-#    - delete_convert_build
-#    - make_convert_build
+#    - del_convert_build
+#    - mk_convert_build
 #
 #*******************************************************************************
 
@@ -77,7 +77,7 @@ def main():
     ------
     '''
 
-    args = get_install_cmdline_arguments()
+    args = get_install_cmdline_args()
     c = ControlFile(args.controlfile)
     c.assign_args_to_control(args)
     check_install_conditions(c)
@@ -86,7 +86,7 @@ def main():
 
     return
 
-def get_install_cmdline_arguments():
+def get_install_cmdline_args():
     '''Decomposes the command line arguments and assigns them to variables.
     Apply default values for non mentioned arguments.
 
@@ -212,8 +212,8 @@ def install_via_gateway(c):
               c.install_target + ' in directory ' +
               os.path.abspath(c.flexpartdir) + '\n')
 
-        delete_convert_build('.')
-        make_convert_build('.', c.makefile)
+        del_convert_build('.')
+        mk_convert_build('.', c.makefile)
 
         os.chdir(ecd)
         if os.path.isfile(tar_file):
@@ -613,7 +613,7 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
 
     return
 
-def delete_convert_build(src_path):
+def del_convert_build(src_path):
     '''Clean up the Fortran source directory and remove all
     build files (e.g. \*.o, \*.mod and CONVERT2)
 
@@ -637,7 +637,7 @@ def delete_convert_build(src_path):
 
     return
 
-def make_convert_build(src_path, makefile):
+def mk_convert_build(src_path, makefile):
     '''Compiles the Fortran code and generates the executable.
 
     Parameters
