@@ -91,7 +91,8 @@ sys.path.append('../')
 import _config
 from GribUtil import GribUtil
 from mods.tools import (init128, to_param_id, silent_remove, product,
-                        my_error, make_dir, get_informations, get_dimensions)
+                        my_error, make_dir, get_informations, get_dimensions,
+                        execute_subprocess)
 from MarsRetrieval import MarsRetrieval
 import mods.disaggregation as disaggregation
 
@@ -1426,8 +1427,10 @@ class EcFlexpart(object):
             sys.stdout.flush()
 
             # Fortran program creates file fort.15 (with u,v,etadot,t,sp,q)
-            p = subprocess.check_call([os.path.join(
-                c.exedir, _config.FORTRAN_EXECUTABLE)], shell=True)
+            execute_subprocess([os.path.join(c.exedir,
+                                _config.FORTRAN_EXECUTABLE)],
+                               error_msg='FORTRAN PROGRAM FAILED!')#shell=True)
+
             os.chdir(pwd)
 #============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
@@ -1506,24 +1509,32 @@ class EcFlexpart(object):
             ofile = os.path.join(self.inputdir, ofile)
 
             if c.format.lower() == 'grib2':
-                p = subprocess.check_call(['grib_set', '-s', 'edition=2,',
-                                           'productDefinitionTemplateNumber=8',
-                                           ofile, ofile + '_2'])
-                p = subprocess.check_call(['mv', ofile + '_2', ofile])
+                execute_subprocess(['grib_set', '-s', 'edition=2,' +
+                                    'productDefinitionTemplateNumber=8',
+                                    ofile, ofile + '_2'],
+                                   error_msg='GRIB2 CONVERSION FAILED!')
+
+                execute_subprocess(['mv', ofile + '_2', ofile],
+                                   error_msg='RENAMING FOR NEW GRIB2 FORMAT '
+                                   'FILES FAILED!')
 
             if c.ectrans and not c.ecapi:
-                p = subprocess.check_call(['ectrans', '-overwrite', '-gateway',
-                                           c.gateway, '-remote', c.destination,
-                                           '-source', ofile])
+                execute_subprocess(['ectrans', '-overwrite', '-gateway',
+                                    c.gateway, '-remote', c.destination,
+                                    '-source', ofile],
+                                   error_msg='TRANSFER TO LOCAL SERVER FAILED!')
 
             if c.ecstorage and not c.ecapi:
-                p = subprocess.check_call(['ecp', '-o', ofile,
-                                           os.path.expandvars(c.ecfsdir)])
+                execute_subprocess(['ecp', '-o', ofile,
+                                    os.path.expandvars(c.ecfsdir)],
+                                   error_msg='COPY OF FILES TO ECSTORAGE '
+                                   'AREA FAILED!')
 
             if c.outputdir != c.inputdir:
-                p = subprocess.check_call(['mv',
-                                           os.path.join(c.inputdir, ofile),
-                                           c.outputdir])
+                execute_subprocess(['mv', os.path.join(c.inputdir, ofile),
+                                    c.outputdir],
+                                   error_msg='RELOCATION OF OUTPUT FILES '
+                                   'TO OUTPUTDIR FAILED!')
 
         return
 
@@ -1603,9 +1614,9 @@ class EcFlexpart(object):
         # change to outputdir and start the grib2flexpart run
         # afterwards switch back to the working dir
         os.chdir(c.outputdir)
-        p = subprocess.check_call([
-            os.path.expandvars(os.path.expanduser(c.flexpartdir))
-            + '/../FLEXPART_PROGRAM/grib2flexpart', 'useAvailable', '.'])
+        cmd = [os.path.expandvars(os.path.expanduser(c.flexpartdir)) +
+         '/../FLEXPART_PROGRAM/grib2flexpart', 'useAvailable', '.']
+        execute_subprocess(cmd)
         os.chdir(pwd)
 
         return

@@ -61,7 +61,7 @@ import _config
 from classes.ControlFile import ControlFile
 from classes.UioFiles import UioFiles
 from mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
-                        silent_remove)
+                        silent_remove, execute_subprocess)
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -676,9 +676,9 @@ def mk_convert_build(src_path, makefile):
         print('ERROR: Makefile call failed:')
         print(e)
     else:
-        subprocess.check_call(['ls', '-l',
-                               os.path.join(src_path,
-                                            _config.FORTRAN_EXECUTABLE)])
+        execute_subprocess(['ls', '-l', os.path.join(src_path,
+                            _config.FORTRAN_EXECUTABLE)], error_msg=
+                           'FORTRAN EXECUTABLE COULD NOT BE FOUND!')
 
     return
 

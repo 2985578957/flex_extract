@@ -742,3 +742,39 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
         it = len(index_vals[2]) * len(index_vals[1]) * len(index_vals[0])
 
     return (ix, jy, it)
+
+
+def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
+    '''Executes a command line instruction via a subprocess.
+
+    Error handling is done if an error occures.
+
+    Parameters
+    ----------
+    cmd_list : :obj:`list` of `:obj:`string`
+        A list of the components for the command line execution. Each
+        list entry is a single part of the command which is seperated from
+        the rest by a blank space.
+        E.g. ['mv', file1, file2]
+
+    Return
+    ------
+    error_msg : :obj:`string`, optional
+        The possible error message if the subprocess failed.
+        By default it will just tell "SUBPROCESS FAILED!".
+    '''
+
+    try:
+        subprocess.check_call(cmd_list)
+    except subprocess.CalledProcessError as e:
+        print('... ERROR CODE: ' + str(e.returncode))
+        print('... ERROR MESSAGE:\n \t ' + str(e))
+
+        sys.exit('... ' + error_msg)
+    except OSError as e:
+        print('... ERROR CODE: ' + str(e.errno))
+        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
+
+        sys.exit('... ' + error_msg)
+
+    return
