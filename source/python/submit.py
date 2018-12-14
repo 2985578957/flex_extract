@@ -152,7 +152,6 @@ def submit(jtemplate, c, queue):
                     c.end_date = (start + chunk).strftime("%Y%m%d")
                 else:
                     c.end_date = end.strftime("%Y%m%d")
-                print c.start_date +' bis ' + c.end_date
 
                 clist = c.to_list()
 
@@ -191,7 +190,6 @@ def submit(jtemplate, c, queue):
 
         job_id = submit_job_to_ecserver(queue, job_file)
         print('The job id is: ' + str(job_id.strip()))
-
 
     print('You should get an email per job with subject flex.hostname.pid')
 
