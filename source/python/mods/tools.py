@@ -127,6 +127,9 @@ def get_cmdline_args():
     parser.add_argument("--date_chunk", dest="date_chunk",
                         type=none_or_int, default=None,
                         help="# of days to be retrieved at once")
+    parser.add_argument("--job_chunk", dest="job_chunk",
+                        type=none_or_int, default=None,
+                        help="# of days to be retrieved within a single job")
     parser.add_argument("--controlfile", dest="controlfile",
                         type=none_or_str, default='CONTROL.temp',
                         help="file with CONTROL parameters")

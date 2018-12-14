@@ -795,3 +795,26 @@ def check_addpar(addpar):
 
     return addpar
 
+
+def check_job_chunk(job_chunk):
+    '''Checks that the job chunk number is positive and non zero.
+
+    Parameters
+    ----------
+    job_chunk : :obj:`integer`
+        The number of days for a single job script.
+
+    Return
+    ------
+    job_chunk : :obj:`integer`
+        The number of days for a single job script.
+    '''
+    if job_chunk < 0:
+        raise ValueError('ERROR: The number of job chunk is negative!\n'
+                         'It has to be a positive number!')
+    elif job_chunk == 0:
+        job_chunk = None
+    else:
+        pass
+
+    return job_chunk

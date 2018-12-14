@@ -47,6 +47,7 @@ import sys
 import subprocess
 import inspect
 import collections
+from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
 import _config
@@ -139,9 +140,37 @@ def submit(jtemplate, c, queue):
         job_file = os.path.join(_config.PATH_JOBSCRIPTS,
                                 jtemplate[:-5] + '.ksh')
 
-        clist = c.to_list()
+        # divide time periode into specified number of job chunks
+        # to have multiple job scripts
+        if c.job_chunk:
+            start = datetime.strptime(c.start_date, '%Y%m%d')
+            end = datetime.strptime(c.end_date, '%Y%m%d')
+            chunk = timedelta(days=c.job_chunk)
 
-        mk_jobscript(jtemplate, job_file, clist)
+            while start <= end:
+                if (start + chunk) <= end:
+                    c.end_date = (start + chunk).strftime("%Y%m%d")
+                else:
+                    c.end_date = end.strftime("%Y%m%d")
+                print c.start_date +' bis ' + c.end_date
+
+                clist = c.to_list()
+
+                mk_jobscript(jtemplate, job_file, clist)
+
+                job_id = submit_job_to_ecserver(queue, job_file)
+                print('The job id is: ' + str(job_id.strip()))
+
+                start = start + chunk
+                c.start_date = start.strftime("%Y%m%d")
+        # submit a single job script
+        else:
+            clist = c.to_list()
+
+            mk_jobscript(jtemplate, job_file, clist)
+
+            job_id = submit_job_to_ecserver(queue, job_file)
+            print('The job id is: ' + str(job_id.strip()))
 
     else:
     # --------- create operational job script ----------------------------------
@@ -160,10 +189,11 @@ def submit(jtemplate, c, queue):
 
         mk_jobscript(jtemplate, job_file, clist)
 
-    # --------- submit the job_script to the ECMWF server
-    job_id = submit_job_to_ecserver(queue, job_file)
-    print('The job id is: ' + str(job_id.strip()))
-    print('You should get an email with subject flex.hostname.pid')
+        job_id = submit_job_to_ecserver(queue, job_file)
+        print('The job id is: ' + str(job_id.strip()))
+
+
+    print('You should get an email per job with subject flex.hostname.pid')
 
     return
 
@@ -221,6 +251,7 @@ def mk_jobscript(jtemplate, job_file, clist):
         sys.exit('\n... error occured while trying to write ' + job_file)
 
     return
+
 
 if __name__ == "__main__":
     main()
