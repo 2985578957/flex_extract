@@ -192,6 +192,12 @@ class ControlFile(object):
 
         # go through every line and store parameter
         for ldata in fdata:
+            if ldata and ldata[0] == '#':
+                # ignore comment line in control file
+                continue
+            if '#' in ldata:
+                # cut off comment
+                ldata = ldata.split('#')[0]
             data = ldata.split()
             if len(data) > 1:
                 if 'm_' in data[0].lower():
