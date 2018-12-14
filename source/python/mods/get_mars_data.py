@@ -69,7 +69,7 @@ from datetime import datetime, timedelta
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from tools import (my_error, normal_exit, get_cmdline_arguments,
+from tools import (my_error, normal_exit, get_cmdline_args,
                    read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
 from classes.UioFiles import UioFiles
@@ -97,7 +97,7 @@ def main():
 
     '''
 
-    args = get_cmdline_arguments()
+    args = get_cmdline_args()
     c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)

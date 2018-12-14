@@ -65,7 +65,7 @@ import _config
 from checks import check_ppid
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
-from tools import clean_up, get_cmdline_arguments, read_ecenv, make_dir
+from tools import clean_up, get_cmdline_args, read_ecenv, make_dir
 from classes.EcFlexpart import EcFlexpart
 
 ecapi = 'ecmwf' not in socket.gethostname()
@@ -92,7 +92,7 @@ def main():
 
     '''
 
-    args = get_cmdline_arguments()
+    args = get_cmdline_args()
     c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)

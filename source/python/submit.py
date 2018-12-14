@@ -50,7 +50,7 @@ import collections
 
 # software specific classes and modules from flex_extract
 import _config
-from mods.tools import (normal_exit, get_cmdline_arguments,
+from mods.tools import (normal_exit, get_cmdline_args,
                         submit_job_to_ecserver, read_ecenv)
 from mods.get_mars_data import get_mars_data
 from mods.prepare_flexpart import prepare_flexpart
@@ -74,7 +74,7 @@ def main():
 
     '''
 
-    args = get_cmdline_arguments()
+    args = get_cmdline_args()
     c = ControlFile(args.controlfile)
 
     env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)

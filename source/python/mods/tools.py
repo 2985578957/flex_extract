@@ -31,7 +31,7 @@
 #    used in different places in flex_extract.
 #
 # @Module Content:
-#    - get_cmdline_arguments
+#    - get_cmdline_args
 #    - clean_up
 #    - my_error
 #    - normal_exit
@@ -100,7 +100,7 @@ def none_or_int(value):
         return None
     return int(value)
 
-def get_cmdline_arguments():
+def get_cmdline_args():
     '''Decomposes the command line arguments and assigns them to variables.
     Apply default values for non mentioned arguments.
 
