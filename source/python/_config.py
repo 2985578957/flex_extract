@@ -84,6 +84,7 @@ PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')
 PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'fortran')
 PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
+PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'test')
 if os.getenv('CONTROL'):
     # this is only needed if gateway version with job script is used!
     # because job is directly submitted from SCRATCH and because the
@@ -105,3 +106,4 @@ PATH_REL_ECMWF_ENV = os.path.relpath(PATH_ECMWF_ENV, PATH_FLEXEXTRACT_DIR)
 PATH_REL_RUN_DIR = os.path.relpath(PATH_RUN_DIR, PATH_FLEXEXTRACT_DIR)
 PATH_REL_JOBSCRIPTS = os.path.relpath(PATH_JOBSCRIPTS, PATH_FLEXEXTRACT_DIR)
 PATH_REL_FORTRAN_SRC = os.path.relpath(PATH_FORTRAN_SRC, PATH_FLEXEXTRACT_DIR)
+PATH_REL_TEST = os.path.relpath(PATH_TEST, PATH_FLEXEXTRACT_DIR)

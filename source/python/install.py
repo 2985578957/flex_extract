@@ -321,6 +321,8 @@ def mk_tarball(tarball_path, target):
     controlfiles = [os.path.relpath(x, ecd)
                     for x in UioFiles(_config.PATH_REL_CONTROLFILES,
                                       'CONTROL*').files]
+    testfiles = [os.path.relpath(x, ecd)
+                 for x in UioFiles(_config.PATH_REL_TEST , '*').files]
     tempfiles = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEMPLATES , '*.temp').files]
     nlfiles = [os.path.relpath(x, ecd)
@@ -338,7 +340,7 @@ def mk_tarball(tarball_path, target):
     # concatenate single lists to one for a better looping
     filelist = pyfiles + pytestfiles + controlfiles + tempfiles + nlfiles + \
                ffiles + gribtable + hfiles + makefiles + ECMWF_ENV_FILE + \
-               runfile + jobdir + \
+               runfile + jobdir + testfiles +\
                ['CODE_OF_CONDUCT.md', 'LICENSE.md', 'README.md']
 
     # create installation tar-file
