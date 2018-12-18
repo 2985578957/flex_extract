@@ -48,6 +48,7 @@ except ImportError:
     ecapi=False
 from gribapi import *
 from GribTools import GribTools
+from opposite import opposite
 
 def interpret_args_and_control(*args,**kwargs):
 
@@ -411,6 +412,32 @@ def darain(alist):
 
     return sfeld
 
+def add_previousday_ifneeded(attrs):
+
+    if attrs['type']=='FC' and 'acc' not in attrs['target']:
+        steps=attrs['step'].split('/')
+        times=attrs['time'].split('/')
+        addpday=False
+        #for t in times:
+            #for s in steps:
+        if int(times[0])+int(steps[0])>23:
+            addpday=True
+        if(addpday):
+            dates=attrs['date'].split('/')
+            start_date=dates[0]
+            syear=int(start_date[:4])
+            smonth=int(start_date[4:6])
+            sday=int(start_date[6:])
+            start = datetime.date( year = syear, month = smonth, day = sday )
+            startm1=start- datetime.timedelta(days=1)
+
+            attrs['date']='/'.join([startm1.strftime("%Y%m%d")]+dates[1:])
+            print('CHANGED FC start date to '+startm1.strftime("%Y%m%d")+'to accomodate TIME='+times[0]+', STEP='+steps[0])
+
+    return
+
+
+
 class Control:
     'class containing the information of the flex_extract control file'
 
@@ -703,6 +730,9 @@ class MARSretrieval:
         mclass = attrs.get('marsclass')
         del attrs['marsclass']
         attrs['class'] = mclass
+
+        add_previousday_ifneeded(attrs)
+
         target = attrs.get('target')
         if not int(self.public):
             del attrs['target']
@@ -768,7 +798,7 @@ class EIFlexpart:
         self.mreq_count = 0
         self.types=dict()
         try:
-            if c.maxstep>len(c.type):    # Pure forecast mode
+            if c.maxstep>24: #len(c.type):    # Pure forecast mode
                 c.type=[c.type[0]] # AP changed this index from 1 to 0
                 c.step=['{:0>3}'.format(int(c.step[0]))]
                 c.time=[c.time[0]]
@@ -803,7 +833,7 @@ class EIFlexpart:
                     btlist=[13,14,15,16,17,18,19,20,21,22,23,0]
 
 
-                if ((ty.upper() == 'AN' and mod(int(c.time[i]),int(c.dtime))==0) or \
+                if ((ty.upper() == 'AN' and mod(int(c.time[i]),int(c.dtime))==0 and int(c.step[i])==0) or \
                    (ty.upper() != 'AN' and mod(int(c.step[i]),int(c.dtime))==0 and \
                     mod(int(c.step[i]),int(c.dtime))==0) ) and \
                    (int(c.time[i]) in btlist or c.maxstep>24):
@@ -1205,6 +1235,19 @@ class EIFlexpart:
             for ofile in self.outputfilelist:
                 p=subprocess.check_call(['grib_set','-s','edition=2,productDefinitionTemplateNumber=8',ofile,ofile+'_2'])
                 p=subprocess.check_call(['mv',ofile+'_2',ofile])
+        if c.debug==0:
+            inputfiles=glob.glob('*.grb')
+            for grb in inputfiles:
+                try:
+                    os.remove(grb)
+                except:
+                    pass
+        if c.stream=='ELDA':
+            opposite(self.inputdir+'/'+c.prefix)
+            for i in range(len(self.outputfilelist)):
+                if self.outputfilelist[i][-4:]!='N000' :
+                    j=int(self.outputfilelist[i][-3:])
+                    self.outputfilelist.append(self.outputfilelist[i][:-3]+'{:0>3}'.format(j+25))
 
         if int(c.ectrans)==1 and c.ecapi==False:
             for ofile in self.outputfilelist:
@@ -1275,7 +1318,11 @@ class EIFlexpart:
         table128=init128(c.flexextractdir+'/grib_templates/ecmwf_grib1_table_128')
         wrfpars=toparamId('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',table128)
 #        index_keys=["date","time","stepRange"]
-        index_keys=["date","time","step"]
+        if '/' in c.number:
+            index_keys=["number","date","time","step"]
+        else:
+            index_keys=["date","time","step"]
+
         indexfile=c.inputdir+"/date_time_stepRange.idx"
         silentremove(indexfile)
         grib=GribTools(inputfiles.files)
@@ -1332,6 +1379,12 @@ class EIFlexpart:
 
                     if timestamp<slimit or timestamp>elimit:
                         continue
+                else:
+                    if c.maxstep<24:
+                        if cdateH<c.start_date+'00':
+                            continue
+                        if cdateH>c.end_date+'23':
+                            continue
 
 
 
@@ -1431,6 +1484,12 @@ class EIFlexpart:
                     suffix=cdate[2:8]+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step)
                 else:
                     suffix=cdateH[2:10]
+                try:
+                    numberindex=index_keys.index('number')
+                    if len(index_vals[numberindex])>1:
+                        suffix=suffix+'.N{:0>3}'.format(int(prod[numberindex]))
+                except:
+                    pass
 
                 fnout+=suffix
                 print "outputfile = " + fnout
@@ -1459,11 +1518,16 @@ class EIFlexpart:
 
         grib_index_release(iid)
 
+        return
+
     def deacc_fluxes(self, inputfiles, c):
 
         table128=init128(c.flexextractdir+'/grib_templates/ecmwf_grib1_table_128')
         pars=toparamId(self.params['OG_acc_SL'][0],table128)
-        index_keys=["date","time","step"]
+        if '/' in c.number:
+            index_keys=["number","date","time","step"]
+        else:
+            index_keys=["date","time","step"]
         indexfile=c.inputdir+"/date_time_stepRange.idx"
         silentremove(indexfile)
         grib=GribTools(inputfiles.files)
@@ -1474,7 +1538,7 @@ class EIFlexpart:
         index_vals = []
         for key in index_keys:
             key_vals = grib_index_get(iid,key)
-
+            print(key_vals)
             l=[]
             for k in key_vals:
                 l.append(int(k))
@@ -1520,16 +1584,24 @@ class EIFlexpart:
                 break
 
             fnout=c.inputdir+'/'
+            numbersuffix=''
+            try:
+                numberindex=index_keys.index('number')
+                if len(index_vals[numberindex])>1:
+                    numbersuffix='.N{:0>3}'.format(int(prod[numberindex]))
+            except:
+                pass
+
             if c.maxstep>12:
-                fnout+='flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step-2*int(c.dtime))
-                gnout=c.inputdir+'/flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step-int(c.dtime))
-                hnout=c.inputdir+'/flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step)
+                fnout+='flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step-2*int(c.dtime))+numbersuffix
+                gnout=c.inputdir+'/flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step-int(c.dtime))+numbersuffix
+                hnout=c.inputdir+'/flux'+sdate.strftime('%Y%m%d')+'.{:0>2}'.format(time/100)+'.{:0>3}'.format(step)+numbersuffix
                 g=open(gnout,'w')
                 h=open(hnout,'w')
             else:
-                fnout+='flux'+fdate.strftime('%Y%m%d%H')
-                gnout=c.inputdir+'/flux'+(fdate+datetime.timedelta(hours=int(c.dtime))).strftime('%Y%m%d%H')
-                hnout=c.inputdir+'/flux'+sdates.strftime('%Y%m%d%H')
+                fnout+='flux'+fdate.strftime('%Y%m%d%H')+numbersuffix
+                gnout=c.inputdir+'/flux'+(fdate+datetime.timedelta(hours=int(c.dtime))).strftime('%Y%m%d%H')+numbersuffix
+                hnout=c.inputdir+'/flux'+sdates.strftime('%Y%m%d%H')+numbersuffix
                 g=open(gnout,'w')
                 h=open(hnout,'w')
             print "outputfile = " + fnout
@@ -1555,7 +1627,7 @@ class EIFlexpart:
 
                     values=(reshape(values,(nj,ni))).flatten()/fak
                     vdp.append(values[:]) # save the accumulated values
-                    if c.marsclass.upper() == 'EA' or \
+                    if c.marsclass.upper() in ('EA') or \
                        step<=int(c.dtime):
                         svdp.append(values[:]/int(c.dtime))
                     else:

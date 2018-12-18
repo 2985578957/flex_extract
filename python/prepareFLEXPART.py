@@ -36,6 +36,7 @@ from UIOTools import UIOFiles
 #from string import strip
 from GribTools import GribTools
 from FlexpartTools import EIFlexpart, Control,interpret_args_and_control, cleanup
+from opposite import opposite
 
 hostname=socket.gethostname()
 ecapi= 'ecmwf' not in hostname
