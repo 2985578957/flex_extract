@@ -24,7 +24,7 @@
 ##PBS -l EC_memory_per_task=32000MB
 
 set -x
-export VERSION=7.0.3
+export VERSION=7.0.4
 case $HOST in
   *ecg*)
   module load python
@@ -32,7 +32,7 @@ case $HOST in
   module unload emos
   module load grib_api/1.14.5
   module load emos/437-r64
-  export PATH=${PATH}:${HOME}/flex_extract_v7.0.3/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.0.4/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
@@ -40,7 +40,7 @@ case $HOST in
   module load emos
   module load python
   export SCRATCH=$TMPDIR
-  export PATH=${PATH}:${HOME}/flex_extract_v7.0.3/python
+  export PATH=${PATH}:${HOME}/flex_extract_v7.0.4/python
   ;;
 esac
 

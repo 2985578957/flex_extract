@@ -97,7 +97,7 @@ def interpret_args_and_control(*args,**kwargs):
     parser.add_argument("--public", dest="public", default=0,
                         help="Public mode - retrieves the public datasets")
 
-    parser.add_argument("--request", dest="request", default=0,
+    parser.add_argument("--request", dest="request", default=None,
                         help="list all mars request in file mars_requests.dat \
                         and skip submission to mars")
 
@@ -192,10 +192,12 @@ def interpret_args_and_control(*args,**kwargs):
         c.flexpart_root_scripts=args.flexpart_root_scripts
 
     # set request attribute to control file
-    if args.request != '0':
-        c.request=args.request
+    if args.request != None:
+        c.request=int(args.request)
+    else:
+        c.request = 0
 
-    if c.request != '0':
+    if c.request != 0:
         marsfile = os.path.join(c.inputdir, 'mars_requests.csv')
         if os.path.isfile(marsfile):
             os.remove(marsfile)
@@ -576,8 +578,9 @@ class Control:
                     self.type[i] = 0
 
             if not hasattr(self,'request'):
-                self.request='0'
-            elif self.request != 0:
+                self.request=0
+            elif int(self.request) != 0:
+                self.request=int(self.request)
                 marsfile = os.path.join(self.inputdir,
                                         'mars_requests.csv')
                 if os.path.isfile(marsfile):
@@ -1030,12 +1033,12 @@ class EIFlexpart:
                                   accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                   date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                    if request == "0":
+                    if request == 0:
                         MR.displayInfo()
                         MR.dataRetrieve()
-                    elif request == "1":
+                    elif request == 1:
                         MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                    elif request == "2":
+                    elif request == 2:
                         MR.print_infodata_csv(self.inputdir, self.mreq_count)
                         MR.displayInfo()
                         MR.dataRetrieve()
@@ -1069,12 +1072,12 @@ class EIFlexpart:
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            if request == "0":
+                            if request == 0:
                                 MR.displayInfo()
                                 MR.dataRetrieve()
-                            elif request == "1":
+                            elif request == 1:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            elif request == "2":
+                            elif request == 2:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                                 MR.displayInfo()
                                 MR.dataRetrieve()
@@ -1089,12 +1092,12 @@ class EIFlexpart:
                                               type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
-                            if request == "0":
+                            if request == 0:
                                 MR.displayInfo()
                                 MR.dataRetrieve()
-                            elif request == "1":
+                            elif request == 1:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            elif request == "2":
+                            elif request == 2:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                                 MR.displayInfo()
                                 MR.dataRetrieve()
@@ -1106,12 +1109,12 @@ class EIFlexpart:
                                                 accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                                 date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            if request == "0":
+                            if request == 0:
                                 MR.displayInfo()
                                 MR.dataRetrieve()
-                            elif request == "1":
+                            elif request == 1:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            elif request == "2":
+                            elif request == 2:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                                 MR.displayInfo()
                                 MR.dataRetrieve()
@@ -1136,12 +1139,12 @@ class EIFlexpart:
                                       accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                       date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                        if request == "0":
+                        if request == 0:
                             MR.displayInfo()
                             MR.dataRetrieve()
-                        elif request == "1":
+                        elif request == 1:
                             MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                        elif request == "2":
+                        elif request == 2:
                             MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             MR.displayInfo()
                             MR.dataRetrieve()
@@ -1158,20 +1161,20 @@ class EIFlexpart:
                                           accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
                                           date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
 
-                            if request == "0":
+                            if request == 0:
                                 MR.displayInfo()
                                 MR.dataRetrieve()
-                            elif request == "1":
+                            elif request == 1:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            elif request == "2":
+                            elif request == 2:
                                 MR.print_infodata_csv(self.inputdir, self.mreq_count)
                                 MR.displayInfo()
                                 MR.dataRetrieve()
 
 
-        if request == "0" or request == "2":
+        if request == 0 or request == 2:
             print('MARS retrieve done ... ')
-        elif request == "1":
+        elif request == 1:
             print('MARS request printed ...')
 
     def getFlexpartTime(self, type,step, time):
@@ -1471,7 +1474,6 @@ class EIFlexpart:
         index_vals = []
         for key in index_keys:
             key_vals = grib_index_get(iid,key)
-            print key_vals
 
             l=[]
             for k in key_vals:
@@ -1480,7 +1482,7 @@ class EIFlexpart:
             key_vals=[]
             for k in l:
                 key_vals.append(str(k))
-
+            print key_vals
             index_vals.append(key_vals)
 
 
@@ -1580,9 +1582,9 @@ class EIFlexpart:
 
                         grib_set_values(gid, values)
                         if c.maxstep>12:
-                            grib_set(gid,'step',max(0,step-2*int(c.dtime)))
+                            grib_set(gid,'stepRange',max(0,step-2*int(c.dtime)))
                         else:
-                            grib_set(gid,'step',0)
+                            grib_set(gid,'stepRange',0)
                             grib_set(gid,'time',fdate.hour*100)
                             grib_set(gid,'date',fdate.year*10000+fdate.month*100+fdate.day)
                         grib_write(gid, f)
@@ -1600,7 +1602,7 @@ class EIFlexpart:
                         if step==c.maxstep and c.maxstep>12 or sdates==elimit:
                             values=svdp[3]
                             grib_set_values(gid, values)
-                            grib_set(gid,'step',0)
+                            grib_set(gid,'stepRange',0)
                             truedatetime=fdate+datetime.timedelta(hours=2*int(c.dtime))
                             grib_set(gid,'time',truedatetime.hour*100)
                             grib_set(gid,'date',truedatetime.year*10000+truedatetime.month*100+truedatetime.day)
@@ -1612,7 +1614,7 @@ class EIFlexpart:
                             else:
                                 values=dapoly(list(reversed(svdp)))
 
-                            grib_set(gid,'step',0)
+                            grib_set(gid,'stepRange',0)
                             truedatetime=fdate+datetime.timedelta(hours=int(c.dtime))
                             grib_set(gid,'time',truedatetime.hour*100)
                             grib_set(gid,'date',truedatetime.year*10000+truedatetime.month*100+truedatetime.day)

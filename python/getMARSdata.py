@@ -111,7 +111,7 @@ def getMARSdata(args,c):
         endp1=end+ datetime.timedelta(days=2)
 
     datechunk=datetime.timedelta(days=int(c.date_chunk))
-    if c.request == '0' or c.request == '2':
+    if c.request == 0 or c.request == 2:
         print 'removing content of '+c.inputdir
         tobecleaned=glob.glob(c.inputdir+'/*_acc_*.'+str(os.getppid())+'.*.grb')
         for f in tobecleaned:
@@ -150,7 +150,7 @@ def getMARSdata(args,c):
             day+=datechunk
 
 
-    if c.request == '0' or c.request == '2':
+    if c.request == 0 or c.request == 2:
         print 'removing content of '+c.inputdir
         tobecleaned=glob.glob(c.inputdir+'/*__*.'+str(os.getppid())+'.*.grb')
         for f in tobecleaned:
