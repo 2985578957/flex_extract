@@ -42,7 +42,7 @@ if not os.path.exists('../test'):
 if len(sys.argv)>1:
     groups=sys.argv[1:]
 else:
-    groups=['xinstall','default','ops','work','cv','fc']#,'hires']
+    groups=['install','default','ops','work','cv','fc','hireseta','highresgauss','opsfc']
 jobcounter=0
 jobfailed=0
 for g in groups:
@@ -85,5 +85,3 @@ for g in groups:
 print 'Test suite tasks completed'
 print str(jobcounter-jobfailed)+' successful, '+str(jobfailed)+' failed'
 print 'If tasks have been submitted via ECACCESS please check emails'
-
-#print tasks

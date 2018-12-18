@@ -31,7 +31,7 @@
 },
 "fc": {
 "script": "submit.py",
-"control": "CONTROL_FC",
+"control": "CONTROL_FC.pure",
 "inputdir": "$SCRATCH/workfc",
 "local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"}
 },
@@ -42,16 +42,16 @@
 "start_date": "20131107",
 "local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"}
 },
-"hires": {
+"hireseta": {
 "script": "submit.py",
-"control": "CONTROL_HIRES",
-"inputdir": "$SCRATCH/workhires",
+"control": "CONTROL_OD.highres.eta",
+"inputdir": "$SCRATCH/workhireseta",
 "local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
 "ecgate": {"queue":"ecgate"}
 },
 "hiresgauss": {
 "script": "submit.py",
-"control": "CONTROL_HIRESGAUSS",
+"control": "CONTROL_OD.highres.gauss",
 "inputdir": "$SCRATCH/workhiresgauss",
 "basetime": "00",
 "local_flexpart": {"flexpart_root_scripts":"$FLEXPART_ROOT_SCRIPTS"},
@@ -61,7 +61,7 @@
 "ops": {
 "script": "submit.py",
 "start_date": "20131108",
-"control": "CONTROL_OPS_V6.0_4V.temp",
+"control": "CONTROL_OPS.4V",
 "inputdir": "$SCRATCH/workops2",
 "local_flexpart": {"basetime":"00"},
 "local_flexpart12": {"basetime":"12"},
@@ -70,7 +70,7 @@
 "opsfc": {
 "script": "submit.py",
 "start_date": "20131108",
-"control": "CONTROL_OPS_V6.0",
+"control": "CONTROL_OPS",
 "inputdir": "$SCRATCH/workopsfc",
 "local_flexpart": {"basetime":"00"},
 "local_flexpart12": {"basetime":"12"},
