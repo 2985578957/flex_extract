@@ -12,7 +12,7 @@
 
 
 GRIB_API_INCLUDE_DIR=/home/srvx1/tmc/TestEnv/Libraries/grib_api-1.12.3_ifort/include
-GRIB_API_LIB=-openmp -L/home/srvx1/tmc/TestEnv/Libraries/grib_api-1.12.3_ifort/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
+GRIB_API_LIB=-fopenmp -L/home/srvx1/tmc/TestEnv/Libraries/grib_api-1.12.3_ifort/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
 
 OPT	= -g
 DEBUG	= -g
