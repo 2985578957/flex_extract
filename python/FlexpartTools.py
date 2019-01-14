@@ -826,7 +826,7 @@ class EIFlexpart:
                     i+=1
         else:
             for ty,st,ti in zip(c.type,c.step,c.time):
-                btlist=range(24)
+                btlist=range(len(c.time))
                 if c.basetime=='12':
                     btlist=[1,2,3,4,5,6,7,8,9,10,11,12]
                 if c.basetime=='00':
@@ -836,7 +836,7 @@ class EIFlexpart:
                 if ((ty.upper() == 'AN' and mod(int(c.time[i]),int(c.dtime))==0 and int(c.step[i])==0) or \
                    (ty.upper() != 'AN' and mod(int(c.step[i]),int(c.dtime))==0 and \
                     mod(int(c.step[i]),int(c.dtime))==0) ) and \
-                   (int(c.time[i]) in btlist or c.maxstep>24):
+                   (i in btlist or c.maxstep>24):
                     if ty not in self.types.keys():
                         self.types[ty]={'times':'','steps':''}
                     if ti not in self.types[ty]['times']:
@@ -1154,6 +1154,10 @@ class EIFlexpart:
 
                         mftimesave=''.join(mftime)
 
+                        if pk=='OG_OROLSM__SL':
+                            mfdate=self.dates.split('/')[0]
+                            mftarget=self.inputdir+"/"+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
+
                         if '/' in mftime:
                             times=mftime.split('/')
                             while int(times[0])+int(mfstep.split('/')[0])<=12 and pk!='OG_OROLSM__SL' and 'acc' not in pk:
@@ -1162,6 +1166,13 @@ class EIFlexpart:
                                     mftime='/'.join(times)
                                 else:
                                     mftime=times[0]
+
+                        if int(mftimesave.split('/')[0])==0 and int(mfstep.split('/')[0])==0 and pk!='OG_OROLSM__SL':
+                            mfdate=datetime.datetime.strftime(elimit,'%Y%m%d')
+                            mftime='00'
+                            mfstep='000'
+                            mftarget=self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
+
                         # increase number of mars requests
                         self.mreq_count += 1
                         MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
@@ -1178,28 +1189,6 @@ class EIFlexpart:
                             MR.print_infodata_csv(self.inputdir, self.mreq_count)
                             MR.displayInfo()
                             MR.dataRetrieve()
-
-                        if int(mftimesave.split('/')[0])==0 and int(mfstep.split('/')[0])==0 and pk!='OG_OROLSM__SL':
-                            mfdate=datetime.datetime.strftime(elimit,'%Y%m%d')
-                            mftime='00'
-                            mfstep='000'
-                            mftarget=self.inputdir+"/"+ftype+pk+'.'+mfdate+'.'+str(os.getppid())+'.'+str(os.getpid())+".grb"
-                            # increase number of mars requests
-                            self.mreq_count += 1
-                            MR= MARSretrieval(self.server, self.public, dataset=self.dataset, marsclass=self.marsclass, stream=self.stream,
-                                              type=mftype, levtype=pv[1], levelist=pv[2],resol=self.resol, gaussian=gaussian,
-                                          accuracy=self.accuracy,grid=pv[3],target=mftarget,area=area,
-                                          date=mfdate, time=mftime,number=self.number,step=mfstep, expver=self.expver, param=pv[0])
-
-                            if request == 0:
-                                MR.displayInfo()
-                                MR.dataRetrieve()
-                            elif request == 1:
-                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                            elif request == 2:
-                                MR.print_infodata_csv(self.inputdir, self.mreq_count)
-                                MR.displayInfo()
-                                MR.dataRetrieve()
 
 
         if request == 0 or request == 2:

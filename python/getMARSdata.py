@@ -72,7 +72,7 @@ def getMARSdata(args,c):
         attrs = vars(MR).copy()
         del attrs['server']
         del attrs['public']
-        marsfile = os.path.join(c.inputdir, 'mars_request.csv')
+        marsfile = os.path.join(c.inputdir, 'mars_requests.csv')
         with open(marsfile, 'w') as f:
             f.write('request_number' + ', ')
             f.write(', '.join(str(key) for key in sorted(attrs.iterkeys())))
