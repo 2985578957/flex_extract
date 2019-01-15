@@ -164,7 +164,7 @@
 <span class="c1">#        - modified method list_files to work with glob instead of listdir</span>
 <span class="c1">#        - added pattern search in method list_files</span>
 <span class="c1">#</span>
-<span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#    February - December 2018 - Anne Philipp (University of Vienna):</span>
 <span class="c1">#        - applied PEP8 style guide</span>
 <span class="c1">#        - added documentation</span>
 <span class="c1">#        - optimisation of method list_files since it didn&#39;t work correctly</span>
@@ -172,28 +172,16 @@
 <span class="c1">#        - additional speed up of method list_files</span>
 <span class="c1">#        - modified the class so that it is initiated with a pattern instead</span>
 <span class="c1">#          of suffixes. Gives more precision in selection of files.</span>
+<span class="c1">#        - added delete method</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Decription:</span>
-<span class="c1">#    The class is for file manipulation. It is initiated with a regular</span>
-<span class="c1">#    expression pattern for this instance and can produce a list of Files</span>
-<span class="c1">#    from the given file pattern. These files can be deleted.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Content:</span>
-<span class="c1">#    - __init__</span>
-<span class="c1">#    - __str__</span>
-<span class="c1">#    - __list_files__</span>
-<span class="c1">#    - delete_files</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Attributes:</span>
-<span class="c1">#    - pattern</span>
-<span class="c1">#    - files</span>
-<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -203,9 +191,8 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">fnmatch</span>
 
-<span class="c1"># software specific module from flex_extract</span>
+<span class="c1"># software specific modules from flex_extract</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
-<span class="c1">#import profiling</span>
 <span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">get_list_as_string</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -213,22 +200,35 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="UioFiles"><a class="viewcode-back" href="../api.html#UioFiles.UioFiles">[docs]</a><span class="k">class</span> <span class="nc">UioFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Class to manipulate files. At initialisation it has the pattern</span>
-<span class="sd">    which stores a regular expression pattern for the files, the path</span>
-<span class="sd">    to the files and the files already.</span>
+    <span class="sd">&#39;&#39;&#39;Collection of files matching a specific pattern.</span>
+
+<span class="sd">    The pattern can contain regular expressions for the files.</span>
+<span class="sd">    The files are listed and can be transformed to a single string or</span>
+<span class="sd">    they can be deleted.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : str</span>
+<span class="sd">        Directory where to list the files.</span>
+
+<span class="sd">    pattern : str</span>
+<span class="sd">        Regular expression pattern. For example: &#39;\*.grb&#39;</span>
+
+<span class="sd">    files : list of str</span>
+<span class="sd">        List of files matching the pattern in the path.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="c1"># CLASS FUNCTIONS</span>
+    <span class="c1"># CLASS METHODS</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Assignes a specific pattern for these files.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        path : :obj:`string`</span>
+<span class="sd">        path : str</span>
 <span class="sd">            Directory where to list the files.</span>
 
-<span class="sd">        pattern : :obj:`string`</span>
+<span class="sd">        pattern : str</span>
 <span class="sd">            Regular expression pattern. For example: &#39;\*.grb&#39;</span>
 
 <span class="sd">        Return</span>
@@ -240,18 +240,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__list_files__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_list_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 
         <span class="k">return</span>
 
-    <span class="c1">#@profiling.timefn</span>
-    <span class="k">def</span> <span class="nf">__list_files__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Lists all files in the directory with the matching</span>
 <span class="sd">        regular expression pattern.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        path : :obj:`string`</span>
+<span class="sd">        path : str</span>
 <span class="sd">            Path to the files.</span>
 
 <span class="sd">        Return</span>
@@ -268,6 +268,7 @@
 
         <span class="k">return</span>
 
+
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Converts the list of files into a single string.</span>
 <span class="sd">        The entries are sepereated by &quot;,&quot; sign.</span>
@@ -277,7 +278,7 @@
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
-<span class="sd">        files_string : :obj:`string`</span>
+<span class="sd">        files_string : str</span>
 <span class="sd">            The content of the list as a single string.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -285,6 +286,7 @@
         <span class="n">files_string</span> <span class="o">=</span> <span class="n">get_list_as_string</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">concatenate_sign</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">files_string</span>
+
 
 <div class="viewcode-block" id="UioFiles.delete_files"><a class="viewcode-back" href="../api.html#UioFiles.UioFiles.delete_files">[docs]</a>    <span class="k">def</span> <span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Deletes the files.</span>
@@ -313,7 +315,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -332,21 +334,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 

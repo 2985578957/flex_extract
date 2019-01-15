@@ -169,46 +169,16 @@
 <span class="c1">#        - applied PEP8 style guide</span>
 <span class="c1">#        - added documentation</span>
 <span class="c1">#        - applied some minor modifications in programming style/structure</span>
+<span class="c1">#        - added writing of mars request attributes to a csv file</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2015-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Description:</span>
-<span class="c1">#    A MARS revtrieval has a specific syntax with a selection of keywords and</span>
-<span class="c1">#    their corresponding values. This class provides the necessary functions</span>
-<span class="c1">#    by displaying the selected parameters and their values and the actual</span>
-<span class="c1">#    retrievement of the data through a mars request or a Python web api</span>
-<span class="c1">#    interface. The initialization already expects all the keyword values.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Content:</span>
-<span class="c1">#    - __init__</span>
-<span class="c1">#    - display_info</span>
-<span class="c1">#    - data_retrieve</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Attributes:</span>
-<span class="c1">#    - server</span>
-<span class="c1">#    - marsclass</span>
-<span class="c1">#    - dtype</span>
-<span class="c1">#    - levtype</span>
-<span class="c1">#    - levelist</span>
-<span class="c1">#    - repres</span>
-<span class="c1">#    - date</span>
-<span class="c1">#    - resol</span>
-<span class="c1">#    - stream</span>
-<span class="c1">#    - area</span>
-<span class="c1">#    - time</span>
-<span class="c1">#    - step</span>
-<span class="c1">#    - expver</span>
-<span class="c1">#    - number</span>
-<span class="c1">#    - accuracy</span>
-<span class="c1">#    - grid</span>
-<span class="c1">#    - gaussian</span>
-<span class="c1">#    - target</span>
-<span class="c1">#    - param</span>
-<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -225,12 +195,91 @@
 <span class="c1"># CLASS</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="MarsRetrieval"><a class="viewcode-back" href="../api.html#MarsRetrieval.MarsRetrieval">[docs]</a><span class="k">class</span> <span class="nc">MarsRetrieval</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Class for submitting MARS retrievals.</span>
+    <span class="sd">&#39;&#39;&#39;Specific syntax and content for submission of MARS retrievals.</span>
+
+<span class="sd">    A MARS revtrieval has a specific syntax with a selection of keywords and</span>
+<span class="sd">    their corresponding values. This class provides the necessary functions</span>
+<span class="sd">    by displaying the selected parameters and their values and the actual</span>
+<span class="sd">    retrievement of the data through a mars request or a Python web api</span>
+<span class="sd">    interface. The initialization already expects all the keyword values.</span>
 
 <span class="sd">    A description of MARS keywords/arguments and examples of their</span>
 <span class="sd">    values can be found here:</span>
 <span class="sd">    https://software.ecmwf.int/wiki/display/UDOC/\</span>
 <span class="sd">                   Identification+keywords#Identificationkeywords-class</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    server : ECMWFService or ECMWFDataServer</span>
+<span class="sd">        This is the connection to the ECMWF data servers.</span>
+
+<span class="sd">    public : int</span>
+<span class="sd">        Decides which Web API Server version is used.</span>
+
+<span class="sd">    marsclass : str, optional</span>
+<span class="sd">        Characterisation of dataset.</span>
+
+<span class="sd">    dataset : str, optional</span>
+<span class="sd">        For public datasets there is the specific naming and parameter</span>
+<span class="sd">        dataset which has to be used to characterize the type of</span>
+<span class="sd">        data.</span>
+
+<span class="sd">    type : str, optional</span>
+<span class="sd">        Determines the type of fields to be retrieved.</span>
+
+<span class="sd">    levtype : str, optional</span>
+<span class="sd">        Denotes type of level.</span>
+
+<span class="sd">    levelist : str, optional</span>
+<span class="sd">        Specifies the required levels.</span>
+
+<span class="sd">    repres : str, optional</span>
+<span class="sd">        Selects the representation of the archived data.</span>
+
+<span class="sd">    date : str, optional</span>
+<span class="sd">        Specifies the Analysis date, the Forecast base date or</span>
+<span class="sd">        Observations date.</span>
+
+<span class="sd">    resol : str, optional</span>
+<span class="sd">        Specifies the desired triangular truncation of retrieved data,</span>
+<span class="sd">        before carrying out any other selected post-processing.</span>
+
+<span class="sd">    stream : str, optional</span>
+<span class="sd">        Identifies the forecasting system used to generate the data.</span>
+
+<span class="sd">    area : str, optional</span>
+<span class="sd">        Specifies the desired sub-area of data to be extracted.</span>
+
+<span class="sd">    time : str, optional</span>
+<span class="sd">        Specifies the time of the data in hours and minutes.</span>
+
+<span class="sd">    step : str, optional</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+
+<span class="sd">    expver : str, optional</span>
+<span class="sd">        The version of the dataset.</span>
+
+<span class="sd">    number : str, optional</span>
+<span class="sd">        Selects the member in ensemble forecast run.</span>
+
+<span class="sd">    accuracy : str, optional</span>
+<span class="sd">        Specifies the number of bits per value to be used in the</span>
+<span class="sd">        generated GRIB coded fields.</span>
+
+<span class="sd">    grid : str, optional</span>
+<span class="sd">        Specifies the output grid which can be either a Gaussian grid</span>
+<span class="sd">        or a Latitude/Longitude grid.</span>
+
+<span class="sd">    gaussian : str, optional</span>
+<span class="sd">        This parameter is deprecated and should no longer be used.</span>
+<span class="sd">        Specifies the desired type of Gaussian grid for the output.</span>
+
+<span class="sd">    target : str, optional</span>
+<span class="sd">        Specifies a file into which data is to be written after</span>
+<span class="sd">        retrieval or manipulation.</span>
+
+<span class="sd">    param : str, optional</span>
+<span class="sd">        Specifies the meteorological parameter.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">public</span><span class="p">,</span> <span class="n">marsclass</span><span class="o">=</span><span class="s2">&quot;ei&quot;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -248,37 +297,37 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        server : :obj:`ECMWFService`</span>
+<span class="sd">        server : ECMWFService or ECMWFDataServer</span>
 <span class="sd">            This is the connection to the ECMWF data servers.</span>
 <span class="sd">            It is needed for the pythonic access of ECMWF data.</span>
 
-<span class="sd">        public : :obj:`integer`</span>
+<span class="sd">        public : int</span>
 <span class="sd">            Decides which Web API version is used:</span>
 <span class="sd">            0: member-state users and full archive access</span>
 <span class="sd">            1: public access and limited access to the public server and</span>
 <span class="sd">               datasets. Needs the parameter dataset.</span>
 <span class="sd">            Default is &quot;0&quot; and for member-state users.</span>
 
-<span class="sd">        marsclass : :obj:`string`, optional</span>
+<span class="sd">        marsclass : str, optional</span>
 <span class="sd">            Characterisation of dataset. E.g. EI (ERA-Interim),</span>
 <span class="sd">            E4 (ERA40), OD (Operational archive), ea (ERA5).</span>
 <span class="sd">            Default is the ERA-Interim dataset &quot;ei&quot;.</span>
 
-<span class="sd">        dataset : :obj:`string`, optional</span>
+<span class="sd">        dataset : str, optional</span>
 <span class="sd">            For public datasets there is the specific naming and parameter</span>
 <span class="sd">            dataset which has to be used to characterize the type of</span>
 <span class="sd">            data. Usually there is less data available, either in times,</span>
 <span class="sd">            domain or parameter.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        type : :obj:`string`, optional</span>
+<span class="sd">        type : str, optional</span>
 <span class="sd">            Determines the type of fields to be retrieved.</span>
 <span class="sd">            Selects between observations, images or fields.</span>
 <span class="sd">            Examples for fields: Analysis (an), Forecast (fc),</span>
 <span class="sd">            Perturbed Forecast (pf), Control Forecast (cf) and so on.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        levtype : :obj:`string`, optional</span>
+<span class="sd">        levtype : str, optional</span>
 <span class="sd">            Denotes type of level. Has a direct implication on valid</span>
 <span class="sd">            levelist values!</span>
 <span class="sd">            E.g. model level (ml), pressure level (pl), surface (sfc),</span>
@@ -286,25 +335,25 @@
 <span class="sd">            and depth (dp).</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        levelist : :obj:`string`, optional</span>
+<span class="sd">        levelist : str, optional</span>
 <span class="sd">            Specifies the required levels. It has to have a valid</span>
 <span class="sd">            correspondence to the selected levtype.</span>
 <span class="sd">            Examples: model level: 1/to/137, pressure levels: 500/to/1000</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        repres : :obj:`string`, optional</span>
+<span class="sd">        repres : str, optional</span>
 <span class="sd">            Selects the representation of the archived data.</span>
 <span class="sd">            E.g. sh - spherical harmonics, gg - Gaussian grid,</span>
 <span class="sd">            ll - latitude/longitude, ...</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        date : :obj:`string`, optional</span>
+<span class="sd">        date : str, optional</span>
 <span class="sd">            Specifies the Analysis date, the Forecast base date or</span>
 <span class="sd">            Observations date. Valid formats are:</span>
 <span class="sd">            Absolute as YYYY-MM-DD or YYYYMMDD.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        resol : :obj:`string`, optional</span>
+<span class="sd">        resol : str, optional</span>
 <span class="sd">            Specifies the desired triangular truncation of retrieved data,</span>
 <span class="sd">            before carrying out any other selected post-processing.</span>
 <span class="sd">            The default is automatic truncation (auto), by which the lowest</span>
@@ -321,12 +370,12 @@
 <span class="sd">                  Retrieve#Retrieve-Truncationbeforeinterpolation</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        stream : :obj:`string`, optional</span>
+<span class="sd">        stream : str, optional</span>
 <span class="sd">            Identifies the forecasting system used to generate the data.</span>
 <span class="sd">            E.g. oper (Atmospheric model), enfo (Ensemble forecats), ...</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        area : :obj:`string`, optional</span>
+<span class="sd">        area : str, optional</span>
 <span class="sd">            Specifies the desired sub-area of data to be extracted.</span>
 <span class="sd">            Areas can be defined to wrap around the globe.</span>
 
@@ -344,7 +393,7 @@
 <span class="sd">            E.g.: North/West/South/East</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        time : :obj:`string`, optional</span>
+<span class="sd">        time : str, optional</span>
 <span class="sd">            Specifies the time of the data in hours and minutes.</span>
 <span class="sd">            Valid values depend on the type of data: Analysis time,</span>
 <span class="sd">            Forecast base time or First guess verification time</span>
@@ -354,7 +403,7 @@
 <span class="sd">            The syntax is HHMM or HH:MM. If MM is omitted it defaults to 00.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        step : :obj:`string`, optional</span>
+<span class="sd">        step : str, optional</span>
 <span class="sd">            Specifies the forecast time step from forecast base time.</span>
 <span class="sd">            Valid values are hours (HH) from forecast base time. It also</span>
 <span class="sd">            specifies the length of the forecast which verifies at</span>
@@ -362,7 +411,7 @@
 <span class="sd">            E.g. 1/3/6-hourly</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        expver : :obj:`string`, optional</span>
+<span class="sd">        expver : str, optional</span>
 <span class="sd">            The version of the dataset. Each experiment is assigned a</span>
 <span class="sd">            unique code (version). Production data is assigned 1 or 2,</span>
 <span class="sd">            and experimental data in Operations 11, 12 ,...</span>
@@ -370,14 +419,14 @@
 <span class="sd">            experiment identifier.</span>
 <span class="sd">            Default is &quot;1&quot;.</span>
 
-<span class="sd">        number : :obj:`string`, optional</span>
+<span class="sd">        number : str, optional</span>
 <span class="sd">            Selects the member in ensemble forecast run. (Only then it</span>
 <span class="sd">            is necessary.) It has a different meaning depending on</span>
 <span class="sd">            the type of data.</span>
 <span class="sd">            E.g. Perturbed Forecasts: specifies the Ensemble forecast member</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        accuracy : :obj:`string`, optional</span>
+<span class="sd">        accuracy : str, optional</span>
 <span class="sd">            Specifies the number of bits per value to be used in the</span>
 <span class="sd">            generated GRIB coded fields.</span>
 <span class="sd">            A positive integer may be given to specify the preferred number</span>
@@ -388,7 +437,7 @@
 <span class="sd">            can be passed to the result field by specifying accuracy=av.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        grid : :obj:`string`, optional</span>
+<span class="sd">        grid : str, optional</span>
 <span class="sd">            Specifies the output grid which can be either a Gaussian grid</span>
 <span class="sd">            or a Latitude/Longitude grid. MARS requests specifying</span>
 <span class="sd">            grid=av will return the archived model grid.</span>
@@ -409,7 +458,7 @@
 <span class="sd">                   640 latitude lines between the pole and equator</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        gaussian : :obj:`string`, optional</span>
+<span class="sd">        gaussian : str, optional</span>
 <span class="sd">            This parameter is deprecated and should no longer be used.</span>
 <span class="sd">            Specifies the desired type of Gaussian grid for the output.</span>
 <span class="sd">            Valid Gaussian grids are quasi-regular (reduced) or regular.</span>
@@ -417,7 +466,7 @@
 <span class="sd">            keyword grid. Gaussian without grid has no effect.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        target : :obj:`string`, optional</span>
+<span class="sd">        target : str, optional</span>
 <span class="sd">            Specifies a file into which data is to be written after</span>
 <span class="sd">            retrieval or manipulation. Path names should always be</span>
 <span class="sd">            enclosed in double quotes. The MARS client supports automatic</span>
@@ -431,7 +480,7 @@
 <span class="sd">            rather than 600, 1 and 129.</span>
 <span class="sd">            Default is an empty string.</span>
 
-<span class="sd">        param : :obj:`string`, optional</span>
+<span class="sd">        param : str, optional</span>
 <span class="sd">            Specifies the meteorological parameter.</span>
 <span class="sd">            The list of meteorological parameters in MARS is extensive.</span>
 <span class="sd">            Their availability is directly related to their meteorological</span>
@@ -499,50 +548,15 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="MarsRetrieval.print_info"><a class="viewcode-back" href="../api.html#MarsRetrieval.MarsRetrieval.print_info">[docs]</a>    <span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputdir</span><span class="p">,</span> <span class="n">request_number</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Prints all mars requests to an extra file for debugging and</span>
-<span class="sd">        information.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        inputdir : :obj:`string`</span>
-<span class="sd">            The path where all data from the retrievals are stored.</span>
-
-<span class="sd">        request_number : :obj:`integer`</span>
-<span class="sd">            Number of mars requests for flux and non-flux data.</span>
-
-<span class="sd">        Return</span>
-<span class="sd">        ------</span>
-
-<span class="sd">        &#39;&#39;&#39;</span>
-        <span class="c1"># Get all class attributes and their values as a dictionary</span>
-        <span class="n">attrs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-        <span class="c1"># open a file to store all requests to</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span>
-                               <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;mars_request #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">request_number</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="c1"># iterate through all attributes and print them</span>
-            <span class="c1"># with their corresponding values</span>
-            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">]:</span>
-                    <span class="k">pass</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-
-        <span class="k">return</span></div>
-
-
 <div class="viewcode-block" id="MarsRetrieval.print_infodata_csv"><a class="viewcode-back" href="../api.html#MarsRetrieval.MarsRetrieval.print_infodata_csv">[docs]</a>    <span class="k">def</span> <span class="nf">print_infodata_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputdir</span><span class="p">,</span> <span class="n">request_number</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Write all request parameter in alpabetical order into a &quot;csv&quot; file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        inputdir : :obj:`string`</span>
+<span class="sd">        inputdir : str</span>
 <span class="sd">            The path where all data from the retrievals are stored.</span>
 
-<span class="sd">        request_number : :obj:`integer`</span>
+<span class="sd">        request_number : int</span>
 <span class="sd">            Number of mars requests for flux and non-flux data.</span>
 
 <span class="sd">        Return</span>
@@ -667,7 +681,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -686,21 +700,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 

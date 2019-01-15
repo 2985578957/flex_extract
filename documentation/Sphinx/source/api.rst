@@ -34,10 +34,10 @@ EcFlexpart
 .. automodule:: EcFlexpart
     :members:
     
-GribTools
+GribUtil
 *********
 
-.. automodule:: GribTools
+.. automodule:: GribUtil
     :members:
 
 MarsRetrieval

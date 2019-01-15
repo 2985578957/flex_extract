@@ -173,32 +173,23 @@
 <span class="c1">#        - outsourced the commandline argument assignments to control attributes</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2015-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#</span>
-<span class="c1"># @Class Description:</span>
-<span class="c1">#    The CONTROL file is the steering part of the FLEXPART extraction</span>
-<span class="c1">#    software. All necessary parameters needed to retrieve the data fields</span>
-<span class="c1">#    from the MARS archive for driving FLEXPART are set in a CONTROL file.</span>
-<span class="c1">#    Some specific parameters like the start and end dates can be overwritten</span>
-<span class="c1">#    by the command line parameters, but in generel all parameters needed</span>
-<span class="c1">#    for a complete set of fields for FLEXPART can be set in the CONTROL file.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Content:</span>
-<span class="c1">#    - __init__</span>
-<span class="c1">#    - __read_controlfile__</span>
-<span class="c1">#    - __str__</span>
-<span class="c1">#    - assign_args_to_control</span>
-<span class="c1">#    - assign_envs_to_control</span>
-<span class="c1">#    - check_conditions</span>
-<span class="c1">#    - check_install_conditions</span>
-<span class="c1">#    - to_list</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Attributes:</span>
-<span class="c1">#</span>
-<span class="c1">#</span>
+<span class="c1"># @Class Methods:</span>
+<span class="c1">#    __init__</span>
+<span class="c1">#    _read_controlfile</span>
+<span class="c1">#    __str__</span>
+<span class="c1">#    assign_args_to_control</span>
+<span class="c1">#    assign_envs_to_control</span>
+<span class="c1">#    check_conditions</span>
+<span class="c1">#    check_install_conditions</span>
+<span class="c1">#    to_list</span>
 <span class="c1">#*******************************************************************************</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -208,11 +199,19 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
 <span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
+<span class="kn">from</span> <span class="nn">mods.checks</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_grid</span><span class="p">,</span> <span class="n">check_area</span><span class="p">,</span> <span class="n">check_levels</span><span class="p">,</span> <span class="n">check_purefc</span><span class="p">,</span>
+                         <span class="n">check_step</span><span class="p">,</span> <span class="n">check_mail</span><span class="p">,</span> <span class="n">check_queue</span><span class="p">,</span> <span class="n">check_pathes</span><span class="p">,</span>
+                         <span class="n">check_dates</span><span class="p">,</span> <span class="n">check_maxstep</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">check_request</span><span class="p">,</span>
+                         <span class="n">check_basetime</span><span class="p">,</span> <span class="n">check_public</span><span class="p">,</span> <span class="n">check_acctype</span><span class="p">,</span>
+                         <span class="n">check_acctime</span><span class="p">,</span> <span class="n">check_accmaxstep</span><span class="p">,</span> <span class="n">check_time</span><span class="p">,</span>
+                         <span class="n">check_logicals_type</span><span class="p">,</span> <span class="n">check_len_type_time_step</span><span class="p">,</span>
+                         <span class="n">check_addpar</span><span class="p">,</span> <span class="n">check_job_chunk</span><span class="p">)</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># CLASS</span>
@@ -220,6 +219,269 @@
 <div class="viewcode-block" id="ControlFile"><a class="viewcode-back" href="../api.html#ControlFile.ControlFile">[docs]</a><span class="k">class</span> <span class="nc">ControlFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Contains the information which are stored in the CONTROL files.</span>
+
+<span class="sd">    The CONTROL file is the steering part of the FLEXPART extraction</span>
+<span class="sd">    software. All necessary parameters needed to retrieve the data fields</span>
+<span class="sd">    from the MARS archive for driving FLEXPART are set in a CONTROL file.</span>
+<span class="sd">    Some specific parameters like the start and end dates can be overwritten</span>
+<span class="sd">    by the command line parameters, but in generel all parameters needed</span>
+<span class="sd">    for a complete set of fields for FLEXPART can be set in the CONTROL file.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    controlfile : str</span>
+<span class="sd">        The name of the control file to be processed. Default value is the</span>
+<span class="sd">        filename passed to the init function when initialised.</span>
+
+<span class="sd">    start_date : str</span>
+<span class="sd">        The first day of the retrieval period. Default value is None.</span>
+
+<span class="sd">    end_date :str</span>
+<span class="sd">        The last day of the retrieval period. Default value is None.</span>
+
+<span class="sd">    date_chunk : int</span>
+<span class="sd">        Length of period for a single mars retrieval. Default value is 3.</span>
+
+<span class="sd">    dtime :str</span>
+<span class="sd">        The time step in hours. Default value is None.</span>
+
+<span class="sd">    basetime : str</span>
+<span class="sd">        The time for a half day retrieval. The 12 hours upfront are to be</span>
+<span class="sd">        retrieved. Default value is None.</span>
+
+<span class="sd">    maxstep : int</span>
+<span class="sd">        The maximum forecast step for non flux data. Default value is None.</span>
+
+<span class="sd">    type : list of str</span>
+<span class="sd">        List of field type per retrieving hour. Default value is None.</span>
+
+<span class="sd">    time : list of str</span>
+<span class="sd">        List of retrieving times in hours. Default valuer is None.</span>
+
+<span class="sd">    step : list of str or str</span>
+<span class="sd">        List of forecast time steps in hours for non flux data.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    acctype : str</span>
+<span class="sd">        The field type for the accumulated forecast fields.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    acctime : str</span>
+<span class="sd">        The starting time of the accumulated forecasts. Default value is None.</span>
+
+<span class="sd">    accmaxstep : int</span>
+<span class="sd">        The maximum forecast step for the accumulated forecast fields</span>
+<span class="sd">        (flux data). Default value is None.</span>
+
+<span class="sd">    marsclass : str</span>
+<span class="sd">        Characterisation of dataset. Default value is None.</span>
+
+<span class="sd">    dataset : str</span>
+<span class="sd">        For public datasets there is the specific naming and parameter</span>
+<span class="sd">        dataset which has to be used to characterize the type of</span>
+<span class="sd">        data. Default value is None.</span>
+
+<span class="sd">    stream : str</span>
+<span class="sd">        Identifies the forecasting system used to generate the data.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    number : str</span>
+<span class="sd">        Selects the member in ensemble forecast run. Default value is &#39;OFF&#39;.</span>
+
+<span class="sd">    expver : str</span>
+<span class="sd">        The version number of the dataset. Default value is &#39;1&#39;.</span>
+
+<span class="sd">    gaussian : str</span>
+<span class="sd">        This parameter is deprecated and should no longer be used.</span>
+<span class="sd">        Specifies the desired type of Gaussian grid for the output.</span>
+<span class="sd">        Default value is an empty string &#39;&#39;.</span>
+
+<span class="sd">    grid : str</span>
+<span class="sd">        Specifies the output grid which can be either a Gaussian grid</span>
+<span class="sd">        or a Latitude/Longitude grid. Default value is None.</span>
+
+<span class="sd">    area : str</span>
+<span class="sd">        Specifies the desired sub-area of data to be extracted.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    left : str</span>
+<span class="sd">        The western most longitude of the area to be extracted.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    lower : str</span>
+<span class="sd">        The southern most latitude of the area to be extracted.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    upper : str</span>
+<span class="sd">        The northern most latitued of the area to be extracted.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    right : str</span>
+<span class="sd">        The eastern most longitude of the area to be extracted.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    level : str</span>
+<span class="sd">        Specifies the maximum level. Default value is None.</span>
+
+<span class="sd">    levelist : str</span>
+<span class="sd">        Specifies the required level list. Default value is None.</span>
+
+<span class="sd">    resol : str</span>
+<span class="sd">        Specifies the desired triangular truncation of retrieved data,</span>
+<span class="sd">        before carrying out any other selected post-processing.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    gauss : int</span>
+<span class="sd">        Switch to select gaussian fields (1) or regular lat/lon (0).</span>
+<span class="sd">        Default value is 0.</span>
+
+<span class="sd">    accuracy : int</span>
+<span class="sd">        Specifies the number of bits per value to be used in the</span>
+<span class="sd">        generated GRIB coded fields. Default value is 24.</span>
+
+<span class="sd">    omega : int</span>
+<span class="sd">       Switch to select omega retrieval (1) or not (0). Default value is 0.</span>
+
+<span class="sd">    omegadiff : int</span>
+<span class="sd">        Switch to decide to calculate Omega and Dps/Dt from continuity</span>
+<span class="sd">        equation for diagnostic purposes (1) or not (0). Default value is 0.</span>
+
+<span class="sd">    eta : int</span>
+<span class="sd">        Switch to select direct retrieval of etadot from MARS (1) or</span>
+<span class="sd">        wether it has to be calculated (0). Then Default value is 0.</span>
+
+<span class="sd">    etadiff : int</span>
+<span class="sd">        Switch to select calculation of etadot and Dps/Dt from continuity</span>
+<span class="sd">        equation for diagnostic purposes (1) or not (0). Default value is 0.</span>
+
+<span class="sd">    etapar : int</span>
+<span class="sd">        GRIB parameter Id for etadot fields. Default value is 77.</span>
+
+<span class="sd">    dpdeta : int</span>
+<span class="sd">        Switch to select multiplication of etadot with dpdeta.</span>
+<span class="sd">        Default value is 1.</span>
+
+<span class="sd">    smooth : int</span>
+<span class="sd">        Spectral truncation of ETADOT after calculation on Gaussian grid.</span>
+<span class="sd">        Default value is 0.</span>
+
+<span class="sd">    format : str</span>
+<span class="sd">        The format of the GRIB data. Default value is &#39;GRIB1&#39;.</span>
+
+<span class="sd">    addpar : str</span>
+<span class="sd">        List of additional surface level ECMWF parameter to be retrieved.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    prefix : str</span>
+<span class="sd">        Prefix string for the final FLEXPART/FLEXTRA ready input files.</span>
+<span class="sd">        Default value is &#39;EN&#39;.</span>
+
+<span class="sd">    cwc : int</span>
+<span class="sd">        Switch to select wether the sum of cloud liquid water content and</span>
+<span class="sd">        cloud ice water content should be retrieved. Default value is 0.</span>
+
+<span class="sd">    wrf : int</span>
+<span class="sd">        Switch to select further parameters for retrievment to support</span>
+<span class="sd">        WRF simulations. Default value is 0.</span>
+
+<span class="sd">    ecfsdir : str</span>
+<span class="sd">        Path to the ECMWF storage  &#39;ectmp:/${USER}/econdemand/&#39;</span>
+
+<span class="sd">    mailfail : list of str</span>
+<span class="sd">        Email list for sending error log files from ECMWF servers.</span>
+<span class="sd">        The email addresses should be seperated by a comma.</span>
+<span class="sd">        Default value is [&#39;${USER}&#39;].</span>
+
+<span class="sd">    mailops : list of str</span>
+<span class="sd">        Email list for sending operational log files from ECMWF servers.</span>
+<span class="sd">        The email addresses should be seperated by a comma.</span>
+<span class="sd">        Default value is [&#39;${USER}&#39;].</span>
+
+<span class="sd">    grib2flexpart : int 0</span>
+<span class="sd">        Switch to select generation of preprocessed FLEXPART files &quot;.fp&quot;.</span>
+<span class="sd">        If it is selected, the program grib2flexpart will try</span>
+<span class="sd">        to convert the flex_extract output files into &quot;.fp&quot; format.</span>
+
+<span class="sd">    ecstorage : int</span>
+<span class="sd">        Switch to select storage of FLEXPART ready output files</span>
+<span class="sd">        in the ECFS file system. Default value is 0.</span>
+
+<span class="sd">    ectrans : int</span>
+<span class="sd">        Switch to select the transfer of FLEXPART ready output files</span>
+<span class="sd">        to the gateway server. Default value is 0.</span>
+
+<span class="sd">    inputdir : str</span>
+<span class="sd">        Path to the temporary directory for the retrieval grib files and</span>
+<span class="sd">        other processing files. Default value is _config.PATH_INPUT_DIR.</span>
+
+<span class="sd">    outputdir : str</span>
+<span class="sd">        Path to the final directory where the final FLEXPART ready input</span>
+<span class="sd">        files are stored. Default value is None.</span>
+
+<span class="sd">    flexextractdir : str</span>
+<span class="sd">        Path to the flex_extract root directory. Default value is</span>
+<span class="sd">        _config.PATH_FLEXEXTRACT_DIR.</span>
+
+<span class="sd">    exedir : str</span>
+<span class="sd">        Path to the FORTRAN executable file. Default value is</span>
+<span class="sd">        _config.PATH_FORTRAN_SRC.</span>
+
+<span class="sd">    flexpartdir : str</span>
+<span class="sd">        Path to a FLEXPART root directory. Default value is None.</span>
+
+<span class="sd">    makefile : str</span>
+<span class="sd">        Name of the makefile to be used for the Fortran program.</span>
+<span class="sd">        Default value is &#39;Makefile.gfortran&#39;.</span>
+
+<span class="sd">    destination : str</span>
+<span class="sd">        The remote destination which is used to transfer files</span>
+<span class="sd">        from ECMWF server to local gateway server. Default value is None.</span>
+
+<span class="sd">    gateway : str</span>
+<span class="sd">        The gateway server the user is using. Default value is None.</span>
+
+<span class="sd">    ecuid : str</span>
+<span class="sd">        The user id on ECMWF server. Default value is None.</span>
+
+<span class="sd">    ecgid : str</span>
+<span class="sd">        The group id on ECMWF server. Default value is None.</span>
+
+<span class="sd">    install_target : str</span>
+<span class="sd">        Defines the location where the installation is to be done.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    debug : int</span>
+<span class="sd">        Switch to keep temporary files at the end of postprocessing (1) or</span>
+<span class="sd">        to delete all temporary files except the final output files (0).</span>
+<span class="sd">        Default value is 0.</span>
+
+<span class="sd">    request : int</span>
+<span class="sd">        Switch to select between just retrieving the data (0), writing the mars</span>
+<span class="sd">        parameter values to a csv file (1) or doing both (2).</span>
+<span class="sd">        Default value is 0.</span>
+
+<span class="sd">    public : int</span>
+<span class="sd">        Switch to select kind of ECMWF Web Api access and the</span>
+<span class="sd">        possible data sets. Public data sets (1) and Memberstate data sets (0).</span>
+<span class="sd">        Default value is 0.</span>
+
+<span class="sd">    ecapi : boolean</span>
+<span class="sd">        Tells wether the ECMWF Web APi was able to load or not.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    purefc : int</span>
+<span class="sd">        Switch to decide wether the job is a pure forecast retrieval or</span>
+<span class="sd">        coupled with analysis data. Default value is 0.</span>
+
+<span class="sd">    rrint: int</span>
+<span class="sd">        Switch to select between old precipitation disaggregation method (0)</span>
+<span class="sd">        or the new IA3 disaggegration method (1). Default value is 0.</span>
+
+<span class="sd">    logicals : list of str</span>
+<span class="sd">        List of the names of logical switches which controls the flow</span>
+<span class="sd">        of the program. Default list is [&#39;gauss&#39;, &#39;omega&#39;, &#39;omegadiff&#39;, &#39;eta&#39;,</span>
+<span class="sd">        &#39;etadiff&#39;, &#39;dpdeta&#39;, &#39;cwc&#39;, &#39;wrf&#39;, &#39;grib2flexpart&#39;, &#39;ecstorage&#39;,</span>
+<span class="sd">        &#39;ectrans&#39;, &#39;debug&#39;, &#39;request&#39;, &#39;public&#39;, &#39;purefc&#39;, &#39;rrint&#39;]</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -229,7 +491,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        filename : :obj:`string`</span>
+<span class="sd">        filename : str</span>
 <span class="sd">            Name of CONTROL file.</span>
 
 <span class="sd">        Return</span>
@@ -242,6 +504,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">date_chunk</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="kc">None</span>
@@ -288,9 +551,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ectrans</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_INPUT_DIR</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ecmwfdatadir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flexextractdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exedir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FORTRAN_SRC</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flexpartdir</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="s1">&#39;Makefile.gfortran&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="o">=</span> <span class="kc">None</span>
@@ -300,16 +563,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">public</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rrint</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logicals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gauss&#39;</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="s1">&#39;omegadiff&#39;</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="s1">&#39;etadiff&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;dpdeta&#39;</span><span class="p">,</span> <span class="s1">&#39;cwc&#39;</span><span class="p">,</span> <span class="s1">&#39;wrf&#39;</span><span class="p">,</span> <span class="s1">&#39;grib2flexpart&#39;</span><span class="p">,</span> <span class="s1">&#39;ecstorage&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">]</span>
+                         <span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;purefc&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;rrint&#39;</span><span class="p">]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">__read_controlfile__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_controlfile</span><span class="p">()</span>
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">__read_controlfile__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_read_controlfile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Read CONTROL file and assign all CONTROL file variables.</span>
 
 <span class="sd">        Parameters</span>
@@ -333,6 +600,12 @@
 
         <span class="c1"># go through every line and store parameter</span>
         <span class="k">for</span> <span class="n">ldata</span> <span class="ow">in</span> <span class="n">fdata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ldata</span> <span class="ow">and</span> <span class="n">ldata</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">:</span>
+                <span class="c1"># ignore comment line in control file</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="s1">&#39;#&#39;</span> <span class="ow">in</span> <span class="n">ldata</span><span class="p">:</span>
+                <span class="c1"># cut off comment</span>
+                <span class="n">ldata</span> <span class="o">=</span> <span class="n">ldata</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">ldata</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s1">&#39;m_&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
@@ -343,15 +616,6 @@
                     <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;start_date&#39;</span>
                 <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;day2&#39;</span><span class="p">:</span>
                     <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;end_date&#39;</span>
-                <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;addpar&#39;</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                        <span class="c1"># remove leading &#39;/&#39; sign from addpar content</span>
-                        <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
-                            <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
-                        <span class="n">dd</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-                        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-                        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dd</span><span class="p">:</span>
-                            <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                     <span class="k">if</span> <span class="s1">&#39;$&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -416,7 +680,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        args : :obj:`Namespace`</span>
+<span class="sd">        args : Namespace</span>
 <span class="sd">            Contains the commandline arguments from script/program call.</span>
 
 <span class="sd">        Return</span>
@@ -441,7 +705,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        envs : :obj:`dictionary` of :obj:`strings`</span>
+<span class="sd">        envs : dict of str</span>
 <span class="sd">            Contains the ECMWF environment parameternames &quot;ECUID&quot;, &quot;ECGID&quot;,</span>
 <span class="sd">            &quot;DESTINATION&quot; and &quot;GATEWAY&quot; with its corresponding values.</span>
 <span class="sd">            They were read from the file &quot;ECMWF_ENV&quot;.</span>
@@ -463,7 +727,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        queue : :obj:`string`</span>
+<span class="sd">        queue : str</span>
 <span class="sd">            Name of the queue if submitted to the ECMWF servers.</span>
 <span class="sd">            Used to check if ecuid, ecgid, gateway and destination</span>
 <span class="sd">            are set correctly and are not empty.</span>
@@ -472,234 +736,78 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="n">my_error</span>
-        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="n">check_logicals_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logicals</span><span class="p">)</span>
 
-        <span class="c1"># check for having at least a starting date</span>
-        <span class="c1"># otherwise program is not allowed to run</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;start_date specified neither in command line nor </span><span class="se">\</span>
-<span class="s1">                   in CONTROL file &#39;</span> <span class="o">+</span>  <span class="bp">self</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Try &quot;&#39;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
-                  <span class="s1">&#39; -h&quot; to print usage information&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span> <span class="o">=</span> <span class="n">check_mail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">)</span>
 
-        <span class="c1"># retrieve just one day if end_date isn&#39;t set</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span> <span class="o">=</span> <span class="n">check_mail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="p">)</span>
 
-        <span class="c1"># basetime has only two possible values</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">12</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Basetime has an invalid value!&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Basetime = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">))</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">check_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecgid</span><span class="p">)</span>
 
-        <span class="c1"># assure consistency of levelist and level</span>
-        <span class="c1"># up-to-date available maximum level numbers at ECMWF, 05.10.2018</span>
-        <span class="n">max_level_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">91</span><span class="p">,</span> <span class="mi">137</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: neither levelist nor level </span><span class="se">\</span>
-<span class="s1">                               specified in CONTROL file&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span> <span class="o">=</span> <span class="s1">&#39;1/to/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">)</span> <span class="ow">or</span> \
-             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpartdir</span> <span class="o">=</span> <span class="n">check_pathes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpartdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexextractdir</span><span class="p">)</span>
 
-        <span class="c1"># check if max level is a valid level</span>
-        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">max_level_list</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;LEVEL must be the maximum level of a specified &#39;</span>
-                  <span class="s1">&#39;level list from ECMWF, e.g.&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;[16, 19, 31, 40, 50, 60, 62, 91 or 137]&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Check parameter &quot;LEVEL&quot; or the max level of &quot;LEVELIST&quot;!&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">check_dates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
 
-        <span class="c1"># if area was provided (only from commandline)</span>
-        <span class="c1"># decompose area into its 4 components</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">:</span>
-            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-            <span class="c1"># convert float to integer coordinates</span>
-            <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">:</span>
-                <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
-                              <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">components</span><span class="p">)]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">components</span>
+        <span class="n">check_basetime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)</span>
 
-        <span class="c1"># prepare step list if &quot;/&quot; signs are found</span>
-        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
-            <span class="n">steps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                <span class="n">ilist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                                  <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                                  <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ilist</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-                <span class="n">my_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">+</span> <span class="s1">&#39;:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
-                         <span class="s1">&#39;if &quot;to&quot; is used in steps parameter, </span><span class="se">\</span>
-<span class="s1">                         please use &quot;by&quot; as well&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">check_levels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">)</span>
 
-        <span class="c1"># if maxstep wasn&#39;t provided</span>
-        <span class="c1"># search for it in the &quot;step&quot; parameter</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">check_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">)</span>
 
-        <span class="c1"># set root scripts since it is needed later on</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecmwfdatadir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="n">check_maxstep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span>
+        <span class="n">check_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                      <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">]</span>
+        <span class="n">check_public</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mailops</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">QUEUES_LIST</span> <span class="ow">and</span> \
-           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="ow">or</span> \
-           <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecuid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecgid</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment variables GATEWAY, DESTINATION, ECUID and </span><span class="se">\</span>
-<span class="s1">                   ECGID were not set properly!&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please check for existence of file &quot;ECMWF_ENV&quot; in the </span><span class="se">\</span>
-<span class="s1">                   python directory!&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">check_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">marsfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
-                                    <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">marsfile</span><span class="p">):</span>
-                <span class="n">silent_remove</span><span class="p">(</span><span class="n">marsfile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">check_len_type_time_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span>
+                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">)</span>
 
-        <span class="c1"># check all logical variables for data type</span>
-        <span class="c1"># if its a string change to integer</span>
-        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logicals</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span> <span class="o">=</span> <span class="n">check_acctype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">public</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: &#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;If public mars data wants to be retrieved, &#39;</span>
-                  <span class="s1">&#39;the &quot;dataset&quot;-parameter has to be set in the control file!&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acctime</span> <span class="o">=</span> <span class="n">check_acctime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">check_accmaxstep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Analysis retrievals must have STEP = 0 (is set to 0)&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span> <span class="o">=</span> <span class="n">check_purefc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="n">check_grid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">check_area</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control paramter ACCTYPE was not defined.&#39;</span><span class="p">)</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;AN&#39;</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Use old setting by using TYPE[1] for flux forecast!&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Use default value &quot;FC&quot; for flux forecast!&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="o">=</span><span class="s1">&#39;FC&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addpar</span> <span class="o">=</span> <span class="n">check_addpar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addpar</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control paramter ACCTIME was not defined.&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Use default value &quot;00/12&quot; for flux forecast!&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="o">=</span><span class="s1">&#39;00/12&#39;</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control paramter ACCMAXSTEP was not defined.&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Use default value &quot;12&quot; for flux forecast!&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="o">=</span><span class="s1">&#39;12&#39;</span>
-
-        <span class="k">return</span></div>
-
-<div class="viewcode-block" id="ControlFile.check_install_conditions"><a class="viewcode-back" href="../api.html#ControlFile.ControlFile.check_install_conditions">[docs]</a>    <span class="k">def</span> <span class="nf">check_install_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Checks a couple of necessary attributes and conditions</span>
-<span class="sd">        for the installation such as if they exist and contain values.</span>
-<span class="sd">        Otherwise set default values.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-
-<span class="sd">        Return</span>
-<span class="sd">        ------</span>
-
-<span class="sd">        &#39;&#39;&#39;</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">and</span> \
-           <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="s1">&#39;ecgate&#39;</span><span class="p">,</span> <span class="s1">&#39;cca&#39;</span><span class="p">]:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: unknown or missing installation target &#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;target: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;please specify correct installation target &#39;</span> <span class="o">+</span>
-                  <span class="s1">&#39;(local | ecgate | cca)&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;use -h or --help for help&#39;</span><span class="p">)</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span> <span class="o">!=</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecgid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecuid</span> <span class="ow">or</span> \
-               <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please enter your ECMWF user id and group id as well &#39;</span> <span class="o">+</span>
-                      <span class="s1">&#39;as the </span><span class="se">\n</span><span class="s1">name of the local gateway and the ectrans &#39;</span> <span class="o">+</span>
-                      <span class="s1">&#39;destination &#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;with command line options --ecuid --ecgid </span><span class="se">\</span>
-<span class="s1">                       --gateway --destination&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Try &quot;&#39;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> \
-                      <span class="s1">&#39; -h&quot; to print usage information&#39;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please consult ecaccess documentation or ECMWF user </span><span class="se">\</span>
-<span class="s1">                       support for further details&#39;</span><span class="p">)</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{HOME}</span><span class="s1">&#39;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span>
-        <span class="k">else</span><span class="p">:</span> <span class="c1"># local</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">flexpart_root_scripts</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span> <span class="o">=</span> <span class="n">check_job_chunk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
 <div class="viewcode-block" id="ControlFile.to_list"><a class="viewcode-back" href="../api.html#ControlFile.ControlFile.to_list">[docs]</a>    <span class="k">def</span> <span class="nf">to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Just generates a list of strings containing the attributes and</span>
 <span class="sd">        assigned values except the attributes &quot;_expanded&quot;, &quot;exedir&quot;,</span>
-<span class="sd">        &quot;ecmwfdatadir&quot; and &quot;flexpart_root_scripts&quot;.</span>
+<span class="sd">        &quot;flexextractdir&quot; and &quot;flexpartdir&quot;.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
-<span class="sd">        l : :obj:`list`</span>
+<span class="sd">        l : list of *</span>
 <span class="sd">            A sorted list of the all ControlFile class attributes with</span>
 <span class="sd">            their values except the attributes &quot;_expanded&quot;, &quot;exedir&quot;,</span>
-<span class="sd">            &quot;ecmwfdatadir&quot; and &quot;flexpart_root_scripts&quot;.</span>
+<span class="sd">            &quot;flexextractdir&quot; and &quot;flexpartdir&quot;.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="kn">import</span> <span class="nn">collections</span>
@@ -713,9 +821,9 @@
                 <span class="k">pass</span>
             <span class="k">elif</span> <span class="s1">&#39;exedir&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="k">pass</span>
-            <span class="k">elif</span> <span class="s1">&#39;flexpart_root_scripts&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="s1">&#39;flexpartdir&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="k">pass</span>
-            <span class="k">elif</span> <span class="s1">&#39;ecmwfdatadir&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">elif</span> <span class="s1">&#39;flexextractdir&#39;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="k">pass</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
@@ -723,9 +831,9 @@
                     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                         <span class="n">stot</span> <span class="o">+=</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
 
-                    <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stot</span><span class="p">))</span>
+                    <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stot</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
+                    <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">)</span></div></div>
 
@@ -741,7 +849,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -760,21 +868,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 

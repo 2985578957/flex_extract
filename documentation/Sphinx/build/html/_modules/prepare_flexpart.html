@@ -174,32 +174,40 @@
 <span class="c1">#        - applied PEP8 style guide</span>
 <span class="c1">#        - added documentation</span>
 <span class="c1">#        - minor changes in programming style for consistence</span>
-<span class="c1">#        - BUG: removed call of clean_up-Function after call of</span>
+<span class="c1">#        - BUGFIX: removed call of clean_up-Function after call of</span>
 <span class="c1">#               prepareFlexpart in main since it is already called in</span>
 <span class="c1">#               prepareFlexpart at the end!</span>
 <span class="c1">#        - created function main and moved the two function calls for</span>
 <span class="c1">#          arguments and prepare_flexpart into it</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
-<span class="c1">#</span>
-<span class="c1"># @Program Functionality:</span>
-<span class="c1">#    This program prepares the final version of the grib files which are</span>
-<span class="c1">#    then used by FLEXPART. It converts the bunch of grib files extracted</span>
-<span class="c1">#    via get_mars_data by doing for example the necessary conversion to get</span>
-<span class="c1">#    consistent grids or the disaggregation of flux data. Finally, the</span>
-<span class="c1">#    program combines the data fields in files per available hour with the</span>
-<span class="c1">#    naming convention xxYYMMDDHH, where xx should be 2 arbitrary letters</span>
-<span class="c1">#    (mostly xx is chosen to be &quot;EN&quot;).</span>
-<span class="c1">#</span>
-<span class="c1"># @Program Content:</span>
-<span class="c1">#    - main</span>
-<span class="c1">#    - prepare_flexpart</span>
-<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;This script prepares the final version of the grib files which are</span>
+<span class="sd">then used by FLEXPART.</span>
+
+<span class="sd">It converts the bunch of grib files extracted via get_mars_data before,</span>
+<span class="sd">by doing the necessary conversion to get consistent grids or the</span>
+<span class="sd">disaggregation of flux data. Finally, the data fields are combined</span>
+<span class="sd">in files per available hour with the naming convention xxYYMMDDHH,</span>
+<span class="sd">where xx should be 2 arbitrary letters (mostly xx is chosen to be &quot;EN&quot;).</span>
+
+<span class="sd">This file can also be imported as a module which then contains the following</span>
+<span class="sd">functions:</span>
+
+<span class="sd">    * main</span>
+<span class="sd">    * prepare_flexpart</span>
+
+<span class="sd">Type: prepare_flexpart.py --help</span>
+<span class="sd">to get information about command line parameters.</span>
+<span class="sd">Read the documentation for usage instructions.</span>
+<span class="sd">&#39;&#39;&#39;</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
@@ -211,13 +219,14 @@
 <span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
-
+<span class="c1"># add path to local main python path for flex_extract to get full access</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
     <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">checks</span> <span class="k">import</span> <span class="n">check_ppid</span>
 <span class="kn">from</span> <span class="nn">classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
 <span class="kn">from</span> <span class="nn">classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
-<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">get_cmdline_arguments</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span>
+<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span>
 <span class="kn">from</span> <span class="nn">classes.EcFlexpart</span> <span class="k">import</span> <span class="n">EcFlexpart</span>
 
 <span class="n">ecapi</span> <span class="o">=</span> <span class="s1">&#39;ecmwf&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
@@ -244,7 +253,7 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_arguments</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_args</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
 
     <span class="n">env_parameter</span> <span class="o">=</span> <span class="n">read_ecenv</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
@@ -266,11 +275,11 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ppid : :obj:`int`</span>
+<span class="sd">    ppid : int</span>
 <span class="sd">        Contains the ppid number of the current ECMWF job. It will be None if</span>
 <span class="sd">        the method was called within this module.</span>
 
-<span class="sd">    c : :obj:`ControlFile`</span>
+<span class="sd">    c : ControlFile</span>
 <span class="sd">        Contains all the parameters of CONTROL file and</span>
 <span class="sd">        command line.</span>
 
@@ -278,11 +287,7 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">ppid</span><span class="p">:</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getppid</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">=</span> <span class="n">ppid</span>
+    <span class="n">check_ppid</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ppid</span><span class="p">)</span>
 
     <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="n">ecapi</span>
 
@@ -295,8 +300,9 @@
                         <span class="n">month</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span>
                         <span class="n">day</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">[</span><span class="mi">6</span><span class="p">:]))</span>
 
+    <span class="c1"># if basetime is 00</span>
     <span class="c1"># assign starting date minus 1 day</span>
-    <span class="c1"># since for basetime 00 we need the 12 hours upfront</span>
+    <span class="c1"># since we need the 12 hours upfront</span>
     <span class="c1"># (the day before from 12 UTC to current day 00 UTC)</span>
     <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span><span class="p">:</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -316,7 +322,7 @@
     <span class="n">flexpart</span><span class="o">.</span><span class="n">write_namelist</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">deacc_fluxes</span><span class="p">(</span><span class="n">inputfiles</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
 
-    <span class="c1"># get a list of all files from the root inputdir</span>
+    <span class="c1"># get a list of all other files</span>
     <span class="n">inputfiles</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;????__??.*&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ppid</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.*&#39;</span><span class="p">)</span>
 
     <span class="c1"># produce FLEXPART-ready GRIB files and process them -</span>
@@ -324,9 +330,10 @@
     <span class="n">flexpart</span> <span class="o">=</span> <span class="n">EcFlexpart</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">inputfiles</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">process_output</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># make use of a possible conversion to a</span>
+    <span class="c1"># specific flexpart binary format</span>
     <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">grib2flexpart</span><span class="p">:</span>
-        <span class="c1"># prepare environment for a FLEXPART run</span>
-        <span class="c1"># to convert grib to flexpart binary format</span>
         <span class="n">flexpart</span><span class="o">.</span><span class="n">prepare_fp_files</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
     <span class="c1"># check if in debugging mode, then store all files</span>
@@ -352,7 +359,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -371,21 +378,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 

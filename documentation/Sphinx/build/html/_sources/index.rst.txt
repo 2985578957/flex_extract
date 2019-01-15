@@ -13,8 +13,7 @@ flex_extract is a software to retrieve meteorological fields from the European C
 .. state gateway server or HPC facility using the ecaccess software package. As another option the scripts can 3)
 .. also be triggered using ecflow scheduling software used by ECMWF for data dissemination.
 
-All required second party software and libraries used within flex_extract is open source and free of charge. 
-
+All third-party software and libraries required by flex_extract are open source and free of charge. 
 
 .. raw:: html
 
@@ -94,7 +93,11 @@ All required second party software and libraries used within flex_extract is ope
     
 .. note::
  
-   License text put in here! Which one?
+   ![][/documentation/Sphinx/source/_static/cc-by-40.png]
+   This work is licensed under the Creative Commons Attribution 4.0
+   International License. To view a copy of this license, visit
+   http://creativecommons.org/licenses/by/4.0/ or send a letter to
+   Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 .. toctree::
    :maxdepth: 3

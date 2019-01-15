@@ -169,32 +169,36 @@
 <span class="c1">#        - added structured documentation</span>
 <span class="c1">#        - outsourced the disaggregation functions dapoly and darain</span>
 <span class="c1">#          to a new module named disaggregation</span>
+<span class="c1">#        - added the new disaggregation method for precipitation</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2015-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#</span>
-<span class="c1"># @Module Description:</span>
-<span class="c1">#    disaggregation of deaccumulated flux data from an ECMWF model FG field.</span>
-<span class="c1">#    Initially the flux data to be concerned are:</span>
-<span class="c1">#    - large-scale precipitation</span>
-<span class="c1">#    - convective precipitation</span>
-<span class="c1">#    - surface sensible heat flux</span>
-<span class="c1">#    - surface solar radiation</span>
-<span class="c1">#    - u stress</span>
-<span class="c1">#    - v stress</span>
-<span class="c1">#    Different versions of disaggregation is provided for rainfall</span>
-<span class="c1">#    data (darain, modified linear) and the surface fluxes and</span>
-<span class="c1">#    stress data (dapoly, cubic polynomial).</span>
-<span class="c1">#</span>
-<span class="c1"># @Module Content:</span>
+<span class="c1"># @Methods:</span>
 <span class="c1">#    - dapoly</span>
 <span class="c1">#    - darain</span>
 <span class="c1">#    - IA3</span>
-<span class="c1">#</span>
 <span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;Disaggregation of deaccumulated flux data from an ECMWF model FG field.</span>
+
+<span class="sd">Initially the flux data to be concerned are:</span>
+<span class="sd">    - large-scale precipitation</span>
+<span class="sd">    - convective precipitation</span>
+<span class="sd">    - surface sensible heat flux</span>
+<span class="sd">    - surface solar radiation</span>
+<span class="sd">    - u stress</span>
+<span class="sd">    - v stress</span>
+
+<span class="sd">Different versions of disaggregation is provided for rainfall</span>
+<span class="sd">data (darain, modified linear) and the surface fluxes and</span>
+<span class="sd">stress data (dapoly, cubic polynomial).</span>
+<span class="sd">&#39;&#39;&#39;</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
@@ -217,13 +221,13 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    alist : :obj:`list` of :obj:`array` of :obj:`float`</span>
+<span class="sd">    alist : list of array of float</span>
 <span class="sd">        List of 4 timespans as 2-dimensional, horizontal fields.</span>
 <span class="sd">        E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
-<span class="sd">    nfield : :obj:`array` of :obj:`float`</span>
+<span class="sd">    nfield : array of float</span>
 <span class="sd">        Interpolated flux at central point of accumulation timespan.</span>
 
 <span class="sd">    Note</span>
@@ -261,13 +265,13 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    alist : :obj:`list` of :obj:`array` of :obj:`float`</span>
+<span class="sd">    alist : list of array of float</span>
 <span class="sd">        List of 4 timespans as 2-dimensional, horizontal fields.</span>
 <span class="sd">        E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
-<span class="sd">    nfield : :obj:`array` of :obj:`float`</span>
+<span class="sd">    nfield : array of float</span>
 <span class="sd">        Interpolated flux at central point of accumulation timespan.</span>
 
 <span class="sd">    Note</span>
@@ -312,7 +316,7 @@
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
-<span class="sd">    Copyright 2017</span>
+<span class="sd">    (C) Copyright 2017-2019</span>
 <span class="sd">    Sabine Hittmeir, Anne Philipp, Petra Seibert</span>
 
 <span class="sd">    This work is licensed under the Creative Commons Attribution 4.0</span>
@@ -322,13 +326,13 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    g : :obj:`list` of :obj:`float`</span>
+<span class="sd">    g : list of float</span>
 <span class="sd">        Complete data series that will be interpolated having</span>
 <span class="sd">        the dimension of the original raw series.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
-<span class="sd">    f : :obj:`list` of :obj:`float`</span>
+<span class="sd">    f : list of float</span>
 <span class="sd">        The interpolated data series with additional subgrid points.</span>
 <span class="sd">        Its dimension is equal to the length of the input data series</span>
 <span class="sd">        times three.</span>
@@ -362,27 +366,27 @@
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
     <span class="c1"># time step</span>
-    <span class="n">dt</span><span class="o">=</span><span class="mf">1.0</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span>
 
     <span class="c1">############### Non-negative Geometric Mean Based Algorithm ###############</span>
 
     <span class="c1"># for the left boundary the following boundary condition is valid:</span>
     <span class="c1"># the value at t=0 of the interpolation algorithm coincides with the</span>
     <span class="c1"># first data value according to the persistence hypothesis</span>
-    <span class="n">f</span><span class="o">=</span><span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 
     <span class="c1"># compute two first sub-grid intervals without monotonicity check</span>
     <span class="c1"># go through the data series and extend each interval by two sub-grid</span>
     <span class="c1"># points and interpolate the corresponding data values</span>
     <span class="c1"># except for the last interval due to boundary conditions</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
 
         <span class="c1"># as a requirement:</span>
         <span class="c1"># if there is a zero data value such that g[i]=0, then the whole</span>
         <span class="c1"># interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0</span>
         <span class="c1"># according to Eq. (6)</span>
-        <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
 
         <span class="c1"># otherwise the sub-grid values are calculated and added to the list</span>
         <span class="k">else</span><span class="p">:</span>
@@ -397,11 +401,11 @@
 
             <span class="c1"># the function value at the first sub-grid point (fi1) is determined</span>
             <span class="c1"># according to the equal area condition with Eq. (19)</span>
-            <span class="n">fi1</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fip1</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fi</span>
+            <span class="n">fi1</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fip1</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fi</span>
 
             <span class="c1"># the function value at the second sub-grid point (fi2) is determined</span>
             <span class="c1"># according Eq. (18)</span>
-            <span class="n">fi2</span><span class="o">=</span><span class="n">fi1</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="o">*</span><span class="p">(</span><span class="n">fip1</span><span class="o">-</span><span class="n">fi</span><span class="p">)</span>
+            <span class="n">fi2</span> <span class="o">=</span> <span class="n">fi1</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="o">*</span><span class="p">(</span><span class="n">fip1</span><span class="o">-</span><span class="n">fi</span><span class="p">)</span>
 
             <span class="c1"># add next interval of interpolated (sub-)grid values</span>
             <span class="n">f</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi1</span><span class="p">)</span>
@@ -412,18 +416,18 @@
     <span class="c1"># go through the data series and extend each interval by two sub-grid</span>
     <span class="c1"># points and interpolate the corresponding data values</span>
     <span class="c1"># except for the last interval due to boundary conditions</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 
         <span class="c1"># as a requirement:</span>
         <span class="c1"># if there is a zero data value such that g[i]=0, then the whole</span>
         <span class="c1"># interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0</span>
         <span class="c1"># according to Eq. (6)</span>
-        <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
             <span class="c1"># apply monotonicity filter for interval before</span>
             <span class="c1"># check if there is &quot;M&quot; or &quot;W&quot; shape</span>
-            <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
 
                 <span class="c1"># the monotonicity filter corrects the value at (fim1) by</span>
                 <span class="c1"># substituting (fim1) with (fmon), see Eq. (27), (28) and (29)</span>
@@ -435,11 +439,11 @@
                 <span class="c1"># recomputation of the sub-grid interval values while the</span>
                 <span class="c1"># interval boundaries (fi) and (fip2) remains unchanged</span>
                 <span class="c1"># see Eq. (18) and (19)</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">fmon</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmon</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
 
             <span class="n">f</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 
@@ -452,21 +456,21 @@
             <span class="c1"># the value at the end of the interval (fip1) is prescribed by the</span>
             <span class="c1"># geometric mean, restricted such that non-negativity is guaranteed</span>
             <span class="c1"># according to Eq. (25)</span>
-            <span class="n">fip1</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span> <span class="mf">3.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">,</span> <span class="mf">3.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
+            <span class="n">fip1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="mf">3.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">,</span> <span class="mf">3.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">)</span>
 
             <span class="c1"># the function value at the first sub-grid point (fi1) is determined</span>
             <span class="c1"># according to the equal area condition with Eq. (19)</span>
-            <span class="n">fi1</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fip1</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fi</span>
+            <span class="n">fi1</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fip1</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fi</span>
 
             <span class="c1"># the function value at the second sub-grid point (fi2) is determined</span>
             <span class="c1"># according Eq. (18)</span>
-            <span class="n">fi2</span><span class="o">=</span><span class="n">fi1</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="o">*</span><span class="p">(</span><span class="n">fip1</span><span class="o">-</span><span class="n">fi</span><span class="p">)</span>
+            <span class="n">fi2</span> <span class="o">=</span> <span class="n">fi1</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="o">*</span><span class="p">(</span><span class="n">fip1</span><span class="o">-</span><span class="n">fi</span><span class="p">)</span>
 
             <span class="c1"># apply monotonicity filter for interval before</span>
             <span class="c1"># check if there is &quot;M&quot; or &quot;W&quot; shape</span>
-            <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+               <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
 
                 <span class="c1"># the monotonicity filter corrects the value at (fim1) by</span>
                 <span class="c1"># substituting (fim1) with fmon, see Eq. (27), (28) and (29)</span>
@@ -478,11 +482,11 @@
                 <span class="c1"># recomputation of the sub-grid interval values while the</span>
                 <span class="c1"># interval boundaries (fi) and (fip2) remains unchanged</span>
                 <span class="c1"># see Eq. (18) and (19)</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">fmon</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
-                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmon</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
+                <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
 
             <span class="c1"># add next interval of interpolated (sub-)grid values</span>
             <span class="n">f</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi1</span><span class="p">)</span>
@@ -495,12 +499,12 @@
     <span class="c1"># if there is a zero data value such that g[i]=0, then the whole</span>
     <span class="c1"># interval in f has to be zero to such that f[i+1]=f[i+2]=f[i+3]=0</span>
     <span class="c1"># according to Eq. (6)</span>
-    <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mf">0.</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">:</span>
         <span class="c1"># apply monotonicity filter for interval before</span>
         <span class="c1"># check if there is &quot;M&quot; or &quot;W&quot; shape</span>
-        <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
 
             <span class="c1"># the monotonicity filter corrects the value at (fim1) by</span>
             <span class="c1"># substituting (fim1) with (fmon), see Eq. (27), (28) and (29)</span>
@@ -512,11 +516,11 @@
             <span class="c1"># recomputation of the sub-grid interval values while the</span>
             <span class="c1"># interval boundaries (fi) and (fip2) remains unchanged</span>
             <span class="c1"># see Eq. (18) and (19)</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">fmon</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmon</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
 
         <span class="n">f</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">])</span>
 
@@ -537,9 +541,9 @@
 
         <span class="c1"># apply monotonicity filter for interval before</span>
         <span class="c1"># check if there is &quot;M&quot; or &quot;W&quot; shape</span>
-        <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span> \
-           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">==-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span>     <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> \
+           <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
 
             <span class="c1"># the monotonicity filter corrects the value at (fim1) by</span>
             <span class="c1"># substituting (fim1) with (fmon), see Eq. (27), (28) and (29)</span>
@@ -551,11 +555,11 @@
             <span class="c1"># recomputation of the sub-grid interval values while the</span>
             <span class="c1"># interval boundaries (fi) and (fip2) remains unchanged</span>
             <span class="c1"># see Eq. (18) and (19)</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="n">fmon</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
-            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">fmon</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">fmon</span><span class="o">-</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">])</span><span class="o">/</span><span class="mf">3.</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">/</span><span class="mf">2.</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="mf">5.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">fmon</span>
+            <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">fmon</span><span class="p">)</span><span class="o">/</span><span class="mf">3.</span>
 
         <span class="c1"># add next interval of interpolated (sub-)grid values</span>
         <span class="n">f</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fi1</span><span class="p">)</span>
@@ -575,7 +579,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -594,21 +598,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 

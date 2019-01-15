@@ -174,27 +174,38 @@
 <span class="c1">#          (necessary for better documentation with docstrings for later</span>
 <span class="c1">#          online documentation)</span>
 <span class="c1">#        - use of UIFiles class for file selection and deletion</span>
-<span class="c1">#</span>
+<span class="c1">#        - seperated get_mars_data function into several smaller pieces:</span>
+<span class="c1">#          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
-<span class="c1">#</span>
-<span class="c1"># @Program Functionality:</span>
-<span class="c1">#    This program can be used as a module in the whole flex_extract process</span>
-<span class="c1">#    or can be run by itself to just extract MARS data from ECMWF. To do so,</span>
-<span class="c1">#    a couple of necessary parameters has to be passed with the program call.</span>
-<span class="c1">#    See documentation for more details.</span>
-<span class="c1">#</span>
-<span class="c1"># @Program Content:</span>
-<span class="c1">#    - main</span>
-<span class="c1">#    - get_mars_data</span>
-<span class="c1">#    - do_retrievement</span>
-<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;This script extracts MARS data from ECMWF servers.</span>
 
+<span class="sd">At first, the necessary parameters from command line and CONTROL files are</span>
+<span class="sd">extracted. They define the data set to be extracted from MARS.</span>
+
+<span class="sd">This file can also be imported as a module and contains the following</span>
+<span class="sd">functions:</span>
+
+<span class="sd">    * main - the main function of the script</span>
+<span class="sd">    * get_mars_data - overall control of ECMWF data retrievment</span>
+<span class="sd">    * write_reqheader - writes the header into the mars_request file</span>
+<span class="sd">    * mk_server - creates the server connection to ECMWF servers</span>
+<span class="sd">    * mk_dates - defines the start and end date</span>
+<span class="sd">    * remove_old - deletes old retrieved grib files</span>
+<span class="sd">    * do_retrievement - creates individual retrievals</span>
+
+<span class="sd">Type: get_mars_data.py --help</span>
+<span class="sd">to get information about command line parameters.</span>
+<span class="sd">Read the documentation for usage instructions.</span>
+<span class="sd">&#39;&#39;&#39;</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -204,13 +215,15 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="c1"># add path to local main python path for flex_extract to get full access</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
     <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">my_error</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_arguments</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">my_error</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
                    <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">classes.EcFlexpart</span> <span class="k">import</span> <span class="n">EcFlexpart</span>
 <span class="kn">from</span> <span class="nn">classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
+<span class="kn">from</span> <span class="nn">classes.MarsRetrieval</span> <span class="k">import</span> <span class="n">MarsRetrieval</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">ecapi</span> <span class="o">=</span> <span class="kc">True</span>
@@ -234,7 +247,7 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_arguments</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_args</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
 
     <span class="n">env_parameter</span> <span class="o">=</span> <span class="n">read_ecenv</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
@@ -243,7 +256,7 @@
     <span class="n">c</span><span class="o">.</span><span class="n">check_conditions</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
 
     <span class="n">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-    <span class="n">normal_exit</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+    <span class="n">normal_exit</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">mailops</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">queue</span><span class="p">,</span> <span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
 
     <span class="k">return</span></div>
 
@@ -256,7 +269,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    c : :obj:`ControlFile`</span>
+<span class="sd">    c : ControlFile</span>
 <span class="sd">        Contains all the parameters of CONTROL file and</span>
 <span class="sd">        command line.</span>
 
@@ -264,19 +277,78 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="n">ecapi</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">):</span>
         <span class="n">make_dir</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data!&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Printing mars requests!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Printing mars requests!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data and printing mars request!&quot;</span><span class="p">)</span>
+        <span class="n">write_reqheader</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">))</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start date </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end date </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">ecapi</span><span class="p">:</span>
+    <span class="n">server</span> <span class="o">=</span> <span class="n">mk_server</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># if data are to be retrieved, clean up any old grib files</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">remove_old</span><span class="p">(</span><span class="s1">&#39;*grb&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+
+    <span class="c1"># --------------  flux data ------------------------------------------------</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span> <span class="o">=</span> <span class="n">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># --------------  non flux data --------------------------------------------</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span> <span class="o">=</span> <span class="n">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="write_reqheader"><a class="viewcode-back" href="../api.html#get_mars_data.write_reqheader">[docs]</a><span class="k">def</span> <span class="nf">write_reqheader</span><span class="p">(</span><span class="n">marsfile</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Writes header with column names into mars request file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    marsfile : str</span>
+<span class="sd">        Path to the mars request file.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">MR</span> <span class="o">=</span> <span class="n">MarsRetrieval</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">MR</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;server&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;public&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">marsfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;request_number&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">())))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_server"><a class="viewcode-back" href="../api.html#get_mars_data.mk_server">[docs]</a><span class="k">def</span> <span class="nf">mk_server</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates server connection if ECMWF WebAPI is available.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    server : ECMWFDataServer or ECMWFService</span>
+<span class="sd">        Connection to ECMWF server via python interface ECMWF WebAPI.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">public</span><span class="p">:</span>
             <span class="n">server</span> <span class="o">=</span> <span class="n">ecmwfapi</span><span class="o">.</span><span class="n">ECMWFDataServer</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -284,76 +356,87 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">server</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="n">ecapi</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using ECMWF WebAPI: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ecapi</span><span class="p">))</span>
 
-    <span class="c1"># basetime geht rückwärts</span>
+    <span class="k">return</span> <span class="n">server</span></div>
 
-    <span class="c1"># if basetime 00</span>
-    <span class="c1"># dann wird von 12 am vortag bis 00 am start tag geholt</span>
-    <span class="c1"># aber ohne 12 selbst sondern 12 + step</span>
 
-    <span class="c1"># if basetime 12</span>
-    <span class="c1"># dann wird von 00 + step bis 12 am start tag geholt</span>
+<div class="viewcode-block" id="mk_dates"><a class="viewcode-back" href="../api.html#get_mars_data.mk_dates">[docs]</a><span class="k">def</span> <span class="nf">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prepares start and end date depending on flux or non flux data.</span>
 
-    <span class="c1"># purer forecast wird vorwärts bestimmt.</span>
-    <span class="c1"># purer forecast mode ist dann wenn  größer 24 stunden</span>
-    <span class="c1"># wie kann das noch festgestellt werden ????</span>
-    <span class="c1"># nur FC und steps mehr als 24 ?</span>
-    <span class="c1"># die einzige problematik beim reinen forecast ist die benennung der files!</span>
-    <span class="c1"># also sobald es Tagesüberschneidungen gibt</span>
-    <span class="c1"># allerdings ist das relevant und ersichtlich an den NICHT FLUSS DATEN</span>
+<span class="sd">    If forecast for maximum one day (upto 24h) are to be retrieved, then</span>
+<span class="sd">    collect accumulation data (flux data) with additional days in the</span>
+<span class="sd">    beginning and at the end (used for complete disaggregation of</span>
+<span class="sd">    original period)</span>
 
+<span class="sd">    If forecast data longer than 24h are to be retrieved, then</span>
+<span class="sd">    collect accumulation data (flux data) with the exact start and end date</span>
+<span class="sd">    (disaggregation will be done for the exact time period with</span>
+<span class="sd">    boundary conditions)</span>
+
+<span class="sd">    Since for basetime the extraction contains the 12 hours upfront,</span>
+<span class="sd">    if basetime is 0, the starting date has to be the day before and</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    fluxes : boolean, optional</span>
+<span class="sd">        Decides if the flux parameter settings are stored or</span>
+<span class="sd">        the rest of the parameter list.</span>
+<span class="sd">        Default value is False.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    start : datetime</span>
+<span class="sd">        The start date of the retrieving data set.</span>
+
+<span class="sd">    end : datetime</span>
+<span class="sd">        The end date of the retrieving data set.</span>
+
+<span class="sd">    chunk : datetime</span>
+<span class="sd">        Time period in days for one single mars retrieval.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="c1"># time period for one single retrieval</span>
-    <span class="n">datechunk</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">date_chunk</span><span class="p">))</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">date_chunk</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span> <span class="ow">and</span> <span class="n">fluxes</span><span class="p">:</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&lt;=</span> <span class="mi">24</span><span class="p">:</span>
-        <span class="n">startm1</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">chunk</span></div>
 
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;12&#39;</span><span class="p">:</span>
-        <span class="c1"># endp1 = end + timedelta(days=1)</span>
-        <span class="n">endp1</span> <span class="o">=</span> <span class="n">end</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># endp1 = end + timedelta(days=2)</span>
-        <span class="n">endp1</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="viewcode-block" id="remove_old"><a class="viewcode-back" href="../api.html#get_mars_data.remove_old">[docs]</a><span class="k">def</span> <span class="nf">remove_old</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">inputdir</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Deletes old retrieval files from current input directory</span>
+<span class="sd">    matching the pattern.</span>
 
-    <span class="c1"># --------------  flux data ------------------------------------------------</span>
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old flux content of &#39;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
-        <span class="n">tobecleaned</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
-                               <span class="s1">&#39;*_acc_*.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getppid</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;.*.grb&#39;</span><span class="p">)</span>
-        <span class="n">tobecleaned</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern : str</span>
+<span class="sd">        The sub string pattern which identifies the files to be deleted.</span>
 
-    <span class="c1"># if forecast for maximum one day (upto 24h) are to be retrieved,</span>
-    <span class="c1"># collect accumulation data (flux data)</span>
-    <span class="c1"># with additional days in the beginning and at the end</span>
-    <span class="c1"># (used for complete disaggregation of original period)</span>
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&lt;=</span> <span class="mi">24</span><span class="p">:</span>
-        <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">startm1</span><span class="p">,</span> <span class="n">endp1</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="sd">    inputdir : str, optional</span>
+<span class="sd">        Path to the directory where the retrieved data is stored.</span>
 
-    <span class="c1"># if forecast data longer than 24h are to be retrieved,</span>
-    <span class="c1"># collect accumulation data (flux data)</span>
-    <span class="c1"># with the exact start and end date</span>
-    <span class="c1"># (disaggregation will be done for the</span>
-    <span class="c1"># exact time period with boundary conditions)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
 
-    <span class="c1"># --------------  non flux data --------------------------------------------</span>
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old non flux content of &#39;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
-        <span class="n">tobecleaned</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
-                               <span class="s1">&#39;*__*.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getppid</span><span class="p">())</span> <span class="o">+</span> <span class="s1">&#39;.*.grb&#39;</span><span class="p">)</span>
-        <span class="n">tobecleaned</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old content of &#39;</span> <span class="o">+</span> <span class="n">inputdir</span><span class="p">)</span>
 
-    <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">tobecleaned</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="n">tobecleaned</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
 
     <span class="k">return</span></div>
+
 
 <div class="viewcode-block" id="do_retrievement"><a class="viewcode-back" href="../api.html#get_mars_data.do_retrievement">[docs]</a><span class="k">def</span> <span class="nf">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Divides the complete retrieval period in smaller chunks and</span>
@@ -361,24 +444,24 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    c : :obj:`ControlFile`</span>
+<span class="sd">    c : ControlFile</span>
 <span class="sd">        Contains all the parameters of CONTROL file and</span>
 <span class="sd">        command line.</span>
 
-<span class="sd">    server : :obj:`ECMWFService`</span>
+<span class="sd">    server : ECMWFService or ECMWFDataServer</span>
 <span class="sd">            The server connection to ECMWF.</span>
 
-<span class="sd">    start : :obj:`datetime`</span>
+<span class="sd">    start : datetime</span>
 <span class="sd">        The start date of the retrieval.</span>
 
-<span class="sd">    end : :obj:`datetime`</span>
+<span class="sd">    end : datetime</span>
 <span class="sd">        The end date of the retrieval.</span>
 
-<span class="sd">    delta_t : :obj:`datetime`</span>
+<span class="sd">    delta_t : datetime</span>
 <span class="sd">        Delta_t + 1 is the maximal time period of a single</span>
 <span class="sd">        retrieval.</span>
 
-<span class="sd">    fluxes : :obj:`boolean`, optional</span>
+<span class="sd">    fluxes : boolean, optional</span>
 <span class="sd">        Decides if the flux parameters are to be retrieved or</span>
 <span class="sd">        the rest of the parameter list.</span>
 <span class="sd">        Default value is False.</span>
@@ -429,7 +512,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
@@ -448,21 +531,13 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'7.1 alpha',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
 
   
 
