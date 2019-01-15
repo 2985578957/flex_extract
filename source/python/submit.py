@@ -17,27 +17,42 @@
 #        - minor changes in programming style (for consistence)
 #        - changed path names to variables from config file
 #        - added option for writing mars requests to extra file
-#          additionally,as option without submitting the mars jobs
+#          additionally, as option without submitting the mars jobs
+#        - splitted submit function to use genshi templates for the
+#          job script and avoid code duplication
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Program Functionality:
-#    This program is the main program of flex_extract and controls the
-#    program flow.
-#    If it is supposed to work locally then it works through the necessary
-#    functions get_mars_data and prepareFlexpart. Otherwise it prepares
-#    a shell job script which will do the necessary work on the
-#    ECMWF server and is submitted via ecaccess-job-submit.
-#
-# @Program Content:
-#    - main
-#    - submit
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
+'''This script allows the user to extract meteorological fields from the ECMWF.
+
+It prepares the settings for retrieving the data from ECMWF servers and
+process the resulting files to prepare them for the use with FLEXPART or
+FLEXTRA.
+
+If it is supposed to work locally then it works through the necessary
+functions get_mars_data and prepare_flexpart. Otherwise it prepares
+a job script (korn shell) which will do the necessary work on the
+ECMWF server. This script will de submitted via the ecaccess command
+ecaccess-job-submit.
+
+This file can also be imported as a module which then contains the following
+functions:
+
+    * main - the main function of the script
+    * submit - calls mk_jobscript depending on operation mode and submits its
+    * mk_jobscript - creates the job script from a template
+
+Type: submit.py --help
+to get information about command line parameters.
+Read the documentation for usage instructions.
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -58,7 +73,7 @@ from mods.prepare_flexpart import prepare_flexpart
 from classes.ControlFile import ControlFile
 
 # ------------------------------------------------------------------------------
-# FUNCTIONS
+# METHODS
 # ------------------------------------------------------------------------------
 
 def main():
@@ -111,18 +126,18 @@ def submit(jtemplate, c, queue):
 
     Parameters
     ----------
-    jtemplate : :obj:`string`
+    jtemplate : str
         Job template file from sub-directory "_templates" for
         submission to ECMWF. It contains all necessary
         module and variable settings for the ECMWF environment as well as
         the job call and mail report instructions.
         Default is "job.temp".
 
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
-    queue : :obj:`string`
+    queue : str
         Name of queue for submission to ECMWF (e.g. ecgate or cca )
 
     Return
@@ -200,17 +215,17 @@ def mk_jobscript(jtemplate, job_file, clist):
 
     Parameters
     ----------
-    jtemplate : :obj:`string`
+    jtemplate : str
         Job template file from sub-directory "_templates" for
         submission to ECMWF. It contains all necessary
         module and variable settings for the ECMWF environment as well as
         the job call and mail report instructions.
         Default is "job.temp".
 
-    job_file : :obj:`string`
+    job_file : str
         Path to the job script file.
 
-    clist : :obj:`list` of :obj:`string`
+    clist : list of str
         Contains all necessary parameters for ECMWF CONTROL file.
 
     Return

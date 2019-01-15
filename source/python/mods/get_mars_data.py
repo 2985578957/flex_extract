@@ -21,42 +21,38 @@
 #          (necessary for better documentation with docstrings for later
 #          online documentation)
 #        - use of UIFiles class for file selection and deletion
-#
+#        - seperated get_mars_data function into several smaller pieces:
+#          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Program Functionality:
-#    This program can be used as a module in the whole flex_extract process
-#    or can be run by itself to just extract MARS data from ECMWF. To do so,
-#    a couple of necessary parameters has to be passed with the program call.
-#    See documentation for more details.
-#
-# @Program Content:
-#    - main
-#    - get_mars_data
-#    - do_retrievement
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
-"""ToDo: Name of litte program
+'''This script extracts MARS data from ECMWF servers.
 
-ToDo: Add desccription
-
-ToDo: Add Conditions
-
-This script requires that `...` be installed within the Python
-environment you are running this script in.
+At first, the necessary parameters from command line and CONTROL files are
+extracted. They define the data set to be extracted from MARS.
 
 This file can also be imported as a module and contains the following
 functions:
 
-    * get_mars_data -
-    * do_retrievement -
     * main - the main function of the script
-"""
+    * get_mars_data - overall control of ECMWF data retrievment
+    * write_reqheader - writes the header into the mars_request file
+    * mk_server - creates the server connection to ECMWF servers
+    * mk_dates - defines the start and end date
+    * remove_old - deletes old retrieved grib files
+    * do_retrievement - creates individual retrievals
+
+Type: get_mars_data.py --help
+to get information about command line parameters.
+Read the documentation for usage instructions.
+'''
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -66,6 +62,7 @@ import inspect
 from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
+# add path to local main python path for flex_extract to get full access
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
@@ -119,7 +116,7 @@ def get_mars_data(c):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
@@ -165,7 +162,7 @@ def write_reqheader(marsfile):
 
     Parameters
     ----------
-    marsfile : :obj:`string`
+    marsfile : str
         Path to the mars request file.
 
     Return
@@ -188,13 +185,13 @@ def mk_server(c):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
     Return
     ------
-    server : :obj:`ECMWFDataServer` or :obj:`ECMWFService`
+    server : ECMWFDataServer or ECMWFService
         Connection to ECMWF server via python interface ECMWF WebAPI.
 
     '''
@@ -229,24 +226,24 @@ def mk_dates(c, fluxes):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
-    fluxes : :obj:`boolean`, optional
+    fluxes : boolean, optional
         Decides if the flux parameter settings are stored or
         the rest of the parameter list.
         Default value is False.
 
     Return
     ------
-    start : :obj:`datetime`
+    start : datetime
         The start date of the retrieving data set.
 
-    end : :obj:`datetime`
+    end : datetime
         The end date of the retrieving data set.
 
-    chunk : :obj:`datetime`
+    chunk : datetime
         Time period in days for one single mars retrieval.
 
     '''
@@ -270,10 +267,10 @@ def remove_old(pattern, inputdir):
 
     Parameters
     ----------
-    pattern : :obj:`string`
+    pattern : str
         The sub string pattern which identifies the files to be deleted.
 
-    inputdir : :obj:`string`, optional
+    inputdir : str, optional
         Path to the directory where the retrieved data is stored.
 
     Return
@@ -294,24 +291,24 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
-    server : :obj:`ECMWFService`
+    server : ECMWFService or ECMWFDataServer
             The server connection to ECMWF.
 
-    start : :obj:`datetime`
+    start : datetime
         The start date of the retrieval.
 
-    end : :obj:`datetime`
+    end : datetime
         The end date of the retrieval.
 
-    delta_t : :obj:`datetime`
+    delta_t : datetime
         Delta_t + 1 is the maximal time period of a single
         retrieval.
 
-    fluxes : :obj:`boolean`, optional
+    fluxes : boolean, optional
         Decides if the flux parameters are to be retrieved or
         the rest of the parameter list.
         Default value is False.

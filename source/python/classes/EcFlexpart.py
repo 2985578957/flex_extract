@@ -40,31 +40,13 @@
 #          duplication, easier testing)
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Class Description:
-#    FLEXPART needs grib files in a specifc format. All necessary data fields
-#    for one time step are stored in a single file. The class represents an
-#    instance with all the parameter and settings necessary for retrieving
-#    MARS data and modifing them so they are fitting FLEXPART need. The class
-#    is able to disaggregate the fluxes and convert grid types to the one needed
-#    by FLEXPART, therefore using the FORTRAN program.
-#
-# @Class Content:
-#    - __init__
-#    - write_namelist
-#    - retrieve
-#    - process_output
-#    - create
-#    - deacc_fluxes
-#
-# @Class Attributes:
-#
-#  TODO
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
 #pylint: disable=unsupported-assignment-operation
 # this is disabled because for this specific case its an error in pylint
@@ -101,8 +83,112 @@ import mods.disaggregation as disaggregation
 # ------------------------------------------------------------------------------
 class EcFlexpart(object):
     '''
-    Class to retrieve FLEXPART specific ECMWF data.
+    Class to represent FLEXPART specific ECMWF data.
+
+    FLEXPART needs grib files in a specifc format. All necessary data fields
+    for one time step are stored in a single file. The class represents an
+    instance with all the parameter and settings necessary for retrieving
+    MARS data and modifing them so they are fitting FLEXPART needs. The class
+    is able to disaggregate the fluxes and convert grid types to the one needed
+    by FLEXPART, therefore using the FORTRAN program.
+
+    Attributes
+    ----------
+    mreq_count : int
+        Counter for the number of generated mars requests.
+
+    inputdir : str
+        Path to the directory where the retrieved data is stored.
+
+    dataset : str
+        For public datasets there is the specific naming and parameter
+        dataset which has to be used to characterize the type of
+        data.
+
+    basetime : str
+        The time for a half day retrieval. The 12 hours upfront are to be
+        retrieved.
+
+    dtime : str
+        Time step in hours.
+
+    acctype : str
+        The field type for the accumulated forecast fields.
+
+    acctime : str
+        The starting time from the accumulated forecasts.
+
+    accmaxstep : str
+        The maximum forecast step for the accumulated forecast fields.
+
+    marsclass : str
+        Characterisation of dataset.
+
+    stream : str
+        Identifies the forecasting system used to generate the data.
+
+    number : str
+        Selects the member in ensemble forecast run.
+
+    resol : str
+        Specifies the desired triangular truncation of retrieved data,
+        before carrying out any other selected post-processing.
+
+    accuracy : str
+        Specifies the number of bits per value to be used in the
+        generated GRIB coded fields.
+
+    addpar : str
+        List of additional parameters to be retrieved.
+
+    level : str
+        Specifies the maximum level.
+
+    expver : str
+        The version of the dataset.
+
+    levelist : str
+        Specifies the required levels.
+
+    glevelist : str
+        Specifies the required levels for gaussian grids.
+
+    gaussian : str
+        This parameter is deprecated and should no longer be used.
+        Specifies the desired type of Gaussian grid for the output.
+
+    grid : str
+        Specifies the output grid which can be either a Gaussian grid
+        or a Latitude/Longitude grid.
+
+    area : str
+        Specifies the desired sub-area of data to be extracted.
+
+    purefc : int
+        Switch for definition of pure forecast mode or not.
+
+    outputfilelist : list of str
+        The final list of FLEXPART ready input files.
+
+    types : dictionary
+        Determines the combination of type of fields, time and forecast step
+        to be retrieved.
+
+    params : dictionary
+        Collection of grid types and their corresponding parameters,
+        levels, level types and the grid definition.
+
+    server : ECMWFService or ECMWFDataServer
+        This is the connection to the ECMWF data servers.
+
+    public : int
+        Decides which Web API Server version is used.
+
+    dates : str
+        Contains start and end date of the retrieval in the format
+        "YYYYMMDD/to/YYYYMMDD"
     '''
+
     # --------------------------------------------------------------------------
     # CLASS FUNCTIONS
     # --------------------------------------------------------------------------
@@ -112,11 +198,11 @@ class EcFlexpart(object):
 
         Parameters:
         -----------
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
-        fluxes : :obj:`boolean`, optional
+        fluxes : boolean, optional
             Decides if the flux parameter settings are stored or
             the rest of the parameter list.
             Default value is False.
@@ -173,13 +259,13 @@ class EcFlexpart(object):
 
         Parameters:
         -----------
-        ftype : :obj:`list` of :obj:`string`
+        ftype : list of str
             List of field types.
 
-        ftime : :obj:`list` of :obj:`string`
+        ftime : list of str
             The time in hours of the field.
 
-        fstep : :obj:`string`
+        fstep : str
             Specifies the forecast time step from forecast base time.
             Valid values are hours (HH) from forecast base time.
 
@@ -266,19 +352,19 @@ class EcFlexpart(object):
 
         Parameters:
         -----------
-        gauss : :obj:`integer`
+        gauss : int
             Gaussian grid is retrieved.
 
-        eta : :obj:`integer`
+        eta : int
             Etadot parameter will be directly retrieved.
 
-        omega : :obj:`integer`
+        omega : int
             The omega paramterwill be retrieved.
 
-        cwc : :obj:`integer`
+        cwc : int
             The cloud liquid and ice water content will be retrieved.
 
-        wrf : :obj:`integer`
+        wrf : int
             Additional model level and surface level data will be retrieved for
             WRF/FLEXPART-WRF simulations.
 
@@ -373,19 +459,19 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        ftype : :obj:`string`
+        ftype : str
             Shortcut name of the type of the field. E.g. AN, FC, PF, ...
 
-        param : :obj:`string`
+        param : str
             Shortcut of the grid type. E.g. SH__ML, SH__SL, GG__ML,
             GG__SL, OG__ML, OG__SL, OG_OROLSM_SL, OG_acc_SL
 
-        date : :obj:`string`
+        date : str
             The date period of the grib data to be stored in this file.
 
         Return
         ------
-        targetname : :obj:`string`
+        targetname : str
             The target filename for the grib data.
         '''
         targetname = (self.inputdir + '/' + ftype + param + '.' + date + '.' +
@@ -400,13 +486,13 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        request : :obj:`integer`
+        request : int
             Selects the mode of retrieval.
             0: Retrieves the data from ECMWF.
             1: Prints the mars requests to an output file.
             2: Retrieves the data and prints the mars request.
 
-        par_dict : :obj:`dictionary`
+        par_dict : dictionary
             Contains all parameter which have to be set for creating the
             Mars Retrievals. The parameter are:
             marsclass, dataset, stream, type, levtype, levelist, resol,
@@ -462,19 +548,19 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        keys : :obj:`dictionary`
+        keys : dictionary
             List of parameter names which serves as index.
 
-        inputfiles : :obj:`UioFiles`
+        inputfiles : UioFiles
             Contains a list of files.
 
         Return
         ------
-        iid : :obj:`codes_index`
+        iid : codes_index
             This is a grib specific index structure to access
             messages in a file.
 
-        index_vals : :obj:`list`
+        index_vals : list of list  of str
             Contains the values from the keys used for a distinct selection
             of grib messages in processing  the grib files.
             Content looks like e.g.:
@@ -516,7 +602,7 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        server : :obj:`ECMWFService` or :obj:`ECMWFDataServer`
+        server : ECMWFService or ECMWFDataServer
             The connection to the ECMWF server. This is different
             for member state users which have full access and non
             member state users which have only access to the public
@@ -524,17 +610,17 @@ class EcFlexpart(object):
             "public"; for public access its True (ECMWFDataServer)
             for member state users its False (ECMWFService)
 
-        dates : :obj:`string`
+        dates : str
             Contains start and end date of the retrieval in the format
             "YYYYMMDD/to/YYYYMMDD"
 
-        request : :obj:`integer`
+        request : int
             Selects the mode of retrieval.
             0: Retrieves the data from ECMWF.
             1: Prints the mars requests to an output file.
             2: Retrieves the data and prints the mars request.
 
-        inputdir : :obj:`string`, optional
+        inputdir : str, optional
             Path to the directory where the retrieved data is about
             to be stored. The default is the current directory ('.').
 
@@ -722,11 +808,11 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
-        filename : :obj:`string`
+        filename : str
                 Name of the namelist file.
 
         Return
@@ -809,10 +895,10 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        inputfiles : :obj:`UioFiles`
+        inputfiles : UioFiles
             Contains the list of files that contain flux data.
 
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
@@ -836,7 +922,7 @@ class EcFlexpart(object):
         # index_vals looks like e.g.:
         # index_vals[0]: ('20171106', '20171107', '20171108') ; date
         # index_vals[1]: ('0', '600', '1200', '1800') ; time
-        # index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
+        # index_vals[2]: ('0', '3', '6', '9', '12') ; stepRange
 
         if c.rrint:
             if not c.purefc:
@@ -1095,31 +1181,31 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        ni : :obj:`integer`
+        ni : int
             Amount of zonal grid points.
 
-        nj : :obj:`integer`
+        nj : int
             Amount of meridional grid points.
 
-        nt : :obj:`integer`
+        nt : int
             Number of time steps.
 
-        lsp_np : :obj:`numpy array` of :obj:`float`
+        lsp_np : numpy array of float
             The large scale precipitation fields for each time step.
             Shape (ni * nj, nt).
 
-        cp_np : :obj:`numpy array` of :obj:`float`
+        cp_np : numpy array of float
             The convective precipitation fields for each time step.
             Shape (ni * nj, nt).
 
-        date_list : :obj:`list` of :obj:`datetime`
+        date_list : list of datetime
             The list of dates for which the disaggregation is to be done.
 
-        step_list : :obj:`list` of :obj:`integer`
+        step_list : list of int
             The list of steps for a single forecast time.
             Only necessary for pure forecasts.
 
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
@@ -1216,10 +1302,10 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        ifile : :obj:`string`
+        ifile : str
             Filename of the input file to read the grib messages from.
 
-        inputdir : :obj:`string`, optional
+        inputdir : str, optional
             Path to the directory where the retrieved data is stored.
 
         Return
@@ -1254,10 +1340,10 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        inputfiles : :obj:`UioFiles`
+        inputfiles : UioFiles
             Contains a list of files.
 
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
@@ -1485,7 +1571,7 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
@@ -1544,7 +1630,7 @@ class EcFlexpart(object):
 
         Parameters
         ----------
-        c : :obj:`ControlFile`
+        c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 

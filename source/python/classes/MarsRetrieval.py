@@ -16,46 +16,16 @@
 #        - applied PEP8 style guide
 #        - added documentation
 #        - applied some minor modifications in programming style/structure
+#        - added writing of mars request attributes to a csv file
 #
 # @License:
-#    (C) Copyright 2015-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Class Description:
-#    A MARS revtrieval has a specific syntax with a selection of keywords and
-#    their corresponding values. This class provides the necessary functions
-#    by displaying the selected parameters and their values and the actual
-#    retrievement of the data through a mars request or a Python web api
-#    interface. The initialization already expects all the keyword values.
-#
-# @Class Content:
-#    - __init__
-#    - display_info
-#    - data_retrieve
-#
-# @Class Attributes:
-#    - server
-#    - marsclass
-#    - dtype
-#    - levtype
-#    - levelist
-#    - repres
-#    - date
-#    - resol
-#    - stream
-#    - area
-#    - time
-#    - step
-#    - expver
-#    - number
-#    - accuracy
-#    - grid
-#    - gaussian
-#    - target
-#    - param
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
 
 # ------------------------------------------------------------------------------
@@ -72,12 +42,91 @@ import _config
 # CLASS
 # ------------------------------------------------------------------------------
 class MarsRetrieval(object):
-    '''Class for submitting MARS retrievals.
+    '''Specific syntax and content for submission of MARS retrievals.
+
+    A MARS revtrieval has a specific syntax with a selection of keywords and
+    their corresponding values. This class provides the necessary functions
+    by displaying the selected parameters and their values and the actual
+    retrievement of the data through a mars request or a Python web api
+    interface. The initialization already expects all the keyword values.
 
     A description of MARS keywords/arguments and examples of their
     values can be found here:
     https://software.ecmwf.int/wiki/display/UDOC/\
                    Identification+keywords#Identificationkeywords-class
+
+    Attributes
+    ----------
+    server : ECMWFService or ECMWFDataServer
+        This is the connection to the ECMWF data servers.
+
+    public : int
+        Decides which Web API Server version is used.
+
+    marsclass : str, optional
+        Characterisation of dataset.
+
+    dataset : str, optional
+        For public datasets there is the specific naming and parameter
+        dataset which has to be used to characterize the type of
+        data.
+
+    type : str, optional
+        Determines the type of fields to be retrieved.
+
+    levtype : str, optional
+        Denotes type of level.
+
+    levelist : str, optional
+        Specifies the required levels.
+
+    repres : str, optional
+        Selects the representation of the archived data.
+
+    date : str, optional
+        Specifies the Analysis date, the Forecast base date or
+        Observations date.
+
+    resol : str, optional
+        Specifies the desired triangular truncation of retrieved data,
+        before carrying out any other selected post-processing.
+
+    stream : str, optional
+        Identifies the forecasting system used to generate the data.
+
+    area : str, optional
+        Specifies the desired sub-area of data to be extracted.
+
+    time : str, optional
+        Specifies the time of the data in hours and minutes.
+
+    step : str, optional
+        Specifies the forecast time step from forecast base time.
+
+    expver : str, optional
+        The version of the dataset.
+
+    number : str, optional
+        Selects the member in ensemble forecast run.
+
+    accuracy : str, optional
+        Specifies the number of bits per value to be used in the
+        generated GRIB coded fields.
+
+    grid : str, optional
+        Specifies the output grid which can be either a Gaussian grid
+        or a Latitude/Longitude grid.
+
+    gaussian : str, optional
+        This parameter is deprecated and should no longer be used.
+        Specifies the desired type of Gaussian grid for the output.
+
+    target : str, optional
+        Specifies a file into which data is to be written after
+        retrieval or manipulation.
+
+    param : str, optional
+        Specifies the meteorological parameter.
     '''
 
     def __init__(self, server, public, marsclass="ei", dataset="", type="",
@@ -95,37 +144,37 @@ class MarsRetrieval(object):
 
         Parameters
         ----------
-        server : :obj:`ECMWFService`
+        server : ECMWFService or ECMWFDataServer
             This is the connection to the ECMWF data servers.
             It is needed for the pythonic access of ECMWF data.
 
-        public : :obj:`integer`
+        public : int
             Decides which Web API version is used:
             0: member-state users and full archive access
             1: public access and limited access to the public server and
                datasets. Needs the parameter dataset.
             Default is "0" and for member-state users.
 
-        marsclass : :obj:`string`, optional
+        marsclass : str, optional
             Characterisation of dataset. E.g. EI (ERA-Interim),
             E4 (ERA40), OD (Operational archive), ea (ERA5).
             Default is the ERA-Interim dataset "ei".
 
-        dataset : :obj:`string`, optional
+        dataset : str, optional
             For public datasets there is the specific naming and parameter
             dataset which has to be used to characterize the type of
             data. Usually there is less data available, either in times,
             domain or parameter.
             Default is an empty string.
 
-        type : :obj:`string`, optional
+        type : str, optional
             Determines the type of fields to be retrieved.
             Selects between observations, images or fields.
             Examples for fields: Analysis (an), Forecast (fc),
             Perturbed Forecast (pf), Control Forecast (cf) and so on.
             Default is an empty string.
 
-        levtype : :obj:`string`, optional
+        levtype : str, optional
             Denotes type of level. Has a direct implication on valid
             levelist values!
             E.g. model level (ml), pressure level (pl), surface (sfc),
@@ -133,25 +182,25 @@ class MarsRetrieval(object):
             and depth (dp).
             Default is an empty string.
 
-        levelist : :obj:`string`, optional
+        levelist : str, optional
             Specifies the required levels. It has to have a valid
             correspondence to the selected levtype.
             Examples: model level: 1/to/137, pressure levels: 500/to/1000
             Default is an empty string.
 
-        repres : :obj:`string`, optional
+        repres : str, optional
             Selects the representation of the archived data.
             E.g. sh - spherical harmonics, gg - Gaussian grid,
             ll - latitude/longitude, ...
             Default is an empty string.
 
-        date : :obj:`string`, optional
+        date : str, optional
             Specifies the Analysis date, the Forecast base date or
             Observations date. Valid formats are:
             Absolute as YYYY-MM-DD or YYYYMMDD.
             Default is an empty string.
 
-        resol : :obj:`string`, optional
+        resol : str, optional
             Specifies the desired triangular truncation of retrieved data,
             before carrying out any other selected post-processing.
             The default is automatic truncation (auto), by which the lowest
@@ -168,12 +217,12 @@ class MarsRetrieval(object):
                   Retrieve#Retrieve-Truncationbeforeinterpolation
             Default is an empty string.
 
-        stream : :obj:`string`, optional
+        stream : str, optional
             Identifies the forecasting system used to generate the data.
             E.g. oper (Atmospheric model), enfo (Ensemble forecats), ...
             Default is an empty string.
 
-        area : :obj:`string`, optional
+        area : str, optional
             Specifies the desired sub-area of data to be extracted.
             Areas can be defined to wrap around the globe.
 
@@ -191,7 +240,7 @@ class MarsRetrieval(object):
             E.g.: North/West/South/East
             Default is an empty string.
 
-        time : :obj:`string`, optional
+        time : str, optional
             Specifies the time of the data in hours and minutes.
             Valid values depend on the type of data: Analysis time,
             Forecast base time or First guess verification time
@@ -201,7 +250,7 @@ class MarsRetrieval(object):
             The syntax is HHMM or HH:MM. If MM is omitted it defaults to 00.
             Default is an empty string.
 
-        step : :obj:`string`, optional
+        step : str, optional
             Specifies the forecast time step from forecast base time.
             Valid values are hours (HH) from forecast base time. It also
             specifies the length of the forecast which verifies at
@@ -209,7 +258,7 @@ class MarsRetrieval(object):
             E.g. 1/3/6-hourly
             Default is an empty string.
 
-        expver : :obj:`string`, optional
+        expver : str, optional
             The version of the dataset. Each experiment is assigned a
             unique code (version). Production data is assigned 1 or 2,
             and experimental data in Operations 11, 12 ,...
@@ -217,14 +266,14 @@ class MarsRetrieval(object):
             experiment identifier.
             Default is "1".
 
-        number : :obj:`string`, optional
+        number : str, optional
             Selects the member in ensemble forecast run. (Only then it
             is necessary.) It has a different meaning depending on
             the type of data.
             E.g. Perturbed Forecasts: specifies the Ensemble forecast member
             Default is an empty string.
 
-        accuracy : :obj:`string`, optional
+        accuracy : str, optional
             Specifies the number of bits per value to be used in the
             generated GRIB coded fields.
             A positive integer may be given to specify the preferred number
@@ -235,7 +284,7 @@ class MarsRetrieval(object):
             can be passed to the result field by specifying accuracy=av.
             Default is an empty string.
 
-        grid : :obj:`string`, optional
+        grid : str, optional
             Specifies the output grid which can be either a Gaussian grid
             or a Latitude/Longitude grid. MARS requests specifying
             grid=av will return the archived model grid.
@@ -256,7 +305,7 @@ class MarsRetrieval(object):
                    640 latitude lines between the pole and equator
             Default is an empty string.
 
-        gaussian : :obj:`string`, optional
+        gaussian : str, optional
             This parameter is deprecated and should no longer be used.
             Specifies the desired type of Gaussian grid for the output.
             Valid Gaussian grids are quasi-regular (reduced) or regular.
@@ -264,7 +313,7 @@ class MarsRetrieval(object):
             keyword grid. Gaussian without grid has no effect.
             Default is an empty string.
 
-        target : :obj:`string`, optional
+        target : str, optional
             Specifies a file into which data is to be written after
             retrieval or manipulation. Path names should always be
             enclosed in double quotes. The MARS client supports automatic
@@ -278,7 +327,7 @@ class MarsRetrieval(object):
             rather than 600, 1 and 129.
             Default is an empty string.
 
-        param : :obj:`string`, optional
+        param : str, optional
             Specifies the meteorological parameter.
             The list of meteorological parameters in MARS is extensive.
             Their availability is directly related to their meteorological
@@ -351,10 +400,10 @@ class MarsRetrieval(object):
 
         Parameters
         ----------
-        inputdir : :obj:`string`
+        inputdir : str
             The path where all data from the retrievals are stored.
 
-        request_number : :obj:`integer`
+        request_number : int
             Number of mars requests for flux and non-flux data.
 
         Return

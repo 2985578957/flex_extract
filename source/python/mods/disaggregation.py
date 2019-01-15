@@ -16,32 +16,36 @@
 #        - added structured documentation
 #        - outsourced the disaggregation functions dapoly and darain
 #          to a new module named disaggregation
+#        - added the new disaggregation method for precipitation
 #
 # @License:
-#    (C) Copyright 2015-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
-# @Module Description:
-#    disaggregation of deaccumulated flux data from an ECMWF model FG field.
-#    Initially the flux data to be concerned are:
-#    - large-scale precipitation
-#    - convective precipitation
-#    - surface sensible heat flux
-#    - surface solar radiation
-#    - u stress
-#    - v stress
-#    Different versions of disaggregation is provided for rainfall
-#    data (darain, modified linear) and the surface fluxes and
-#    stress data (dapoly, cubic polynomial).
-#
-# @Module Content:
+# @Methods:
 #    - dapoly
 #    - darain
 #    - IA3
-#
 #*******************************************************************************
+'''Disaggregation of deaccumulated flux data from an ECMWF model FG field.
+
+Initially the flux data to be concerned are:
+    - large-scale precipitation
+    - convective precipitation
+    - surface sensible heat flux
+    - surface solar radiation
+    - u stress
+    - v stress
+
+Different versions of disaggregation is provided for rainfall
+data (darain, modified linear) and the surface fluxes and
+stress data (dapoly, cubic polynomial).
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -64,13 +68,13 @@ def dapoly(alist):
 
     Parameters
     ----------
-    alist : :obj:`list` of :obj:`array` of :obj:`float`
+    alist : list of array of float
         List of 4 timespans as 2-dimensional, horizontal fields.
         E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
 
     Return
     ------
-    nfield : :obj:`array` of :obj:`float`
+    nfield : array of float
         Interpolated flux at central point of accumulation timespan.
 
     Note
@@ -108,13 +112,13 @@ def darain(alist):
 
     Parameters
     ----------
-    alist : :obj:`list` of :obj:`array` of :obj:`float`
+    alist : list of array of float
         List of 4 timespans as 2-dimensional, horizontal fields.
         E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]
 
     Return
     ------
-    nfield : :obj:`array` of :obj:`float`
+    nfield : array of float
         Interpolated flux at central point of accumulation timespan.
 
     Note
@@ -159,7 +163,7 @@ def IA3(g):
 
     Note
     ----
-    Copyright 2017
+    (C) Copyright 2017-2019
     Sabine Hittmeir, Anne Philipp, Petra Seibert
 
     This work is licensed under the Creative Commons Attribution 4.0
@@ -169,13 +173,13 @@ def IA3(g):
 
     Parameters
     ----------
-    g : :obj:`list` of :obj:`float`
+    g : list of float
         Complete data series that will be interpolated having
         the dimension of the original raw series.
 
     Return
     ------
-    f : :obj:`list` of :obj:`float`
+    f : list of float
         The interpolated data series with additional subgrid points.
         Its dimension is equal to the length of the input data series
         times three.

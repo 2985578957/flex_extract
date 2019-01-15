@@ -11,7 +11,7 @@
 #        - modified method list_files to work with glob instead of listdir
 #        - added pattern search in method list_files
 #
-#    February 2018 - Anne Philipp (University of Vienna):
+#    February - December 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
 #        - added documentation
 #        - optimisation of method list_files since it didn't work correctly
@@ -19,28 +19,16 @@
 #        - additional speed up of method list_files
 #        - modified the class so that it is initiated with a pattern instead
 #          of suffixes. Gives more precision in selection of files.
+#        - added delete method
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Class Decription:
-#    The class is for file manipulation. It is initiated with a regular
-#    expression pattern for this instance and can produce a list of Files
-#    from the given file pattern. These files can be deleted.
-#
-# @Class Content:
-#    - __init__
-#    - __str__
-#    - __list_files__
-#    - delete_files
-#
-# @Class Attributes:
-#    - pattern
-#    - files
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
 
 # ------------------------------------------------------------------------------
@@ -50,9 +38,8 @@ import os
 import sys
 import fnmatch
 
-# software specific module from flex_extract
+# software specific modules from flex_extract
 sys.path.append('../')
-#import profiling
 from mods.tools import silent_remove, get_list_as_string
 
 # ------------------------------------------------------------------------------
@@ -60,22 +47,35 @@ from mods.tools import silent_remove, get_list_as_string
 # ------------------------------------------------------------------------------
 
 class UioFiles(object):
-    '''Class to manipulate files. At initialisation it has the pattern
-    which stores a regular expression pattern for the files, the path
-    to the files and the files already.
+    '''Collection of files matching a specific pattern.
+
+    The pattern can contain regular expressions for the files.
+    The files are listed and can be transformed to a single string or
+    they can be deleted.
+
+    Attributes
+    ----------
+    path : str
+        Directory where to list the files.
+
+    pattern : str
+        Regular expression pattern. For example: '\*.grb'
+
+    files : list of str
+        List of files matching the pattern in the path.
     '''
     # --------------------------------------------------------------------------
-    # CLASS FUNCTIONS
+    # CLASS METHODS
     # --------------------------------------------------------------------------
     def __init__(self, path, pattern):
         '''Assignes a specific pattern for these files.
 
         Parameters
         ----------
-        path : :obj:`string`
+        path : str
             Directory where to list the files.
 
-        pattern : :obj:`string`
+        pattern : str
             Regular expression pattern. For example: '\*.grb'
 
         Return
@@ -91,14 +91,14 @@ class UioFiles(object):
 
         return
 
-    #@profiling.timefn
+
     def _list_files(self, path):
         '''Lists all files in the directory with the matching
         regular expression pattern.
 
         Parameters
         ----------
-        path : :obj:`string`
+        path : str
             Path to the files.
 
         Return
@@ -115,6 +115,7 @@ class UioFiles(object):
 
         return
 
+
     def __str__(self):
         '''Converts the list of files into a single string.
         The entries are sepereated by "," sign.
@@ -124,7 +125,7 @@ class UioFiles(object):
 
         Return
         ------
-        files_string : :obj:`string`
+        files_string : str
             The content of the list as a single string.
         '''
 
@@ -132,6 +133,7 @@ class UioFiles(object):
         files_string = get_list_as_string(filenames, concatenate_sign=', ')
 
         return files_string
+
 
     def delete_files(self):
         '''Deletes the files.

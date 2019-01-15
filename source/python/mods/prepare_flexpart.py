@@ -21,32 +21,40 @@
 #        - applied PEP8 style guide
 #        - added documentation
 #        - minor changes in programming style for consistence
-#        - BUG: removed call of clean_up-Function after call of
+#        - BUGFIX: removed call of clean_up-Function after call of
 #               prepareFlexpart in main since it is already called in
 #               prepareFlexpart at the end!
 #        - created function main and moved the two function calls for
 #          arguments and prepare_flexpart into it
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Program Functionality:
-#    This program prepares the final version of the grib files which are
-#    then used by FLEXPART. It converts the bunch of grib files extracted
-#    via get_mars_data by doing for example the necessary conversion to get
-#    consistent grids or the disaggregation of flux data. Finally, the
-#    program combines the data fields in files per available hour with the
-#    naming convention xxYYMMDDHH, where xx should be 2 arbitrary letters
-#    (mostly xx is chosen to be "EN").
-#
-# @Program Content:
-#    - main
-#    - prepare_flexpart
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
+'''This script prepares the final version of the grib files which are
+then used by FLEXPART.
+
+It converts the bunch of grib files extracted via get_mars_data before,
+by doing the necessary conversion to get consistent grids or the
+disaggregation of flux data. Finally, the data fields are combined
+in files per available hour with the naming convention xxYYMMDDHH,
+where xx should be 2 arbitrary letters (mostly xx is chosen to be "EN").
+
+This file can also be imported as a module which then contains the following
+functions:
+
+    * main
+    * prepare_flexpart
+
+Type: prepare_flexpart.py --help
+to get information about command line parameters.
+Read the documentation for usage instructions.
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -58,7 +66,7 @@ import sys
 import socket
 
 # software specific classes and modules from flex_extract
-
+# add path to local main python path for flex_extract to get full access
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
@@ -114,11 +122,11 @@ def prepare_flexpart(ppid, c):
 
     Parameters
     ----------
-    ppid : :obj:`int`
+    ppid : int
         Contains the ppid number of the current ECMWF job. It will be None if
         the method was called within this module.
 
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-##*******************************************************************************
+#*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
 #
 # @Date: November 2018
@@ -8,24 +8,23 @@
 # @Change History:
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-#
-# @Modul Description:
-#
-#
-# @Module Content:
-
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
+'''This module contains check methods for the CONTROL paramaters.
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
 
 import os
+import sys
 import _config
 import exceptions
 from tools import my_error, silent_remove
@@ -39,11 +38,11 @@ def check_logicals_type(c, logicals):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
-    logicals : :obj:`list` of (:obj:`string` or :obj:`integer`)
+    logicals : list of (str or int)
         Names of the switches that are used to control the flow of the
         program.
 
@@ -66,12 +65,12 @@ def check_grid(grid):
 
     Parameters
     ----------
-    grid : :obj:`string`
+    grid : str
         Contains grid information
 
     Return
     ------
-    grid : :obj:``string`
+    grid : str
         Contains grid in format Lat/lon. E.g. 0.1/0.1
     '''
 
@@ -107,27 +106,27 @@ def check_area(grid, area, upper, lower, left , right):
 
     Parameters
     ----------
-    grid : :obj:`string`
+    grid : str
         Contains grid information.
 
-    area : :obj:`string`
+    area : str
         Contains area informtion.
 
-    upper : :obj:`string`
+    upper : str
         The northern most latitude.
 
-    lower : :obj:`string`
+    lower : str
         The souther most latitude.
 
-    left : :obj:`string`
+    left : str
         The western most longitude.
 
-    right : :obj:`string`
+    right : str
         The eastern most longiude.
 
     Return
     ------
-    grid : :obj:``string`
+    grid : str
         Contains grid in format Lat/lon. E.g. 0.1/0.1
     '''
     if 'N' in grid:  # Gaussian output grid
@@ -172,21 +171,21 @@ def check_levels(levelist, level):
 
     Parameters
     ----------
-    levelist : :obj:`string`
+    levelist : str
         Specifies the level list.
         Examples: model level: 1/to/137, pressure levels: 500/to/1000
 
-    level : :obj:`string`
+    level : str
         Specifies the maximum level.
 
     Return
     ------
-    levelist : :obj:`string`
+    levelist : str
         Specifies the required levels. It has to have a valid
         correspondence to the selected levtype.
         Examples: model level: 1/to/137, pressure levels: 500/to/1000
 
-    level : :obj:`string`
+    level : str
         Specifies the maximum level. It has to be one of the
         available maximum level number as contained in the variable
         MAX_LEVEL_LIST in "_config". E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]
@@ -220,11 +219,11 @@ def check_ppid(c, ppid):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
             Contains all the parameters of CONTROL file and
             command line.
 
-    ppid : :obj:`int` or :obj:`None`
+    ppid : int or None
         Contains the ppid number provided by the command line parameter
         of is None otherwise.
 
@@ -246,7 +245,7 @@ def check_purefc(ftype):
 
     Parameters
     ----------
-    ftype : :obj:`list` of :obj:`string`
+    ftype : list of str
         List of field types.
 
     Return
@@ -272,18 +271,18 @@ def check_step(step, mailfail):
 
     Parameters
     ----------
-    step : :obj:`list` of :obj:`string` or :obj:`string`
+    step : list of str or str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
 
-    mailfail : :obj:`list` of :obj:``string`
+    mailfail : list of str
         Contains all email addresses which should be notified.
         It might also contain just the ecmwf user name which will trigger
         mailing to the associated email address for this user.
 
     Return
     ------
-    step : :obj:`list` of :obj:`string`
+    step : list of str
         List of forecast steps in format e.g. [001, 002, ...]
     '''
 
@@ -312,16 +311,16 @@ def check_type(ftype, steps):
 
     Parameters
     ----------
-    ftype : :obj:`list` of :obj:`string` or :obj:`string`
+    ftype : list of str or str
         List of field types.
 
-    steps : :obj:`string`
+    steps : str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
 
     Return
     ------
-    ftype : :obj:`list` of :obj:`string`
+    ftype : list of str
         List of field types.
     '''
     if not isinstance(ftype, list):
@@ -339,12 +338,12 @@ def check_time(ftime):
 
     Parameters
     ----------
-    ftime : :obj:`list` of :obj:`string` or :obj:`string`
+    ftime : list of str or str
         The time in hours of the field.
 
     Return
     ------
-    ftime : :obj:`list` of :obj:`string`
+    ftime : list of str
         The time in hours of the field.
     '''
     if not isinstance(ftime, list):
@@ -357,32 +356,32 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
 
     Parameters
     ----------
-    ftype : :obj:`list` of :obj:`string`
+    ftype : list of str
         List of field types.
 
-    ftime : :obj:`list` of :obj:`string` or :obj:`string`
+    ftime : list of str or str
         The time in hours of the field.
 
-    steps : :obj:`string`
+    steps : str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
 
-    maxstep : :obj:`integer`
+    maxstep : int
         The maximum forecast time step in hours from the forecast base time.
         This is the maximum step for non flux (accumulated) forecast data.
 
-    purefc : :obj:`integer`
+    purefc : int
         Switch for definition of pure forecast mode or not.
 
     Return
     ------
-    ftype : :obj:`list` of :obj:`string`
+    ftype : list of str
         List of field types.
 
-    ftime : :obj:`list` of :obj:`string`
+    ftime : list of str
         The time in hours of the field.
 
-    steps : :obj:`string`
+    steps : str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
     '''
@@ -409,14 +408,14 @@ def check_mail(mail):
 
     Parameters
     ----------
-    mail : :obj:`list` of :obj:`string` or :obj:`string`
+    mail : list of str or str
         Contains email addresses for notifications.
         It might also contain just the ecmwf user name which will trigger
         mailing to the associated email address for this user.
 
     Return
     ------
-    mail : :obj:`list` of :obj:``string`
+    mail : list of str
         Contains email addresses for notifications.
         It might also contain just the ecmwf user name which will trigger
         mailing to the associated email address for this user.
@@ -438,22 +437,22 @@ def check_queue(queue, gateway, destination, ecuid, ecgid):
 
     Parameters
     ----------
-    queue : :obj:`string`
+    queue : str
         Name of the queue if submitted to the ECMWF servers.
         Used to check if ecuid, ecgid, gateway and destination
         are set correctly and are not empty.
 
-    gateway : :obj:`string`
+    gateway : str
         The address of the gateway server.
 
-    destination : :obj:`string`
+    destination : str
         The name of the destination of the gateway server for data
         transfer through ectrans. E.g. name@genericSftp
 
-    ecuid : :obj:`string`
+    ecuid : str
         ECMWF user id.
 
-    ecgid : :obj:`string`
+    ecgid : str
         ECMWF group id.
 
     Return
@@ -474,26 +473,26 @@ def check_pathes(idir, odir, fpdir, fedir):
 
     Parameters
     ----------
-    idir : :obj:`string`
+    idir : str
         Path to the temporary directory for MARS retrieval data.
 
-    odir : :obj:`string`
+    odir : str
         Path to the final output directory where the FLEXPART input files
         will be stored.
 
-    fpdir : :obj:`string`
+    fpdir : str
         Path to FLEXPART root directory.
 
-    fedir : :obj:`string`
+    fedir : str
         Path to flex_extract root directory.
 
     Return
     ------
-    odir : :obj:`string`
+    odir : str
         Path to the final output directory where the FLEXPART input files
         will be stored.
 
-    fpdir : :obj:`string`
+    fpdir : str
         Path to FLEXPART root directory.
 
     '''
@@ -512,18 +511,18 @@ def check_dates(start, end):
 
     Parameters
     ----------
-    start : :obj:`string`
+    start : str
         The start date of the retrieval job.
 
-    end : :obj:`string`
+    end : str
         The end date of the retrieval job.
 
     Return
     ------
-    start : :obj:`string`
+    start : str
         The start date of the retrieval job.
 
-    end : :obj:`string`
+    end : str
         The end date of the retrieval job.
 
     '''
@@ -554,17 +553,17 @@ def check_maxstep(maxstep, steps):
 
     Parameters
     ----------
-    maxstep : :obj:`string`
+    maxstep : str
         The maximum forecast time step in hours from the forecast base time.
         This is the maximum step for non flux (accumulated) forecast data.
 
-    steps : :obj:`string`
+    steps : str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
 
     Return
     ------
-    maxstep : :obj:`integer`
+    maxstep : int
         The maximum forecast time step in hours from the forecast base time.
         This is the maximum step for non flux (accumulated) forecast data.
 
@@ -587,7 +586,7 @@ def check_basetime(basetime):
 
     Parameters
     ----------
-    basetime : :obj:``
+    basetime : str
         The time for a half day retrieval. The 12 hours upfront are to be
         retrieved.
 
@@ -606,13 +605,13 @@ def check_request(request, marsfile):
 
     Parameters
     ----------
-    request : :obj:`integer`
+    request : int
         Selects the mode of retrieval.
         0: Retrieves the data from ECMWF.
         1: Prints the mars requests to an output file.
         2: Retrieves the data and prints the mars request.
 
-    marsfile : :obj:`string`
+    marsfile : str
         Path to the mars request file.
 
     Return
@@ -630,10 +629,10 @@ def check_public(public, dataset):
 
     Parameters
     ----------
-    public : :obj:`ìnteger`
+    public : int
         Specifies if public data are to be retrieved or not.
 
-    dataset : :obj:`string`
+    dataset : str
         Specific name which identifies the public dataset.
 
     Return
@@ -652,15 +651,15 @@ def check_acctype(acctype, ftype):
 
     Parameters
     ----------
-    acctype : :obj:`string`
+    acctype : str
         The field type for the accumulated forecast fields.
 
-    ftype : :obj:`list` of :obj:`string`
+    ftype : list of str
         List of field types.
 
     Return
     ------
-    acctype : :obj:`string`
+    acctype : str
         The field type for the accumulated forecast fields.
     '''
     if not acctype:
@@ -689,23 +688,23 @@ def check_acctime(acctime, acctype, purefc):
 
     Parameters
     ----------
-    acctime : :obj:`string`
+    acctime : str
         The starting time from the accumulated forecasts.
 
-    acctype : :obj:`string`
+    acctype : str
         The field type for the accumulated forecast fields.
 
-    purefc : :obj:`integer`
+    purefc : int
         Switch for definition of pure forecast mode or not.
 
     Return
     ------
-    acctime : :obj:`string`
+    acctime : str
         The starting time from the accumulated forecasts.
     '''
     if not acctime:
         print('... Control parameter ACCTIME was not defined.')
-        print('... Value will be set depending on field type: '
+        print('... Value will be set depending on field type:\n '
               '\t\t EA=06/18\n\t\t EI/OD=00/12\n\t\t  EP=18')
         if acctype.upper() == 'EA': # Era 5
             acctime = '06/18'
@@ -725,22 +724,22 @@ def check_accmaxstep(accmaxstep, acctype, purefc, maxstep):
 
     Parameters
     ----------
-    accmaxstep : :obj:`string`
+    accmaxstep : str
         The maximum forecast step for the accumulated forecast fields.
 
-    acctype : :obj:`string`
+    acctype : str
         The field type for the accumulated forecast fields.
 
-    purefc : :obj:`integer`
+    purefc : int
         Switch for definition of pure forecast mode or not.
 
-    maxstep : :obj:`string`
+    maxstep : str
         The maximum forecast time step in hours from the forecast base time.
         This is the maximum step for non flux (accumulated) forecast data.
 
     Return
     ------
-    accmaxstep : :obj:`string`
+    accmaxstep : str
         The maximum forecast step for the accumulated forecast fields.
     '''
     if not accmaxstep:
@@ -775,12 +774,12 @@ def check_addpar(addpar):
 
     Parameters
     ----------
-    addpar : :obj:`string` or :obj:'list' of :obj:'string'
+    addpar : str or list of str
         List of additional parameters to be retrieved.
 
     Return
     ------
-    addpar : :obj:'string'
+    addpar : str
         List of additional parameters to be retrieved.
     '''
 
@@ -797,18 +796,21 @@ def check_addpar(addpar):
 
 
 def check_job_chunk(job_chunk):
-    '''Checks that the job chunk number is positive and non zero.
+    '''Checks that if job chunk is set, the number is positive and non zero.
 
     Parameters
     ----------
-    job_chunk : :obj:`integer`
+    job_chunk : int
         The number of days for a single job script.
 
     Return
     ------
-    job_chunk : :obj:`integer`
+    job_chunk : int
         The number of days for a single job script.
     '''
+    if not job_chunk:
+        return job_chunk
+
     if job_chunk < 0:
         raise ValueError('ERROR: The number of job chunk is negative!\n'
                          'It has to be a positive number!')

@@ -13,36 +13,47 @@
 #        - created functions: interpret_args_and_control, clean_up
 #          my_error, normal_exit, init128, to_param_id
 #
-#    April 2018 - Anne Philipp (University of Vienna):
+#    April - December 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
 #        - added documentation
-#        - moved all functions from file Flexparttools to this file tools
-#        - added function get_list_as_string
+#        - moved all non class methods from former file Flexparttools in here
 #        - seperated args and control interpretation
+#        - added functions get_list_as_string, read_ecenv, send_mail, make_dir,
+#          put_file_to_ecserver, submit_job_to_ecserver, get_informations,
+#          get_dimensions, execute_subprocess, none_or_int, none_or_str
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
-# @Modul Description:
-#    This module contains a couple of helpful functions which are
-#    used in different places in flex_extract.
-#
-# @Module Content:
-#    - get_cmdline_args
-#    - clean_up
-#    - my_error
-#    - normal_exit
-#    - product
-#    - silent_remove
-#    - init128
-#    - to_param_id
-#    - get_list_as_string
-#    - make_dir
-#
+# @Methods:
+#    none_or_str
+#    none_or_int
+#    get_cmdline_args
+#    read_ecenv
+#    clean_up
+#    my_error
+#    send_mail
+#    normal_exit
+#    product
+#    silent_remove
+#    init128
+#    to_param_id
+#    get_list_as_string
+#    make_dir
+#    put_file_to_ecserver
+#    submit_job_to_ecserver
+#    get_informations
+#    get_dimensions
+#    execute_subprocess
 #*******************************************************************************
+'''This module contains a collection of diverse tasks within flex_extract.
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -58,7 +69,7 @@ from datetime import datetime
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # ------------------------------------------------------------------------------
-# FUNCTIONS
+# METHODS
 # ------------------------------------------------------------------------------
 
 def none_or_str(value):
@@ -67,7 +78,7 @@ def none_or_str(value):
 
     Parameters
     ----------
-    value : :obj:`string`
+    value : str
         String to be checked for the "None" word.
 
     Return
@@ -86,7 +97,7 @@ def none_or_int(value):
 
     Parameters
     ----------
-    value : :obj:`string`
+    value : str
         String to be checked for the "None" word.
 
     Return
@@ -109,7 +120,7 @@ def get_cmdline_args():
 
     Return
     ------
-    args : :obj:`Namespace`
+    args : Namespace
         Contains the commandline arguments from script/program call.
     '''
 
@@ -200,12 +211,12 @@ def read_ecenv(filepath):
 
     Parameters
     ----------
-    filepath : :obj:`string`
+    filepath : str
         Path to file where the ECMWF environment parameters are stored.
 
     Return
     ------
-    envs : :obj:`dictionary`
+    envs : dict
         Contains the environment parameter ecuid, ecgid, gateway
         and destination for ECMWF server environments.
     '''
@@ -232,7 +243,7 @@ def clean_up(c):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
@@ -264,12 +275,12 @@ def my_error(users, message='ERROR'):
 
     Parameters
     ----------
-    user : :obj:`list` of :obj:`string`
+    user : list of str
         Contains all email addresses which should be notified.
         It might also contain just the ecmwf user name which wil trigger
         mailing to the associated email address for this user.
 
-    message : :obj:`string`, optional
+    message : str, optional
         Error message. Default value is "ERROR".
 
     Return
@@ -294,16 +305,16 @@ def send_mail(users, success_mode, message):
 
     Parameters
     ----------
-    users : :obj:`list` of :obj:`string`
+    users : list of str
         Contains all email addresses which should be notified.
         It might also contain just the ecmwf user name which wil trigger
         mailing to the associated email address for this user.
 
-    success_mode : :obj:``string`
+    success_mode : str
         States the exit mode of the program to put into
         the mail subject line.
 
-    message : :obj:`string`, optional
+    message : str, optional
         Message for exiting program. Default value is "Done!".
 
     Return
@@ -340,7 +351,7 @@ def normal_exit(message='Done!'):
 
     Parameters
     ----------
-    message : :obj:`string`, optional
+    message : str, optional
         Message for exiting program. Default value is "Done!".
 
     Return
@@ -373,10 +384,10 @@ def product(*args, **kwds):
 
     Parameters
     ----------
-    \*args : :obj:`list` or :obj:`string`
+    \*args : list or str
         Positional arguments (arbitrary number).
 
-    \*\*kwds : :obj:`dictionary`
+    \*\*kwds : dict
         Contains all the keyword arguments from \*args.
 
     Return
@@ -404,7 +415,7 @@ def silent_remove(filename):
 
     Parameters
     ----------
-    filename : :obj:`string`
+    filename : str
         The name of the file to be removed without notification.
 
     Return
@@ -428,12 +439,12 @@ def init128(filepath):
 
     Parameters
     ----------
-    filepath : :obj:`string`
+    filepath : str
         Path to file of ECMWF grib table number 128.
 
     Return
     ------
-    table128 : :obj:`dictionary`
+    table128 : dict
         Contains the ECMWF grib table 128 information.
         The key is the parameter number and the value is the
         short name of the parameter.
@@ -461,20 +472,20 @@ def to_param_id(pars, table):
 
     Parameters
     ----------
-    pars : :obj:`string`
+    pars : str
         Addpar argument from CONTROL file in the format of
         parameter names instead of ids. The parameter short
         names are sepearted with "/" and they are passed as
         one single string.
 
-    table : :obj:`dictionary`
+    table : dict
         Contains the ECMWF grib table 128 information.
         The key is the parameter number and the value is the
         short name of the parameter.
 
     Return
     ------
-    ipar : :obj:`list` of :obj:`integer`
+    ipar : list of int
         List of addpar parameters from CONTROL file transformed to
         parameter ids in the format of integer.
     '''
@@ -500,16 +511,16 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
 
     Parameters
     ----------
-    list_obj : :obj:`list`
+    list_obj : list of *
         A list with arbitrary content.
 
-    concatenate_sign : :obj:`string`, optional
+    concatenate_sign : str, optional
         A string which is used to concatenate the single
         list elements. Default value is ", ".
 
     Return
     ------
-    str_of_list : :obj:`string`
+    str_of_list : str
         The content of the list as a single string.
     '''
 
@@ -527,7 +538,7 @@ def make_dir(directory):
 
     Parameters
     ----------
-    directory : :obj:`string`
+    directory : str
         The path to directory which should be created.
 
     Return
@@ -556,19 +567,19 @@ def put_file_to_ecserver(ecd, filename, target, ecuid, ecgid):
 
     Parameters
     ----------
-    ecd : :obj:`string`
+    ecd : str
         The path were the file is stored.
 
-    filename : :obj:`string`
+    filename : str
         The name of the file to send to the ECMWF server.
 
-    target : :obj:`string`
+    target : str
         The target queue where the file should be sent to.
 
-    ecuid : :obj:`string`
+    ecuid : str
         The user id on ECMWF server.
 
-    ecgid : :obj:`string`
+    ecgid : str
         The group id on ECMWF server.
 
     Return
@@ -609,15 +620,15 @@ def submit_job_to_ecserver(target, jobname):
 
     Parameters
     ----------
-    target : :obj:`string`
+    target : str
         The target where the file should be sent to, e.g. the queue.
 
-    jobname : :obj:`string`
+    jobname : str
         The name of the jobfile to be submitted to the ECMWF server.
 
     Return
     ------
-    job_id : :obj:`int`
+    job_id : int
         The id number of the job as a reference at the ecmwf server.
     '''
 
@@ -649,12 +660,12 @@ def get_informations(filename):
 
     Parameters
     ----------
-    filename : :obj:`string`
+    filename : str
             Name of the file which will be opened to extract basic information.
 
     Return
     ------
-    data : :obj:`dictionary`
+    data : dict
         Contains basic informations of the ECMWF grib files, e.g.
         'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
         'longitudeOfFirstGridPointInDegrees', 'latitudeOfLastGridPointInDegrees',
@@ -701,20 +712,20 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
 
     Parameters
     ----------
-    info : :obj:`dictionary`
+    info : dict
         Contains basic informations of the ECMWF grib files, e.g.
         'Ni', 'Nj', 'latitudeOfFirstGridPointInDegrees',
         'longitudeOfFirstGridPointInDegrees', 'latitudeOfLastGridPointInDegrees',
         'longitudeOfLastGridPointInDegrees', 'jDirectionIncrementInDegrees',
         'iDirectionIncrementInDegrees', 'missingValue'
 
-    purefc : :obj:`integer`
+    purefc : int
         Switch for definition of pure forecast mode or not.
 
-    dtime : :obj:`string`
+    dtime : str
         Time step in hours.
 
-    index_vals : :obj:`list`
+    index_vals : list of list of str
         Contains the values from the keys used for a distinct selection
         of grib messages in processing  the grib files.
         Content looks like e.g.:
@@ -722,15 +733,15 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
         index_vals[1]: ('0', '1200', '1800', '600') ; time
         index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
 
-    start_date : :obj:`string`
+    start_date : str
         The start date of the retrieval job.
 
-    end_date : :obj:`string`
+    end_date : str
         The end date of the retrieval job.
 
     Return
     ------
-    (ix, jy, it) : :obj:`tuple` of :obj:`integer`
+    (ix, jy, it) : tuple of int
         Dimension in x-direction, y-direction and in time.
     '''
 
@@ -754,7 +765,7 @@ def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
 
     Parameters
     ----------
-    cmd_list : :obj:`list` of `:obj:`string`
+    cmd_list : list of str
         A list of the components for the command line execution. Each
         list entry is a single part of the command which is seperated from
         the rest by a blank space.
@@ -762,7 +773,7 @@ def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
 
     Return
     ------
-    error_msg : :obj:`string`, optional
+    error_msg : str, optional
         The possible error message if the subprocess failed.
         By default it will just tell "SUBPROCESS FAILED!".
     '''

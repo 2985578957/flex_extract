@@ -1,25 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#*******************************************************************************
+# @Author: Anne Philipp (University of Vienna)
+#
+# @Date: August 2018
+#
+# @Change History:
+#
+# @License:
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
+#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+#*******************************************************************************
+'''Configurations for flex_extract.
+
+Defines a couple of global constant parameters as well as filenames
+and pathes.
 '''
-*******************************************************************************
- @Author: Anne Philipp (University of Vienna)
-
- @Date: August 2018
-
- @Change History:
-
- @License:
-    (C) Copyright 2014-2018.
-
-    This software is licensed under the terms of the Apache Licence Version 2.0
-    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
-
- @Description:
-    Contains constant value parameter for flex_extract.
-
-*******************************************************************************
-'''
-
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -94,8 +95,7 @@ else:
     PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'control')
 #
 # ------------------------------------------------------------------------------
-# for making the installation tar ball, the relative pathes to the
-# flex_extract root directory are needed
+# RELATIVE PATHES FOR INSTALLATION TAR-BALL
 # ------------------------------------------------------------------------------
 
 PATH_REL_PYTHON_SRC = os.path.relpath(PATH_LOCAL_PYTHON, PATH_FLEXEXTRACT_DIR)

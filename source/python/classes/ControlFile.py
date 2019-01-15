@@ -20,32 +20,23 @@
 #        - outsourced the commandline argument assignments to control attributes
 #
 # @License:
-#    (C) Copyright 2015-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
-# @Class Description:
-#    The CONTROL file is the steering part of the FLEXPART extraction
-#    software. All necessary parameters needed to retrieve the data fields
-#    from the MARS archive for driving FLEXPART are set in a CONTROL file.
-#    Some specific parameters like the start and end dates can be overwritten
-#    by the command line parameters, but in generel all parameters needed
-#    for a complete set of fields for FLEXPART can be set in the CONTROL file.
-#
-# @Class Content:
-#    - __init__
-#    - __read_controlfile__
-#    - __str__
-#    - assign_args_to_control
-#    - assign_envs_to_control
-#    - check_conditions
-#    - check_install_conditions
-#    - to_list
-#
-# @Class Attributes:
-#
-#
+# @Class Methods:
+#    __init__
+#    _read_controlfile
+#    __str__
+#    assign_args_to_control
+#    assign_envs_to_control
+#    check_conditions
+#    check_install_conditions
+#    to_list
 #*******************************************************************************
 
 # ------------------------------------------------------------------------------
@@ -75,6 +66,269 @@ from mods.checks import (check_grid, check_area, check_levels, check_purefc,
 class ControlFile(object):
     '''
     Contains the information which are stored in the CONTROL files.
+
+    The CONTROL file is the steering part of the FLEXPART extraction
+    software. All necessary parameters needed to retrieve the data fields
+    from the MARS archive for driving FLEXPART are set in a CONTROL file.
+    Some specific parameters like the start and end dates can be overwritten
+    by the command line parameters, but in generel all parameters needed
+    for a complete set of fields for FLEXPART can be set in the CONTROL file.
+
+    Attributes
+    ----------
+    controlfile : str
+        The name of the control file to be processed. Default value is the
+        filename passed to the init function when initialised.
+
+    start_date : str
+        The first day of the retrieval period. Default value is None.
+
+    end_date :str
+        The last day of the retrieval period. Default value is None.
+
+    date_chunk : int
+        Length of period for a single mars retrieval. Default value is 3.
+
+    dtime :str
+        The time step in hours. Default value is None.
+
+    basetime : str
+        The time for a half day retrieval. The 12 hours upfront are to be
+        retrieved. Default value is None.
+
+    maxstep : int
+        The maximum forecast step for non flux data. Default value is None.
+
+    type : list of str
+        List of field type per retrieving hour. Default value is None.
+
+    time : list of str
+        List of retrieving times in hours. Default valuer is None.
+
+    step : list of str or str
+        List of forecast time steps in hours for non flux data.
+        Default value is None.
+
+    acctype : str
+        The field type for the accumulated forecast fields.
+        Default value is None.
+
+    acctime : str
+        The starting time of the accumulated forecasts. Default value is None.
+
+    accmaxstep : int
+        The maximum forecast step for the accumulated forecast fields
+        (flux data). Default value is None.
+
+    marsclass : str
+        Characterisation of dataset. Default value is None.
+
+    dataset : str
+        For public datasets there is the specific naming and parameter
+        dataset which has to be used to characterize the type of
+        data. Default value is None.
+
+    stream : str
+        Identifies the forecasting system used to generate the data.
+        Default value is None.
+
+    number : str
+        Selects the member in ensemble forecast run. Default value is 'OFF'.
+
+    expver : str
+        The version number of the dataset. Default value is '1'.
+
+    gaussian : str
+        This parameter is deprecated and should no longer be used.
+        Specifies the desired type of Gaussian grid for the output.
+        Default value is an empty string ''.
+
+    grid : str
+        Specifies the output grid which can be either a Gaussian grid
+        or a Latitude/Longitude grid. Default value is None.
+
+    area : str
+        Specifies the desired sub-area of data to be extracted.
+        Default value is None.
+
+    left : str
+        The western most longitude of the area to be extracted.
+        Default value is None.
+
+    lower : str
+        The southern most latitude of the area to be extracted.
+        Default value is None.
+
+    upper : str
+        The northern most latitued of the area to be extracted.
+        Default value is None.
+
+    right : str
+        The eastern most longitude of the area to be extracted.
+        Default value is None.
+
+    level : str
+        Specifies the maximum level. Default value is None.
+
+    levelist : str
+        Specifies the required level list. Default value is None.
+
+    resol : str
+        Specifies the desired triangular truncation of retrieved data,
+        before carrying out any other selected post-processing.
+        Default value is None.
+
+    gauss : int
+        Switch to select gaussian fields (1) or regular lat/lon (0).
+        Default value is 0.
+
+    accuracy : int
+        Specifies the number of bits per value to be used in the
+        generated GRIB coded fields. Default value is 24.
+
+    omega : int
+       Switch to select omega retrieval (1) or not (0). Default value is 0.
+
+    omegadiff : int
+        Switch to decide to calculate Omega and Dps/Dt from continuity
+        equation for diagnostic purposes (1) or not (0). Default value is 0.
+
+    eta : int
+        Switch to select direct retrieval of etadot from MARS (1) or
+        wether it has to be calculated (0). Then Default value is 0.
+
+    etadiff : int
+        Switch to select calculation of etadot and Dps/Dt from continuity
+        equation for diagnostic purposes (1) or not (0). Default value is 0.
+
+    etapar : int
+        GRIB parameter Id for etadot fields. Default value is 77.
+
+    dpdeta : int
+        Switch to select multiplication of etadot with dpdeta.
+        Default value is 1.
+
+    smooth : int
+        Spectral truncation of ETADOT after calculation on Gaussian grid.
+        Default value is 0.
+
+    format : str
+        The format of the GRIB data. Default value is 'GRIB1'.
+
+    addpar : str
+        List of additional surface level ECMWF parameter to be retrieved.
+        Default value is None.
+
+    prefix : str
+        Prefix string for the final FLEXPART/FLEXTRA ready input files.
+        Default value is 'EN'.
+
+    cwc : int
+        Switch to select wether the sum of cloud liquid water content and
+        cloud ice water content should be retrieved. Default value is 0.
+
+    wrf : int
+        Switch to select further parameters for retrievment to support
+        WRF simulations. Default value is 0.
+
+    ecfsdir : str
+        Path to the ECMWF storage  'ectmp:/${USER}/econdemand/'
+
+    mailfail : list of str
+        Email list for sending error log files from ECMWF servers.
+        The email addresses should be seperated by a comma.
+        Default value is ['${USER}'].
+
+    mailops : list of str
+        Email list for sending operational log files from ECMWF servers.
+        The email addresses should be seperated by a comma.
+        Default value is ['${USER}'].
+
+    grib2flexpart : int 0
+        Switch to select generation of preprocessed FLEXPART files ".fp".
+        If it is selected, the program grib2flexpart will try
+        to convert the flex_extract output files into ".fp" format.
+
+    ecstorage : int
+        Switch to select storage of FLEXPART ready output files
+        in the ECFS file system. Default value is 0.
+
+    ectrans : int
+        Switch to select the transfer of FLEXPART ready output files
+        to the gateway server. Default value is 0.
+
+    inputdir : str
+        Path to the temporary directory for the retrieval grib files and
+        other processing files. Default value is _config.PATH_INPUT_DIR.
+
+    outputdir : str
+        Path to the final directory where the final FLEXPART ready input
+        files are stored. Default value is None.
+
+    flexextractdir : str
+        Path to the flex_extract root directory. Default value is
+        _config.PATH_FLEXEXTRACT_DIR.
+
+    exedir : str
+        Path to the FORTRAN executable file. Default value is
+        _config.PATH_FORTRAN_SRC.
+
+    flexpartdir : str
+        Path to a FLEXPART root directory. Default value is None.
+
+    makefile : str
+        Name of the makefile to be used for the Fortran program.
+        Default value is 'Makefile.gfortran'.
+
+    destination : str
+        The remote destination which is used to transfer files
+        from ECMWF server to local gateway server. Default value is None.
+
+    gateway : str
+        The gateway server the user is using. Default value is None.
+
+    ecuid : str
+        The user id on ECMWF server. Default value is None.
+
+    ecgid : str
+        The group id on ECMWF server. Default value is None.
+
+    install_target : str
+        Defines the location where the installation is to be done.
+        Default value is None.
+
+    debug : int
+        Switch to keep temporary files at the end of postprocessing (1) or
+        to delete all temporary files except the final output files (0).
+        Default value is 0.
+
+    request : int
+        Switch to select between just retrieving the data (0), writing the mars
+        parameter values to a csv file (1) or doing both (2).
+        Default value is 0.
+
+    public : int
+        Switch to select kind of ECMWF Web Api access and the
+        possible data sets. Public data sets (1) and Memberstate data sets (0).
+        Default value is 0.
+
+    ecapi : boolean
+        Tells wether the ECMWF Web APi was able to load or not.
+        Default value is None.
+
+    purefc : int
+        Switch to decide wether the job is a pure forecast retrieval or
+        coupled with analysis data. Default value is 0.
+
+    rrint: int
+        Switch to select between old precipitation disaggregation method (0)
+        or the new IA3 disaggegration method (1). Default value is 0.
+
+    logicals : list of str
+        List of the names of logical switches which controls the flow
+        of the program. Default list is ['gauss', 'omega', 'omegadiff', 'eta',
+        'etadiff', 'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
+        'ectrans', 'debug', 'request', 'public', 'purefc', 'rrint']
     '''
 
     def __init__(self, filename):
@@ -84,7 +338,7 @@ class ControlFile(object):
 
         Parameters
         ----------
-        filename : :obj:`string`
+        filename : str
             Name of CONTROL file.
 
         Return
@@ -97,6 +351,7 @@ class ControlFile(object):
         self.start_date = None
         self.end_date = None
         self.date_chunk = 3
+        self.job_chunk = None
         self.dtime = None
         self.basetime = None
         self.maxstep = None
@@ -272,7 +527,7 @@ class ControlFile(object):
 
         Parameters
         ----------
-        args : :obj:`Namespace`
+        args : Namespace
             Contains the commandline arguments from script/program call.
 
         Return
@@ -297,7 +552,7 @@ class ControlFile(object):
 
         Parameters
         ----------
-        envs : :obj:`dictionary` of :obj:`strings`
+        envs : dict of str
             Contains the ECMWF environment parameternames "ECUID", "ECGID",
             "DESTINATION" and "GATEWAY" with its corresponding values.
             They were read from the file "ECMWF_ENV".
@@ -319,7 +574,7 @@ class ControlFile(object):
 
         Parameters
         ----------
-        queue : :obj:`string`
+        queue : str
             Name of the queue if submitted to the ECMWF servers.
             Used to check if ecuid, ecgid, gateway and destination
             are set correctly and are not empty.
@@ -396,7 +651,7 @@ class ControlFile(object):
 
         Return
         ------
-        l : :obj:`list`
+        l : list of *
             A sorted list of the all ControlFile class attributes with
             their values except the attributes "_expanded", "exedir",
             "flexextractdir" and "flexpartdir".

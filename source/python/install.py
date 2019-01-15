@@ -13,37 +13,50 @@
 #        - moved install_args_and_control in here
 #        - splitted code in smaller functions
 #        - delete convert build files in here instead of compile job script
-#        - changed static path names to Variables from config file
+#        - changed static path names to variables from config file
+#        - splitted install function into several smaller pieces
+#        - use of tarfile package in python
 #
 # @License:
-#    (C) Copyright 2015-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
-# @Program Functionality:
-#    Depending on the selected installation environment (locally or on the
-#    ECMWF server ecgate or cca) the program extracts the commandline
-#    arguments and the CONTROL file parameter and prepares the corresponding
-#    environment. The necessary files are collected in a tar-ball and placed
-#    at the target location. There its untared, the environment variables will
-#    be set and the Fortran code will be compiled. If the ECMWF environment is
-#    selected a job script is prepared and submitted for the remaining
-#    configurations after putting the tar-ball to the target ECMWF server.
-#
-# @Program Content:
-#    - main
-#    - get_install_cmdline_args
-#    - install_via_gateway
-#    - mk_tarball
-#    - un_tarball
-#    - mk_env_vars
-#    - mk_compilejob
-#    - mk_job_template
-#    - del_convert_build
-#    - mk_convert_build
+# @Methods:
+#    main
+#    get_install_cmdline_args
+#    install_via_gateway
+#    check_install_conditions
+#    mk_tarball
+#    un_tarball
+#    mk_env_vars
+#    mk_compilejob
+#    mk_job_template
+#    del_convert_build
+#    mk_convert_build
 #
 #*******************************************************************************
+'''This script installs the flex_extract program.
+
+Depending on the selected installation environment (locally or on the
+ECMWF server ecgate or cca) the program extracts the commandline
+arguments and the CONTROL file parameter and prepares the corresponding
+environment.
+The necessary files are collected in a tar-ball and placed
+at the target location. There its untared, the environment variables will
+be set and the Fortran code will be compiled.
+If the ECMWF environment is selected a job script is prepared and submitted
+for the remaining configurations after putting the tar-ball to the
+target ECMWF server.
+
+Type: install.py --help
+to get information about command line parameters.
+Read the documentation for usage instructions.
+'''
 
 # ------------------------------------------------------------------------------
 # MODULES
@@ -95,7 +108,7 @@ def get_install_cmdline_args():
 
     Return
     ------
-    args : :obj:`Namespace`
+    args : Namespace
         Contains the commandline arguments from script/program call.
     '''
     parser = ArgumentParser(description='Install flex_extract software locally or \
@@ -143,7 +156,7 @@ def install_via_gateway(c):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
@@ -228,7 +241,7 @@ def check_install_conditions(c):
 
     Parameters
     ----------
-    c : :obj:`ControlFile`
+    c : ControlFile
         Contains all the parameters of CONTROL file and
         command line.
 
@@ -282,11 +295,11 @@ def mk_tarball(tarball_path, target):
 
     Parameters
     ----------
-    tarball_path : :obj:`string`
+    tarball_path : str
         The complete path to the tar file which will contain all
         relevant data for flex_extract.
 
-    target : :obj:`string`
+    target : str
         The queue where the job is submitted to.
 
     Return
@@ -373,7 +386,7 @@ def un_tarball(tarball_path):
 
     Parameters
     ----------
-    tarball_path : :obj:`string`
+    tarball_path : str
         The complete path to the tar file which will contain all
         relevant data for flex_extract.
 
@@ -406,16 +419,16 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
 
     Parameters
     ----------
-    ecuid : :obj:`string`
+    ecuid : str
         The user id on ECMWF server.
 
-    ecgid : :obj:`string`
+    ecgid : str
         The group id on ECMWF server.
 
-    gateway : :obj:`string`
+    gateway : str
         The gateway server the user is using.
 
-    destination : :obj:`string`
+    destination : str
         The remote destination which is used to transfer files
         from ECMWF server to local gateway server.
 
@@ -468,20 +481,20 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
 
     Parameters
     ----------
-    makefile : :obj:`string`
+    makefile : str
         Name of the makefile which should be used to compile FORTRAN
         CONVERT2 program.
 
-    target : :obj:`string`
+    target : str
         The target where the installation should be done, e.g. the queue.
 
-    ecuid : :obj:`string`
+    ecuid : str
         The user id on ECMWF server.
 
-    ecgid : :obj:`string`
+    ecgid : str
         The group id on ECMWF server.
 
-    fp_root : :obj:`string`
+    fp_root : str
        Path to the root directory of FLEXPART environment or flex_extract
        environment.
 
@@ -543,20 +556,20 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
 
     Parameters
     ----------
-    ecuid : :obj:`string`
+    ecuid : str
         The user id on ECMWF server.
 
-    ecgid : :obj:`string`
+    ecgid : str
         The group id on ECMWF server.
 
-    gateway : :obj:`string`
+    gateway : str
         The gateway server the user is using.
 
-    destination : :obj:`string`
+    destination : str
         The remote destination which is used to transfer files
         from ECMWF server to local gateway server.
 
-    fp_root : :obj:`string`
+    fp_root : str
        Path to the root directory of FLEXPART environment or flex_extract
        environment.
 
@@ -621,7 +634,7 @@ def del_convert_build(src_path):
 
     Parameters
     ----------
-    src_path : :obj:`string`
+    src_path : str
         Path to the fortran source directory.
 
     Return
@@ -644,10 +657,10 @@ def mk_convert_build(src_path, makefile):
 
     Parameters
     ----------
-    src_path : :obj:`string`
+    src_path : str
         Path to the fortran source directory.
 
-    makefile : :obj:`string`
+    makefile : str
         The name of the makefile which should be used.
 
     Return
