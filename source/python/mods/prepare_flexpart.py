@@ -151,7 +151,7 @@ def prepare_flexpart(ppid, c):
     # assign starting date minus 1 day
     # since we need the 12 hours upfront
     # (the day before from 12 UTC to current day 00 UTC)
-    if c.basetime == '00':
+    if c.basetime == 0:
         start = start - datetime.timedelta(days=1)
 
     print('Prepare ' + start.strftime("%Y%m%d") +

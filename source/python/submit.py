@@ -145,7 +145,7 @@ def submit(jtemplate, c, queue):
 
     '''
 
-    if not c.basetime:
+    if not c.oper:
     # --------- create on demand job script ------------------------------------
         if c.purefc:
             print('---- Pure forecast mode! ----')
@@ -195,7 +195,7 @@ def submit(jtemplate, c, queue):
 
         c.start_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
         c.end_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
-        c.base_time = '${MSJ_BASETIME}'
+        c.basetime = '${MSJ_BASETIME}'
         if c.maxstep > 24:
             c.time = '${MSJ_BASETIME} {MSJ_BASETIME}'
 

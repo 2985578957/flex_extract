@@ -251,11 +251,10 @@ def mk_dates(c, fluxes):
     end = datetime.strptime(c.end_date, '%Y%m%d')
     chunk = timedelta(days=int(c.date_chunk))
 
-    if c.basetime:
-        if c.basetime == '00':
-            start = start - timedelta(days=1)
+    if c.basetime == 0:
+        start = start - timedelta(days=1)
 
-    if not c.purefc and fluxes:
+    if not c.purefc and fluxes and not c.basetime == 0:
         start = start - timedelta(days=1)
         end = end + timedelta(days=1)
 

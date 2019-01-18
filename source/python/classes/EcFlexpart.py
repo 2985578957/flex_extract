@@ -105,7 +105,7 @@ class EcFlexpart(object):
         dataset which has to be used to characterize the type of
         data.
 
-    basetime : str
+    basetime : int
         The time for a half day retrieval. The 12 hours upfront are to be
         retrieved.
 
@@ -275,10 +275,10 @@ class EcFlexpart(object):
         '''
         i = 0
         for ty, st, ti in zip(ftype, fstep, ftime):
-            btlist = range(24)
-            if self.basetime == '12':
+            btlist = range(len(ftime))
+            if self.basetime == 12:
                 btlist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-            if self.basetime == '00':
+            if self.basetime == 0:
                 btlist = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0]
 
             # if ((ty.upper() == 'AN' and (int(c.time[i]) % int(c.dtime)) == 0) or
@@ -286,7 +286,7 @@ class EcFlexpart(object):
                  # (int(c.step[i]) % int(c.dtime) == 0)) ) and \
                  # (int(c.time[i]) in btlist or c.purefc):
 
-            if (int(ti) in btlist) or self.purefc:
+            if (i in btlist) or self.purefc:
 
                 if ((ty.upper() == 'AN' and (int(ti) % int(self.dtime)) == 0) or
                     (ty.upper() != 'AN' and (int(st) % int(self.dtime)) == 0)):
@@ -304,6 +304,7 @@ class EcFlexpart(object):
                             self.types[ty]['steps'] += '/'
                         self.types[ty]['steps'] += st
             i += 1
+
         return
 
     def _create_field_types_fluxes(self):
@@ -707,7 +708,7 @@ class EcFlexpart(object):
                     retr_param_dict['gaussian'] = 'reduced'
 
     # ------  on demand path  --------------------------------------------------
-                if not self.basetime:
+                if self.basetime is None:
                     # ******* start retrievement
                     self._start_retrievement(request, retr_param_dict)
     # ------  operational path  ------------------------------------------------
@@ -717,20 +718,12 @@ class EcFlexpart(object):
                     # be accessible with user's credentials
 
                     enddate = retr_param_dict['date'].split('/')[-1]
-                    elimit = datetime.strptime(enddate + self.basetime,
+                    elimit = datetime.strptime(enddate + str(self.basetime),
                                                '%Y%m%d%H')
 
-                    if self.basetime == '12':
+                    if self.basetime == 12:
                         # --------------  flux data ----------------------------
                         if 'acc' in pk:
-
-                        # Strategy:
-                        # if maxtime-elimit >= 24h reduce date by 1,
-                        # if 12h <= maxtime-elimit<12h reduce time for last date
-                        # if maxtime-elimit<12h reduce step for last time
-                        # A split of the MARS job into 2 is likely necessary.
-
-
                             startdate = retr_param_dict['date'].split('/')[0]
                             enddate = datetime.strftime(elimit - t24h,'%Y%m%d')
                             retr_param_dict['date'] = '/'.join([startdate,
@@ -755,27 +748,31 @@ class EcFlexpart(object):
                             # ******* start retrievement
                             self._start_retrievement(request, retr_param_dict)
 
-                    else: # basetime = 0
+                    elif self.basetime == 0:
                         retr_param_dict['date'] = \
                             datetime.strftime(elimit - t24h, '%Y%m%d')
 
                         timesave = ''.join(retr_param_dict['time'])
 
-                        if '/' in retr_param_dict['time']:
+                        if ('/' in retr_param_dict['time'] and
+                            pk != 'OG_OROLSM__SL' and
+                            'acc' not in pk ) :
                             times = retr_param_dict['time'].split('/')
                             steps = retr_param_dict['step'].split('/')
-                            while (pk != 'OG_OROLSM__SL' and
-                                   'acc' not in pk and
-                                   (int(times[0]) + int(steps[0])) <= 12):
+                            print 'times', times, int(times[0]), times[1:]
+                            print 'steps', steps, int(steps[0])
+                            while int(times[0]) + int(steps[0]) <= 12:
+                                print 'HELLO'
                                 times = times[1:]
+                                print 'in while 1 ', times
 
-                            if len(times) > 1:
-                                retr_param_dict['time'] = '/'.join(times)
-                            else:
-                                retr_param_dict['time'] = times[0]
+                                if len(times) > 1:
+                                    retr_param_dict['time'] = '/'.join(times)
+                                else:
+                                    retr_param_dict['time'] = times[0]
 
-                        # ******* start retrievement
-                        self._start_retrievement(request, retr_param_dict)
+                                print 'in while 2 ', times
+                                print retr_param_dict['time']
 
                         if (pk != 'OG_OROLSM__SL' and
                             int(retr_param_dict['step'].split('/')[0]) == 0 and
@@ -789,8 +786,11 @@ class EcFlexpart(object):
                                 self._mk_targetname(ftype, pk,
                                                     retr_param_dict['date'])
 
-                            # ******* start retrievement
-                            self._start_retrievement(request, retr_param_dict)
+                        # ******* start retrievement
+                        self._start_retrievement(request, retr_param_dict)
+                    else:
+                        raise ValueError('ERROR: Basetime has an invalid value '
+                                                 '-> {}'.format(str(basetime)))
 
         if request == 0 or request == 2:
             print('MARS retrieve done ... ')
@@ -984,7 +984,11 @@ class EcFlexpart(object):
             t_dt = t_date + timedelta(hours=step)
             t_m1dt = t_date + timedelta(hours=step-int(c.dtime))
             t_m2dt = t_date + timedelta(hours=step-2*int(c.dtime))
-            t_enddate = None
+            if c.basetime is not None:
+                t_enddate = datetime.strptime(c.end_date + str(c.basetime),
+                                              '%Y%m%d%H')
+            else:
+                t_enddate = t_date + timedelta(2*int(c.dtime))
 
             if c.purefc:
                 fnout = os.path.join(c.inputdir, 'flux' +
@@ -1106,53 +1110,47 @@ class EcFlexpart(object):
 
                         codes_write(gid, f_handle)
 
-                        if c.basetime:
-                            t_enddate = datetime.strptime(c.end_date + c.basetime,
-                                                          '%Y%m%d%H')
-                        else:
-                            t_enddate = t_date + timedelta(2*int(c.dtime))
+                        # squeeze out information of last two steps
+                        # contained in deac_vals[parId]
+                        # Note that deac_vals[parId][0] has not been popped
+                        # in this case
 
-                            # squeeze out information of last two steps
-                            # contained in deac_vals[parId]
-                            # Note that deac_vals[parId][0] has not been popped
-                            # in this case
+                        if step == c.maxstep and c.purefc or \
+                           t_dt == t_enddate:
+                            # last step
+                            if c.purefc:
+                                values = deac_vals[parId][3]
+                                codes_set_values(gid, values)
+                                codes_set(gid, 'stepRange', step)
+                                #truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
+                                codes_write(gid, h_handle)
+                            else:
+                                values = deac_vals[parId][3]
+                                codes_set_values(gid, values)
+                                codes_set(gid, 'stepRange', 0)
+                                truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
+                                codes_set(gid, 'time', truedatetime.hour * 100)
+                                codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
+                                codes_write(gid, h_handle)
 
-                            if step == c.maxstep and c.purefc or \
-                               t_dt == t_enddate:
-                                # last step
-                                if c.purefc:
-                                    values = deac_vals[parId][3]
-                                    codes_set_values(gid, values)
-                                    codes_set(gid, 'stepRange', step)
-                                    #truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
-                                    codes_write(gid, h_handle)
-                                else:
-                                    values = deac_vals[parId][3]
-                                    codes_set_values(gid, values)
-                                    codes_set(gid, 'stepRange', 0)
-                                    truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))
-                                    codes_set(gid, 'time', truedatetime.hour * 100)
-                                    codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
-                                    codes_write(gid, h_handle)
+                            if parId == 142 or parId == 143:
+                                values = disaggregation.darain(list(reversed(deac_vals[parId])))
+                            else:
+                                values = disaggregation.dapoly(list(reversed(deac_vals[parId])))
 
-                                if parId == 142 or parId == 143:
-                                    values = disaggregation.darain(list(reversed(deac_vals[parId])))
-                                else:
-                                    values = disaggregation.dapoly(list(reversed(deac_vals[parId])))
-
-                                # step before last step
-                                if c.purefc:
-                                    codes_set(gid, 'stepRange', step-int(c.dtime))
-                                    #truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
-                                    codes_set_values(gid, values)
-                                    codes_write(gid, g_handle)
-                                else:
-                                    codes_set(gid, 'stepRange', 0)
-                                    truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
-                                    codes_set(gid, 'time', truedatetime.hour * 100)
-                                    codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
-                                    codes_set_values(gid, values)
-                                    codes_write(gid, g_handle)
+                            # step before last step
+                            if c.purefc:
+                                codes_set(gid, 'stepRange', step-int(c.dtime))
+                                #truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
+                                codes_set_values(gid, values)
+                                codes_write(gid, g_handle)
+                            else:
+                                codes_set(gid, 'stepRange', 0)
+                                truedatetime = t_m2dt + timedelta(hours=int(c.dtime))
+                                codes_set(gid, 'time', truedatetime.hour * 100)
+                                codes_set(gid, 'date', int(truedatetime.strftime('%Y%m%d')))
+                                codes_set_values(gid, values)
+                                codes_write(gid, g_handle)
 
                 codes_release(gid)
 
@@ -1416,10 +1414,11 @@ class EcFlexpart(object):
 
             # if the timestamp is out of basetime start/end date period,
             # skip this specific product
-            if c.basetime:
-                start_time = datetime.strptime(c.end_date + c.basetime,
+            if c.basetime is not None:
+                time_delta = timedelta(hours=12-int(c.dtime))
+                start_time = datetime.strptime(c.end_date + str(c.basetime),
                                                 '%Y%m%d%H') - time_delta
-                end_time = datetime.strptime(c.end_date + c.basetime,
+                end_time = datetime.strptime(c.end_date + str(c.basetime),
                                              '%Y%m%d%H')
                 if timestamp < start_time or timestamp > end_time:
                     continue

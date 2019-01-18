@@ -586,19 +586,22 @@ def check_basetime(basetime):
 
     Parameters
     ----------
-    basetime : str
+    basetime : int or str or None
         The time for a half day retrieval. The 12 hours upfront are to be
         retrieved.
 
     Return
     ------
-
+    basetime : int or None
+        The time for a half day retrieval. The 12 hours upfront are to be
+        retrieved.
     '''
-    if basetime:
-        if int(basetime) != 0 and int(basetime) != 12:
+    if basetime is not None:
+        basetime = int(basetime)
+        if basetime != 0 and basetime != 12:
             raise ValueError('ERROR: Basetime has an invalid value '
                              '-> {}'.format(str(basetime)))
-    return
+    return basetime
 
 def check_request(request, marsfile):
     '''Check if there is an old mars request file and remove it.
@@ -666,10 +669,10 @@ def check_acctype(acctype, ftype):
         print('... Control parameter ACCTYPE was not defined.')
         try:
             if len(ftype) == 1 and ftype[0] != 'AN':
-                print('Use same field type as for the non-flux fields.')
+                print('... Use same field type as for the non-flux fields.')
                 acctype = ftype[0]
             elif len(ftype) > 1 and ftype[1] != 'AN':
-                print('Use old setting by using TYPE[1] for flux forecast!')
+                print('... Use old setting by using TYPE[1] for flux forecast!')
                 acctype = ftype[1]
         except:
             raise ValueError('ERROR: Accumulation field type could not be set!')
@@ -680,10 +683,10 @@ def check_acctype(acctype, ftype):
     return acctype
 
 
-def check_acctime(acctime, acctype, purefc):
+def check_acctime(acctime, marsclass, purefc):
     '''Guarantees that the accumulation forecast times were set.
 
-    If it is not set, it is tried to set the value fore some of the
+    If it is not set, it tries to set the value for some of the
     most commonly used data sets. Otherwise it raises an error.
 
     Parameters
@@ -691,8 +694,8 @@ def check_acctime(acctime, acctype, purefc):
     acctime : str
         The starting time from the accumulated forecasts.
 
-    acctype : str
-        The field type for the accumulated forecast fields.
+    marsclass : str
+        ECMWF data classification identifier.
 
     purefc : int
         Switch for definition of pure forecast mode or not.
@@ -702,24 +705,25 @@ def check_acctime(acctime, acctype, purefc):
     acctime : str
         The starting time from the accumulated forecasts.
     '''
+
     if not acctime:
         print('... Control parameter ACCTIME was not defined.')
         print('... Value will be set depending on field type:\n '
-              '\t\t EA=06/18\n\t\t EI/OD=00/12\n\t\t  EP=18')
-        if acctype.upper() == 'EA': # Era 5
+              '\t\t EA=06/18\n\t\t EI/OD=00/12\n\t\t EP=18')
+        if marsclass.upper() == 'EA': # Era 5
             acctime = '06/18'
-        elif acctype.upper() == 'EI': # Era-Interim
+        elif marsclass.upper() == 'EI': # Era-Interim
             acctime = '00/12'
-        elif acctype.upper() == 'EP': # CERA
+        elif marsclass.upper() == 'EP': # CERA
             acctime = '18'
-        elif acctype.upper() == 'OD' and not purefc: # On-demand operational
+        elif marsclass.upper() == 'OD' and not purefc: # On-demand
             acctime = '00/12'
         else:
             raise ValueError('ERROR: Accumulation forecast time can not '
                              'automatically be derived!')
     return acctime
 
-def check_accmaxstep(accmaxstep, acctype, purefc, maxstep):
+def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
     '''Guarantees that the accumulation forecast step were set.
 
     Parameters
@@ -727,8 +731,8 @@ def check_accmaxstep(accmaxstep, acctype, purefc, maxstep):
     accmaxstep : str
         The maximum forecast step for the accumulated forecast fields.
 
-    acctype : str
-        The field type for the accumulated forecast fields.
+    marsclass : str
+        ECMWF data classification identifier.
 
     purefc : int
         Switch for definition of pure forecast mode or not.
@@ -745,11 +749,11 @@ def check_accmaxstep(accmaxstep, acctype, purefc, maxstep):
     if not accmaxstep:
         print('... Control parameter ACCMAXSTEP was not defined.')
         print('... Value will be set depending on field type/time: '
-              '\t\t EA/EI/OD=12\n\t\t  EP=24')
-        if acctype.upper() in ['EA', 'EI', 'OD'] and not purefc:
+              '\n\t\t EA/EI/OD=12\n\t\t EP=24')
+        if marsclass.upper() in ['EA', 'EI', 'OD'] and not purefc:
             # Era 5, Era-Interim, On-demand operational
             accmaxstep = '12'
-        elif acctype.upper() == 'EP': # CERA
+        elif marsclass.upper() == 'EP': # CERA
             accmaxstep = '18'
         elif purefc and accmaxstep != maxstep:
             accmaxstep = maxstep

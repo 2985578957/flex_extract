@@ -92,7 +92,7 @@ class ControlFile(object):
     dtime :str
         The time step in hours. Default value is None.
 
-    basetime : str
+    basetime : int
         The time for a half day retrieval. The 12 hours upfront are to be
         retrieved. Default value is None.
 
@@ -302,6 +302,11 @@ class ControlFile(object):
         to delete all temporary files except the final output files (0).
         Default value is 0.
 
+    oper : int
+        Switch to prepare the operational job script. Start date, end date and
+        basetime will be prepared with environment variables.
+        Default value is 0.
+
     request : int
         Switch to select between just retrieving the data (0), writing the mars
         parameter values to a csv file (1) or doing both (2).
@@ -408,6 +413,7 @@ class ControlFile(object):
         self.ecgid = None
         self.install_target = None
         self.debug = 0
+        self.oper = 0
         self.request = 0
         self.public = 0
         self.ecapi = None
@@ -416,8 +422,8 @@ class ControlFile(object):
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
                          'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
-                         'ectrans', 'debug', 'request', 'public', 'purefc',
-                         'rrint']
+                         'ectrans', 'debug', 'oper', 'request', 'public',
+                         'purefc', 'rrint']
 
         self._read_controlfile()
 
@@ -598,7 +604,7 @@ class ControlFile(object):
         self.start_date, self.end_date = check_dates(self.start_date,
                                                      self.end_date)
 
-        check_basetime(self.basetime)
+        self.basetime = check_basetime(self.basetime)
 
         self.levelist, self.level = check_levels(self.levelist, self.level)
 
@@ -623,9 +629,9 @@ class ControlFile(object):
 
         self.acctype = check_acctype(self.acctype, self.type)
 
-        self.acctime = check_acctime(self.acctime, self.acctype, self.purefc)
+        self.acctime = check_acctime(self.acctime, self.marsclass, self.purefc)
 
-        self.accmaxstep = check_accmaxstep(self.accmaxstep, self.acctype,
+        self.accmaxstep = check_accmaxstep(self.accmaxstep, self.marsclass,
                                            self.purefc, self.maxstep)
 
         self.purefc = check_purefc(self.type)

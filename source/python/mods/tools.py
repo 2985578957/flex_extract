@@ -146,7 +146,7 @@ def get_cmdline_args():
                         help="file with CONTROL parameters")
     parser.add_argument("--basetime", dest="basetime",
                         type=none_or_int, default=None,
-                        help="base such as 00 or 12 (for half day retrievals)")
+                        help="base such as 0 or 12 (for half day retrievals)")
     parser.add_argument("--step", dest="step",
                         type=none_or_str, default=None,
                         help="steps such as 00/to/48")
@@ -161,6 +161,10 @@ def get_cmdline_args():
     parser.add_argument("--debug", dest="debug",
                         type=none_or_int, default=None,
                         help="debug mode - leave temporary files intact")
+    parser.add_argument("--oper", dest="oper",
+                        type=none_or_int, default=None,
+                        help="operational mode - prepares dates with \
+                        environment variables")
     parser.add_argument("--request", dest="request",
                         type=none_or_int, default=None,
                         help="list all mars requests in file mars_requests.dat")
