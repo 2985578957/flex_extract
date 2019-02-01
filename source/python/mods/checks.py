@@ -754,7 +754,7 @@ def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
             # Era 5, Era-Interim, On-demand operational
             accmaxstep = '12'
         elif marsclass.upper() == 'EP': # CERA
-            accmaxstep = '18'
+            accmaxstep = '24'
         elif purefc and accmaxstep != maxstep:
             accmaxstep = maxstep
             print('... For pure forecast mode, the accumulated forecast must '
