@@ -29,6 +29,7 @@ import _config
 import exceptions
 from tools import my_error, silent_remove
 from datetime import datetime
+import numpy as np
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------
@@ -824,3 +825,42 @@ def check_job_chunk(job_chunk):
         pass
 
     return job_chunk
+
+
+def check_number(number, mailfail):
+    '''Check for correct string format of ensemble member numbers.
+
+    Parameters
+    ----------
+    number : str
+        List of ensemble member forecast runs.
+
+    mailfail : list of str
+        Contains all email addresses which should be notified.
+        It might also contain just the ecmwf user name which will trigger
+        mailing to the associated email address for this user.
+
+    Return
+    ------
+    number : str
+        String with list of ensemble member forecast runs. E.g. '01/02/03/04'
+    '''
+
+    if '/' in number:
+        numbers = number.split('/')
+        if 'to' in number.lower() and 'by' in number.lower():
+            number = '{:0>3}'.format(int(numbers[0])) + '/TO/' + \
+                     '{:0>3}'.format(int(numbers[2])) + '/BY/' + \
+                     '{:0>3}'.format(int(numbers[4]))
+        elif 'to' in number.lower() and 'by' not in number.lower():
+            number = '{:0>3}'.format(int(numbers[0])) + '/TO/' + \
+                     '{:0>3}'.format(int(numbers[2]))
+        else:
+            numbers = ['{:0>3}'.format(i) for i in numbers]
+            number = '{:0>3}/'.join(numbers)
+    elif number.isdigit():
+        number = '{:0>3}'.format(int(number))
+    else:
+        pass
+
+    return number

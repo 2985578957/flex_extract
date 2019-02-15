@@ -58,7 +58,7 @@ from mods.checks import (check_grid, check_area, check_levels, check_purefc,
                          check_basetime, check_public, check_acctype,
                          check_acctime, check_accmaxstep, check_time,
                          check_logicals_type, check_len_type_time_step,
-                         check_addpar, check_job_chunk)
+                         check_addpar, check_job_chunk, check_number)
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -644,6 +644,8 @@ class ControlFile(object):
         self.addpar = check_addpar(self.addpar)
 
         self.job_chunk = check_job_chunk(self.job_chunk)
+
+        self.number = check_number(self.number, self.mailfail)
 
         return
 
