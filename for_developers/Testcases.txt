@@ -15,6 +15,7 @@
 
 Testdatensätze:
 - ERA5
+  - streams OPER or ELDA
   - full resolution vs minimal resolution, testgrid
   - 1h / 3h / 6h
   - public vs member state
