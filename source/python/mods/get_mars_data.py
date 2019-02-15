@@ -208,6 +208,15 @@ def mk_server(c):
     return server
 
 
+def check_dates_for_nonflux_fc_times(types, times):
+    '''
+    '''
+    for ty, ti in zip(types,times):
+        if ty.upper() == 'FC' and int(ti) == 18:
+            return True
+    return False
+
+
 def mk_dates(c, fluxes):
     '''Prepares start and end date depending on flux or non flux data.
 
@@ -257,6 +266,11 @@ def mk_dates(c, fluxes):
     if not c.purefc and fluxes and not c.basetime == 0:
         start = start - timedelta(days=1)
         end = end + timedelta(days=1)
+
+    # if we have non-flux forecast data starting at 18 UTC
+    # we need to start retrieving data one day in advance
+    if not fluxes and check_dates_for_nonflux_fc_times(c.type, c.time):
+        start = start - timedelta(days=1)
 
     return start, end, chunk
 
