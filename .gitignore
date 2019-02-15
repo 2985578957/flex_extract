@@ -26,5 +26,7 @@ source/fortran/Makefile*
 test/Regression/Mars_request/Log/*
 run/control/*
 /test/Regression/Mars_request/7.1/*
+test/Testcases*
+
 
 
