@@ -10,23 +10,7 @@ source/fortran/*.mod
 run/ECMWF_ENV
 run/workspace/*
 source/fortran/CONVERT2
-source/python/.cache
-source/pythontest/.cache
-source/pythontest/.pytest_cache
 
-# temporary ignorance of the following files!
-for_developers/Content_Paper2.txt
-for_developers/DOCUFPEXTRACT.txt
-for_developers/FLEXEXTRACT_CONTENT.txt
-for_developers/NewDocu.odt
-for_developers/dokuECMWFDATA
-for_developers/*
-setup.sh
-source/fortran/Makefile*
-test/Regression/Mars_request/Log/*
-run/control/*
-/test/Regression/Mars_request/7.1/*
-test/Testcases*
 
 
 
