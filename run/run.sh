@@ -11,24 +11,24 @@
 # -----------------------------------------------------------------
 # AVAILABLE COMMANDLINE ARGUMENTS TO SET
 #
-# THE USER HAS TO SPECIFY THESE PARAMETER
-#
+# THE USER HAS TO SPECIFY THESE PARAMETERS:
 
 QUEUE='ecgate'
-START_DATE='20090108'
-END_DATE=None
+START_DATE=20190212
+END_DATE=20190212
 DATE_CHUNK=None
+JOB_CHUNK=1
 BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
 INPUTDIR=''
 OUTPUTDIR=None
-FLEXPART_ROOT_SCRIPTS=None 
+FLEXPARTDIR=None 
 PP_ID=None
 JOB_TEMPLATE='job.temp' 
-CONTROLFILE='CONTROL_EA5.testgrid' 
-DEBUG=1 
+CONTROLFILE='CONTROL_OD.fastnet' 
+DEBUG=0 
 REQUEST=2
 PUBLIC=0
 
@@ -54,6 +54,9 @@ fi
 if [ -n "$DATE_CHUNK" ]; then
   parameterlist+=" --date_chunk=$DATE_CHUNK"
 fi
+if [ -n "$JOB_CHUNK" ]; then
+  parameterlist+=" --job_chunk=$JOB_CHUNK"
+fi
 if [ -n "$BASETIME" ]; then
   parameterlist+=" --basetime=$BASETIME"
 fi
@@ -72,8 +75,8 @@ fi
 if [ -n "$OUTPUTDIR" ]; then
   parameterlist+=" --outputdir=$OUTPUTDIR"
 fi
-if [ -n "$FLEXPART_ROOT_SCRIPTS" ]; then
-  parameterlist+=" --flexpart_root_scripts=$FLEXPART_ROOT_SCRIPTS"
+if [ -n "$FLEXPARTDIR" ]; then
+  parameterlist+=" --flexpartdir=$FLEXPARTDIR"
 fi
 if [ -n "$PP_ID" ]; then
   parameterlist+=" --ppid=$PP_ID"
@@ -98,7 +101,7 @@ if [ -n "$PUBLIC" ]; then
 fi
 
 # -----------------------------------------------------------------
-# CALL INSTALLATION SCRIPT WITH DETERMINED COMMANDLINE ARGUMENTS
+# CALL SCRIPT WITH DETERMINED COMMANDLINE ARGUMENTS
 
 $pyscript $parameterlist
 

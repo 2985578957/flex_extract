@@ -30,15 +30,14 @@ case ${HOST} in
   module load python
   module unload grib_api
   module unload eccodes
+  module load eccodes
   module unload emos
-#  module load grib_api/1.27.0
-  module load grib_api/1.14.5
-  module load emos/457-r64
+  module load emos/455-r64
   export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
-  module load grib_api
+  module load eccodes
   module load emos
   module load python
   export SCRATCH=${TMPDIR}
@@ -54,67 +53,73 @@ export CONTROL=CONTROL
 
 cat >${CONTROL}<<EOF
 accmaxstep 12
-acctime 06/18
+acctime 00/12
 acctype FC
 accuracy 24
-addpar 186 187 188 235 139 39 
-area 
+addpar /186/187/188/235/139/39
+area 61.2/-10.0/36.0/32.0
 basetime None
-controlfile CONTROL_EA5.testgrid
+controlfile CONTROL_OD.fastnet
 cwc 0
 dataset None
 date_chunk 3
-debug 1
+debug 0
 destination annep@genericSftp
 dpdeta 1
 dtime 1
+ecapi None
 ecfsdir ectmp:/${USER}/econdemand/
 ecgid at
 ecstorage 0
 ectrans 1
 ecuid km4a
-end_date 20090108
+end_date 20190212
 eta 1
 etadiff 0
 etapar 77
 expver 1
-format GRIB1
+format GRIB2
 gateway srvx8.img.univie.ac.at
 gauss 0
 gaussian 
 grib2flexpart 0
-grid 1000
+grid 0.1/0.1
 inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
 install_target None
+job_chunk 1
 job_template job.temp
-left -5000
+left -10.0
 level 137
-levelist 100/to/137
-logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug request public 
-lower 10000
+levelist 1/to/137
+logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug oper request public purefc rrint 
+lower 36.0
 mailfail ${USER} 
 mailops ${USER} 
 makefile Makefile.gfortran
-marsclass EA
-maxstep 0
+marsclass OD
+maxstep 11
 number OFF
 omega 0
 omegadiff 0
+oper 0
 outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
-prefix EA
+prefix EN
 public 0
+purefc 0
 queue ecgate
 request 2
-resol 159
-right 5000
+resol 1279
+right 32.0
+rrint 0
 smooth 0
-start_date 20090108
-step 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+start_date 20190212
+step 00 01 02 03 04 05 06 07 08 09 10 11 00 01 02 03 04 05 06 07 08 09 10 11 
 stream OPER
-time 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
-type AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN AN 
-upper 20000
+time 00 00 00 00 00 00 00 00 00 00 00 00 12 12 12 12 12 12 12 12 12 12 12 12 
+type AN FC FC FC FC FC FC FC FC FC FC FC AN FC FC FC FC FC FC FC FC FC FC FC 
+upper 61.2
 wrf 0
+
 EOF
 
 

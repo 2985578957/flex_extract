@@ -27,18 +27,18 @@ set -x
 export VERSION=7.1
 case ${HOST} in
   *ecg*)
-  module unload eccodes
-#  module load python
   module unload grib_api
+  module unload eccodes
+  module load eccodes
+  module load python
   module unload emos
-  module load grib_api/1.27.0
-  module load emos/457-r64
+  module load emos/455-r64
   export FLEXPART_ROOT_SCRIPTS=${HOME}
   export MAKEFILE=Makefile.gfortran
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
-  module load grib_api
+  module load eccodes
   module load emos
   module load python
   echo ${GROUP}
