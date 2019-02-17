@@ -73,7 +73,7 @@ ecgid at
 ecstorage 0
 ectrans 1
 ecuid km4a
-end_date 20190212
+end_date 20190215
 eta 1
 etadiff 0
 etapar 77
@@ -84,7 +84,7 @@ gauss 0
 gaussian 
 grib2flexpart 0
 grid 0.1/0.1
-inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+inputdir /raid60/nas/tmc/Anne/Interpolation/Mergeflexextract/flexextract/run/workspace
 install_target None
 job_chunk 1
 job_template job.temp
@@ -102,7 +102,7 @@ number OFF
 omega 0
 omegadiff 0
 oper 0
-outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+outputdir /raid60/nas/tmc/Anne/Interpolation/Mergeflexextract/flexextract/run/workspace
 prefix EN
 public 0
 purefc 0
@@ -112,7 +112,7 @@ resol 1279
 right 32.0
 rrint 0
 smooth 0
-start_date 20190212
+start_date 20190215
 step 00 01 02 03 04 05 06 07 08 09 10 11 00 01 02 03 04 05 06 07 08 09 10 11 
 stream OPER
 time 00 00 00 00 00 00 00 00 00 00 00 00 12 12 12 12 12 12 12 12 12 12 12 12 
