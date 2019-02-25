@@ -161,15 +161,15 @@ def submit(jtemplate, c, queue):
             start = datetime.strptime(c.start_date, '%Y%m%d')
             end = datetime.strptime(c.end_date, '%Y%m%d')
             chunk = timedelta(days=c.job_chunk)
+            oneday = timedelta(days=1)
 
             while start <= end:
                 if (start + chunk) <= end:
-                    c.end_date = (start + chunk).strftime("%Y%m%d")
+                    c.end_date = (start + chunk - oneday).strftime("%Y%m%d")
                 else:
                     c.end_date = end.strftime("%Y%m%d")
 
                 clist = c.to_list()
-
                 mk_jobscript(jtemplate, job_file, clist)
 
                 job_id = submit_job_to_ecserver(queue, job_file)
