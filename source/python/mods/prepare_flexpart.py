@@ -177,7 +177,7 @@ def prepare_flexpart(ppid, c):
     flexpart = EcFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
     if c.stream.lower() == 'elda':
-        flexpart.calc_extra_elda(os.path.join(c.inputdir, c.prefix))
+        flexpart.calc_extra_elda(c.inputdir, c.prefix)
     flexpart.process_output(c)
 
     # make use of a possible conversion to a
