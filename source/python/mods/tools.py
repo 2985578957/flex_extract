@@ -297,8 +297,6 @@ def my_error(users, message='ERROR'):
 
     print(full_message)
 
-    send_mail(users, 'ERROR', full_message)
-
     sys.exit(1)
 
     return
