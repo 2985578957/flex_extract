@@ -1376,6 +1376,12 @@ class EcFlexpart(object):
 
         '''
 
+        # generate start and end timestamp of the retrieval period
+        start_period = datetime.strptime(c.start_date + c.time[0], '%Y%m%d%H')
+        start_period = start_period + timedelta(hours=int(c.step[0]))
+        end_period = datetime.strptime(c.end_date + c.time[-1], '%Y%m%d%H')
+        end_period = end_period + timedelta(hours=int(c.step[-1]))
+
         if c.wrf:
             table128 = init128(_config.PATH_GRIBTABLE)
             wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
@@ -1441,6 +1447,12 @@ class EcFlexpart(object):
             timestamp = datetime.strptime(cdate + ctime, '%Y%m%d%H')
             timestamp += timedelta(hours=int(cstep))
             cdate_hour = datetime.strftime(timestamp, '%Y%m%d%H')
+
+            # eliminate all temporary times
+            # which are outside the retrieval period
+            if timestamp < start_period or \
+               timestamp > end_period:
+                continue
 
             # if the timestamp is out of basetime start/end date period,
             # skip this specific product
