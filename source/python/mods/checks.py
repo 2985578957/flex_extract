@@ -394,13 +394,14 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
     # if pure forecast is selected and only one field type/time is set
     # prepare a complete list of type/time/step combination upto maxstep
     if len(ftype) == 1 and purefc:
-        ftype = []
-        steps = []
-        ftime = []
+        nftype = []
+        nsteps = []
+        nftime = []
         for i in range(0, maxstep + 1):
-            ftype.append(ftype[0])
-            steps.append('{:0>3}'.format(i))
-            ftime.append(ftime[0])
+            nftype.append(ftype[0])
+            nsteps.append('{:0>3}'.format(i))
+            nftime.append(ftime[0])
+        return nftype, nftime, nsteps
 
     return ftype, ftime, steps
 
