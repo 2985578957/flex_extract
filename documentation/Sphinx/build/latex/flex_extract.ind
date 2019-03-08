@@ -1,0 +1,73 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{accuracy}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{area}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{dapoly()}\spxextra{in module disaggregation}, \hyperpage{15}
+  \item \spxentry{darain()}\spxextra{in module disaggregation}, \hyperpage{15}
+  \item \spxentry{data\_retrieve()}\spxextra{MarsRetrieval.MarsRetrieval method}, \hyperpage{14}
+  \item \spxentry{dataset}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+  \item \spxentry{date}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{disaggregation}\spxextra{module}, \hyperpage{14}
+  \item \spxentry{display\_info()}\spxextra{MarsRetrieval.MarsRetrieval method}, \hyperpage{14}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{expver}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{gaussian}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{grid}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter I
+  \item \spxentry{IA3()}\spxextra{in module disaggregation}, \hyperpage{14}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{levelist}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{levtype}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{marsclass}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+  \item \spxentry{MarsRetrieval}\spxextra{class in MarsRetrieval}, \hyperpage{12}
+  \item \spxentry{MarsRetrieval}\spxextra{module}, \hyperpage{12}
+
+  \indexspace
+  \bigletter N
+  \item \spxentry{number}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{param}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{14}
+  \item \spxentry{print\_infodata\_csv()}\spxextra{MarsRetrieval.MarsRetrieval method}, 
+		\hyperpage{14}
+  \item \spxentry{public}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{repres}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{resol}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{server}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+  \item \spxentry{step}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{stream}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{target}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{14}
+  \item \spxentry{time}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{13}
+  \item \spxentry{type}\spxextra{MarsRetrieval.MarsRetrieval attribute}, \hyperpage{12}
+
+\end{sphinxtheindex}

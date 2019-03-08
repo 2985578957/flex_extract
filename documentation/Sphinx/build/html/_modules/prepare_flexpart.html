@@ -226,15 +226,9 @@
 <span class="kn">from</span> <span class="nn">checks</span> <span class="k">import</span> <span class="n">check_ppid</span>
 <span class="kn">from</span> <span class="nn">classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
 <span class="kn">from</span> <span class="nn">classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
-<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span>
+<span class="kn">from</span> <span class="nn">tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
+                   <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">classes.EcFlexpart</span> <span class="k">import</span> <span class="n">EcFlexpart</span>
-
-<span class="n">ecapi</span> <span class="o">=</span> <span class="s1">&#39;ecmwf&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">ecapi</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">ecmwfapi</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">ecapi</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># FUNCTION</span>
@@ -253,15 +247,9 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_args</span><span class="p">()</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
-
-    <span class="n">env_parameter</span> <span class="o">=</span> <span class="n">read_ecenv</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">assign_args_to_control</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">assign_envs_to_control</span><span class="p">(</span><span class="n">env_parameter</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">check_conditions</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
-
-    <span class="n">prepare_flexpart</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">ppid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">setup_controldata</span><span class="p">()</span>
+    <span class="n">prepare_flexpart</span><span class="p">(</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="n">normal_exit</span><span class="p">(</span><span class="s1">&#39;Preparing FLEXPART output files: Done!&#39;</span><span class="p">)</span>
 
     <span class="k">return</span></div>
 
@@ -289,8 +277,6 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">check_ppid</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ppid</span><span class="p">)</span>
 
-    <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="n">ecapi</span>
-
     <span class="c1"># create the start and end date</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">[:</span><span class="mi">4</span><span class="p">]),</span>
                           <span class="n">month</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span>
@@ -304,7 +290,7 @@
     <span class="c1"># assign starting date minus 1 day</span>
     <span class="c1"># since we need the 12 hours upfront</span>
     <span class="c1"># (the day before from 12 UTC to current day 00 UTC)</span>
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Prepare &#39;</span> <span class="o">+</span> <span class="n">start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span>
@@ -329,6 +315,8 @@
     <span class="c1"># copy/transfer/interpolate them or make them GRIB2</span>
     <span class="n">flexpart</span> <span class="o">=</span> <span class="n">EcFlexpart</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">inputfiles</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;elda&#39;</span><span class="p">:</span>
+        <span class="n">flexpart</span><span class="o">.</span><span class="n">calc_extra_elda</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">process_output</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
     <span class="c1"># make use of a possible conversion to a</span>
@@ -359,7 +347,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
 
     </p>
   </div>
@@ -378,13 +366,21 @@
 
   
 
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

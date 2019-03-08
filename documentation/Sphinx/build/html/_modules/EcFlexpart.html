@@ -219,7 +219,8 @@
 <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                      <span class="n">codes_get_values</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span>
                      <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span>
-                     <span class="n">codes_index_release</span><span class="p">,</span> <span class="n">codes_index_get</span><span class="p">)</span>
+                     <span class="n">codes_index_release</span><span class="p">,</span> <span class="n">codes_index_get</span><span class="p">,</span> <span class="n">codes_get_array</span><span class="p">,</span>
+                     <span class="n">codes_set_array</span><span class="p">,</span> <span class="n">codes_grib_new_from_file</span><span class="p">)</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
@@ -227,8 +228,9 @@
 <span class="kn">from</span> <span class="nn">GribUtil</span> <span class="k">import</span> <span class="n">GribUtil</span>
 <span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">init128</span><span class="p">,</span> <span class="n">to_param_id</span><span class="p">,</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span>
                         <span class="n">my_error</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">,</span> <span class="n">get_informations</span><span class="p">,</span> <span class="n">get_dimensions</span><span class="p">,</span>
-                        <span class="n">execute_subprocess</span><span class="p">)</span>
+                        <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">to_param_id_with_tablenumber</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">MarsRetrieval</span> <span class="k">import</span> <span class="n">MarsRetrieval</span>
+<span class="kn">from</span> <span class="nn">UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
 <span class="kn">import</span> <span class="nn">mods.disaggregation</span> <span class="k">as</span> <span class="nn">disaggregation</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -258,7 +260,7 @@
 <span class="sd">        dataset which has to be used to characterize the type of</span>
 <span class="sd">        data.</span>
 
-<span class="sd">    basetime : str</span>
+<span class="sd">    basetime : int</span>
 <span class="sd">        The time for a half day retrieval. The 12 hours upfront are to be</span>
 <span class="sd">        retrieved.</span>
 
@@ -428,10 +430,10 @@
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">ti</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="n">fstep</span><span class="p">,</span> <span class="n">ftime</span><span class="p">):</span>
-            <span class="n">btlist</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;12&#39;</span><span class="p">:</span>
+            <span class="n">btlist</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ftime</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
                 <span class="n">btlist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;00&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">btlist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
 
             <span class="c1"># if ((ty.upper() == &#39;AN&#39; and (int(c.time[i]) % int(c.dtime)) == 0) or</span>
@@ -439,7 +441,7 @@
                  <span class="c1"># (int(c.step[i]) % int(c.dtime) == 0)) ) and \</span>
                  <span class="c1"># (int(c.time[i]) in btlist or c.purefc):</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="ow">in</span> <span class="n">btlist</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="ow">in</span> <span class="n">btlist</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
 
                 <span class="k">if</span> <span class="p">((</span><span class="n">ty</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span>
                     <span class="p">(</span><span class="n">ty</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">st</span><span class="p">)</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)):</span>
@@ -457,6 +459,7 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">ty</span><span class="p">][</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/&#39;</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">ty</span><span class="p">][</span><span class="s1">&#39;steps&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">st</span>
             <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">_create_field_types_fluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -552,13 +555,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;SH__ML&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;U/V/D&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">glevelist</span><span class="p">,</span> <span class="s1">&#39;OFF&#39;</span><span class="p">]</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">gauss</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">eta</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/U/V&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Collecting etadot and parameters for gaussian grid </span><span class="se">\</span>
-<span class="s1">                            is a very costly parameter combination, </span><span class="se">\</span>
-<span class="s1">                            use this combination only for debugging!&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__SL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> \
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># GAUSS and ETA</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Collecting etadot and parameters for gaussian grid &#39;</span>
+                           <span class="s1">&#39;is a very costly parameter combination, &#39;</span>
+                           <span class="s1">&#39;use this combination only for debugging!&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__SL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
                                      <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resol</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__ML&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;U/V/D/77&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">glevelist</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__ML&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;U/V/D/ETADOT&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">glevelist</span><span class="p">,</span>
                                      <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resol</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="n">omega</span><span class="p">:</span>
@@ -568,11 +571,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/CLWC/CIWC&#39;</span>
 
         <span class="c1"># ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)</span>
-        <span class="c1">#-----------------------------------------------------------------------</span>
+        <span class="c1"># -----------------------------------------------------------------------</span>
         <span class="k">if</span> <span class="n">wrf</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/Z/VO&#39;</span>
             <span class="k">if</span> <span class="s1">&#39;/D&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/D&#39;</span>
+
             <span class="n">wrf_sfc</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SP&#39;</span><span class="p">,</span><span class="s1">&#39;SKT&#39;</span><span class="p">,</span><span class="s1">&#39;SST&#39;</span><span class="p">,</span><span class="s1">&#39;CI&#39;</span><span class="p">,</span><span class="s1">&#39;STL1&#39;</span><span class="p">,</span><span class="s1">&#39;STL2&#39;</span><span class="p">,</span> <span class="s1">&#39;STL3&#39;</span><span class="p">,</span><span class="s1">&#39;STL4&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;SWVL1&#39;</span><span class="p">,</span><span class="s1">&#39;SWVL2&#39;</span><span class="p">,</span><span class="s1">&#39;SWVL3&#39;</span><span class="p">,</span><span class="s1">&#39;SWVL4&#39;</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">wrf_sfc</span><span class="p">:</span>
@@ -601,7 +605,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG_acc_SL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LSP/CP/SSHF/EWSS/NSSS/SSR&quot;</span><span class="p">,</span> \
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG_acc_SL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LSP/CP/SSHF/EWSS/NSSS/SSR&quot;</span><span class="p">,</span>
                                     <span class="s1">&#39;SFC&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">]</span>
         <span class="k">return</span>
 
@@ -814,10 +818,8 @@
                            <span class="s1">&#39;param&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">ftype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
-            <span class="c1"># fk contains field types such as</span>
+            <span class="c1"># ftype contains field types such as</span>
             <span class="c1">#     [AN, FC, PF, CV]</span>
-            <span class="c1"># fv contains all of the items of the belonging key</span>
-            <span class="c1">#     [times, steps]</span>
             <span class="k">for</span> <span class="n">pk</span><span class="p">,</span> <span class="n">pv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
                 <span class="c1"># pk contains one of these keys of params</span>
                 <span class="c1">#     [SH__ML, SH__SL, GG__ML, GG__SL, OG__ML, OG__SL,</span>
@@ -835,7 +837,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_mk_targetname</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span>
                                         <span class="n">pk</span><span class="p">,</span>
                                         <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-                <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">table128</span> <span class="o">=</span> <span class="n">init128</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_GRIBTABLE</span><span class="p">)</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="n">to_param_id_with_tablenumber</span><span class="p">(</span><span class="n">pv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">table128</span><span class="p">)</span>
+                <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ids</span>
                 <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;levtype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;levelist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
                 <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
@@ -858,9 +862,26 @@
                 <span class="k">if</span> <span class="n">pk</span> <span class="o">==</span> <span class="s1">&#39;GG__SL&#39;</span> <span class="ow">and</span> <span class="n">pv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Q&#39;</span><span class="p">:</span>
                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;gaussian&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;reduced&#39;</span>
+                <span class="k">if</span> <span class="n">ftype</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;FC&#39;</span> <span class="ow">and</span> \
+                    <span class="s1">&#39;acc&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">23</span><span class="p">:</span>
+                        <span class="n">dates</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+                        <span class="n">sdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">dates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
+                        <span class="n">sdate</span> <span class="o">=</span> <span class="n">sdate</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">sdate</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)]</span> <span class="o">+</span>
+                            <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:])</span>
+
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;CHANGED FC start date to &#39;</span> <span class="o">+</span>
+                              <span class="n">sdate</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span>
+                              <span class="s1">&#39; to accomodate TIME=&#39;</span> <span class="o">+</span>
+                              <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                              <span class="s1">&#39;, STEP=&#39;</span> <span class="o">+</span>
+                              <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="c1"># ------  on demand path  --------------------------------------------------</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="c1"># ******* start retrievement</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
     <span class="c1"># ------  operational path  ------------------------------------------------</span>
@@ -870,20 +891,12 @@
                     <span class="c1"># be accessible with user&#39;s credentials</span>
 
                     <span class="n">enddate</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">elimit</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">enddate</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">,</span>
+                    <span class="n">elimit</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">enddate</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
                                                <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
 
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="s1">&#39;12&#39;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
                         <span class="c1"># --------------  flux data ----------------------------</span>
                         <span class="k">if</span> <span class="s1">&#39;acc&#39;</span> <span class="ow">in</span> <span class="n">pk</span><span class="p">:</span>
-
-                        <span class="c1"># Strategy:</span>
-                        <span class="c1"># if maxtime-elimit &gt;= 24h reduce date by 1,</span>
-                        <span class="c1"># if 12h &lt;= maxtime-elimit&lt;12h reduce time for last date</span>
-                        <span class="c1"># if maxtime-elimit&lt;12h reduce step for last time</span>
-                        <span class="c1"># A split of the MARS job into 2 is likely necessary.</span>
-
-
                             <span class="n">startdate</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                             <span class="n">enddate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span> <span class="o">-</span> <span class="n">t24h</span><span class="p">,</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">startdate</span><span class="p">,</span>
@@ -908,27 +921,24 @@
                             <span class="c1"># ******* start retrievement</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
 
-                    <span class="k">else</span><span class="p">:</span> <span class="c1"># basetime = 0</span>
+                    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> \
                             <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span> <span class="o">-</span> <span class="n">t24h</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
 
                         <span class="n">timesave</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">])</span>
 
-                        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="ow">and</span>
+                            <span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span>
+                            <span class="s1">&#39;acc&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pk</span> <span class="p">)</span> <span class="p">:</span>
                             <span class="n">times</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
                             <span class="n">steps</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-                            <span class="k">while</span> <span class="p">(</span><span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span>
-                                   <span class="s1">&#39;acc&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pk</span> <span class="ow">and</span>
-                                   <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">):</span>
+
+                            <span class="k">while</span> <span class="nb">int</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
                                 <span class="n">times</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-
-                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                                <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
-                            <span class="k">else</span><span class="p">:</span>
-                                <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-                        <span class="c1"># ******* start retrievement</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                    <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">times</span><span class="p">)</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
                         <span class="k">if</span> <span class="p">(</span><span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span>
                             <span class="nb">int</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span>
@@ -942,8 +952,11 @@
                                 <span class="bp">self</span><span class="o">.</span><span class="n">_mk_targetname</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="n">pk</span><span class="p">,</span>
                                                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
 
-                            <span class="c1"># ******* start retrievement</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
+                        <span class="c1"># ******* start retrievement</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Basetime has an invalid value &#39;</span>
+                                                 <span class="s1">&#39;-&gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">basetime</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MARS retrieve done ... &#39;</span><span class="p">)</span>
@@ -1068,7 +1081,11 @@
 
         <span class="c1"># get the values of the keys which are used for distinct access</span>
         <span class="c1"># of grib messages via product</span>
-        <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
+            <span class="c1"># more than one ensemble member is selected</span>
+            <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
         <span class="n">iid</span><span class="p">,</span> <span class="n">index_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mk_index_values</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
                                                 <span class="n">inputfiles</span><span class="p">,</span>
                                                 <span class="n">index_keys</span><span class="p">)</span>
@@ -1137,25 +1154,41 @@
             <span class="n">t_dt</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
             <span class="n">t_m1dt</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">step</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
             <span class="n">t_m2dt</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
-            <span class="n">t_enddate</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">t_enddate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
+                                              <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">t_enddate</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+
+            <span class="c1"># if necessary, add ensemble member number to filename suffix</span>
+            <span class="c1"># otherwise, add empty string</span>
+            <span class="k">if</span> <span class="s1">&#39;number&#39;</span> <span class="ow">in</span> <span class="n">index_keys</span><span class="p">:</span>
+                <span class="n">index_number</span> <span class="o">=</span> <span class="n">index_keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_vals</span><span class="p">[</span><span class="n">index_number</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">numbersuffix</span> <span class="o">=</span> <span class="s1">&#39;.N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prod</span><span class="p">[</span><span class="n">index_number</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">numbersuffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
                 <span class="n">fnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
                                      <span class="n">t_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">.%H&#39;</span><span class="p">)</span> <span class="o">+</span>
-                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">)))</span>
+                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span> <span class="o">+</span>
+                                     <span class="n">numbersuffix</span><span class="p">)</span>
                 <span class="n">gnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
                                      <span class="n">t_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">.%H&#39;</span><span class="p">)</span> <span class="o">+</span>
-                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">)))</span>
+                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span> <span class="o">+</span>
+                                     <span class="n">numbersuffix</span><span class="p">)</span>
                 <span class="n">hnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
                                      <span class="n">t_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">.%H&#39;</span><span class="p">)</span> <span class="o">+</span>
-                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">))</span>
+                                     <span class="s1">&#39;.</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span>
+                                     <span class="n">numbersuffix</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
-                                     <span class="n">t_m2dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">))</span>
+                                     <span class="n">t_m2dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">numbersuffix</span><span class="p">)</span>
                 <span class="n">gnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
-                                     <span class="n">t_m1dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">))</span>
+                                     <span class="n">t_m1dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">numbersuffix</span><span class="p">)</span>
                 <span class="n">hnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span>
-                                     <span class="n">t_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">))</span>
+                                     <span class="n">t_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">numbersuffix</span><span class="p">)</span>
 
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;outputfile = &quot;</span> <span class="o">+</span> <span class="n">fnout</span><span class="p">)</span>
             <span class="n">f_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fnout</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
@@ -1259,53 +1292,47 @@
 
                         <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">f_handle</span><span class="p">)</span>
 
-                        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
-                            <span class="n">t_enddate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">,</span>
-                                                          <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">t_enddate</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                        <span class="c1"># squeeze out information of last two steps</span>
+                        <span class="c1"># contained in deac_vals[parId]</span>
+                        <span class="c1"># Note that deac_vals[parId][0] has not been popped</span>
+                        <span class="c1"># in this case</span>
 
-                            <span class="c1"># squeeze out information of last two steps</span>
-                            <span class="c1"># contained in deac_vals[parId]</span>
-                            <span class="c1"># Note that deac_vals[parId][0] has not been popped</span>
-                            <span class="c1"># in this case</span>
+                        <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span> <span class="ow">or</span> \
+                           <span class="n">t_dt</span> <span class="o">==</span> <span class="n">t_enddate</span><span class="p">:</span>
+                            <span class="c1"># last step</span>
+                            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
+                                <span class="n">values</span> <span class="o">=</span> <span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+                                <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+                                <span class="c1">#truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))</span>
+                                <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">h_handle</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">values</span> <span class="o">=</span> <span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+                                <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                                <span class="n">truedatetime</span> <span class="o">=</span> <span class="n">t_m2dt</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">truedatetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">truedatetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
+                                <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">h_handle</span><span class="p">)</span>
 
-                            <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span> <span class="ow">or</span> \
-                               <span class="n">t_dt</span> <span class="o">==</span> <span class="n">t_enddate</span><span class="p">:</span>
-                                <span class="c1"># last step</span>
-                                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
-                                    <span class="n">values</span> <span class="o">=</span> <span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
-                                    <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
-                                    <span class="c1">#truedatetime = t_m2dt + timedelta(hours=2*int(c.dtime))</span>
-                                    <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">h_handle</span><span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">values</span> <span class="o">=</span> <span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
-                                    <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-                                    <span class="n">truedatetime</span> <span class="o">=</span> <span class="n">t_m2dt</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">truedatetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">truedatetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
-                                    <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">h_handle</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">parId</span> <span class="o">==</span> <span class="mi">142</span> <span class="ow">or</span> <span class="n">parId</span> <span class="o">==</span> <span class="mi">143</span><span class="p">:</span>
+                                <span class="n">values</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">darain</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">])))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">values</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">dapoly</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">])))</span>
 
-                                <span class="k">if</span> <span class="n">parId</span> <span class="o">==</span> <span class="mi">142</span> <span class="ow">or</span> <span class="n">parId</span> <span class="o">==</span> <span class="mi">143</span><span class="p">:</span>
-                                    <span class="n">values</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">darain</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">])))</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">values</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">dapoly</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">])))</span>
-
-                                <span class="c1"># step before last step</span>
-                                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
-                                    <span class="c1">#truedatetime = t_m2dt + timedelta(hours=int(c.dtime))</span>
-                                    <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-                                    <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">g_handle</span><span class="p">)</span>
-                                <span class="k">else</span><span class="p">:</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-                                    <span class="n">truedatetime</span> <span class="o">=</span> <span class="n">t_m2dt</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">truedatetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
-                                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">truedatetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
-                                    <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-                                    <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">g_handle</span><span class="p">)</span>
+                            <span class="c1"># step before last step</span>
+                            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="n">step</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                                <span class="c1">#truedatetime = t_m2dt + timedelta(hours=int(c.dtime))</span>
+                                <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                                <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">g_handle</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                                <span class="n">truedatetime</span> <span class="o">=</span> <span class="n">t_m2dt</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">truedatetime</span><span class="o">.</span><span class="n">hour</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+                                <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">truedatetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)))</span>
+                                <span class="n">codes_set_values</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+                                <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">g_handle</span><span class="p">)</span>
 
                 <span class="n">codes_release</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
 
@@ -1366,7 +1393,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... disaggregation or precipitation with new method.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... disaggregation of precipitation with new method.&#39;</span><span class="p">)</span>
         <span class="n">lsp_new_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ni</span> <span class="o">*</span> <span class="n">nj</span><span class="p">,</span> <span class="n">nt</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="n">cp_new_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ni</span> <span class="o">*</span> <span class="n">nj</span><span class="p">,</span> <span class="n">nt</span> <span class="o">*</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
@@ -1396,11 +1423,6 @@
                     <span class="n">fluxfilename</span> <span class="o">=</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
                     <span class="n">filename1</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_1&#39;</span>
                     <span class="n">filename2</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span>
-
-                <span class="c1"># collect for final processing</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fluxfilename</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename1</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename2</span><span class="p">))</span>
 
                 <span class="c1"># write original time step to flux file as usual</span>
                 <span class="n">fluxfile</span> <span class="o">=</span> <span class="n">GribUtil</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">fluxfilename</span><span class="p">))</span>
@@ -1505,6 +1527,12 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
+        <span class="c1"># generate start and end timestamp of the retrieval period</span>
+        <span class="n">start_period</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
+        <span class="n">start_period</span> <span class="o">=</span> <span class="n">start_period</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">step</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">end_period</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">time</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
+        <span class="n">end_period</span> <span class="o">=</span> <span class="n">end_period</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">wrf</span><span class="p">:</span>
             <span class="n">table128</span> <span class="o">=</span> <span class="n">init128</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_GRIBTABLE</span><span class="p">)</span>
             <span class="n">wrfpars</span> <span class="o">=</span> <span class="n">to_param_id</span><span class="p">(</span><span class="s1">&#39;sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/</span><span class="se">\</span>
@@ -1524,7 +1552,11 @@
 
         <span class="c1"># get the values of the keys which are used for distinct access</span>
         <span class="c1"># of grib messages via product</span>
-        <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">:</span>
+            <span class="c1"># more than one ensemble member is selected</span>
+            <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;step&quot;</span><span class="p">]</span>
         <span class="n">iid</span><span class="p">,</span> <span class="n">index_vals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mk_index_values</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
                                                 <span class="n">inputfiles</span><span class="p">,</span>
                                                 <span class="n">index_keys</span><span class="p">)</span>
@@ -1567,12 +1599,19 @@
             <span class="n">timestamp</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">cstep</span><span class="p">))</span>
             <span class="n">cdate_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
 
+            <span class="c1"># skip all temporary times</span>
+            <span class="c1"># which are outside the retrieval period</span>
+            <span class="k">if</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">start_period</span> <span class="ow">or</span> \
+               <span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">end_period</span><span class="p">:</span>
+                <span class="k">continue</span>
+
             <span class="c1"># if the timestamp is out of basetime start/end date period,</span>
             <span class="c1"># skip this specific product</span>
-            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
-                <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">,</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">time_delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">12</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
                                                 <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">time_delta</span>
-                <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">,</span>
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
                                              <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">start_time</span> <span class="ow">or</span> <span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">end_time</span><span class="p">:</span>
                     <span class="k">continue</span>
@@ -1656,12 +1695,12 @@
             <span class="n">pwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="s1">&#39;fort.21&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">st_size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">eta</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Parameter 77 (etadot) is missing, most likely it is </span><span class="se">\</span>
-<span class="s1">                       not available for this type or date/time</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Parameter 77 (etadot) is missing, most likely it is &#39;</span>
+                      <span class="s1">&#39;not available for this type or date / time</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Check parameters CLASS, TYPE, STREAM, START_DATE</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">my_error</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span> <span class="s1">&#39;fort.21 is empty while parameter eta </span><span class="se">\</span>
-<span class="s1">                         is set to 1 in CONTROL file&#39;</span><span class="p">)</span>
-<span class="c1">#============================================================================================</span>
+                <span class="n">my_error</span><span class="p">(</span><span class="s1">&#39;fort.21 is empty while parameter eta &#39;</span>
+                         <span class="s1">&#39;is set to 1 in CONTROL file&#39;</span><span class="p">)</span>
+<span class="c1"># ============================================================================================</span>
             <span class="c1"># write out all output to log file before starting fortran programm</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
@@ -1671,17 +1710,28 @@
                                <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;FORTRAN PROGRAM FAILED!&#39;</span><span class="p">)</span><span class="c1">#shell=True)</span>
 
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
-<span class="c1">#============================================================================================</span>
+<span class="c1"># ============================================================================================</span>
             <span class="c1"># create name of final output file, e.g. EN13040500 (ENYYMMDDHH)</span>
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">ctime</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cstep</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate_hour</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+
+            <span class="c1"># if necessary, add ensemble member number to filename suffix</span>
+            <span class="k">if</span> <span class="s1">&#39;number&#39;</span> <span class="ow">in</span> <span class="n">index_keys</span><span class="p">:</span>
+                <span class="n">index_number</span> <span class="o">=</span> <span class="n">index_keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_vals</span><span class="p">[</span><span class="n">index_number</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span> <span class="o">+</span> <span class="s1">&#39;.N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">prod</span><span class="p">[</span><span class="n">index_number</span><span class="p">]))</span>
+
             <span class="n">fnout</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">suffix</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;outputfile = &quot;</span> <span class="o">+</span> <span class="n">fnout</span><span class="p">)</span>
             <span class="c1"># collect for final processing</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fnout</span><span class="p">))</span>
-<span class="c1">#============================================================================================</span>
+            <span class="c1"># get additional precipitation subgrid data if available</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">rrint</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fnout</span> <span class="o">+</span> <span class="s1">&#39;_1&#39;</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">fnout</span> <span class="o">+</span> <span class="s1">&#39;_2&#39;</span><span class="p">))</span>
+<span class="c1"># ============================================================================================</span>
             <span class="c1"># create outputfile and copy all data from intermediate files</span>
             <span class="c1"># to the outputfile (final GRIB input files for FLEXPART)</span>
             <span class="n">orolsm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">+</span>
@@ -1701,11 +1751,72 @@
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span> <span class="s1">&#39;OMEGA&#39;</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
                     <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;fort.25&#39;</span><span class="p">),</span>
                                             <span class="s1">&#39;rb&#39;</span><span class="p">),</span> <span class="n">fout</span><span class="p">)</span>
-<span class="c1">#============================================================================================</span>
+<span class="c1"># ============================================================================================</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">wrf</span><span class="p">:</span>
             <span class="n">fwrf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="n">codes_index_release</span><span class="p">(</span><span class="n">iid</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="EcFlexpart.calc_extra_elda"><a class="viewcode-back" href="../api.html#EcFlexpart.EcFlexpart.calc_extra_elda">[docs]</a>    <span class="k">def</span> <span class="nf">calc_extra_elda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Calculates extra ensemble members for ELDA - Stream.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        path : str</span>
+<span class="sd">            Path to the output files.</span>
+
+<span class="sd">        prefix : str</span>
+<span class="sd">            The prefix of the output filenames as defined in Control file.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1"># max number</span>
+        <span class="n">maxnum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># get a list of all prepared output files with control forecast (CF)</span>
+        <span class="n">CF_filelist</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;*.N000&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">cffile</span> <span class="ow">in</span> <span class="n">CF_filelist</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cffile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">cfvalues</span><span class="o">=</span><span class="p">[]</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">fid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">fid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">cfvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">codes_get_array</span><span class="p">(</span><span class="n">fid</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">))</span>
+                    <span class="n">codes_release</span><span class="p">(</span><span class="n">fid</span><span class="p">)</span>
+
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">cffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;N000&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">maxnum</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span> <span class="c1"># max number nehmen</span>
+
+                <span class="c1"># read an ensemble member</span>
+                <span class="n">g</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+                <span class="c1"># create file for newly calculated ensemble member</span>
+                <span class="n">h</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">maxnum</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+                <span class="c1"># number of message in grib file</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">gid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="n">codes_get_array</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">)</span>
+                    <span class="n">codes_set_array</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">,</span>
+                                    <span class="n">values</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">values</span><span class="o">-</span><span class="n">cfvalues</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+                    <span class="n">codes_set</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="n">maxnum</span><span class="p">)</span>
+                    <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+                    <span class="n">codes_release</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
+                    <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="n">g</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="n">h</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;wrote &#39;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">maxnum</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">outputfilelist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;N</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="n">maxnum</span><span class="p">)))</span>
 
         <span class="k">return</span></div>
 
@@ -1735,7 +1846,7 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Postprocessing:</span><span class="se">\n</span><span class="s1"> Format: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_config</span><span class="o">.</span><span class="n">FLAG_ON_ECMWFSERVER</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ecstorage: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> ecfsdir: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span>
                   <span class="nb">format</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ecstorage</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecfsdir</span><span class="p">))</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ectrans: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> gateway: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> destination: </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> &#39;</span>
@@ -1757,13 +1868,13 @@
                                    <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;RENAMING FOR NEW GRIB2 FORMAT &#39;</span>
                                    <span class="s1">&#39;FILES FAILED!&#39;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ectrans</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ectrans</span> <span class="ow">and</span> <span class="n">_config</span><span class="o">.</span><span class="n">FLAG_ON_ECMWFSERVER</span><span class="p">:</span>
                 <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;-overwrite&#39;</span><span class="p">,</span> <span class="s1">&#39;-gateway&#39;</span><span class="p">,</span>
                                     <span class="n">c</span><span class="o">.</span><span class="n">gateway</span><span class="p">,</span> <span class="s1">&#39;-remote&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span>
                                     <span class="s1">&#39;-source&#39;</span><span class="p">,</span> <span class="n">ofile</span><span class="p">],</span>
                                    <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;TRANSFER TO LOCAL SERVER FAILED!&#39;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ecstorage</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecapi</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">ecstorage</span> <span class="ow">and</span> <span class="n">_config</span><span class="o">.</span><span class="n">FLAG_ON_ECMWFSERVER</span><span class="p">:</span>
                 <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ecp&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">ofile</span><span class="p">,</span>
                                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ecfsdir</span><span class="p">)],</span>
                                    <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;COPY OF FILES TO ECSTORAGE &#39;</span>
@@ -1871,7 +1982,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
 
     </p>
   </div>
@@ -1890,13 +2001,21 @@
 
   
 
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

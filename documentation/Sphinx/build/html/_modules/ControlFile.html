@@ -211,7 +211,7 @@
                          <span class="n">check_basetime</span><span class="p">,</span> <span class="n">check_public</span><span class="p">,</span> <span class="n">check_acctype</span><span class="p">,</span>
                          <span class="n">check_acctime</span><span class="p">,</span> <span class="n">check_accmaxstep</span><span class="p">,</span> <span class="n">check_time</span><span class="p">,</span>
                          <span class="n">check_logicals_type</span><span class="p">,</span> <span class="n">check_len_type_time_step</span><span class="p">,</span>
-                         <span class="n">check_addpar</span><span class="p">,</span> <span class="n">check_job_chunk</span><span class="p">)</span>
+                         <span class="n">check_addpar</span><span class="p">,</span> <span class="n">check_job_chunk</span><span class="p">,</span> <span class="n">check_number</span><span class="p">)</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># CLASS</span>
@@ -245,7 +245,7 @@
 <span class="sd">    dtime :str</span>
 <span class="sd">        The time step in hours. Default value is None.</span>
 
-<span class="sd">    basetime : str</span>
+<span class="sd">    basetime : int</span>
 <span class="sd">        The time for a half day retrieval. The 12 hours upfront are to be</span>
 <span class="sd">        retrieved. Default value is None.</span>
 
@@ -455,6 +455,11 @@
 <span class="sd">        to delete all temporary files except the final output files (0).</span>
 <span class="sd">        Default value is 0.</span>
 
+<span class="sd">    oper : int</span>
+<span class="sd">        Switch to prepare the operational job script. Start date, end date and</span>
+<span class="sd">        basetime will be prepared with environment variables.</span>
+<span class="sd">        Default value is 0.</span>
+
 <span class="sd">    request : int</span>
 <span class="sd">        Switch to select between just retrieving the data (0), writing the mars</span>
 <span class="sd">        parameter values to a csv file (1) or doing both (2).</span>
@@ -465,8 +470,12 @@
 <span class="sd">        possible data sets. Public data sets (1) and Memberstate data sets (0).</span>
 <span class="sd">        Default value is 0.</span>
 
-<span class="sd">    ecapi : boolean</span>
-<span class="sd">        Tells wether the ECMWF Web APi was able to load or not.</span>
+<span class="sd">    ec_api : boolean</span>
+<span class="sd">        Tells wether the ECMWF Web API was able to load or not.</span>
+<span class="sd">        Default value is None.</span>
+
+<span class="sd">    cds_api : boolean</span>
+<span class="sd">        Tells wether the CDS API was able to load or not.</span>
 <span class="sd">        Default value is None.</span>
 
 <span class="sd">    purefc : int</span>
@@ -561,16 +570,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ecgid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">install_target</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oper</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">public</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ecapi</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ec_api</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cds_api</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rrint</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logicals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gauss&#39;</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="s1">&#39;omegadiff&#39;</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="s1">&#39;etadiff&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;dpdeta&#39;</span><span class="p">,</span> <span class="s1">&#39;cwc&#39;</span><span class="p">,</span> <span class="s1">&#39;wrf&#39;</span><span class="p">,</span> <span class="s1">&#39;grib2flexpart&#39;</span><span class="p">,</span> <span class="s1">&#39;ecstorage&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span> <span class="s1">&#39;purefc&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;rrint&#39;</span><span class="p">]</span>
+                         <span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;oper&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;purefc&#39;</span><span class="p">,</span> <span class="s1">&#39;rrint&#39;</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_controlfile</span><span class="p">()</span>
 
@@ -627,8 +638,7 @@
                             <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                                 <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][:</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">var</span> <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">my_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">,</span>
-                                         <span class="s1">&#39;Could not find variable &#39;</span>
+                                <span class="n">my_error</span><span class="p">(</span><span class="s1">&#39;Could not find variable &#39;</span>
                                          <span class="o">+</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; while reading &#39;</span> <span class="o">+</span>
                                          <span class="bp">self</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
                         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;_expanded&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -751,7 +761,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">check_dates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
 
-        <span class="n">check_basetime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">=</span> <span class="n">check_basetime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">check_levels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">)</span>
 
@@ -776,9 +786,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span> <span class="o">=</span> <span class="n">check_acctype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">acctime</span> <span class="o">=</span> <span class="n">check_acctime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">acctime</span> <span class="o">=</span> <span class="n">check_acctime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">marsclass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">check_accmaxstep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">check_accmaxstep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">marsclass</span><span class="p">,</span>
                                            <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span> <span class="o">=</span> <span class="n">check_purefc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
@@ -791,6 +801,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">addpar</span> <span class="o">=</span> <span class="n">check_addpar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addpar</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span> <span class="o">=</span> <span class="n">check_job_chunk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">check_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
@@ -849,7 +861,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
 
     </p>
   </div>
@@ -868,13 +880,21 @@
 
   
 
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

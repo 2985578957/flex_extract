@@ -219,7 +219,7 @@
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
                         <span class="n">submit_job_to_ecserver</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">mods.get_mars_data</span> <span class="k">import</span> <span class="n">get_mars_data</span>
 <span class="kn">from</span> <span class="nn">mods.prepare_flexpart</span> <span class="k">import</span> <span class="n">prepare_flexpart</span>
@@ -243,31 +243,25 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_args</span><span class="p">()</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
-
-    <span class="n">env_parameter</span> <span class="o">=</span> <span class="n">read_ecenv</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">assign_args_to_control</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">assign_envs_to_control</span><span class="p">(</span><span class="n">env_parameter</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">check_conditions</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">ppid</span><span class="p">,</span> <span class="n">queue</span><span class="p">,</span> <span class="n">job_template</span> <span class="o">=</span> <span class="n">setup_controldata</span><span class="p">()</span>
 
     <span class="c1"># on local side</span>
-    <span class="c1"># on ECMWF server this would also be the local side</span>
+    <span class="c1"># starting from an ECMWF server this would also be the local side</span>
     <span class="n">called_from_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">called_from_dir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">called_from_dir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">)</span>
         <span class="n">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">prepare_flexpart</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+            <span class="n">prepare_flexpart</span><span class="p">(</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
             <span class="n">exit_message</span> <span class="o">=</span> <span class="s1">&#39;FLEX_EXTRACT IS DONE!&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">exit_message</span> <span class="o">=</span> <span class="s1">&#39;PRINTING MARS_REQUESTS DONE!&#39;</span>
     <span class="c1"># send files to ECMWF server</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">submit</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">job_template</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">queue</span><span class="p">)</span>
+        <span class="n">submit</span><span class="p">(</span><span class="n">job_template</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
         <span class="n">exit_message</span> <span class="o">=</span> <span class="s1">&#39;FLEX_EXTRACT JOB SCRIPT IS SUBMITED!&#39;</span>
 
     <span class="n">normal_exit</span><span class="p">(</span><span class="n">exit_message</span><span class="p">)</span>
@@ -298,7 +292,7 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">oper</span><span class="p">:</span>
     <span class="c1"># --------- create on demand job script ------------------------------------</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;---- Pure forecast mode! ----&#39;</span><span class="p">)</span>
@@ -314,15 +308,15 @@
             <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">chunk</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">c</span><span class="o">.</span><span class="n">job_chunk</span><span class="p">)</span>
+            <span class="n">oneday</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
             <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">chunk</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
-                    <span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">chunk</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">chunk</span> <span class="o">-</span> <span class="n">oneday</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
 
                 <span class="n">clist</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
-
                 <span class="n">mk_jobscript</span><span class="p">(</span><span class="n">jtemplate</span><span class="p">,</span> <span class="n">job_file</span><span class="p">,</span> <span class="n">clist</span><span class="p">)</span>
 
                 <span class="n">job_id</span> <span class="o">=</span> <span class="n">submit_job_to_ecserver</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">job_file</span><span class="p">)</span>
@@ -348,7 +342,7 @@
 
         <span class="n">c</span><span class="o">.</span><span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_YEAR}</span><span class="s1">$</span><span class="si">{MSJ_MONTH}</span><span class="s1">$</span><span class="si">{MSJ_DAY}</span><span class="s1">&#39;</span>
         <span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_YEAR}</span><span class="s1">$</span><span class="si">{MSJ_MONTH}</span><span class="s1">$</span><span class="si">{MSJ_DAY}</span><span class="s1">&#39;</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">base_time</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_BASETIME}</span><span class="s1">&#39;</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_BASETIME}</span><span class="s1">&#39;</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&gt;</span> <span class="mi">24</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{MSJ_BASETIME}</span><span class="s1"> </span><span class="si">{MSJ_BASETIME}</span><span class="s1">&#39;</span>
 
@@ -433,7 +427,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
 
     </p>
   </div>
@@ -452,13 +446,21 @@
 
   
 
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-    
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

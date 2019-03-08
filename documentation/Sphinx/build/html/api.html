@@ -522,981 +522,468 @@ for a complete set of fields for FLEXPART can be set in the CONTROL file.</p>
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.controlfile">
 <code class="descname">controlfile</code><a class="headerlink" href="#ControlFile.ControlFile.controlfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>The name of the control file to be processed. Default value is the
+<dd><p><em>str</em> – The name of the control file to be processed. Default value is the
 filename passed to the init function when initialised.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.start_date">
 <code class="descname">start_date</code><a class="headerlink" href="#ControlFile.ControlFile.start_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>The first day of the retrieval period. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The first day of the retrieval period. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.end_date">
 <code class="descname">end_date</code><a class="headerlink" href="#ControlFile.ControlFile.end_date" title="Permalink to this definition">¶</a></dt>
-<dd><p>The last day of the retrieval period. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The last day of the retrieval period. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.date_chunk">
 <code class="descname">date_chunk</code><a class="headerlink" href="#ControlFile.ControlFile.date_chunk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Length of period for a single mars retrieval. Default value is 3.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Length of period for a single mars retrieval. Default value is 3.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.dtime">
 <code class="descname">dtime</code><a class="headerlink" href="#ControlFile.ControlFile.dtime" title="Permalink to this definition">¶</a></dt>
-<dd><p>The time step in hours. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The time step in hours. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.basetime">
 <code class="descname">basetime</code><a class="headerlink" href="#ControlFile.ControlFile.basetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>The time for a half day retrieval. The 12 hours upfront are to be
+<dd><p><em>int</em> – The time for a half day retrieval. The 12 hours upfront are to be
 retrieved. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.maxstep">
 <code class="descname">maxstep</code><a class="headerlink" href="#ControlFile.ControlFile.maxstep" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum forecast step for non flux data. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – The maximum forecast step for non flux data. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.type">
 <code class="descname">type</code><a class="headerlink" href="#ControlFile.ControlFile.type" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of field type per retrieving hour. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>list of str</em> – List of field type per retrieving hour. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.time">
 <code class="descname">time</code><a class="headerlink" href="#ControlFile.ControlFile.time" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of retrieving times in hours. Default valuer is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>list of str</em> – List of retrieving times in hours. Default valuer is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.step">
 <code class="descname">step</code><a class="headerlink" href="#ControlFile.ControlFile.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of forecast time steps in hours for non flux data.
+<dd><p><em>list of str or str</em> – List of forecast time steps in hours for non flux data.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str or str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.acctype">
 <code class="descname">acctype</code><a class="headerlink" href="#ControlFile.ControlFile.acctype" title="Permalink to this definition">¶</a></dt>
-<dd><p>The field type for the accumulated forecast fields.
+<dd><p><em>str</em> – The field type for the accumulated forecast fields.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.acctime">
 <code class="descname">acctime</code><a class="headerlink" href="#ControlFile.ControlFile.acctime" title="Permalink to this definition">¶</a></dt>
-<dd><p>The starting time of the accumulated forecasts. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The starting time of the accumulated forecasts. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.accmaxstep">
 <code class="descname">accmaxstep</code><a class="headerlink" href="#ControlFile.ControlFile.accmaxstep" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum forecast step for the accumulated forecast fields
+<dd><p><em>int</em> – The maximum forecast step for the accumulated forecast fields
 (flux data). Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.marsclass">
 <code class="descname">marsclass</code><a class="headerlink" href="#ControlFile.ControlFile.marsclass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Characterisation of dataset. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Characterisation of dataset. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.dataset">
 <code class="descname">dataset</code><a class="headerlink" href="#ControlFile.ControlFile.dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>For public datasets there is the specific naming and parameter
+<dd><p><em>str</em> – For public datasets there is the specific naming and parameter
 dataset which has to be used to characterize the type of
 data. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.stream">
 <code class="descname">stream</code><a class="headerlink" href="#ControlFile.ControlFile.stream" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identifies the forecasting system used to generate the data.
+<dd><p><em>str</em> – Identifies the forecasting system used to generate the data.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.number">
 <code class="descname">number</code><a class="headerlink" href="#ControlFile.ControlFile.number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects the member in ensemble forecast run. Default value is ‘OFF’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Selects the member in ensemble forecast run. Default value is ‘OFF’.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.expver">
 <code class="descname">expver</code><a class="headerlink" href="#ControlFile.ControlFile.expver" title="Permalink to this definition">¶</a></dt>
-<dd><p>The version number of the dataset. Default value is ‘1’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The version number of the dataset. Default value is ‘1’.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.gaussian">
 <code class="descname">gaussian</code><a class="headerlink" href="#ControlFile.ControlFile.gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>This parameter is deprecated and should no longer be used.
+<dd><p><em>str</em> – This parameter is deprecated and should no longer be used.
 Specifies the desired type of Gaussian grid for the output.
 Default value is an empty string ‘’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.grid">
 <code class="descname">grid</code><a class="headerlink" href="#ControlFile.ControlFile.grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the output grid which can be either a Gaussian grid
+<dd><p><em>str</em> – Specifies the output grid which can be either a Gaussian grid
 or a Latitude/Longitude grid. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.area">
 <code class="descname">area</code><a class="headerlink" href="#ControlFile.ControlFile.area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired sub-area of data to be extracted.
+<dd><p><em>str</em> – Specifies the desired sub-area of data to be extracted.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.left">
 <code class="descname">left</code><a class="headerlink" href="#ControlFile.ControlFile.left" title="Permalink to this definition">¶</a></dt>
-<dd><p>The western most longitude of the area to be extracted.
+<dd><p><em>str</em> – The western most longitude of the area to be extracted.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.lower">
 <code class="descname">lower</code><a class="headerlink" href="#ControlFile.ControlFile.lower" title="Permalink to this definition">¶</a></dt>
-<dd><p>The southern most latitude of the area to be extracted.
+<dd><p><em>str</em> – The southern most latitude of the area to be extracted.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.upper">
 <code class="descname">upper</code><a class="headerlink" href="#ControlFile.ControlFile.upper" title="Permalink to this definition">¶</a></dt>
-<dd><p>The northern most latitued of the area to be extracted.
+<dd><p><em>str</em> – The northern most latitued of the area to be extracted.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.right">
 <code class="descname">right</code><a class="headerlink" href="#ControlFile.ControlFile.right" title="Permalink to this definition">¶</a></dt>
-<dd><p>The eastern most longitude of the area to be extracted.
+<dd><p><em>str</em> – The eastern most longitude of the area to be extracted.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.level">
 <code class="descname">level</code><a class="headerlink" href="#ControlFile.ControlFile.level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the maximum level. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the maximum level. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.levelist">
 <code class="descname">levelist</code><a class="headerlink" href="#ControlFile.ControlFile.levelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the required level list. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the required level list. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.resol">
 <code class="descname">resol</code><a class="headerlink" href="#ControlFile.ControlFile.resol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired triangular truncation of retrieved data,
+<dd><p><em>str</em> – Specifies the desired triangular truncation of retrieved data,
 before carrying out any other selected post-processing.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.gauss">
 <code class="descname">gauss</code><a class="headerlink" href="#ControlFile.ControlFile.gauss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select gaussian fields (1) or regular lat/lon (0).
+<dd><p><em>int</em> – Switch to select gaussian fields (1) or regular lat/lon (0).
 Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.accuracy">
 <code class="descname">accuracy</code><a class="headerlink" href="#ControlFile.ControlFile.accuracy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the number of bits per value to be used in the
+<dd><p><em>int</em> – Specifies the number of bits per value to be used in the
 generated GRIB coded fields. Default value is 24.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.omega">
 <code class="descname">omega</code><a class="headerlink" href="#ControlFile.ControlFile.omega" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select omega retrieval (1) or not (0). Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Switch to select omega retrieval (1) or not (0). Default value is 0.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.omegadiff">
 <code class="descname">omegadiff</code><a class="headerlink" href="#ControlFile.ControlFile.omegadiff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to decide to calculate Omega and Dps/Dt from continuity
+<dd><p><em>int</em> – Switch to decide to calculate Omega and Dps/Dt from continuity
 equation for diagnostic purposes (1) or not (0). Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.eta">
 <code class="descname">eta</code><a class="headerlink" href="#ControlFile.ControlFile.eta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select direct retrieval of etadot from MARS (1) or
+<dd><p><em>int</em> – Switch to select direct retrieval of etadot from MARS (1) or
 wether it has to be calculated (0). Then Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.etadiff">
 <code class="descname">etadiff</code><a class="headerlink" href="#ControlFile.ControlFile.etadiff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select calculation of etadot and Dps/Dt from continuity
+<dd><p><em>int</em> – Switch to select calculation of etadot and Dps/Dt from continuity
 equation for diagnostic purposes (1) or not (0). Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.etapar">
 <code class="descname">etapar</code><a class="headerlink" href="#ControlFile.ControlFile.etapar" title="Permalink to this definition">¶</a></dt>
-<dd><p>GRIB parameter Id for etadot fields. Default value is 77.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – GRIB parameter Id for etadot fields. Default value is 77.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.dpdeta">
 <code class="descname">dpdeta</code><a class="headerlink" href="#ControlFile.ControlFile.dpdeta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select multiplication of etadot with dpdeta.
+<dd><p><em>int</em> – Switch to select multiplication of etadot with dpdeta.
 Default value is 1.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.smooth">
 <code class="descname">smooth</code><a class="headerlink" href="#ControlFile.ControlFile.smooth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Spectral truncation of ETADOT after calculation on Gaussian grid.
+<dd><p><em>int</em> – Spectral truncation of ETADOT after calculation on Gaussian grid.
 Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.format">
 <code class="descname">format</code><a class="headerlink" href="#ControlFile.ControlFile.format" title="Permalink to this definition">¶</a></dt>
-<dd><p>The format of the GRIB data. Default value is ‘GRIB1’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The format of the GRIB data. Default value is ‘GRIB1’.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.addpar">
 <code class="descname">addpar</code><a class="headerlink" href="#ControlFile.ControlFile.addpar" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of additional surface level ECMWF parameter to be retrieved.
+<dd><p><em>str</em> – List of additional surface level ECMWF parameter to be retrieved.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.prefix">
 <code class="descname">prefix</code><a class="headerlink" href="#ControlFile.ControlFile.prefix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prefix string for the final FLEXPART/FLEXTRA ready input files.
+<dd><p><em>str</em> – Prefix string for the final FLEXPART/FLEXTRA ready input files.
 Default value is ‘EN’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.cwc">
 <code class="descname">cwc</code><a class="headerlink" href="#ControlFile.ControlFile.cwc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select wether the sum of cloud liquid water content and
+<dd><p><em>int</em> – Switch to select wether the sum of cloud liquid water content and
 cloud ice water content should be retrieved. Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.wrf">
 <code class="descname">wrf</code><a class="headerlink" href="#ControlFile.ControlFile.wrf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select further parameters for retrievment to support
+<dd><p><em>int</em> – Switch to select further parameters for retrievment to support
 WRF simulations. Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.ecfsdir">
 <code class="descname">ecfsdir</code><a class="headerlink" href="#ControlFile.ControlFile.ecfsdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the ECMWF storage  ‘ectmp:/${USER}/econdemand/’</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Path to the ECMWF storage  ‘ectmp:/${USER}/econdemand/’</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.mailfail">
 <code class="descname">mailfail</code><a class="headerlink" href="#ControlFile.ControlFile.mailfail" title="Permalink to this definition">¶</a></dt>
-<dd><p>Email list for sending error log files from ECMWF servers.
+<dd><p><em>list of str</em> – Email list for sending error log files from ECMWF servers.
 The email addresses should be seperated by a comma.
 Default value is [‘${USER}’].</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.mailops">
 <code class="descname">mailops</code><a class="headerlink" href="#ControlFile.ControlFile.mailops" title="Permalink to this definition">¶</a></dt>
-<dd><p>Email list for sending operational log files from ECMWF servers.
+<dd><p><em>list of str</em> – Email list for sending operational log files from ECMWF servers.
 The email addresses should be seperated by a comma.
 Default value is [‘${USER}’].</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.grib2flexpart">
 <code class="descname">grib2flexpart</code><a class="headerlink" href="#ControlFile.ControlFile.grib2flexpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select generation of preprocessed FLEXPART files “.fp”.
+<dd><p><em>int 0</em> – Switch to select generation of preprocessed FLEXPART files “.fp”.
 If it is selected, the program grib2flexpart will try
 to convert the flex_extract output files into “.fp” format.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int 0</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.ecstorage">
 <code class="descname">ecstorage</code><a class="headerlink" href="#ControlFile.ControlFile.ecstorage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select storage of FLEXPART ready output files
+<dd><p><em>int</em> – Switch to select storage of FLEXPART ready output files
 in the ECFS file system. Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.ectrans">
 <code class="descname">ectrans</code><a class="headerlink" href="#ControlFile.ControlFile.ectrans" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select the transfer of FLEXPART ready output files
+<dd><p><em>int</em> – Switch to select the transfer of FLEXPART ready output files
 to the gateway server. Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.inputdir">
 <code class="descname">inputdir</code><a class="headerlink" href="#ControlFile.ControlFile.inputdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the temporary directory for the retrieval grib files and
+<dd><p><em>str</em> – Path to the temporary directory for the retrieval grib files and
 other processing files. Default value is _config.PATH_INPUT_DIR.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.outputdir">
 <code class="descname">outputdir</code><a class="headerlink" href="#ControlFile.ControlFile.outputdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the final directory where the final FLEXPART ready input
+<dd><p><em>str</em> – Path to the final directory where the final FLEXPART ready input
 files are stored. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.flexextractdir">
 <code class="descname">flexextractdir</code><a class="headerlink" href="#ControlFile.ControlFile.flexextractdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the flex_extract root directory. Default value is
+<dd><p><em>str</em> – Path to the flex_extract root directory. Default value is
 _config.PATH_FLEXEXTRACT_DIR.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.exedir">
 <code class="descname">exedir</code><a class="headerlink" href="#ControlFile.ControlFile.exedir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the FORTRAN executable file. Default value is
+<dd><p><em>str</em> – Path to the FORTRAN executable file. Default value is
 _config.PATH_FORTRAN_SRC.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.flexpartdir">
 <code class="descname">flexpartdir</code><a class="headerlink" href="#ControlFile.ControlFile.flexpartdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to a FLEXPART root directory. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Path to a FLEXPART root directory. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.makefile">
 <code class="descname">makefile</code><a class="headerlink" href="#ControlFile.ControlFile.makefile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Name of the makefile to be used for the Fortran program.
+<dd><p><em>str</em> – Name of the makefile to be used for the Fortran program.
 Default value is ‘Makefile.gfortran’.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.destination">
 <code class="descname">destination</code><a class="headerlink" href="#ControlFile.ControlFile.destination" title="Permalink to this definition">¶</a></dt>
-<dd><p>The remote destination which is used to transfer files
+<dd><p><em>str</em> – The remote destination which is used to transfer files
 from ECMWF server to local gateway server. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.gateway">
 <code class="descname">gateway</code><a class="headerlink" href="#ControlFile.ControlFile.gateway" title="Permalink to this definition">¶</a></dt>
-<dd><p>The gateway server the user is using. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The gateway server the user is using. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.ecuid">
 <code class="descname">ecuid</code><a class="headerlink" href="#ControlFile.ControlFile.ecuid" title="Permalink to this definition">¶</a></dt>
-<dd><p>The user id on ECMWF server. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The user id on ECMWF server. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.ecgid">
 <code class="descname">ecgid</code><a class="headerlink" href="#ControlFile.ControlFile.ecgid" title="Permalink to this definition">¶</a></dt>
-<dd><p>The group id on ECMWF server. Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The group id on ECMWF server. Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.install_target">
 <code class="descname">install_target</code><a class="headerlink" href="#ControlFile.ControlFile.install_target" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the location where the installation is to be done.
+<dd><p><em>str</em> – Defines the location where the installation is to be done.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.debug">
 <code class="descname">debug</code><a class="headerlink" href="#ControlFile.ControlFile.debug" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to keep temporary files at the end of postprocessing (1) or
+<dd><p><em>int</em> – Switch to keep temporary files at the end of postprocessing (1) or
 to delete all temporary files except the final output files (0).
 Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ControlFile.ControlFile.oper">
+<code class="descname">oper</code><a class="headerlink" href="#ControlFile.ControlFile.oper" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – Switch to prepare the operational job script. Start date, end date and
+basetime will be prepared with environment variables.
+Default value is 0.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.request">
 <code class="descname">request</code><a class="headerlink" href="#ControlFile.ControlFile.request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select between just retrieving the data (0), writing the mars
+<dd><p><em>int</em> – Switch to select between just retrieving the data (0), writing the mars
 parameter values to a csv file (1) or doing both (2).
 Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.public">
 <code class="descname">public</code><a class="headerlink" href="#ControlFile.ControlFile.public" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select kind of ECMWF Web Api access and the
+<dd><p><em>int</em> – Switch to select kind of ECMWF Web Api access and the
 possible data sets. Public data sets (1) and Memberstate data sets (0).
 Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ControlFile.ControlFile.ecapi">
-<code class="descname">ecapi</code><a class="headerlink" href="#ControlFile.ControlFile.ecapi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tells wether the ECMWF Web APi was able to load or not.
+<dt id="ControlFile.ControlFile.ec_api">
+<code class="descname">ec_api</code><a class="headerlink" href="#ControlFile.ControlFile.ec_api" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>boolean</em> – Tells wether the ECMWF Web API was able to load or not.
 Default value is None.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">boolean</td>
-</tr>
-</tbody>
-</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ControlFile.ControlFile.cds_api">
+<code class="descname">cds_api</code><a class="headerlink" href="#ControlFile.ControlFile.cds_api" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>boolean</em> – Tells wether the CDS API was able to load or not.
+Default value is None.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.purefc">
 <code class="descname">purefc</code><a class="headerlink" href="#ControlFile.ControlFile.purefc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to decide wether the job is a pure forecast retrieval or
+<dd><p><em>int</em> – Switch to decide wether the job is a pure forecast retrieval or
 coupled with analysis data. Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.rrint">
 <code class="descname">rrint</code><a class="headerlink" href="#ControlFile.ControlFile.rrint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch to select between old precipitation disaggregation method (0)
+<dd><p><em>int</em> – Switch to select between old precipitation disaggregation method (0)
 or the new IA3 disaggegration method (1). Default value is 0.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ControlFile.ControlFile.logicals">
 <code class="descname">logicals</code><a class="headerlink" href="#ControlFile.ControlFile.logicals" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of the names of logical switches which controls the flow
+<dd><p><em>list of str</em> – List of the names of logical switches which controls the flow
 of the program. Default list is [‘gauss’, ‘omega’, ‘omegadiff’, ‘eta’,
 ‘etadiff’, ‘dpdeta’, ‘cwc’, ‘wrf’, ‘grib2flexpart’, ‘ecstorage’,
 ‘ectrans’, ‘debug’, ‘request’, ‘public’, ‘purefc’, ‘rrint’]</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">
@@ -1586,400 +1073,194 @@ by FLEXPART, therefore using the FORTRAN program.</p>
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.mreq_count">
 <code class="descname">mreq_count</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.mreq_count" title="Permalink to this definition">¶</a></dt>
-<dd><p>Counter for the number of generated mars requests.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Counter for the number of generated mars requests.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.inputdir">
 <code class="descname">inputdir</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.inputdir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Path to the directory where the retrieved data is stored.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Path to the directory where the retrieved data is stored.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.dataset">
 <code class="descname">dataset</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>For public datasets there is the specific naming and parameter
+<dd><p><em>str</em> – For public datasets there is the specific naming and parameter
 dataset which has to be used to characterize the type of
 data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.basetime">
 <code class="descname">basetime</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.basetime" title="Permalink to this definition">¶</a></dt>
-<dd><p>The time for a half day retrieval. The 12 hours upfront are to be
+<dd><p><em>int</em> – The time for a half day retrieval. The 12 hours upfront are to be
 retrieved.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.dtime">
 <code class="descname">dtime</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.dtime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time step in hours.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Time step in hours.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.acctype">
 <code class="descname">acctype</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.acctype" title="Permalink to this definition">¶</a></dt>
-<dd><p>The field type for the accumulated forecast fields.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The field type for the accumulated forecast fields.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.acctime">
 <code class="descname">acctime</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.acctime" title="Permalink to this definition">¶</a></dt>
-<dd><p>The starting time from the accumulated forecasts.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The starting time from the accumulated forecasts.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.accmaxstep">
 <code class="descname">accmaxstep</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.accmaxstep" title="Permalink to this definition">¶</a></dt>
-<dd><p>The maximum forecast step for the accumulated forecast fields.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The maximum forecast step for the accumulated forecast fields.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.marsclass">
 <code class="descname">marsclass</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.marsclass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Characterisation of dataset.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Characterisation of dataset.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.stream">
 <code class="descname">stream</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.stream" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identifies the forecasting system used to generate the data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Identifies the forecasting system used to generate the data.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.number">
 <code class="descname">number</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects the member in ensemble forecast run.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Selects the member in ensemble forecast run.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.resol">
 <code class="descname">resol</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.resol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired triangular truncation of retrieved data,
+<dd><p><em>str</em> – Specifies the desired triangular truncation of retrieved data,
 before carrying out any other selected post-processing.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.accuracy">
 <code class="descname">accuracy</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.accuracy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the number of bits per value to be used in the
+<dd><p><em>str</em> – Specifies the number of bits per value to be used in the
 generated GRIB coded fields.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.addpar">
 <code class="descname">addpar</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.addpar" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of additional parameters to be retrieved.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – List of additional parameters to be retrieved.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.level">
 <code class="descname">level</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the maximum level.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the maximum level.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.expver">
 <code class="descname">expver</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.expver" title="Permalink to this definition">¶</a></dt>
-<dd><p>The version of the dataset.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – The version of the dataset.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.levelist">
 <code class="descname">levelist</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.levelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the required levels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the required levels.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.glevelist">
 <code class="descname">glevelist</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.glevelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the required levels for gaussian grids.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the required levels for gaussian grids.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.gaussian">
 <code class="descname">gaussian</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>This parameter is deprecated and should no longer be used.
+<dd><p><em>str</em> – This parameter is deprecated and should no longer be used.
 Specifies the desired type of Gaussian grid for the output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.grid">
 <code class="descname">grid</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the output grid which can be either a Gaussian grid
+<dd><p><em>str</em> – Specifies the output grid which can be either a Gaussian grid
 or a Latitude/Longitude grid.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.area">
 <code class="descname">area</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired sub-area of data to be extracted.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Specifies the desired sub-area of data to be extracted.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.purefc">
 <code class="descname">purefc</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.purefc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Switch for definition of pure forecast mode or not.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Switch for definition of pure forecast mode or not.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.outputfilelist">
 <code class="descname">outputfilelist</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.outputfilelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>The final list of FLEXPART ready input files.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>list of str</em> – The final list of FLEXPART ready input files.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.types">
 <code class="descname">types</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the combination of type of fields, time and forecast step
+<dd><p><em>dictionary</em> – Determines the combination of type of fields, time and forecast step
 to be retrieved.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dictionary</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.params">
 <code class="descname">params</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Collection of grid types and their corresponding parameters,
+<dd><p><em>dictionary</em> – Collection of grid types and their corresponding parameters,
 levels, level types and the grid definition.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">dictionary</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.server">
 <code class="descname">server</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.server" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the connection to the ECMWF data servers.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ECMWFService or ECMWFDataServer</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>ECMWFService or ECMWFDataServer</em> – This is the connection to the ECMWF data servers.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.public">
 <code class="descname">public</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.public" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decides which Web API Server version is used.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Decides which Web API Server version is used.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="EcFlexpart.EcFlexpart.dates">
 <code class="descname">dates</code><a class="headerlink" href="#EcFlexpart.EcFlexpart.dates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains start and end date of the retrieval in the format
+<dd><p><em>str</em> – Contains start and end date of the retrieval in the format
 “YYYYMMDD/to/YYYYMMDD”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="EcFlexpart.EcFlexpart.calc_extra_elda">
+<code class="descname">calc_extra_elda</code><span class="sig-paren">(</span><em>path</em>, <em>prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EcFlexpart.html#EcFlexpart.calc_extra_elda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#EcFlexpart.EcFlexpart.calc_extra_elda" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates extra ensemble members for ELDA - Stream.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> (<em>str</em>) – Path to the output files.</li>
+<li><strong>prefix</strong> (<em>str</em>) – The prefix of the output filenames as defined in Control file.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -2259,7 +1540,7 @@ meeting the where statement (True). Default is False.</li>
 <span id="marsretrieval"></span><h3><a class="toc-backref" href="#id8">MarsRetrieval</a><a class="headerlink" href="#module-MarsRetrieval" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="MarsRetrieval.MarsRetrieval">
-<em class="property">class </em><code class="descclassname">MarsRetrieval.</code><code class="descname">MarsRetrieval</code><span class="sig-paren">(</span><em>server</em>, <em>public</em>, <em>marsclass='ei'</em>, <em>dataset=''</em>, <em>type=''</em>, <em>levtype=''</em>, <em>levelist=''</em>, <em>repres=''</em>, <em>date=''</em>, <em>resol=''</em>, <em>stream=''</em>, <em>area=''</em>, <em>time=''</em>, <em>step=''</em>, <em>expver='1'</em>, <em>number=''</em>, <em>accuracy=''</em>, <em>grid=''</em>, <em>gaussian=''</em>, <em>target=''</em>, <em>param=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MarsRetrieval.html#MarsRetrieval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MarsRetrieval.MarsRetrieval" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">MarsRetrieval.</code><code class="descname">MarsRetrieval</code><span class="sig-paren">(</span><em>server</em>, <em>public</em>, <em>marsclass='EA'</em>, <em>dataset=''</em>, <em>type=''</em>, <em>levtype=''</em>, <em>levelist=''</em>, <em>repres=''</em>, <em>date=''</em>, <em>resol=''</em>, <em>stream=''</em>, <em>area=''</em>, <em>time=''</em>, <em>step=''</em>, <em>expver='1'</em>, <em>number=''</em>, <em>accuracy=''</em>, <em>grid=''</em>, <em>gaussian=''</em>, <em>target=''</em>, <em>param=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MarsRetrieval.html#MarsRetrieval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MarsRetrieval.MarsRetrieval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specific syntax and content for submission of MARS retrievals.</p>
 <p>A MARS revtrieval has a specific syntax with a selection of keywords and
 their corresponding values. This class provides the necessary functions
@@ -2272,310 +1553,142 @@ values can be found here:
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.server">
 <code class="descname">server</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.server" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the connection to the ECMWF data servers.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">ECMWFService or ECMWFDataServer</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>ECMWFService or ECMWFDataServer</em> – This is the connection to the ECMWF data servers.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.public">
 <code class="descname">public</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.public" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decides which Web API Server version is used.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>int</em> – Decides which Web API Server version is used.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.marsclass">
 <code class="descname">marsclass</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.marsclass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Characterisation of dataset.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Characterisation of dataset.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.dataset">
 <code class="descname">dataset</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>For public datasets there is the specific naming and parameter
+<dd><p><em>str, optional</em> – For public datasets there is the specific naming and parameter
 dataset which has to be used to characterize the type of
 data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.type">
 <code class="descname">type</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the type of fields to be retrieved.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Determines the type of fields to be retrieved.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.levtype">
 <code class="descname">levtype</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.levtype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Denotes type of level.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Denotes type of level.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.levelist">
 <code class="descname">levelist</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.levelist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the required levels.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Specifies the required levels.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.repres">
 <code class="descname">repres</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.repres" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects the representation of the archived data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Selects the representation of the archived data.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.date">
 <code class="descname">date</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.date" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the Analysis date, the Forecast base date or
+<dd><p><em>str, optional</em> – Specifies the Analysis date, the Forecast base date or
 Observations date.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.resol">
 <code class="descname">resol</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.resol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired triangular truncation of retrieved data,
+<dd><p><em>str, optional</em> – Specifies the desired triangular truncation of retrieved data,
 before carrying out any other selected post-processing.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.stream">
 <code class="descname">stream</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.stream" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identifies the forecasting system used to generate the data.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Identifies the forecasting system used to generate the data.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.area">
 <code class="descname">area</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the desired sub-area of data to be extracted.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Specifies the desired sub-area of data to be extracted.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.time">
 <code class="descname">time</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the time of the data in hours and minutes.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Specifies the time of the data in hours and minutes.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.step">
 <code class="descname">step</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the forecast time step from forecast base time.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Specifies the forecast time step from forecast base time.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.expver">
 <code class="descname">expver</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.expver" title="Permalink to this definition">¶</a></dt>
-<dd><p>The version of the dataset.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – The version of the dataset.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.number">
 <code class="descname">number</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Selects the member in ensemble forecast run.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Selects the member in ensemble forecast run.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.accuracy">
 <code class="descname">accuracy</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.accuracy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the number of bits per value to be used in the
+<dd><p><em>str, optional</em> – Specifies the number of bits per value to be used in the
 generated GRIB coded fields.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.grid">
 <code class="descname">grid</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.grid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the output grid which can be either a Gaussian grid
+<dd><p><em>str, optional</em> – Specifies the output grid which can be either a Gaussian grid
 or a Latitude/Longitude grid.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.gaussian">
 <code class="descname">gaussian</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>This parameter is deprecated and should no longer be used.
+<dd><p><em>str, optional</em> – This parameter is deprecated and should no longer be used.
 Specifies the desired type of Gaussian grid for the output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.target">
 <code class="descname">target</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.target" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies a file into which data is to be written after
+<dd><p><em>str, optional</em> – Specifies a file into which data is to be written after
 retrieval or manipulation.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MarsRetrieval.MarsRetrieval.param">
 <code class="descname">param</code><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Specifies the meteorological parameter.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str, optional</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str, optional</em> – Specifies the meteorological parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MarsRetrieval.MarsRetrieval.data_retrieve">
 <code class="descname">data_retrieve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MarsRetrieval.html#MarsRetrieval.data_retrieve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MarsRetrieval.MarsRetrieval.data_retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submits a MARS retrieval. Depending on the existence of
-ECMWF Web-API it is submitted via Python or a
+ECMWF Web-API or CDS API it is submitted via Python or a
 subprocess in the Shell. The parameter for the mars retrieval
 are taken from the defined class attributes.</p>
 </dd></dl>
@@ -2620,43 +1733,19 @@ they can be deleted.</p>
 <dl class="attribute">
 <dt id="UioFiles.UioFiles.path">
 <code class="descname">path</code><a class="headerlink" href="#UioFiles.UioFiles.path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Directory where to list the files.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Directory where to list the files.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="UioFiles.UioFiles.pattern">
 <code class="descname">pattern</code><a class="headerlink" href="#UioFiles.UioFiles.pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Regular expression pattern. For example: ‘*.grb’</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>str</em> – Regular expression pattern. For example: ‘*.grb’</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="UioFiles.UioFiles.files">
 <code class="descname">files</code><a class="headerlink" href="#UioFiles.UioFiles.files" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of files matching the pattern in the path.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">list of str</td>
-</tr>
-</tbody>
-</table>
+<dd><p><em>list of str</em> – List of files matching the pattern in the path.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2692,6 +1781,11 @@ functions:</p>
 <p>Type: get_mars_data.py –help
 to get information about command line parameters.
 Read the documentation for usage instructions.</p>
+<dl class="function">
+<dt id="get_mars_data.check_dates_for_nonflux_fc_times">
+<code class="descclassname">get_mars_data.</code><code class="descname">check_dates_for_nonflux_fc_times</code><span class="sig-paren">(</span><em>types</em>, <em>times</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/get_mars_data.html#check_dates_for_nonflux_fc_times"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.check_dates_for_nonflux_fc_times" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="get_mars_data.do_retrievement">
 <code class="descclassname">get_mars_data.</code><code class="descname">do_retrievement</code><span class="sig-paren">(</span><em>c</em>, <em>server</em>, <em>start</em>, <em>end</em>, <em>delta_t</em>, <em>fluxes=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/get_mars_data.html#do_retrievement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.do_retrievement" title="Permalink to this definition">¶</a></dt>
@@ -2787,7 +1881,10 @@ Default value is False.</li>
 <dl class="function">
 <dt id="get_mars_data.mk_server">
 <code class="descclassname">get_mars_data.</code><code class="descname">mk_server</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/get_mars_data.html#mk_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.mk_server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates server connection if ECMWF WebAPI is available.</p>
+<dd><p>Creates a server connection with available python API.</p>
+<p>Which API is used depends on availability and the dataset to be retrieved.
+The CDS API is used for ERA5 dataset no matter if the user is a member or
+a public user. ECMWF WebAPI is used for all other available datasets.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -2795,9 +1892,9 @@ Default value is False.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> (<a class="reference internal" href="#ControlFile.ControlFile" title="ControlFile.ControlFile"><em>ControlFile</em></a>) – Contains all the parameters of CONTROL file and
 command line.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>server</strong> – Connection to ECMWF server via python interface ECMWF WebAPI.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>server</strong> – Connection to ECMWF server via python interface ECMWF WebAPI or CDS API.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ECMWFDataServer or ECMWFService</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ECMWFDataServer, ECMWFService or Client</td>
 </tr>
 </tbody>
 </table>
@@ -3074,20 +2171,14 @@ The program stops only if there is another problem.</p>
 
 <dl class="function">
 <dt id="tools.my_error">
-<code class="descclassname">tools.</code><code class="descname">my_error</code><span class="sig-paren">(</span><em>users</em>, <em>message='ERROR'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools.html#my_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.my_error" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tools.</code><code class="descname">my_error</code><span class="sig-paren">(</span><em>message='ERROR'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools.html#my_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.my_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints a specified error message which can be passed to the function
 before exiting the program.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>user</strong> (<em>list of str</em>) – Contains all email addresses which should be notified.
-It might also contain just the ecmwf user name which wil trigger
-mailing to the associated email address for this user.</li>
-<li><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – Error message. Default value is “ERROR”.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – Error message. Default value is “ERROR”.</td>
 </tr>
 </tbody>
 </table>
@@ -3254,6 +2345,28 @@ the mail subject line.</li>
 </dd></dl>
 
 <dl class="function">
+<dt id="tools.setup_controldata">
+<code class="descclassname">tools.</code><code class="descname">setup_controldata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools.html#setup_controldata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.setup_controldata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects, stores and checks controlling arguments from command line,
+CONTROL file and ECMWF_ENV file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
+<li><strong>c</strong> (<em>ControlFile</em>) – Contains all the parameters of CONTROL file and
+command line.</li>
+<li><strong>ppid</strong> (<em>str</em>) – Parent process id.</li>
+<li><strong>queue</strong> (<em>str</em>) – Name of queue for submission to ECMWF (e.g. ecgate or cca )</li>
+<li><strong>job_template</strong> (<em>str</em>) – Name of the job template file for submission to ECMWF server.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.silent_remove">
 <code class="descclassname">tools.</code><code class="descname">silent_remove</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools.html#silent_remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.silent_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove file if it exists.
@@ -3322,6 +2435,37 @@ parameter ids in the format of integer.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.to_param_id_with_tablenumber">
+<code class="descclassname">tools.</code><code class="descname">to_param_id_with_tablenumber</code><span class="sig-paren">(</span><em>pars</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tools.html#to_param_id_with_tablenumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.to_param_id_with_tablenumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform parameter names to parameter ids and add table id.</p>
+<p>Conversion with ECMWF grib table 128.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pars</strong> (<em>str</em>) – Addpar argument from CONTROL file in the format of
+parameter names instead of ids. The parameter short
+names are sepearted with “/” and they are passed as
+one single string.</li>
+<li><strong>table</strong> (<em>dict</em>) – Contains the ECMWF grib table 128 information.
+The key is the parameter number and the value is the
+short name of the parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>spar</strong> – List of addpar parameters from CONTROL file transformed to
+parameter ids in the format of integer.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
 </td>
 </tr>
 </tbody>
@@ -3487,7 +2631,7 @@ E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</td>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2018, Anne Philipp and Leopold Haimberger.
 
     </p>
   </div>
@@ -3506,13 +2650,21 @@ E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</td>
 
   
 
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-    
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'7.1 alpha',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
