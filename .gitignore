@@ -6,10 +6,12 @@
 *.pyc
 source/fortran/*.o
 source/fortran/*.mod
+source/fortran/CONVERT2*
 *.tar*
 run/ECMWF_ENV
 run/workspace/*
-source/fortran/CONVERT2
+run/jobscripts/*
+
 
 
 
