@@ -27,12 +27,17 @@ and pathes.
 import os
 import sys
 import inspect
+import socket
 
 _VERSION_STR = '7.1'
+
+FLAG_ON_ECMWFSERVER = 'ecmwf' in socket.gethostname()
 
 QUEUES_LIST = ['ecgate', 'cca', 'ccb']
 
 INSTALL_TARGETS = ['local', 'ecgate', 'cca']
+
+CDS_DATASET = 'reanalysis-era5-complete'
 
 # up-to-date available maximum level numbers at ECMWF, 05.10.2018
 MAX_LEVEL_LIST = [16, 19, 31, 40, 50, 60, 62, 91, 137]

@@ -72,12 +72,12 @@ from eccodes import (codes_index_select, codes_new_from_index, codes_get,
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from GribUtil import GribUtil
+from .GribUtil import GribUtil
 from mods.tools import (init128, to_param_id, silent_remove, product,
                         my_error, make_dir, get_informations, get_dimensions,
-                        execute_subprocess)
-from MarsRetrieval import MarsRetrieval
-from UioFiles import UioFiles
+                        execute_subprocess, to_param_id_with_tablenumber)
+from .MarsRetrieval import MarsRetrieval
+from .UioFiles import UioFiles
 import mods.disaggregation as disaggregation
 
 # ------------------------------------------------------------------------------
@@ -402,13 +402,13 @@ class EcFlexpart(object):
             self.params['SH__ML'] = ['U/V/D', 'ML', self.glevelist, 'OFF']
         elif not gauss and not eta:
             self.params['OG__ML'][0] += '/U/V'
-        else:
-            print('Warning: Collecting etadot and parameters for gaussian grid \
-                            is a very costly parameter combination, \
-                            use this combination only for debugging!')
-            self.params['GG__SL'] = ['Q', 'ML', '1', \
+        else:  # GAUSS and ETA
+            print('Warning: Collecting etadot and parameters for gaussian grid '
+                           'is a very costly parameter combination, '
+                           'use this combination only for debugging!')
+            self.params['GG__SL'] = ['Q', 'ML', '1',
                                      '{}'.format((int(self.resol) + 1) / 2)]
-            self.params['GG__ML'] = ['U/V/D/77', 'ML', self.glevelist, \
+            self.params['GG__ML'] = ['U/V/D/ETADOT', 'ML', self.glevelist,
                                      '{}'.format((int(self.resol) + 1) / 2)]
 
         if omega:
@@ -418,11 +418,12 @@ class EcFlexpart(object):
             self.params['OG__ML'][0] += '/CLWC/CIWC'
 
         # ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)
-        #-----------------------------------------------------------------------
+        # -----------------------------------------------------------------------
         if wrf:
             self.params['OG__ML'][0] += '/Z/VO'
             if '/D' not in self.params['OG__ML'][0]:
                 self.params['OG__ML'][0] += '/D'
+
             wrf_sfc = ['SP','SKT','SST','CI','STL1','STL2', 'STL3','STL4',
                        'SWVL1','SWVL2','SWVL3','SWVL4']
             for par in wrf_sfc:
@@ -451,7 +452,7 @@ class EcFlexpart(object):
         ------
 
         '''
-        self.params['OG_acc_SL'] = ["LSP/CP/SSHF/EWSS/NSSS/SSR", \
+        self.params['OG_acc_SL'] = ["LSP/CP/SSHF/EWSS/NSSS/SSR",
                                     'SFC', '1', self.grid]
         return
 
@@ -683,7 +684,9 @@ class EcFlexpart(object):
                     self._mk_targetname(ftype,
                                         pk,
                                         retr_param_dict['date'].split('/')[0])
-                retr_param_dict['param'] = pv[0]
+                table128 = init128(_config.PATH_GRIBTABLE)
+                ids = to_param_id_with_tablenumber(pv[0], table128)
+                retr_param_dict['param'] = ids
                 retr_param_dict['levtype'] = pv[1]
                 retr_param_dict['levelist'] = pv[2]
                 retr_param_dict['grid'] = pv[3]
@@ -1237,7 +1240,7 @@ class EcFlexpart(object):
         ------
 
         '''
-        print('... disaggregation or precipitation with new method.')
+        print('... disaggregation of precipitation with new method.')
         lsp_new_np = np.zeros((ni * nj, nt * 3), dtype=np.float64)
         cp_new_np = np.zeros((ni * nj, nt * 3), dtype=np.float64)
 
@@ -1267,11 +1270,6 @@ class EcFlexpart(object):
                     fluxfilename = 'flux' + date.strftime('%Y%m%d%H')
                     filename1 = c.prefix + date.strftime('%y%m%d%H') + '_1'
                     filename2 = c.prefix + date.strftime('%y%m%d%H') + '_2'
-
-                # collect for final processing
-                self.outputfilelist.append(os.path.basename(fluxfilename))
-                self.outputfilelist.append(os.path.basename(filename1))
-                self.outputfilelist.append(os.path.basename(filename2))
 
                 # write original time step to flux file as usual
                 fluxfile = GribUtil(os.path.join(c.inputdir, fluxfilename))
@@ -1448,7 +1446,7 @@ class EcFlexpart(object):
             timestamp += timedelta(hours=int(cstep))
             cdate_hour = datetime.strftime(timestamp, '%Y%m%d%H')
 
-            # eliminate all temporary times
+            # skip all temporary times
             # which are outside the retrieval period
             if timestamp < start_period or \
                timestamp > end_period:
@@ -1544,12 +1542,12 @@ class EcFlexpart(object):
             pwd = os.getcwd()
             os.chdir(c.inputdir)
             if os.stat('fort.21').st_size == 0 and c.eta:
-                print('Parameter 77 (etadot) is missing, most likely it is \
-                       not available for this type or date/time\n')
+                print('Parameter 77 (etadot) is missing, most likely it is '
+                      'not available for this type or date / time\n')
                 print('Check parameters CLASS, TYPE, STREAM, START_DATE\n')
-                my_error(c.mailfail, 'fort.21 is empty while parameter eta \
-                         is set to 1 in CONTROL file')
-#============================================================================================
+                my_error('fort.21 is empty while parameter eta '
+                         'is set to 1 in CONTROL file')
+# ============================================================================================
             # write out all output to log file before starting fortran programm
             sys.stdout.flush()
 
@@ -1559,7 +1557,7 @@ class EcFlexpart(object):
                                error_msg='FORTRAN PROGRAM FAILED!')#shell=True)
 
             os.chdir(pwd)
-#============================================================================================
+# ============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
             if c.purefc:
                 suffix = cdate[2:8] + '.' + ctime + '.' + cstep
@@ -1576,7 +1574,11 @@ class EcFlexpart(object):
             print("outputfile = " + fnout)
             # collect for final processing
             self.outputfilelist.append(os.path.basename(fnout))
-#============================================================================================
+            # get additional precipitation subgrid data if available
+            if c.rrint:
+                self.outputfilelist.append(os.path.basename(fnout + '_1'))
+                self.outputfilelist.append(os.path.basename(fnout + '_2'))
+# ============================================================================================
             # create outputfile and copy all data from intermediate files
             # to the outputfile (final GRIB input files for FLEXPART)
             orolsm = os.path.basename(glob.glob(c.inputdir +
@@ -1596,7 +1598,7 @@ class EcFlexpart(object):
                 with open(os.path.join(c.outputdir, 'OMEGA'), 'wb') as fout:
                     shutil.copyfileobj(open(os.path.join(c.inputdir, 'fort.25'),
                                             'rb'), fout)
-#============================================================================================
+# ============================================================================================
         if c.wrf:
             fwrf.close()
 
@@ -1691,7 +1693,7 @@ class EcFlexpart(object):
 
         print('\n\nPostprocessing:\n Format: {}\n'.format(c.format))
 
-        if not c.ecapi:
+        if _config.FLAG_ON_ECMWFSERVER:
             print('ecstorage: {}\n ecfsdir: {}\n'.
                   format(c.ecstorage, c.ecfsdir))
             print('ectrans: {}\n gateway: {}\n destination: {}\n '
@@ -1713,13 +1715,13 @@ class EcFlexpart(object):
                                    error_msg='RENAMING FOR NEW GRIB2 FORMAT '
                                    'FILES FAILED!')
 
-            if c.ectrans and not c.ecapi:
+            if c.ectrans and _config.FLAG_ON_ECMWFSERVER:
                 execute_subprocess(['ectrans', '-overwrite', '-gateway',
                                     c.gateway, '-remote', c.destination,
                                     '-source', ofile],
                                    error_msg='TRANSFER TO LOCAL SERVER FAILED!')
 
-            if c.ecstorage and not c.ecapi:
+            if c.ecstorage and _config.FLAG_ON_ECMWFSERVER:
                 execute_subprocess(['ecp', '-o', ofile,
                                     os.path.expandvars(c.ecfsdir)],
                                    error_msg='COPY OF FILES TO ECSTORAGE '

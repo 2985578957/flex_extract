@@ -317,8 +317,12 @@ class ControlFile(object):
         possible data sets. Public data sets (1) and Memberstate data sets (0).
         Default value is 0.
 
-    ecapi : boolean
-        Tells wether the ECMWF Web APi was able to load or not.
+    ec_api : boolean
+        Tells wether the ECMWF Web API was able to load or not.
+        Default value is None.
+
+    cds_api : boolean
+        Tells wether the CDS API was able to load or not.
         Default value is None.
 
     purefc : int
@@ -416,7 +420,8 @@ class ControlFile(object):
         self.oper = 0
         self.request = 0
         self.public = 0
-        self.ecapi = None
+        self.ec_api = None
+        self.cds_api = None
         self.purefc = 0
         self.rrint = 0
 
@@ -480,8 +485,7 @@ class ControlFile(object):
                             if var is not None:
                                 data[1] = data[1][:i] + var + data[1][k+1:]
                             else:
-                                my_error(self.mailfail,
-                                         'Could not find variable '
+                                my_error('Could not find variable '
                                          + data[1][j+1:k] + ' while reading ' +
                                          self.controlfile)
                         setattr(self, data[0].lower() + '_expanded', data[1])

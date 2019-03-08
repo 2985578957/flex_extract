@@ -34,10 +34,22 @@
 import os
 import sys
 import subprocess
+import traceback
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
+try:
+    ec_api = True
+    import ecmwfapi
+except ImportError:
+    ec_api = False
+
+try:
+    cds_api = True
+    import cdsapi
+except ImportError:
+    cds_api = False
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -129,7 +141,7 @@ class MarsRetrieval(object):
         Specifies the meteorological parameter.
     '''
 
-    def __init__(self, server, public, marsclass="ei", dataset="", type="",
+    def __init__(self, server, public, marsclass="EA", dataset="", type="",
                  levtype="", levelist="", repres="", date="", resol="",
                  stream="", area="", time="", step="", expver="1",
                  number="", accuracy="", grid="", gaussian="", target="",
@@ -157,8 +169,8 @@ class MarsRetrieval(object):
 
         marsclass : str, optional
             Characterisation of dataset. E.g. EI (ERA-Interim),
-            E4 (ERA40), OD (Operational archive), ea (ERA5).
-            Default is the ERA-Interim dataset "ei".
+            E4 (ERA40), OD (Operational archive), EA (ERA5).
+            Default is the ERA5 dataset "EA".
 
         dataset : str, optional
             For public datasets there is the specific naming and parameter
@@ -428,7 +440,7 @@ class MarsRetrieval(object):
 
     def data_retrieve(self):
         '''Submits a MARS retrieval. Depending on the existence of
-        ECMWF Web-API it is submitted via Python or a
+        ECMWF Web-API or CDS API it is submitted via Python or a
         subprocess in the Shell. The parameter for the mars retrieval
         are taken from the defined class attributes.
 
@@ -451,7 +463,7 @@ class MarsRetrieval(object):
         del attrs['marsclass']
         attrs['class'] = mclass
 
-        # prepare target variable as needed for the Web API mode
+        # prepare target variable as needed for the Web API or CDS API mode
         # within the dictionary for full access
         # as a single variable for public access
         target = attrs.get('target')
@@ -474,33 +486,34 @@ class MarsRetrieval(object):
         # MARS request via Python script
         if self.server:
             try:
-                if self.public:
-                    print('RETRIEVE PUBLIC DATA!')
+                if cds_api and isinstance(self.server, cdsapi.Client):
+                    print('RETRIEVE ERA5 WITH CDS API!')
+                    self.server.retrieve(_config.CDS_DATASET,
+                                         attrs, target)
+                elif ec_api and isinstance(self.server, ecmwfapi.ECMWFDataServer):
+                    print('RETRIEVE PUBLIC DATA (NOT ERA5)!')
                     self.server.retrieve(attrs)
-                else:
-                    print('EXECUTE NON-PUBLIC RETRIEVAL!')
+                elif ec_api and isinstance(self.server, ecmwfapi.ECMWFService):
+                    print('EXECUTE NON-PUBLIC RETRIEVAL (NOT ERA5)!')
                     self.server.execute(attrs, target)
-            except:
-                e = sys.exc_info()[0]
-                print("ERROR: ", e)
-                print('MARS Request failed!')
-                if not self.public and os.stat(target).st_size == 0:
-                    print('MARS Request returned no data - '
-                          'please check request')
-                    raise IOError
-                elif self.public and os.stat(target).st_size == 0:
-                    print('Public MARS Request returned no data - '
-                          'please check request')
-                    raise IOError
                 else:
+                    print('ERROR:')
+                    print('No match for Web API instance!')
                     raise IOError
-        # MARS request via extra process in shell
+            except Exception as e:
+                print('\n\nMARS Request failed!')
+                print(e)
+                tb = sys.exc_info()[2]
+                print(traceback.format_exc())
+                sys.exit()
+
+        # MARS request via call in shell
         else:
             request_str = 'ret'
             for key, value in attrs.iteritems():
                 request_str = request_str + ',' + key + '=' + str(value)
             request_str += ',target="' + target + '"'
-            p = subprocess.Popen(['mars'],
+            p = subprocess.Popen(['mars', '-p'],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,

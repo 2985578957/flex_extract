@@ -64,13 +64,53 @@ import sys
 import glob
 import subprocess
 import traceback
-import exceptions
+try:
+    import exceptions
+except ImportError:
+    import builtins as exceptions
 from datetime import datetime
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
+
+
 
 # ------------------------------------------------------------------------------
 # METHODS
 # ------------------------------------------------------------------------------
+
+def setup_controldata():
+    '''Collects, stores and checks controlling arguments from command line,
+    CONTROL file and ECMWF_ENV file.
+
+    Parameters
+    ----------
+
+    Return
+    ------
+    c : ControlFile
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    ppid : str
+        Parent process id.
+
+    queue : str
+        Name of queue for submission to ECMWF (e.g. ecgate or cca )
+
+    job_template : str
+        Name of the job template file for submission to ECMWF server.
+    '''
+    import _config
+    from classes.ControlFile import ControlFile
+
+    args = get_cmdline_args()
+    c = ControlFile(args.controlfile)
+    c.assign_args_to_control(args)
+    if os.path.isfile(_config.PATH_ECMWF_ENV):
+        env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
+        c.assign_envs_to_control(env_parameter)
+    c.check_conditions(args.queue)
+
+    return c, args.ppid, args.queue, args.job_template
 
 def none_or_str(value):
     '''Converts the input string into pythons None-type if the string
@@ -258,14 +298,12 @@ def clean_up(c):
 
     print("... clean inputdir!")
 
-    cleanlist = glob.glob(os.path.join(c.inputdir, "*"))
+    cleanlist = [file for file in glob.glob(os.path.join(c.inputdir, "*"))
+                 if not os.path.basename(file).startswith(c.prefix)]
 
     if cleanlist:
         for element in cleanlist:
-            if c.prefix not in element:
-                silent_remove(element)
-            if c.ecapi is False and (c.ectrans == 1 or c.ecstorage == 1):
-                silent_remove(element)
+            silent_remove(element)
         print("... done!")
     else:
         print("... nothing to clean!")
@@ -273,17 +311,12 @@ def clean_up(c):
     return
 
 
-def my_error(users, message='ERROR'):
+def my_error(message='ERROR'):
     '''Prints a specified error message which can be passed to the function
     before exiting the program.
 
     Parameters
     ----------
-    user : list of str
-        Contains all email addresses which should be notified.
-        It might also contain just the ecmwf user name which wil trigger
-        mailing to the associated email address for this user.
-
     message : str, optional
         Error message. Default value is "ERROR".
 
@@ -463,8 +496,8 @@ def init128(filepath):
                  'table file: ' + str(filepath))
     else:
         for data in fdata:
-            if data[0] != '!':
-                table128[data[0:3]] = data[59:64].strip()
+            if data != '' and data[0] != '!':
+                table128[data[0:3]] = data[59:65].strip()
 
     return table128
 
@@ -507,6 +540,47 @@ def to_param_id(pars, table):
             print('Warning: par ' + par + ' not found in table 128')
 
     return ipar
+
+def to_param_id_with_tablenumber(pars, table):
+    '''Transform parameter names to parameter ids and add table id.
+
+    Conversion with ECMWF grib table 128.
+
+    Parameters
+    ----------
+    pars : str
+        Addpar argument from CONTROL file in the format of
+        parameter names instead of ids. The parameter short
+        names are sepearted with "/" and they are passed as
+        one single string.
+
+    table : dict
+        Contains the ECMWF grib table 128 information.
+        The key is the parameter number and the value is the
+        short name of the parameter.
+
+    Return
+    ------
+    spar : str
+        List of addpar parameters from CONTROL file transformed to
+        parameter ids in the format of integer.
+    '''
+    if not pars:
+        return []
+    if not isinstance(pars, str):
+        pars=str(pars)
+
+    cpar = pars.upper().split('/')
+    spar = []
+    for par in cpar:
+        for k, v in table.iteritems():
+            if par == k or par == v:
+                spar.append(k + '.128')
+                break
+        else:
+            print('\n\n\t\tWarning: par ' + par + ' not found in table 128\n\n')
+
+    return '/'.join(spar)
 
 def get_list_as_string(list_obj, concatenate_sign=', '):
     '''Converts a list of arbitrary content into a single string.

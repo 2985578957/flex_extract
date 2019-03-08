@@ -66,17 +66,23 @@ from datetime import datetime, timedelta
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from tools import (my_error, normal_exit, get_cmdline_args,
+from .tools import (setup_controldata, my_error, normal_exit, get_cmdline_args,
                    read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
 from classes.UioFiles import UioFiles
 from classes.MarsRetrieval import MarsRetrieval
 
 try:
-    ecapi = True
+    ec_api = True
     import ecmwfapi
 except ImportError:
-    ecapi = False
+    ec_api = False
+
+try:
+    cds_api = True
+    import cdsapi
+except ImportError:
+    cds_api = False
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
@@ -94,16 +100,9 @@ def main():
 
     '''
 
-    args = get_cmdline_args()
-    c = ControlFile(args.controlfile)
-
-    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
-    c.assign_args_to_control(args)
-    c.assign_envs_to_control(env_parameter)
-    c.check_conditions(args.queue)
-
+    c, _, _, _ = setup_controldata()
     get_mars_data(c)
-    normal_exit(c.mailops, c.queue, 'Done!')
+    normal_exit('Retrieving MARS data: Done!')
 
     return
 
@@ -124,7 +123,8 @@ def get_mars_data(c):
     ------
 
     '''
-    c.ecapi = ecapi
+    c.ec_api = ec_api
+    c.cds_api = cds_api
 
     if not os.path.exists(c.inputdir):
         make_dir(c.inputdir)
@@ -181,7 +181,11 @@ def write_reqheader(marsfile):
     return
 
 def mk_server(c):
-    '''Creates server connection if ECMWF WebAPI is available.
+    '''Creates a server connection with available python API.
+
+    Which API is used depends on availability and the dataset to be retrieved.
+    The CDS API is used for ERA5 dataset no matter if the user is a member or
+    a public user. ECMWF WebAPI is used for all other available datasets.
 
     Parameters
     ----------
@@ -191,19 +195,24 @@ def mk_server(c):
 
     Return
     ------
-    server : ECMWFDataServer or ECMWFService
-        Connection to ECMWF server via python interface ECMWF WebAPI.
+    server : ECMWFDataServer, ECMWFService or Client
+        Connection to ECMWF server via python interface ECMWF WebAPI or CDS API.
 
     '''
-    if c.ecapi:
+    if cds_api and (c.marsclass.upper() == 'EA'):
+        server = cdsapi.Client()
+        c.ec_api = False
+    elif c.ec_api:
         if c.public:
             server = ecmwfapi.ECMWFDataServer()
         else:
             server = ecmwfapi.ECMWFService("mars")
+        c.cds_api = False
     else:
         server = False
 
-    print('Using ECMWF WebAPI: ' + str(c.ecapi))
+    print('Using ECMWF WebAPI: ' + str(c.ec_api))
+    print('Using CDS API: ' + str(c.cds_api))
 
     return server
 
@@ -352,7 +361,7 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
         try:
             flexpart.retrieve(server, dates, c.public, c.request, c.inputdir)
         except IOError:
-            my_error(c.mailfail, 'MARS request failed')
+            my_error('MARS request failed')
 
         day += delta_t
 

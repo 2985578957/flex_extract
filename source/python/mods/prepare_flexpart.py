@@ -70,18 +70,12 @@ import socket
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from checks import check_ppid
+from .checks import check_ppid
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
-from tools import clean_up, get_cmdline_args, read_ecenv, make_dir
+from .tools import (setup_controldata, clean_up, get_cmdline_args,
+                   read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
-
-ecapi = 'ecmwf' not in socket.gethostname()
-try:
-    if ecapi:
-        import ecmwfapi
-except ImportError:
-    ecapi = False
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -100,15 +94,9 @@ def main():
 
     '''
 
-    args = get_cmdline_args()
-    c = ControlFile(args.controlfile)
-
-    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
-    c.assign_args_to_control(args)
-    c.assign_envs_to_control(env_parameter)
-    c.check_conditions(args.queue)
-
-    prepare_flexpart(args.ppid, c)
+    c, ppid, _, _ = setup_controldata()
+    prepare_flexpart(ppid, c)
+    normal_exit('Preparing FLEXPART output files: Done!')
 
     return
 
@@ -135,8 +123,6 @@ def prepare_flexpart(ppid, c):
 
     '''
     check_ppid(c, ppid)
-
-    c.ecapi = ecapi
 
     # create the start and end date
     start = datetime.date(year=int(c.start_date[:4]),

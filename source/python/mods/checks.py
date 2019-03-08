@@ -26,8 +26,11 @@
 import os
 import sys
 import _config
-import exceptions
-from tools import my_error, silent_remove
+try:
+    import exceptions
+except ImportError:
+    import builtins as exceptions
+from .tools import my_error, silent_remove
 from datetime import datetime
 import numpy as np
 # ------------------------------------------------------------------------------
@@ -295,7 +298,7 @@ def check_step(step, mailfail):
                               int(steps[4]))
             step = ['{:0>3}'.format(i) for i in ilist]
         elif 'to' in step.lower() and 'by' not in step.lower():
-            my_error(mailfail, step + ':\n' +
+            my_error(step + ':\n' +
                      'if "to" is used in steps parameter, '
                      'please use "by" as well')
         else:

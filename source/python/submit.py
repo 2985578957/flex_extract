@@ -66,7 +66,7 @@ from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
 import _config
-from mods.tools import (normal_exit, get_cmdline_args,
+from mods.tools import (setup_controldata, normal_exit, get_cmdline_args,
                         submit_job_to_ecserver, read_ecenv)
 from mods.get_mars_data import get_mars_data
 from mods.prepare_flexpart import prepare_flexpart
@@ -90,31 +90,25 @@ def main():
 
     '''
 
-    args = get_cmdline_args()
-    c = ControlFile(args.controlfile)
-
-    env_parameter = read_ecenv(_config.PATH_ECMWF_ENV)
-    c.assign_args_to_control(args)
-    c.assign_envs_to_control(env_parameter)
-    c.check_conditions(args.queue)
+    c, ppid, queue, job_template = setup_controldata()
 
     # on local side
-    # on ECMWF server this would also be the local side
+    # starting from an ECMWF server this would also be the local side
     called_from_dir = os.getcwd()
-    if args.queue is None:
+    if queue is None:
         if c.inputdir[0] != '/':
             c.inputdir = os.path.join(called_from_dir, c.inputdir)
         if c.outputdir[0] != '/':
             c.outputdir = os.path.join(called_from_dir, c.outputdir)
         get_mars_data(c)
         if c.request == 0 or c.request == 2:
-            prepare_flexpart(args.ppid, c)
+            prepare_flexpart(ppid, c)
             exit_message = 'FLEX_EXTRACT IS DONE!'
         else:
             exit_message = 'PRINTING MARS_REQUESTS DONE!'
     # send files to ECMWF server
     else:
-        submit(args.job_template, c, args.queue)
+        submit(job_template, c, queue)
         exit_message = 'FLEX_EXTRACT JOB SCRIPT IS SUBMITED!'
 
     normal_exit(exit_message)
