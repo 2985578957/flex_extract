@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
@@ -367,7 +367,7 @@ def send_mail(users, success_mode, message):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  bufsize=1)
-            pout = p.communicate(input=message + '\n\n')[0]
+            pout = p.communicate(input=message.encode() + '\n\n')[0]
         except ValueError as e:
             print('... ERROR: ' + str(e))
             sys.exit('... Email could not be sent!')
@@ -432,7 +432,7 @@ def product(*args, **kwds):
         See example in description above.
     '''
     try:
-        pools = map(tuple, args) * kwds.get('repeat', 1)
+        pools = [tuple(arg) for arg in args] * kwds.get('repeat', 1)
         result = [[]]
         for pool in pools:
             result = [x + [y] for x in result for y in pool]
@@ -532,7 +532,7 @@ def to_param_id(pars, table):
     cpar = pars.upper().split('/')
     ipar = []
     for par in cpar:
-        for k, v in table.iteritems():
+        for k, v in table.items():
             if par == k or par == v:
                 ipar.append(int(k))
                 break
@@ -573,7 +573,7 @@ def to_param_id_with_tablenumber(pars, table):
     cpar = pars.upper().split('/')
     spar = []
     for par in cpar:
-        for k, v in table.iteritems():
+        for k, v in table.items():
             if par == k or par == v:
                 spar.append(k + '.128')
                 break
@@ -725,7 +725,7 @@ def submit_job_to_ecserver(target, jobname):
         print('\n... Most likely the ECACCESS library is not available!')
         sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
 
-    return job_id
+    return job_id.decode()
 
 
 def get_informations(filename):
@@ -826,7 +826,7 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
     jy = info['Nj']
 
     if not purefc:
-        it = ((end_date - start_date).days + 1) * 24/int(dtime)
+        it = ((end_date - start_date).days + 1) * 24 // int(dtime)
     else:
         # #no of step * #no of times * #no of days
         it = len(index_vals[2]) * len(index_vals[1]) * len(index_vals[0])

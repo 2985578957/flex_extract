@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -67,7 +67,7 @@ from datetime import datetime, timedelta
 # software specific classes and modules from flex_extract
 import _config
 from mods.tools import (setup_controldata, normal_exit, get_cmdline_args,
-                        submit_job_to_ecserver, read_ecenv)
+                         submit_job_to_ecserver, read_ecenv)
 from mods.get_mars_data import get_mars_data
 from mods.prepare_flexpart import prepare_flexpart
 from classes.ControlFile import ControlFile

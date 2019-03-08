@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
@@ -366,17 +366,9 @@ def mk_tarball(tarball_path, target):
                                       if os.path.splitext(tarinfo.name)[1]
                                          in exclude_files
                                       else tarinfo)
-    except subprocess.CalledProcessError as e:
-        print('... ERROR CODE:\n ... ' + str(e.returncode))
-        print('... ERROR MESSAGE:\n ... ' + str(e))
-
-        sys.exit('\n... could not make installation tar ball!')
-    except OSError as e:
-        print('... ERROR CODE: ' + str(e.errno))
-        print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
-
-        sys.exit('\n... error occured while trying to read tar-file ' +
-                 str(tarball_path))
+    except tarfile.TarError as e:
+        sys.exit('\n... error occured while trying to create the tar-file ' +
+                     str(tarball_path))
 
     return
 
@@ -677,9 +669,9 @@ def mk_convert_build(src_path, makefile):
                              stderr=subprocess.PIPE,
                              bufsize=1)
         pout, perr = p.communicate()
-        print(pout)
+        print(pout.decode())
         if p.returncode != 0:
-            print(perr)
+            print(perr.decode())
             print('Please edit ' + makefile +
                   ' or try another Makefile in the src directory.')
             print('Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '

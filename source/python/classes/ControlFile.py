@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
@@ -552,7 +552,7 @@ class ControlFile(object):
                      if args_dict[k] != None}
 
         # assign all passed command line arguments to ControlFile instance
-        for k, v in arguments.iteritems():
+        for k, v in arguments.items():
             setattr(self, str(k), v)
 
         return
@@ -572,7 +572,7 @@ class ControlFile(object):
 
         '''
 
-        for k, v in envs.iteritems():
+        for k, v in envs.items():
             setattr(self, str(k).lower(), str(v))
 
         return

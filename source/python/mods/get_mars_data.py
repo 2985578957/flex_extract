@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -175,7 +175,7 @@ def write_reqheader(marsfile):
     del attrs['public']
     with open(marsfile, 'w') as f:
         f.write('request_number' + ', ')
-        f.write(', '.join(str(key) for key in sorted(attrs.iterkeys())))
+        f.write(', '.join(str(key) for key in sorted(attrs.keys())))
         f.write('\n')
 
     return

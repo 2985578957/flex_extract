@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
@@ -30,9 +30,9 @@ try:
     import exceptions
 except ImportError:
     import builtins as exceptions
-from .tools import my_error, silent_remove
 from datetime import datetime
 import numpy as np
+from .tools import my_error, silent_remove
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------

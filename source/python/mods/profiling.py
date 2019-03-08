@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #************************************************************************
 # ToDo AP
@@ -65,7 +65,7 @@ def timefn(fn):
         t1 = time.time()
         result = fn(*args, **kwargs)
         t2 = time.time()
-        print("@timefn:" + fn.func_name + " took " + str(t2 - t1) + " seconds")
+        print("@timefn:" + fn.__name__ + " took " + str(t2 - t1) + " seconds")
 
         return result
 

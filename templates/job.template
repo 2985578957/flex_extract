@@ -27,19 +27,21 @@ set -x
 export VERSION=$version_number
 case $$$${HOST} in
   *ecg*)
-  module load python
   module unload grib_api
   module unload eccodes
-  module load eccodes
+  module unload python
   module unload emos
+  module load python3
+  module load eccodes/2.12.0
   module load emos/455-r64
   export PATH=$$$${PATH}:$fp_root_path
   ;;
   *cca*)
+  module unload python
   module switch PrgEnv-cray PrgEnv-intel
-  module load eccodes
+  module load python3
+  module load eccodes/2.12.0
   module load emos
-  module load python
   export SCRATCH=$$$${TMPDIR}
   export PATH=$$$${PATH}:$fp_root_path
   ;;

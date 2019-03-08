@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -277,7 +277,7 @@ class EcFlexpart(object):
         '''
         i = 0
         for ty, st, ti in zip(ftype, fstep, ftime):
-            btlist = range(len(ftime))
+            btlist = list(range(len(ftime)))
             if self.basetime == 12:
                 btlist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
             if self.basetime == 0:
@@ -397,8 +397,8 @@ class EcFlexpart(object):
         if not gauss and eta:
             self.params['OG__ML'][0] += '/U/V/ETADOT'
         elif gauss and not eta:
-            self.params['GG__SL'] = ['Q', 'ML', '1', \
-                                     '{}'.format((int(self.resol) + 1) / 2)]
+            self.params['GG__SL'] = ['Q', 'ML', '1',
+                                     '{}'.format((int(self.resol) + 1) // 2)]
             self.params['SH__ML'] = ['U/V/D', 'ML', self.glevelist, 'OFF']
         elif not gauss and not eta:
             self.params['OG__ML'][0] += '/U/V'
@@ -407,9 +407,9 @@ class EcFlexpart(object):
                            'is a very costly parameter combination, '
                            'use this combination only for debugging!')
             self.params['GG__SL'] = ['Q', 'ML', '1',
-                                     '{}'.format((int(self.resol) + 1) / 2)]
+                                     '{}'.format((int(self.resol) + 1) // 2)]
             self.params['GG__ML'] = ['U/V/D/ETADOT', 'ML', self.glevelist,
-                                     '{}'.format((int(self.resol) + 1) / 2)]
+                                     '{}'.format((int(self.resol) + 1) // 2)]
 
         if omega:
             self.params['OG__ML'][0] += '/W'
@@ -667,7 +667,7 @@ class EcFlexpart(object):
         for ftype in self.types:
             # ftype contains field types such as
             #     [AN, FC, PF, CV]
-            for pk, pv in self.params.iteritems():
+            for pk, pv in self.params.items():
                 # pk contains one of these keys of params
                 #     [SH__ML, SH__SL, GG__ML, GG__SL, OG__ML, OG__SL,
                 #      OG_OROLSM_SL, OG_acc_SL]
@@ -992,7 +992,7 @@ class EcFlexpart(object):
 
             # create correct timestamp from the three time informations
             cdate = str(codes_get(gid, 'date'))
-            time = codes_get(gid, 'time')/100 # integer
+            time = codes_get(gid, 'time') // 100  # integer
             step = codes_get(gid, 'step') # integer
             ctime = '{:0>2}'.format(time)
             cstep = '{:0>3}'.format(step)
@@ -1254,7 +1254,10 @@ class EcFlexpart(object):
         # write to grib files (full/orig times to flux file and inbetween
         # times into seperate end files)
         print('... write disaggregated precipitation to files.')
+        # index variable of disaggregated fields
         it = 0
+        # loop over times and write original time step and the two newly
+        # generated sub time steps for each loop
         for date in date_list:
             for step in step_list:
                 tmpfile = os.path.join(c.inputdir, 'rr_grib_dummy.grb')
@@ -1433,14 +1436,14 @@ class EcFlexpart(object):
 #============================================================================================
             # remove old fort.* files and open new ones
             # they are just valid for a single product
-            for k, f in fdict.iteritems():
+            for k, f in fdict.items():
                 fortfile = os.path.join(c.inputdir, 'fort.' + k)
                 silent_remove(fortfile)
                 fdict[k] = open(fortfile, 'w')
 #============================================================================================
             # create correct timestamp from the three time informations
             cdate = str(codes_get(gid, 'date'))
-            ctime = '{:0>2}'.format(codes_get(gid, 'time')/100)
+            ctime = '{:0>2}'.format(codes_get(gid, 'time') // 100)
             cstep = '{:0>3}'.format(codes_get(gid, 'step'))
             timestamp = datetime.strptime(cdate + ctime, '%Y%m%d%H')
             timestamp += timedelta(hours=int(cstep))

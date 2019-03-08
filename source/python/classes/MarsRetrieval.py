@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -433,7 +433,7 @@ class MarsRetrieval(object):
                                _config.FILE_MARS_REQUESTS), 'a') as f:
             f.write(str(request_number) + ', ')
             f.write(', '.join(str(attrs[key])
-                              for key in sorted(attrs.iterkeys())))
+                              for key in sorted(attrs.keys())))
             f.write('\n')
 
         return
@@ -473,7 +473,7 @@ class MarsRetrieval(object):
 
         # find all keys without a value and convert all other values to strings
         empty_keys = []
-        for key, value in attrs.iteritems():
+        for key, value in attrs.items():
             if value == '':
                 empty_keys.append(str(key))
             else:
@@ -510,7 +510,7 @@ class MarsRetrieval(object):
         # MARS request via call in shell
         else:
             request_str = 'ret'
-            for key, value in attrs.iteritems():
+            for key, value in attrs.items():
                 request_str = request_str + ',' + key + '=' + str(value)
             request_str += ',target="' + target + '"'
             p = subprocess.Popen(['mars', '-p'],
@@ -518,7 +518,7 @@ class MarsRetrieval(object):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  bufsize=1)
-            pout = p.communicate(input=request_str)[0]
+            pout = p.communicate(input=request_str.encode())[0]
             print(pout.decode())
 
             if 'Some errors reported' in pout.decode():
