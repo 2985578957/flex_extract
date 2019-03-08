@@ -91,7 +91,7 @@
 148 Charnock                          -                    CHNK             0  -9999.00
 149 Surface net radiation             W m**-2 s            SNR              0  -9999.00
 150 Top net radiation                 W m**-2 s            TNR              0  -9999.00
-151 Mean sea level pressure           Pa                   MSLP             0  -9999.00
+151 Mean sea level pressure           Pa                   MSL              0  -9999.00
 152 Logarithm of surface pressure     ln(Pa)               LNSP             0  -9999.00
 153 Short-wave heating rate           K                    SWHR             0  -9999.00
 154 Long-wave heating rate            K                    LWHR             0  -9999.00
