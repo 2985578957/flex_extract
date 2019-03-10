@@ -329,15 +329,19 @@ class ControlFile(object):
         Switch to decide wether the job is a pure forecast retrieval or
         coupled with analysis data. Default value is 0.
 
-    rrint: int
+    rrint : int
         Switch to select between old precipitation disaggregation method (0)
         or the new IA3 disaggegration method (1). Default value is 0.
+
+    doubleelda : int
+        Switch to select the calculation of extra ensemble members for the
+        ELDA stream. It doubles the amount of retrieved ensemble members.
 
     logicals : list of str
         List of the names of logical switches which controls the flow
         of the program. Default list is ['gauss', 'omega', 'omegadiff', 'eta',
         'etadiff', 'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
-        'ectrans', 'debug', 'request', 'public', 'purefc', 'rrint']
+        'ectrans', 'debug', 'request', 'public', 'purefc', 'rrint', 'doubleelda']
     '''
 
     def __init__(self, filename):
@@ -424,11 +428,12 @@ class ControlFile(object):
         self.cds_api = None
         self.purefc = 0
         self.rrint = 0
+        self.doubleelda = 0
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
                          'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
                          'ectrans', 'debug', 'oper', 'request', 'public',
-                         'purefc', 'rrint']
+                         'purefc', 'rrint', 'doubleelda']
 
         self._read_controlfile()
 

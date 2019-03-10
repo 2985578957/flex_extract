@@ -22,7 +22,7 @@ GATEWAY None
 
 #===============================================================================
 # GENERAL SECTION:
-# Specific storage, notifcication and data transfer settings.
+# Specific storage, notification and data transfer settings.
 # Selection of ECMWF access interface and extra output options. 
 #-------------------------------------------------------------------------------
 DEBUG 0
@@ -111,6 +111,7 @@ ETAPAR 77
 #-------------------------------------------------------------------------------
 CWC 0
 WRF 0
+DOUBLEELDA 0 
 ADDPAR None
 
 #===============================================================================

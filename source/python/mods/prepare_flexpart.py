@@ -70,11 +70,11 @@ import socket
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from .checks import check_ppid
+from mods.checks import check_ppid
 from classes.UioFiles import UioFiles
 from classes.ControlFile import ControlFile
-from .tools import (setup_controldata, clean_up, get_cmdline_args,
-                   read_ecenv, make_dir)
+from mods.tools import (setup_controldata, clean_up, get_cmdline_args,
+                        read_ecenv, make_dir, normal_exit)
 from classes.EcFlexpart import EcFlexpart
 
 # ------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ def prepare_flexpart(ppid, c):
     # copy/transfer/interpolate them or make them GRIB2
     flexpart = EcFlexpart(c, fluxes=False)
     flexpart.create(inputfiles, c)
-    if c.stream.lower() == 'elda':
+    if c.stream.lower() == 'elda' and c.doubleelda:
         flexpart.calc_extra_elda(c.inputdir, c.prefix)
     flexpart.process_output(c)
 
