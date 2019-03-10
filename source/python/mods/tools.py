@@ -68,7 +68,7 @@ try:
     import exceptions
 except ImportError:
     import builtins as exceptions
-from datetime import datetime
+from datetime import datetime, timedelta
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 
@@ -868,3 +868,32 @@ def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
         sys.exit('... ' + error_msg)
 
     return
+
+
+def generate_retrieval_period_boundary(c):
+    '''Generates retrieval period boundary datetimes from CONTROL information.
+
+    Parameters
+    ----------
+    c : ControlFile
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    Return
+    ------
+    start_period : datetime
+        The first timestamp of the actual retrieval period disregarding
+        the temporary times which were used for processing reasons.
+
+    end_period : datetime
+        The last timestamp of the actual retrieval period disregarding
+        the temporary times which were used for processing reasons.
+    '''
+    # generate start and end timestamp of the retrieval period
+    start_period = datetime.strptime(c.start_date + c.time[0], '%Y%m%d%H')
+    start_period = start_period + timedelta(hours=int(c.step[0]))
+    end_period = datetime.strptime(c.end_date + c.time[-1], '%Y%m%d%H')
+    end_period = end_period + timedelta(hours=int(c.step[-1]))
+
+
+    return start_period, end_period

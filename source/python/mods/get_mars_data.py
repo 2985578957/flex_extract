@@ -66,7 +66,7 @@ from datetime import datetime, timedelta
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from .tools import (setup_controldata, my_error, normal_exit, get_cmdline_args,
+from mods.tools import (setup_controldata, my_error, normal_exit, get_cmdline_args,
                    read_ecenv, make_dir)
 from classes.EcFlexpart import EcFlexpart
 from classes.UioFiles import UioFiles
