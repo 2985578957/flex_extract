@@ -513,7 +513,7 @@ class MarsRetrieval(object):
             for key, value in attrs.items():
                 request_str = request_str + ',' + key + '=' + str(value)
             request_str += ',target="' + target + '"'
-            p = subprocess.Popen(['mars', '-p'],
+            p = subprocess.Popen(['mars'],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
