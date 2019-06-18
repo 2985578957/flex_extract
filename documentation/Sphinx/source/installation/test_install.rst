@@ -1,5 +1,0 @@
-Installation test
-=================
-
-    UNDER CONSTRUCTION
-    

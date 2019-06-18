@@ -1,6 +1,0 @@
-Operating modes
-===============
-
- 
-    UNDER CONSTRUCTION
-    

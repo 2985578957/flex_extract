@@ -1,0 +1,159 @@
+.. flex_extract documentation master file, created by
+   sphinx-quickstart on Wed Oct 17 18:39:05 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+========================================================
+Welcome to :literal:`flex_extract's` user documentation!
+========================================================
+
+:literal:`flex_extract` is an open-source software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to serve as input files for the FLEXTRA/FLEXPART Atmospheric Transport Modelling system. 
+
+
+.. The scripts can be 1) executed locally using the ECMWF WebMARS interface, or 2) on the ECMWF member
+.. state gateway server or HPC facility using the ecaccess software package. As another option the scripts can 3)
+.. also be triggered using ecflow scheduling software used by ECMWF for data dissemination.
+
+.. All third-party software and libraries required by :literal:`flex_extract` are open source and free of charge. 
+
+.. raw:: html
+
+    <table style="width:100%;">
+      <tr>
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
+          </div>
+          <h2><a href="installation.html">Installation</a></h2>
+          <ul>
+            <li><a href="installation.html#ref-requirements">Environment requirements</a></li>
+            <li><a href="installation.html#ref-download">Download flex_extract</a></li>
+            <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
+          </ul>
+        </td>          
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+          </div>
+          <h2><a href="ecmwf_data.html">ECMWF data</a></h2>
+          <ul>
+            <li><a href="ecmwf_data.html">Overview</a></li>
+            <li><a href="Ecmwf/access.html">Access Modes</a></li>
+            <li><a href="Ecmwf/ec-links.html">Link Collection</a></li>
+          </ul>
+        </td>
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+          </div>
+          <h2><a href="documentation.html">Documentation</a></h2>
+          <ul>
+            <li><a href="">Content</a></li>
+            <li><a href="">Configuration</a></li>
+            <li><a href="">Tutorials</a></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>   
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
+          </div>
+          <h2><a href="first_steps.html">First Steps</a></h2>
+          <ul>
+            <li><a href="">...</a></li>
+            <li><a href="">...</a></li>
+            <li><a href="">...</a></li>
+          </ul>
+        </td>  
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+          </div>
+          <h2><a href="evaluation.html">Evaluation</a></h2>
+          <ul>
+            <li><a href="">Code</a></li>
+            <li><a href="">Functionality</a></li>
+            <li><a href="">Regression</a></li>
+          </ul>
+        </td> 
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
+          </div>
+          <h2><a href="dev_guide.html">Developer</a></h2>
+          <ul>
+            <li><a href="">...</a></li>
+            <li><a href="">...</a></li>
+            <li><a href="">...</a></li>
+          </ul>
+        </td>
+      </tr>
+      </table>
+      <table style="width:100%;">
+      <tr>
+        <td style="width:15%">
+        </td>
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:10%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/change_icon.png">
+          </div>
+          <h2><a href="changelog.html">Changelog</a></h2>
+          <ul>
+            <li><a href="changelog.html#ref-v71">v7.1</a></li>
+            <li><a href="changelog.html#ref-v704">v7.0.4</a></li>
+            <li><a href="changelog.html#ref-v703">v7.0.3</a></li>
+            <li><a href="changelog.html#ref-v60">v6</a></li>
+          </ul>
+        </td>        
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:10%;position:relative;">
+          <img style="position:absolute;height:100%;vertical-align:bottom;" src="_static/help_icon.png">
+          </div>
+          <h2><a href="support.html">Support</a></h2>
+          <ul>
+            <li><a href="support.html#ref-ticket-system">Ticket system</a></li>
+            <li><a href="support.html#ref-mailing-list">Mailing list</a></li>
+            <li><a href="Support/known_bugs_issues.html">Known bugs or issues</a></li>
+            <li><a href="Support/faq.html">FAQ</a></li>
+          </ul>
+        </td>
+        <td style="width:10%">
+        </td>
+      </tr>
+    </table>
+    <p></p>
+    
+.. note::
+ 
+   .. figure:: _static/cc-by-40.png
+     :width: 100px
+     
+   This work is licensed under the Creative Commons Attribution 4.0
+   International License. To view a copy of this license, visit
+   http://creativecommons.org/licenses/by/4.0/ or send a letter to
+   Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Table of Contents:
+
+   installation
+   first_steps
+   ecmwf_data
+   documentation
+   evaluation
+   dev_guide
+   changelog
+   support
+   Support/faq
+   authors
+   
+
+.. Indices and tables
+.. ==================
+
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
+
