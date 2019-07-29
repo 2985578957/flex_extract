@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -31,6 +31,8 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import sys
 import subprocess
@@ -483,6 +485,8 @@ class MarsRetrieval(object):
         for key in empty_keys:
             del attrs[key]
 
+        attrs['ppengine'] = 'emos'
+
         # MARS request via Python script
         if self.server:
             try:
@@ -513,7 +517,7 @@ class MarsRetrieval(object):
             for key, value in attrs.items():
                 request_str = request_str + ',' + key + '=' + str(value)
             request_str += ',target="' + target + '"'
-            p = subprocess.Popen(['mars'],
+            p = subprocess.Popen(['mars', '-e'],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
