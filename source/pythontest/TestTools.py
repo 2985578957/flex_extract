@@ -1,4 +1,4 @@
-#!/opt/anaconda/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # for the gateway tests, the env vars of ECUID and ECGID have to be set upfront
