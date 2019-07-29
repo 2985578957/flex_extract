@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -23,8 +23,6 @@
 #        - retrieve also longer term forecasts, not only analyses and
 #          short term forecast data
 #        - added conversion into GRIB2
-#        - added conversion into .fp format for faster execution of FLEXPART
-#          (see https://www.flexpart.eu/wiki/FpCtbtoWo4FpFormat)
 #
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
@@ -55,19 +53,14 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import sys
 import glob
 import shutil
 import subprocess
 from datetime import datetime, timedelta
-import numpy as np
-
-from eccodes import (codes_index_select, codes_new_from_index, codes_get,
-                     codes_get_values, codes_set_values, codes_set,
-                     codes_write, codes_release, codes_new_from_index,
-                     codes_index_release, codes_index_get, codes_get_array,
-                     codes_set_array, codes_grib_new_from_file)
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
@@ -251,7 +244,7 @@ class EcFlexpart(object):
         else:
             self._create_params(c.gauss, c.eta, c.omega, c.cwc, c.wrf)
 
-        if fluxes and not c.purefc:
+        if fluxes:# and not c.purefc:
             self._create_field_types_fluxes()
         else:
             self._create_field_types(c.type, c.time, c.step)
@@ -573,6 +566,8 @@ class EcFlexpart(object):
             index_vals[1]: ('0', '1200', '1800', '600') ; time
             index_vals[2]: ('0', '12', '3', '6', '9') ; stepRange
         '''
+        from eccodes import codes_index_get
+
         iid = None
         index_keys = keys
 
@@ -665,10 +660,10 @@ class EcFlexpart(object):
                            'expver':self.expver,
                            'param':None}
 
-        for ftype in self.types:
+        for ftype in sorted(self.types):
             # ftype contains field types such as
             #     [AN, FC, PF, CV]
-            for pk, pv in self.params.items():
+            for pk, pv in sorted(self.params.items()):
                 # pk contains one of these keys of params
                 #     [SH__ML, SH__SL, GG__ML, GG__SL, OG__ML, OG__SL,
                 #      OG_OROLSM_SL, OG_acc_SL]
@@ -837,6 +832,7 @@ class EcFlexpart(object):
         from genshi.template.text import NewTextTemplate
         from genshi.template import  TemplateLoader
         from genshi.template.eval import  UndefinedError
+        import numpy as np
 
         try:
             loader = TemplateLoader(_config.PATH_TEMPLATES, auto_reload=False)
@@ -849,8 +845,8 @@ class EcFlexpart(object):
 
             if area[1] > area[3]:
                 area[1] -= 360
-            maxl = int((area[3] - area[1]) / grid[1]) + 1
-            maxb = int((area[0] - area[2]) / grid[0]) + 1
+            maxl = round((area[3] - area[1]) / grid[1]) + 1
+            maxb = round((area[0] - area[2]) / grid[0]) + 1
 
             stream = namelist_template.generate(
                 maxl = str(maxl),
@@ -920,6 +916,11 @@ class EcFlexpart(object):
         ------
 
         '''
+        import numpy as np
+        from eccodes import (codes_index_select, codes_new_from_index, codes_get,
+                             codes_get_values, codes_set_values, codes_set,
+                             codes_write, codes_release, codes_new_from_index,
+                             codes_index_release)
 
         table128 = init128(_config.PATH_GRIBTABLE)
         # get ids from the flux parameter names
@@ -1300,6 +1301,8 @@ class EcFlexpart(object):
         ------
 
         '''
+        import numpy as np
+
         print('... disaggregation of precipitation with new method.')
 
         tmpfile = os.path.join(c.inputdir, 'rr_grib_dummy.grb')
@@ -1322,11 +1325,11 @@ class EcFlexpart(object):
                     cp_new_np[inum,ix,:] = disaggregation.IA3(cp_np[inum,ix,:])[:-1]
         else:
             for ix in range(ni*nj):
-                lsp_new_np[ix,:] = disaggregation.IA3(lsp_np[0,ix,:])[:-1]
-                cp_new_np[ix,:] = disaggregation.IA3(cp_np[0,ix,:])[:-1]
+                lsp_new_np[0,ix,:] = disaggregation.IA3(lsp_np[ix,:])[:-1]
+                cp_new_np[0,ix,:] = disaggregation.IA3(cp_np[ix,:])[:-1]
 
         # write to grib files (full/orig times to flux file and inbetween
-        # times into seperate end files)
+        # times with step 1 and 2, respectively)
         print('... write disaggregated precipitation to files.')
 
         if maxnum:
@@ -1487,6 +1490,10 @@ class EcFlexpart(object):
         ------
 
         '''
+        from eccodes import (codes_index_select, codes_new_from_index, codes_get,
+                             codes_get_values, codes_set_values, codes_set,
+                             codes_write, codes_release, codes_new_from_index,
+                             codes_index_release)
 
         # generate start and end timestamp of the retrieval period
         start_period = datetime.strptime(c.start_date + c.time[0], '%Y%m%d%H')
@@ -1504,7 +1511,7 @@ class EcFlexpart(object):
         # which are used to seperate the grib fields to,
         # for the Fortran program input
         # 10: U,V | 11: T | 12: lnsp | 13: D | 16: sfc fields
-        # 17: Q | 18: Q , gaussian| 19: w | 21: etadot | 22: clwc+ciwc
+        # 17: Q | 18: Q, SL, GG| 19: omega | 21: etadot | 22: clwc+ciwc
         fdict = {'10':None, '11':None, '12':None, '13':None, '16':None,
                  '17':None, '18':None, '19':None, '21':None, '22':None}
 
@@ -1739,6 +1746,10 @@ class EcFlexpart(object):
         ------
 
         '''
+        from eccodes import (codes_grib_new_from_file, codes_get_array,
+                             codes_set_array, codes_release, codes_set_values,
+                             codes_set, codes_write, codes_release)
+
         # max number
         maxnum = int(self.number.split('/')[-1])
 
@@ -1854,85 +1865,3 @@ class EcFlexpart(object):
 
         return
 
-
-    def prepare_fp_files(self, c):
-        '''Conversion of GRIB files to FLEXPART binary format.
-
-        Parameters
-        ----------
-        c : ControlFile
-            Contains all the parameters of CONTROL file and
-            command line.
-
-        Return
-        ------
-
-        '''
-        # generate AVAILABLE file
-        # Example of AVAILABLE file data:
-        # 20131107 000000      EN13110700              ON DISC
-        clist = []
-        for ofile in self.outputfilelist:
-            fname = ofile.split('/')
-            if '.' in fname[-1]:
-                l = fname[-1].split('.')
-                timestamp = datetime.strptime(l[0][-6:] + l[1],
-                                              '%y%m%d%H')
-                timestamp += timedelta(hours=int(l[2]))
-                cdate = datetime.strftime(timestamp, '%Y%m%d')
-                chms = datetime.strftime(timestamp, '%H%M%S')
-            else:
-                cdate = '20' + fname[-1][-8:-2]
-                chms = fname[-1][-2:] + '0000'
-            clist.append(cdate + ' ' + chms + ' '*6 +
-                         fname[-1] + ' '*14 + 'ON DISC')
-        clist.sort()
-        with open(c.outputdir + '/' + 'AVAILABLE', 'w') as f:
-            f.write('\n'.join(clist) + '\n')
-
-        # generate pathnames file
-        pwd = os.path.abspath(c.outputdir)
-        with open(pwd + '/pathnames', 'w') as f:
-            f.write(pwd + '/Options/\n')
-            f.write(pwd + '/\n')
-            f.write(pwd + '/\n')
-            f.write(pwd + '/AVAILABLE\n')
-            f.write(' = == = == = == = == = == ==  = \n')
-
-        # create Options dir if necessary
-        if not os.path.exists(pwd + '/Options'):
-            make_dir(pwd+'/Options')
-
-        # read template COMMAND file
-        with open(os.path.expandvars(os.path.expanduser(
-            c.flexpartdir)) + '/../Options/COMMAND', 'r') as f:
-            lflist = f.read().split('\n')
-
-        # find index of list where to put in the
-        # date and time information
-        # usually after the LDIRECT parameter
-        i = 0
-        for l in lflist:
-            if 'LDIRECT' in l.upper():
-                break
-            i += 1
-
-        # insert the date and time information of run start and end
-        # into the list of lines of COMMAND file
-        lflist = lflist[:i+1] + \
-                 [clist[0][:16], clist[-1][:16]] + \
-                 lflist[i+3:]
-
-        # write the new COMMAND file
-        with open(pwd + '/Options/COMMAND', 'w') as g:
-            g.write('\n'.join(lflist) + '\n')
-
-        # change to outputdir and start the grib2flexpart run
-        # afterwards switch back to the working dir
-        os.chdir(c.outputdir)
-        cmd = [os.path.expandvars(os.path.expanduser(c.flexpartdir)) +
-         '/../FLEXPART_PROGRAM/grib2flexpart', 'useAvailable', '.']
-        execute_subprocess(cmd)
-        os.chdir(pwd)
-
-        return
