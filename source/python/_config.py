@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
@@ -27,15 +27,19 @@ and pathes.
 import os
 import sys
 import inspect
-import socket
+import platform
+
+# ------------------------------------------------------------------------------
+# PARAMETERS
+# ------------------------------------------------------------------------------
 
 _VERSION_STR = '7.1'
 
-FLAG_ON_ECMWFSERVER = 'ecmwf' in socket.gethostname()
+FLAG_ON_ECMWFSERVER = 'ecgb' in platform.node()
 
 QUEUES_LIST = ['ecgate', 'cca', 'ccb']
 
-INSTALL_TARGETS = ['local', 'ecgate', 'cca']
+INSTALL_TARGETS = ['local', 'ecgate', 'cca', 'ccb']
 
 CDS_DATASET = 'reanalysis-era5-complete'
 
@@ -92,7 +96,7 @@ PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
 PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'test')
 if os.getenv('CONTROL'):
-    # this is only needed if gateway version with job script is used!
+    # this is only needed if (gateway) version with job script is used!
     # because job is directly submitted from SCRATCH and because the
     # CONTROL file is stored there, the normal path is not valid.
     PATH_CONTROLFILES = '.'
