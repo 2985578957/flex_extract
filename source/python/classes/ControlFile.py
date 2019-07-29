@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
@@ -42,11 +42,12 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import re
 import sys
 import inspect
-import numpy as np
 
 # software specific classes and modules from flex_extract
 sys.path.append('../')
@@ -273,7 +274,7 @@ class ControlFile(object):
         Path to the FORTRAN executable file. Default value is
         _config.PATH_FORTRAN_SRC.
 
-    flexpartdir : str
+    installdir : str
         Path to a FLEXPART root directory. Default value is None.
 
     makefile : str
@@ -413,7 +414,7 @@ class ControlFile(object):
         self.outputdir = None
         self.flexextractdir = _config.PATH_FLEXEXTRACT_DIR
         self.exedir = _config.PATH_FORTRAN_SRC
-        self.flexpartdir = None
+        self.installdir = None
         self.makefile = 'Makefile.gfortran'
         self.destination = None
         self.gateway = None
@@ -607,8 +608,8 @@ class ControlFile(object):
         check_queue(queue, self.gateway, self.destination,
                     self.ecuid, self.ecgid)
 
-        self.outputdir, self.flexpartdir = check_pathes(self.inputdir,
-             self.outputdir, self.flexpartdir, self.flexextractdir)
+        self.outputdir, self.installdir = check_pathes(self.inputdir,
+             self.outputdir, self.installdir, self.flexextractdir)
 
         self.start_date, self.end_date = check_dates(self.start_date,
                                                      self.end_date)
@@ -630,6 +631,8 @@ class ControlFile(object):
 
         self.time = check_time(self.time)
 
+        self.purefc = check_purefc(self.type)
+
         self.type, self.time, self.step = check_len_type_time_step(self.type,
                                                                    self.time,
                                                                    self.step,
@@ -638,12 +641,11 @@ class ControlFile(object):
 
         self.acctype = check_acctype(self.acctype, self.type)
 
-        self.acctime = check_acctime(self.acctime, self.marsclass, self.purefc)
+        self.acctime = check_acctime(self.acctime, self.marsclass,
+                                     self.purefc, self.time)
 
         self.accmaxstep = check_accmaxstep(self.accmaxstep, self.marsclass,
                                            self.purefc, self.maxstep)
-
-        self.purefc = check_purefc(self.type)
 
         self.grid = check_grid(self.grid)
 
@@ -661,7 +663,7 @@ class ControlFile(object):
     def to_list(self):
         '''Just generates a list of strings containing the attributes and
         assigned values except the attributes "_expanded", "exedir",
-        "flexextractdir" and "flexpartdir".
+        "flexextractdir" and "installdir".
 
         Parameters
         ----------
@@ -671,7 +673,7 @@ class ControlFile(object):
         l : list of *
             A sorted list of the all ControlFile class attributes with
             their values except the attributes "_expanded", "exedir",
-            "flexextractdir" and "flexpartdir".
+            "flexextractdir" and "installdir".
         '''
 
         import collections
@@ -685,7 +687,7 @@ class ControlFile(object):
                 pass
             elif 'exedir' in item[0]:
                 pass
-            elif 'flexpartdir' in item[0]:
+            elif 'installdir' in item[0]:
                 pass
             elif 'flexextractdir' in item[0]:
                 pass
