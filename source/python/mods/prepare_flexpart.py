@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -59,6 +59,8 @@ Read the documentation for usage instructions.
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import datetime
 import os
 import inspect
