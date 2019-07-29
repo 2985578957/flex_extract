@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Leopold Haimberger (University of Vienna)
@@ -61,6 +61,8 @@ Read the documentation for usage instructions.
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import sys
 import glob
@@ -74,7 +76,7 @@ import _config
 from classes.ControlFile import ControlFile
 from classes.UioFiles import UioFiles
 from mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
-                        silent_remove, execute_subprocess)
+                        silent_remove, execute_subprocess, none_or_str)
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -95,7 +97,10 @@ def main():
     c.assign_args_to_control(args)
     check_install_conditions(c)
 
-    install_via_gateway(c)
+    if c.install_target.lower() != 'local': # ecgate or cca
+        install_via_gateway(c)
+    else: # local
+        install_local(c)
 
     return
 
@@ -111,38 +116,46 @@ def get_install_cmdline_args():
     args : Namespace
         Contains the commandline arguments from script/program call.
     '''
-    parser = ArgumentParser(description='Install flex_extract software locally or \
-                            on ECMWF machines',
+    parser = ArgumentParser(description='Install flex_extract software '
+                                        'locally or on ECMWF machines',
                             formatter_class=ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--target', dest='install_target', default=None,
+    parser.add_argument('--target', dest='install_target',
+                        type=none_or_str, default=None,
                         help="Valid targets: local | ecgate | cca , \
                         the latter two are at ECMWF")
-    parser.add_argument("--makefile", dest="makefile", default=None,
-                        help='Name of Makefile to use for compiling CONVERT2')
-    parser.add_argument("--ecuid", dest="ecuid", default=None,
-                        help='user id at ECMWF')
-    parser.add_argument("--ecgid", dest="ecgid", default=None,
-                        help='group id at ECMWF')
-    parser.add_argument("--gateway", dest="gateway", default=None,
-                        help='name of local gateway server')
-    parser.add_argument("--destination", dest="destination", default=None,
-                        help='ecaccess destination, e.g. leo@genericSftp')
+    parser.add_argument("--makefile", dest="makefile",
+                        type=none_or_str, default=None,
+                        help='Name of Makefile to use for compiling the '
+                        'Fortran program')
+    parser.add_argument("--ecuid", dest="ecuid",
+                        type=none_or_str, default=None,
+                        help='The user id at ECMWF.')
+    parser.add_argument("--ecgid", dest="ecgid",
+                        type=none_or_str, default=None,
+                        help='The group id at ECMWF.')
+    parser.add_argument("--gateway", dest="gateway",
+                        type=none_or_str, default=None,
+                        help='The name of the local gateway server.')
+    parser.add_argument("--destination", dest="destination",
+                        type=none_or_str, default=None,
+                        help='The ecaccess association, e.g. '
+                        'myUser@genericSftp')
 
-    parser.add_argument("--flexpartdir", dest="flexpartdir",
-                        default=None, help="FLEXPART root directory on ECMWF \
-                        servers (to find grib2flexpart and COMMAND file)\n\
-                        Normally flex_extract resides in the scripts directory \
-                        of the FLEXPART distribution.")
+    parser.add_argument("--installdir", dest="installdir",
+                        type=none_or_str, default=None,
+                        help='Root directory where '
+                        'flex_extract will be installed to.')
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
-                        default="job.temp.o",
-                        help="job template file for submission to ECMWF")
+                        type=none_or_str, default="job.template",
+                        help='The rudimentary template file to create a batch '
+                        'job template for submission to ECMWF servers.')
 
     parser.add_argument("--controlfile", dest="controlfile",
-                        default='CONTROL.temp',
-                        help="file with CONTROL parameters")
+                        type=none_or_str, default='CONTROL_EA5',
+                        help="The file with all CONTROL parameters.")
 
     args = parser.parse_args()
 
@@ -150,8 +163,7 @@ def get_install_cmdline_args():
 
 
 def install_via_gateway(c):
-    '''Perform the actual installation on local machine or prepare data
-    transfer to remote gate and submit a job script which will
+    '''Prepare data transfer to remote gate and submit a job script which will
     install everything on the remote gate.
 
     Parameters
@@ -166,73 +178,88 @@ def install_via_gateway(c):
     '''
     import tarfile
 
-    ecd = _config.PATH_FLEXEXTRACT_DIR
     tarball_name = _config.FLEXEXTRACT_DIRNAME + '.tar'
-    tar_file = os.path.join(ecd, tarball_name)
+    tar_file = os.path.join(_config.PATH_FLEXEXTRACT_DIR, tarball_name)
 
-    target_dirname = _config.FLEXEXTRACT_DIRNAME
-    fortran_executable = _config.FORTRAN_EXECUTABLE
+    mk_compilejob(c.makefile, c.install_target, c.ecuid, c.ecgid,
+                  c.installdir)
 
-    if c.install_target.lower() != 'local': # ecgate or cca
+    mk_job_template(c.ecuid, c.ecgid, c.gateway,
+                    c.destination, c.installdir)
 
-        mk_compilejob(c.makefile, c.install_target, c.ecuid, c.ecgid,
-                      c.flexpartdir)
+    mk_env_vars(c.ecuid, c.ecgid, c.gateway, c.destination)
 
-        mk_job_template(c.ecuid, c.ecgid, c.gateway,
-                        c.destination, c.flexpartdir)
+    mk_tarball(tar_file, c.install_target)
 
-        mk_env_vars(c.ecuid, c.ecgid, c.gateway, c.destination)
+    put_file_to_ecserver(_config.PATH_FLEXEXTRACT_DIR, tarball_name,
+                         c.install_target, c.ecuid, c.ecgid)
 
-        mk_tarball(tar_file, c.install_target)
+    submit_job_to_ecserver(c.install_target,
+                           os.path.join(_config.PATH_REL_JOBSCRIPTS,
+                                        _config.FILE_INSTALL_COMPILEJOB))
 
-        put_file_to_ecserver(ecd, tarball_name, c.install_target,
-                             c.ecuid, c.ecgid)
+    silent_remove(tar_file)
 
-        submit_job_to_ecserver(c.install_target,
-                               os.path.join(_config.PATH_REL_JOBSCRIPTS,
-                                            _config.FILE_INSTALL_COMPILEJOB))
-
-        silent_remove(tar_file)
-
-        print('job compilation script has been submitted to ecgate for ' +
-              'installation in ' + c.flexpartdir +
-               '/' + target_dirname)
-        print('You should get an email with subject "flexcompile" within ' +
-              'the next few minutes!')
-
-    else: #local
-        if c.flexpartdir == _config.PATH_FLEXEXTRACT_DIR :
-            print('WARNING: FLEXPARTDIR has not been specified')
-            print('flex_extract will be installed in here by compiling the ' +
-                  'Fortran source in ' + _config.PATH_FORTRAN_SRC)
-            os.chdir(_config.PATH_FORTRAN_SRC)
-        else: # creates the target working directory for flex_extract
-            c.flexpartdir = os.path.expandvars(os.path.expanduser(
-                                        c.flexpartdir))
-            if os.path.abspath(ecd) != os.path.abspath(c.flexpartdir):
-                mk_tarball(tar_file, c.install_target)
-                make_dir(os.path.join(c.flexpartdir,
-                                      target_dirname))
-                os.chdir(os.path.join(c.flexpartdir,
-                                      target_dirname))
-                un_tarball(tar_file)
-                os.chdir(os.path.join(c.flexpartdir,
-                                      target_dirname,
-                                      _config.PATH_REL_FORTRAN_SRC))
-
-        # Create Fortran executable - CONVERT2
-        print('Install ' + target_dirname + ' software at ' +
-              c.install_target + ' in directory ' +
-              os.path.abspath(c.flexpartdir) + '\n')
-
-        del_convert_build('.')
-        mk_convert_build('.', c.makefile)
-
-        os.chdir(ecd)
-        if os.path.isfile(tar_file):
-            os.remove(tar_file)
+    print('Job compilation script has been submitted to ecgate for ' +
+          'installation in ' + c.installdir +
+           '/' + _config.FLEXEXTRACT_DIRNAME)
+    print('You should get an email with subject "flexcompile" within ' +
+          'the next few minutes!')
 
     return
+
+def install_local(c):
+    '''Perform the actual installation on a local machine.
+
+    Parameters
+    ----------
+    c : ControlFile
+        Contains all the parameters of CONTROL file and
+        command line.
+
+    Return
+    ------
+
+    '''
+    import tarfile
+
+    tar_file = os.path.join(_config.PATH_FLEXEXTRACT_DIR,
+                            _config.FLEXEXTRACT_DIRNAME + '.tar')
+
+    if c.installdir == _config.PATH_FLEXEXTRACT_DIR :
+        print('WARNING: installdir has not been specified')
+        print('flex_extract will be installed in here by compiling the ' +
+              'Fortran source in ' + _config.PATH_FORTRAN_SRC)
+        os.chdir(_config.PATH_FORTRAN_SRC)
+    else: # creates the target working directory for flex_extract
+        c.installdir = os.path.expandvars(os.path.expanduser(
+            c.installdir))
+        if os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) != \
+           os.path.abspath(c.installdir):
+            mk_tarball(tar_file, c.install_target)
+            make_dir(os.path.join(c.installdir,
+                                   _config.FLEXEXTRACT_DIRNAME))
+            os.chdir(os.path.join(c.installdir,
+                                   _config.FLEXEXTRACT_DIRNAME))
+            un_tarball(tar_file)
+            os.chdir(os.path.join(c.installdir,
+                                   _config.FLEXEXTRACT_DIRNAME,
+                                  _config.PATH_REL_FORTRAN_SRC))
+
+    # Create Fortran executable - CONVERT2
+    print('Install ' +  _config.FLEXEXTRACT_DIRNAME + ' software at ' +
+          c.install_target + ' in directory ' +
+          os.path.abspath(c.installdir) + '\n')
+
+    del_convert_build('.')
+    mk_convert_build('.', c.makefile)
+
+    os.chdir(_config.PATH_FLEXEXTRACT_DIR)
+    if os.path.isfile(tar_file):
+        os.remove(tar_file)
+
+    return
+
 
 def check_install_conditions(c):
     '''Checks a couple of necessary attributes and conditions
@@ -274,13 +301,11 @@ def check_install_conditions(c):
                    support for further details')
             sys.exit(1)
 
-        if not c.flexpartdir:
-            c.flexpartdir = '${HOME}'
-        else:
-            c.flexpartdir = c.flexpartdir
+        if not c.installdir:
+            c.installdir = '${HOME}'
     else: # local
-        if not c.flexpartdir:
-            c.flexpartdir = _config.PATH_FLEXEXTRACT_DIR
+        if not c.installdir:
+            c.installdir = _config.PATH_FLEXEXTRACT_DIR
 
     return
 
