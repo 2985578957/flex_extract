@@ -13,12 +13,15 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sys
-sys.path.insert(0, os.path.abspath('../../../source/python'))
-sys.path.insert(0, os.path.abspath('../../../source/python/mods'))
-sys.path.insert(0, os.path.abspath('../../../source/python/classes'))
+import sys, glob
+sys.path.insert(0, os.path.abspath('../../../Source/Python'))
+sys.path.insert(0, os.path.abspath('../../../Source/Python/Mods'))
+sys.path.insert(0, os.path.abspath('../../../Source/Python/Classes'))
 
+sys.path.insert(0, os.path.abspath('_static/python'))
 
+#fortran_src = [f for f in os.listdir('../../../source/fortran') if '.f90' in f or '.f' in f]
+#print(fortran_src)
 
 # -- Project information -----------------------------------------------------
 
@@ -51,10 +54,24 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-#    'sphinx_pyreverse',
     'sphinx-jsonschema',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'hidden_code_block',
+    'sphinxcontrib.exceltable',
+    'sphinxcontrib.seqdiag',
+    'sphinxcontrib.blockdiag',
+    'sphinx.ext.todo',
+#    'sphinxfortran.fortran_autodoc',
+#    'sphinxfortran.fortran_domain'
 ]
+
+
+# Fontpath for seqdiag (truetype font)
+seqdiag_fontpath = '/usr/share/fonts/dejavu/DejaVuSerif.ttf'
+
+# Fontpath for blockdiag (truetype font)
+blockdiag_fontpath = '/usr/share/fonts/dejavu/DejaVuSerif.ttf'
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -185,12 +202,12 @@ html_context = {
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+#todo_link_only = True
 
 
 # -- Add extra css -----------------------------------------------------------
 def setup(app):
     app.add_stylesheet('css/custom.css')
-
 
 
 

@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The executable Script - run.sh &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The Jobscript job.ksh" href="jobscript.html" />
+    <link rel="prev" title="The Fortran Makefile - CONVERT2" href="fortran_makefile.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submission-parameter">Submission Parameter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#content-of-run-sh">Content of <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-of-submit-py-optional">Usage of <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> (optional)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control_params.html">The CONTROL parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+        
+      <li>The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Documentation/Input/run.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-executable-script-run-sh">
+<h1>The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code><a class="headerlink" href="#the-executable-script-run-sh" title="Permalink to this headline">¶</a></h1>
+<p>The execution of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> Shell script, which is a wrapping script for the top-level Python script <code class="docutils literal notranslate"><span class="pre">submit.py</span></code>.
+The Python script constitutes the entry point to ECMWF data retrievals with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and controls the program flow.</p>
+<p><code class="docutils literal notranslate"><span class="pre">submit.py</span></code> has two (three) sources for input parameters with information about program flow and ECMWF data selection, the so-called <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file,
+the command line parameters and the so-called <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> file. Whereby, the command line parameters will override the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters.</p>
+<p>Based on these input information <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> applies one of the application modes to either retrieve the ECMWF data via a Web API on a local maschine or submit a jobscript to ECMWF servers and retrieve the data there with sending the files to the local system eventually.</p>
+<p>PUT IN HERE A BLOCKDIAGRAM OF RAW PROGRAM FLOW</p>
+<div class="section" id="submission-parameter">
+<h2>Submission Parameter<a class="headerlink" href="#submission-parameter" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Parameter for Submission</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="9%" />
+<col width="27%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Datatype</th>
+<th class="head">Possible values</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Specifics / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">START_DATE</p>
+</td>
+<td><p class="first last">String YYYYMMDD</p>
+</td>
+<td><p class="first last">depends on dataset</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The first day of the retrieval period.</p>
+</td>
+<td><p class="first last">If END_DATE is set, START_DATE must be greater than END_DATE.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">END_DATE</p>
+</td>
+<td><p class="first last">String YYYYMMDD</p>
+</td>
+<td><p class="first last">depends on dataset</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p>
+</td>
+<td><p class="first last">Doesn’t have to be set. If set, it has to be greater or equal than START_DATE.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">DATE_CHUNK</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">depends on resolution</p>
+</td>
+<td><p class="first last">3</p>
+</td>
+<td><p class="first last">Maximum number of days retrieved within one MARS request. </p>
+</td>
+<td><p class="first last">This number is limited due to maximum allowed memory and time limit for one MARS request. Be careful in changing this number.  It can be  larger for reanalysis data but may be too large for very high resolution retrievals.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">JOB_CHUNK</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">depends on resolution</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last"># of days to be retrieved within a single job</p>
+</td>
+<td><p class="first last">Can be selected to start the submit script once and let it automatically divide the time period in smaller job chunks. Might be very useful for example if one would like to retrieve one month with 0.1° space resolution and 1h time resolution. Then only 1 day per job is possible.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">CONTROLFILE</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">any CONTROL file</p>
+</td>
+<td><p class="first last">CONTROL_EA5</p>
+</td>
+<td><p class="first last">The file with all CONTROL parameters.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">BASETIME</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0; 12]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p>
+</td>
+<td><p class="first last">Can be set to 00 or 12 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">STEP</p>
+</td>
+<td><p class="first last">list of String [xx xx … xx] or as String [x/to/x]</p>
+</td>
+<td><p class="first last">[00 - max available STEP in data set]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This is the forecast time step in hours for each corresponding field type (TYPE). Counting of the steps starts from the forecast times.  E.g. In Era-Interim, for forecasts at 3, 6, 9 UTC the STEPS 3,6 and 9 are used and the forecast TIME 00 UTC. </p>
+</td>
+<td><p class="first last">Has to have the same amount of values as in TYPE and TIME! For analysis (AN) fields the STEP has to be 00 always! It is more easily set in the CONTROL file. For pure forecast modes it might be set here as e.g. 0/to/36</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">LEVELIST</p>
+</td>
+<td><p class="first last">String [start/to/end]</p>
+</td>
+<td><p class="first last">1/to/137; depends on dataset</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">List of vertical levels for MARS request. It can be a subset of levels but it has to include the maximum level (end).</p>
+</td>
+<td><p class="first last">If full list of levels is needed and parameter LEVEL is set, the LEVELIST parameter is not needed. “end” has to be the maximum number of possible levels and has to be the same as in LEVEL, if specified.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">AREA</p>
+</td>
+<td><p class="first last">Double [f/f/f/f]</p>
+</td>
+<td><p class="first last">any float within lat and lon boundaries</p>
+</td>
+<td><p class="first last">‘’</p>
+</td>
+<td><p class="first last">Area defined as north/west/south/east</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">DEBUG</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Debug mode - leave temporary files intact</p>
+</td>
+<td><p class="first last">Usually only the final FLEXPART inputfiles are saved.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">OPER</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Operational mode - prepares dates with            environment variables</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">REQUEST</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1,2]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">List all mars requests with its specifc values in file mars_requests.dat</p>
+</td>
+<td><p class="first last">Very useful for documentation or debugging reasons.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">PUBLIC</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Public mode - retrieves the public datasets</p>
+</td>
+<td><p class="first last">IMPORTANT: This is necessary to select for each PUBLIC user!</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">RRINT</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Selection of old or new precipitation interpolation ; 
+                        0 - old method;
+                        1 - new method                                                         (additional subgrid points)</p>
+</td>
+<td><p class="first last">IMPORTANT: If this new method is used, each single GRIB file will contain 3 fields for the large scale and 3 fields for the convective precipitation. They can be distinguished by the “stepRange” keyword in the GribMessages. StepRange = 0 : original time step; stepRange = 1 : first subgrid point; stepRange = 2 : second subgrid point </p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">INPUTDIR</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">any path</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Path to the temporary directory for the retrieval grib files and other processing files.</p>
+</td>
+<td><p class="first last">The temporary directory will be created if it does not already exist.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">OUTPUTDIR</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">any path</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Path to the final directory where the final FLEXPART ready input files are stored.</p>
+</td>
+<td><p class="first last">The final output directory will be created if it does not already exist.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">PPID</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This is the specify parent process id of a single flex_extract run to identify the files. It is the second number in the GRIB files.</p>
+</td>
+<td><p class="first last">This is usually only necessary if the GRIB data were retrieved and a rerun of prepare_flexpart has to be done. Then ppid is used to select the files. </p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">JOB_TEMPLATE</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">job.temp</p>
+</td>
+<td><p class="first last">job.temp</p>
+</td>
+<td><p class="first last">The job template file which are adapted to be submitted to the batch system on ECMWF server.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">QUEUE</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">ecgate, cca, ccb</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The ECMWF server name for submission of the job script to the batch system.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="content-of-run-sh">
+<h2>Content of <code class="docutils literal notranslate"><span class="pre">run.sh</span></code><a class="headerlink" href="#content-of-run-sh" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="usage-of-submit-py-optional">
+<span id="ref-install-script"></span><h2>Usage of <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> (optional)<a class="headerlink" href="#usage-of-submit-py-optional" title="Permalink to this headline">¶</a></h2>
+<p>It is also possible to start <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly from command line by using the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script instead of the wrapping Shell script <code class="docutils literal notranslate"><span class="pre">run.sh</span></code>.  This top-level script is located in
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
+command line parameter.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>submit.py --help
+
+usage: submit.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--start_date START_DATE<span class="o">]</span> <span class="o">[</span>--end_date END_DATE<span class="o">]</span>
+              <span class="o">[</span>--date_chunk DATE_CHUNK<span class="o">]</span> <span class="o">[</span>--job_chunk JOB_CHUNK<span class="o">]</span>
+              <span class="o">[</span>--controlfile CONTROLFILE<span class="o">]</span> <span class="o">[</span>--basetime BASETIME<span class="o">]</span>
+              <span class="o">[</span>--step STEP<span class="o">]</span> <span class="o">[</span>--levelist LEVELIST<span class="o">]</span> <span class="o">[</span>--area AREA<span class="o">]</span>
+              <span class="o">[</span>--debug DEBUG<span class="o">]</span> <span class="o">[</span>--oper OPER<span class="o">]</span> <span class="o">[</span>--request REQUEST<span class="o">]</span>
+              <span class="o">[</span>--public PUBLIC<span class="o">]</span> <span class="o">[</span>--rrint RRINT<span class="o">]</span> <span class="o">[</span>--inputdir INPUTDIR<span class="o">]</span>
+              <span class="o">[</span>--outputdir OUTPUTDIR<span class="o">]</span> <span class="o">[</span>--ppid PPID<span class="o">]</span>
+              <span class="o">[</span>--job_template JOB_TEMPLATE<span class="o">]</span> <span class="o">[</span>--queue QUEUE<span class="o">]</span>
+
+ Retrieve FLEXPART input from ECMWF MARS archive
+
+ optional arguments:
+   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+   --start_date START_DATE
+                         start date YYYYMMDD <span class="o">(</span>default: None<span class="o">)</span>
+   --end_date END_DATE   end_date YYYYMMDD <span class="o">(</span>default: None<span class="o">)</span>
+   --date_chunk DATE_CHUNK
+                         <span class="c1"># of days to be retrieved at once (default: None)</span>
+   --job_chunk JOB_CHUNK
+                         <span class="c1"># of days to be retrieved within a single job</span>
+                         <span class="o">(</span>default: None<span class="o">)</span>
+   --controlfile CONTROLFILE
+                         The file with all CONTROL parameters. <span class="o">(</span>default:
+                         CONTROL_EA5<span class="o">)</span>
+   --basetime BASETIME   base such as <span class="m">0</span> or <span class="m">12</span> <span class="o">(</span><span class="k">for</span> half day retrievals<span class="o">)</span>
+                         <span class="o">(</span>default: None<span class="o">)</span>
+   --step STEP           Forecast steps such as <span class="m">00</span>/to/48 <span class="o">(</span>default: None<span class="o">)</span>
+   --levelist LEVELIST   Vertical levels to be retrieved, e.g. <span class="m">30</span>/to/60
+                         <span class="o">(</span>default: None<span class="o">)</span>
+   --area AREA           area defined as north/west/south/east <span class="o">(</span>default: None<span class="o">)</span>
+   --debug DEBUG         debug mode - leave temporary files intact <span class="o">(</span>default:
+                         None<span class="o">)</span>
+   --oper OPER           operational mode - prepares dates with environment
+                         variables <span class="o">(</span>default: None<span class="o">)</span>
+   --request REQUEST     list all mars requests in file mars_requests.dat
+                         <span class="o">(</span>default: None<span class="o">)</span>
+   --public PUBLIC       public mode - retrieves the public datasets <span class="o">(</span>default:
+                         None<span class="o">)</span>
+   --rrint RRINT         Selection of old or new precipitation interpolation: <span class="m">0</span>
+                         - old method <span class="m">1</span> - new method <span class="o">(</span>additional subgrid
+                         points<span class="o">)</span> <span class="o">(</span>default: None<span class="o">)</span>
+   --inputdir INPUTDIR   Path to the temporary directory <span class="k">for</span> the retrieval grib
+                         files and other processing files. <span class="o">(</span>default: None<span class="o">)</span>
+   --outputdir OUTPUTDIR
+                         Path to the final directory where the final FLEXPART
+                         ready input files are stored. <span class="o">(</span>default: None<span class="o">)</span>
+   --ppid PPID           This is the specify parent process id of a single
+                         flex_extract run to identify the files. It is the
+                         second number in the GRIB files. <span class="o">(</span>default: None<span class="o">)</span>
+   --job_template JOB_TEMPLATE
+                         The job template file which are adapted to be
+                         submitted to the batch system on ECMWF server.
+                         <span class="o">(</span>default: job.temp<span class="o">)</span>
+   --queue QUEUE         The ECMWF server name <span class="k">for</span> submission of the job script
+                         to the batch system <span class="o">(</span>e.g. ecgate <span class="p">|</span> cca <span class="p">|</span> ccb<span class="o">)</span>
+                         <span class="o">(</span>default: None<span class="o">)</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jobscript.html" class="btn btn-neutral float-right" title="The Jobscript job.ksh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fortran_makefile.html" class="btn btn-neutral float-left" title="The Fortran Makefile - CONVERT2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

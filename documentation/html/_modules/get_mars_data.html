@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>get_mars_data &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>get_mars_data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for get_mars_data</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="c1"># @Author: Anne Fouilloux (University of Oslo)</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: October 2014</span>
+<span class="c1">#</span>
+<span class="c1"># @Change History:</span>
+<span class="c1">#</span>
+<span class="c1">#    November 2015 - Leopold Haimberger (University of Vienna):</span>
+<span class="c1">#        - moved the getEIdata program into a function &quot;get_mars_data&quot;</span>
+<span class="c1">#        - moved the AgurmentParser into a seperate function</span>
+<span class="c1">#        - adatpted the function for the use in flex_extract</span>
+<span class="c1">#        - renamed file to get_mars_data</span>
+<span class="c1">#</span>
+<span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#        - applied PEP8 style guide</span>
+<span class="c1">#        - added structured documentation</span>
+<span class="c1">#        - minor changes in programming style for consistence</span>
+<span class="c1">#        - added function main and moved function calls vom __main__ there</span>
+<span class="c1">#          (necessary for better documentation with docstrings for later</span>
+<span class="c1">#          online documentation)</span>
+<span class="c1">#        - use of UIFiles class for file selection and deletion</span>
+<span class="c1">#        - seperated get_mars_data function into several smaller pieces:</span>
+<span class="c1">#          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment</span>
+<span class="c1">#</span>
+<span class="c1"># @License:</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
+<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;This script extracts MARS data from ECMWF servers.</span>
+
+<span class="sd">At first, the necessary parameters from command line and CONTROL files are</span>
+<span class="sd">extracted. They define the data set to be extracted from MARS.</span>
+
+<span class="sd">This file can also be imported as a module and contains the following</span>
+<span class="sd">functions:</span>
+
+<span class="sd">    * main - the main function of the script</span>
+<span class="sd">    * get_mars_data - overall control of ECMWF data retrievment</span>
+<span class="sd">    * write_reqheader - writes the header into the mars_request file</span>
+<span class="sd">    * mk_server - creates the server connection to ECMWF servers</span>
+<span class="sd">    * mk_dates - defines the start and end date</span>
+<span class="sd">    * remove_old - deletes old retrieved grib files</span>
+<span class="sd">    * do_retrievement - creates individual retrievals</span>
+
+<span class="sd">Type: get_mars_data.py --help</span>
+<span class="sd">to get information about command line parameters.</span>
+<span class="sd">Read the documentation for usage instructions.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># MODULES</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="c1"># add path to local main python path for flex_extract to get full access</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+    <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
+                   <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">Classes.EcFlexpart</span> <span class="k">import</span> <span class="n">EcFlexpart</span>
+<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
+<span class="kn">from</span> <span class="nn">Classes.MarsRetrieval</span> <span class="k">import</span> <span class="n">MarsRetrieval</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">ec_api</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="kn">import</span> <span class="nn">ecmwfapi</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">ec_api</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">cds_api</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="kn">import</span> <span class="nn">cdsapi</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">cds_api</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># FUNCTION</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Controls the program to get data out of mars.</span>
+
+<span class="sd">    This is done if it is called directly from command line.</span>
+<span class="sd">    Then it also takes program call arguments and control file input.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">c</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">setup_controldata</span><span class="p">()</span>
+    <span class="n">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="n">normal_exit</span><span class="p">(</span><span class="s1">&#39;Retrieving MARS data: Done!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="get_mars_data"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.get_mars_data">[docs]</a><span class="k">def</span> <span class="nf">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Retrieves the EC data needed for a FLEXPART simulation.</span>
+
+<span class="sd">    Start and end dates for retrieval period is set. Retrievals</span>
+<span class="sd">    are divided into smaller periods if necessary and datechunk parameter</span>
+<span class="sd">    is set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">ec_api</span> <span class="o">=</span> <span class="n">ec_api</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">cds_api</span> <span class="o">=</span> <span class="n">cds_api</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">):</span>
+        <span class="n">make_dir</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Printing mars requests!&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data and printing mars request!&quot;</span><span class="p">)</span>
+        <span class="n">write_reqheader</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">))</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start date </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;end date </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">))</span>
+
+    <span class="n">server</span> <span class="o">=</span> <span class="n">mk_server</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="c1"># if data are to be retrieved, clean up any old grib files</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">remove_old</span><span class="p">(</span><span class="s1">&#39;*grb&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+
+    <span class="c1"># --------------  flux data ------------------------------------------------</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span> <span class="o">=</span> <span class="n">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># --------------  non flux data --------------------------------------------</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span> <span class="o">=</span> <span class="n">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">datechunk</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="write_reqheader"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.write_reqheader">[docs]</a><span class="k">def</span> <span class="nf">write_reqheader</span><span class="p">(</span><span class="n">marsfile</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Writes header with column names into mars request file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    marsfile : str</span>
+<span class="sd">        Path to the mars request file.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">MR</span> <span class="o">=</span> <span class="n">MarsRetrieval</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">attrs</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">MR</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;server&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;public&#39;</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">marsfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;request_number&#39;</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_server"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.mk_server">[docs]</a><span class="k">def</span> <span class="nf">mk_server</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates a server connection with available python API.</span>
+
+<span class="sd">    Which API is used depends on availability and the dataset to be retrieved.</span>
+<span class="sd">    The CDS API is used for ERA5 dataset no matter if the user is a member or</span>
+<span class="sd">    a public user. ECMWF WebAPI is used for all other available datasets.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    server : ECMWFDataServer, ECMWFService or Client</span>
+<span class="sd">        Connection to ECMWF server via python interface ECMWF WebAPI or CDS API.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">cds_api</span> <span class="ow">and</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EA&#39;</span><span class="p">):</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ec_api</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">ec_api</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">public</span><span class="p">:</span>
+            <span class="n">server</span> <span class="o">=</span> <span class="n">ecmwfapi</span><span class="o">.</span><span class="n">ECMWFDataServer</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">server</span> <span class="o">=</span> <span class="n">ecmwfapi</span><span class="o">.</span><span class="n">ECMWFService</span><span class="p">(</span><span class="s2">&quot;mars&quot;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">cds_api</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">server</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using ECMWF WebAPI: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ec_api</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using CDS API: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">cds_api</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">server</span></div>
+
+
+<div class="viewcode-block" id="check_dates_for_nonflux_fc_times"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.check_dates_for_nonflux_fc_times">[docs]</a><span class="k">def</span> <span class="nf">check_dates_for_nonflux_fc_times</span><span class="p">(</span><span class="n">types</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">for</span> <span class="n">ty</span><span class="p">,</span> <span class="n">ti</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">types</span><span class="p">,</span><span class="n">times</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ty</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;FC&#39;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">ti</span><span class="p">)</span> <span class="o">==</span> <span class="mi">18</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="mk_dates"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.mk_dates">[docs]</a><span class="k">def</span> <span class="nf">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prepares start and end date depending on flux or non flux data.</span>
+
+<span class="sd">    If forecast for maximum one day (upto 24h) are to be retrieved, then</span>
+<span class="sd">    collect accumulation data (flux data) with additional days in the</span>
+<span class="sd">    beginning and at the end (used for complete disaggregation of</span>
+<span class="sd">    original period)</span>
+
+<span class="sd">    If forecast data longer than 24h are to be retrieved, then</span>
+<span class="sd">    collect accumulation data (flux data) with the exact start and end date</span>
+<span class="sd">    (disaggregation will be done for the exact time period with</span>
+<span class="sd">    boundary conditions)</span>
+
+<span class="sd">    Since for basetime the extraction contains the 12 hours upfront,</span>
+<span class="sd">    if basetime is 0, the starting date has to be the day before and</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    fluxes : boolean, optional</span>
+<span class="sd">        Decides if the flux parameter settings are stored or</span>
+<span class="sd">        the rest of the parameter list.</span>
+<span class="sd">        Default value is False.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    start : datetime</span>
+<span class="sd">        The start date of the retrieving data set.</span>
+
+<span class="sd">    end : datetime</span>
+<span class="sd">        The end date of the retrieving data set.</span>
+
+<span class="sd">    chunk : datetime</span>
+<span class="sd">        Time period in days for one single mars retrieval.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">date_chunk</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span> <span class="ow">and</span> <span class="n">fluxes</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">&lt;</span> <span class="mi">24</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span> <span class="ow">and</span> <span class="n">fluxes</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">end</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># if we have non-flux forecast data starting at 18 UTC</span>
+    <span class="c1"># we need to start retrieving data one day in advance</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fluxes</span> <span class="ow">and</span> <span class="n">check_dates_for_nonflux_fc_times</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">time</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">chunk</span></div>
+
+<div class="viewcode-block" id="remove_old"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.remove_old">[docs]</a><span class="k">def</span> <span class="nf">remove_old</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">inputdir</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Deletes old retrieval files from current input directory</span>
+<span class="sd">    matching the pattern.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pattern : str</span>
+<span class="sd">        The sub string pattern which identifies the files to be deleted.</span>
+
+<span class="sd">    inputdir : str, optional</span>
+<span class="sd">        Path to the directory where the retrieved data is stored.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old content of &#39;</span> <span class="o">+</span> <span class="n">inputdir</span><span class="p">)</span>
+
+    <span class="n">tobecleaned</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="n">tobecleaned</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="do_retrievement"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.do_retrievement">[docs]</a><span class="k">def</span> <span class="nf">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Divides the complete retrieval period in smaller chunks and</span>
+<span class="sd">    retrieves the data from MARS.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    server : ECMWFService or ECMWFDataServer</span>
+<span class="sd">            The server connection to ECMWF.</span>
+
+<span class="sd">    start : datetime</span>
+<span class="sd">        The start date of the retrieval.</span>
+
+<span class="sd">    end : datetime</span>
+<span class="sd">        The end date of the retrieval.</span>
+
+<span class="sd">    delta_t : datetime</span>
+<span class="sd">        Delta_t + 1 is the maximal time period of a single</span>
+<span class="sd">        retrieval.</span>
+
+<span class="sd">    fluxes : boolean, optional</span>
+<span class="sd">        Decides if the flux parameters are to be retrieved or</span>
+<span class="sd">        the rest of the parameter list.</span>
+<span class="sd">        Default value is False.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1"># since actual day also counts as one day,</span>
+    <span class="c1"># we only need to add datechunk - 1 days to retrieval</span>
+    <span class="c1"># for a period</span>
+    <span class="n">delta_t_m1</span> <span class="o">=</span> <span class="n">delta_t</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">day</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="k">while</span> <span class="n">day</span> <span class="o">&lt;=</span> <span class="n">end</span><span class="p">:</span>
+        <span class="n">flexpart</span> <span class="o">=</span> <span class="n">EcFlexpart</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">)</span>
+        <span class="n">tmpday</span> <span class="o">=</span> <span class="n">day</span> <span class="o">+</span> <span class="n">delta_t_m1</span>
+        <span class="k">if</span> <span class="n">tmpday</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+            <span class="n">dates</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/to/&quot;</span> <span class="o">+</span> \
+                    <span class="n">tmpday</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dates</span> <span class="o">=</span> <span class="n">day</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/to/&quot;</span> <span class="o">+</span> \
+                    <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;... retrieve &quot;</span> <span class="o">+</span> <span class="n">dates</span> <span class="o">+</span> <span class="s2">&quot; in dir &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">flexpart</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">public</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="n">my_error</span><span class="p">(</span><span class="s1">&#39;MARS request failed&#39;</span><span class="p">)</span>
+
+        <span class="n">day</span> <span class="o">+=</span> <span class="n">delta_t</span>
+
+    <span class="k">return</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

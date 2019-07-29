@@ -1,0 +1,670 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quick Start &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ECMWF Data" href="ecmwf_data.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#job-preparation">Job preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remote-and-gateway-modes">Remote and gateway modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#local-mode">Local mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#selection-and-adjustment-of-control-files">Selection and adjustment of <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#public-datasets">Public datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cera">CERA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#era-5">ERA 5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#era-interim">ERA-Interim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operational-data">Operational data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specific-features">Specific features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hints-for-definition-of-some-parameter-combinations">Hints for definition of some parameter combinations</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Quick Start</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/quick_start.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quick-start">
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> by itself is a command-line tool. With version 7.1 an upstream shell script was implemented which calls <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the command-line parameters.</p>
+<p>To submit a job with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> change the working directory to the <code class="docutils literal notranslate"><span class="pre">Run</span></code> directory  which is placed directly under the <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X</span></code> root directory  (<code class="docutils literal notranslate"><span class="pre">X.X</span></code> is the version number):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> &lt;path-to-flex_extract_vX.X&gt;/Run
+</pre></div>
+</div>
+<p>Within this directory you can find everything you need to modify and run <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. The following tree shows a shortened list of directories and important files. The <code class="docutils literal notranslate"><span class="pre">*</span></code> serves as a wildcard. The brackets <code class="docutils literal notranslate"><span class="pre">[]</span></code> means that the file appearance depends on the mode of application and night not be present.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Run
+├── Control
+│   ├── CONTROL_*
+├── Jobscripts
+│   ├── compilejob.ksh
+│   ├── job.ksh
+│   ├── <span class="o">[</span>joboper.ksh<span class="o">]</span>
+├── Workspace
+│   ├── CERA_example
+│   │   ├── CE000908*
+├── <span class="o">[</span>ECMWF_ENV<span class="o">]</span>
+├── run_local.sh
+└── run.sh
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Jobscripts</span></code> directory is used to store the Korn shell job scripts generated by a <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> run in the <strong>Remote</strong> or <strong>Gateway</strong> mode. They are used to submit the setup information to the ECMWF server and start the jobs in ECMWF’s batch mode. The typical user must not touch these files. They will be generated from template files which are stored in the <code class="docutils literal notranslate"><span class="pre">Templates</span></code> directory under <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X</span></code>. Usually there will be a <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code> and a <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code> script which are explained in the section <a class="reference internal" href="Documentation/input.html"><span class="doc">Control &amp; Input Data</span></a>. In the rare case of operational data extraction there will be a <code class="docutils literal notranslate"><span class="pre">joboper.ksh</span></code> which is designed to get the time parameters from environment variables at the ECMWF servers.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Controls</span></code> directory contains a number of example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files. These``CONTROL`` files represent the current range of possible dataset retrievals with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. Some parameters in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files can be adapted and some others should not be changed. In this <a class="reference internal" href="#"><span class="doc">Quick Start</span></a> guide we explain how an extraction with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> can be started in the different <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and point out some specifics of each dataset and <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</p>
+<p>Directly under <code class="docutils literal notranslate"><span class="pre">Run</span></code> you find the files <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> and according to your selected <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> there might also be a file named <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> for the user credentials to quickly and automatically access ECMWF servers.</p>
+<p>From version 7.1 on, the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> (or <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code>) script is the main access point to <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Note that, for experienced users (or users of older versions), it is still possible to access <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly via the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script which can be found in the directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Python</span></code>.</p>
+</div>
+<div class="section" id="job-preparation">
+<h2>Job preparation<a class="headerlink" href="#job-preparation" title="Permalink to this headline">¶</a></h2>
+<p>To actually start a job with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> it is only necessary to submit the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> or <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> script on the command-line. For the specification of dataset and the selection of the access mode it is necessary to select and modify a <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file and change the parameters in the user section of the <code class="docutils literal notranslate"><span class="pre">run</span></code> scripts. The following sections describes the differences in the application modes and where the results will be stored.</p>
+<div class="section" id="remote-and-gateway-modes">
+<h3>Remote and gateway modes<a class="headerlink" href="#remote-and-gateway-modes" title="Permalink to this headline">¶</a></h3>
+<p>For member state users it is recommended to use the <em>remote</em> or <em>gateway</em> mode, especially for more demanding tasks, to retrieve and convert data on ECMWF machines and to transfer only the final output files to the local host.</p>
+<dl class="docutils">
+<dt>Remote mode</dt>
+<dd><p class="first">The only difference between both modes is the users working location. In the <em>remote</em> mode you have to login to the ECMWF server and then go to the <code class="docutils literal notranslate"><span class="pre">Run</span></code> directory as shown above. At ECMWF servers <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory. However, to be able to start the program you have to load the <code class="docutils literal notranslate"><span class="pre">Python3</span></code> environment with the module system first.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Remote mode</span>
+ssh -X &lt;ecuid&gt;@ecaccess.ecmwf.int
+</pre></div>
+</div>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On ECMWF server</span>
+<span class="o">[</span>&lt;ecuid&gt;@ecgb11 ~<span class="o">]</span>$ module load python3
+<span class="o">[</span>&lt;ecuid&gt;@ecgb11 ~<span class="o">]</span>$ <span class="nb">cd</span> flex_extract_vX.X/Run
+</pre></div>
+</div>
+</dd>
+<dt>Gateway mode</dt>
+<dd><p class="first">For the gateway mode you have to log in on the gateway server and go to the <code class="docutils literal notranslate"><span class="pre">Run</span></code> directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gateway mode</span>
+ssh &lt;user&gt;@&lt;gatewayserver&gt;
+<span class="nb">cd</span> &lt;path-to-flex_extract_vX.X&gt;/Run
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>From here on the working process is the same for both modes.</p>
+<p>For your first submission you should use one of the example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files stored in the <code class="docutils literal notranslate"><span class="pre">Control</span></code> directory. We recommend to extract <em>CERA-20C</em> data since they usually guarantee quick results and are best for testing reasons.</p>
+<p>Therefore open the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> file and modify the parameter block marked in the file as shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETERS:</span>
+
+<span class="nv">QUEUE</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
+<span class="nv">START_DATE</span><span class="o">=</span>None
+<span class="nv">END_DATE</span><span class="o">=</span>None
+<span class="nv">DATE_CHUNK</span><span class="o">=</span>None
+<span class="nv">JOB_CHUNK</span><span class="o">=</span><span class="m">3</span>
+<span class="nv">BASETIME</span><span class="o">=</span>None
+<span class="nv">STEP</span><span class="o">=</span>None
+<span class="nv">LEVELIST</span><span class="o">=</span>None
+<span class="nv">AREA</span><span class="o">=</span>None
+<span class="nv">INPUTDIR</span><span class="o">=</span>None
+<span class="nv">OUTPUTDIR</span><span class="o">=</span>None
+<span class="nv">PP_ID</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.temp&#39;</span>
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_CERA&#39;</span>
+<span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">REQUEST</span><span class="o">=</span><span class="m">2</span>
+<span class="nv">PUBLIC</span><span class="o">=</span><span class="m">0</span>
+</pre></div>
+</div>
+<p>This would retrieve a one day (08.09.2000) <em>CERA-20C</em> dataset with 3 hourly temporal resolution and a small 1° domain over Europe. Since the <code class="docutils literal notranslate"><span class="pre">ectrans</span></code> parameter is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> the resulting output files will be transferred to the local gateway into the path stored in the destination (SEE INSTRUCTIONS FROM INSTALLATION).  The parameters listed in the <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> file would overwrite existing settings in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</p>
+<p>To start the retrieval you only have to start the script by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run.sh
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> will print some information about the job. If there is no error in the submission to the ECMWF server you will see something like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>---- On-demand mode! ----
+The job id is: <span class="m">10627807</span>
+You should get an email per job with subject flex.hostname.pid
+FLEX_EXTRACT JOB SCRIPT IS SUBMITED!
+</pre></div>
+</div>
+<p>Once submitted you can check the progress of the submitted job using <code class="docutils literal notranslate"><span class="pre">ecaccess-job-list</span></code>. You should get an email after the job is finished with a detailed protocol of what was done.</p>
+<p>In case the job fails you will receive an email with the subject <code class="docutils literal notranslate"><span class="pre">ERROR!</span></code> and the job name. You can then check for information in the email or you can check on ECMWF server in the <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code> directory for debugging information.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$SCRATCH</span>
+ls -rthl
+</pre></div>
+</div>
+<p>The last command lists the most recent logs and temporary retrieval directories (usually <code class="docutils literal notranslate"><span class="pre">pythonXXXXX</span></code>, where XXXXX is the process id). Under <code class="docutils literal notranslate"><span class="pre">pythonXXXXX</span></code> a copy of the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file is stored under the name <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code>, the protocol is stored in the file <code class="docutils literal notranslate"><span class="pre">prot</span></code> and the temporary files as well as the resulting files are stored in a directory <code class="docutils literal notranslate"><span class="pre">work</span></code>. The original name of the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file is stored in this new file under parameter <code class="docutils literal notranslate"><span class="pre">controlfile</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">“Example structure of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> output directory on ECMWF servers.”</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pythonXXXXX
+├── CONTROL
+├── prot
+├── work
+│   ├── temporary files
+│   ├── CE000908* <span class="o">(</span>resulting files<span class="o">)</span>
+</pre></div>
+</div>
+</div>
+<p>If the job was submitted to the HPC ( <code class="docutils literal notranslate"><span class="pre">queue=cca</span></code> ) you may login to the HPC and look into the directory <code class="docutils literal notranslate"><span class="pre">/scratch/ms/ECGID/ECUID/.ecaccess_do_not_remove</span></code> for job logs. The working directories are deleted after job failure and thus normally cannot be accessed.</p>
+<p>To check if the resulting files are still transferred to local gateway server you can use the command <code class="docutils literal notranslate"><span class="pre">ecaccess-ectrans-list</span></code> or check the destination path for resulting files on your local gateway server.</p>
+</div>
+<div class="section" id="local-mode">
+<h3>Local mode<a class="headerlink" href="#local-mode" title="Permalink to this headline">¶</a></h3>
+<p>To get to know the working process and to start your first submission you could use one of the example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files stored in the <code class="docutils literal notranslate"><span class="pre">Control</span></code> directory as they are. For quick results and for testing reasons it is recommended to extract <em>CERA-20C</em> data.</p>
+<p>Open the <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> file and modify the parameter block marked in the file as shown below. The differences are highlighted.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Take this for <strong>member-state user</strong></td>
+<td>Take this for <strong>public user</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># -----------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETERs:</span>
+<span class="c1">#</span>
+
+<span class="nv">QUEUE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="nv">START_DATE</span><span class="o">=</span>None
+<span class="nv">END_DATE</span><span class="o">=</span>None
+<span class="nv">DATE_CHUNK</span><span class="o">=</span>None
+<span class="nv">JOB_CHUNK</span><span class="o">=</span>None
+<span class="nv">BASETIME</span><span class="o">=</span>None
+<span class="nv">STEP</span><span class="o">=</span>None
+<span class="nv">LEVELIST</span><span class="o">=</span>None
+<span class="nv">AREA</span><span class="o">=</span>None
+<span class="hll"><span class="nv">INPUTDIR</span><span class="o">=</span><span class="s1">&#39;./Workspace/CERA&#39;</span>
+</span><span class="nv">OUTPUTDIR</span><span class="o">=</span>None
+<span class="nv">PP_ID</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="hll"><span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_CERA&#39;</span>
+</span><span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">REQUEST</span><span class="o">=</span><span class="m">0</span>
+<span class="hll"><span class="nv">PUBLIC</span><span class="o">=</span><span class="m">0</span>
+</span></pre></div>
+</div>
+</td>
+<td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># -----------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETERs:</span>
+<span class="c1">#</span>
+
+<span class="nv">QUEUE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="nv">START_DATE</span><span class="o">=</span>None
+<span class="nv">END_DATE</span><span class="o">=</span>None
+<span class="nv">DATE_CHUNK</span><span class="o">=</span>None
+<span class="nv">JOB_CHUNK</span><span class="o">=</span>None
+<span class="nv">BASETIME</span><span class="o">=</span>None
+<span class="nv">STEP</span><span class="o">=</span>None
+<span class="nv">LEVELIST</span><span class="o">=</span>None
+<span class="nv">AREA</span><span class="o">=</span>None
+<span class="hll"><span class="nv">INPUTDIR</span><span class="o">=</span><span class="s1">&#39;./Workspace/CERApublic&#39;</span>
+</span><span class="nv">OUTPUTDIR</span><span class="o">=</span>None
+<span class="nv">PP_ID</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="hll"><span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_CERA.public&#39;</span>
+</span><span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">REQUEST</span><span class="o">=</span><span class="m">0</span>
+<span class="hll"><span class="nv">PUBLIC</span><span class="o">=</span><span class="m">1</span>
+</span></pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This would retrieve a one day (08.09.2000) <em>CERA-20C</em> dataset with 3 hourly temporal resolution and a small 1° domain over Europe. The destination location for this retrieval will be within the <code class="docutils literal notranslate"><span class="pre">Workspace</span></code> directory within <code class="docutils literal notranslate"><span class="pre">Run</span></code>. This can be changed to whatever path you like. The parameters listed in <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> would overwrite existing settings in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</p>
+<p>To start the retrieval you then start the script by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run_local.sh
+</pre></div>
+</div>
+<p>While job submission on the local host is convenient and easy to monitor (on standard output), there are a few caveats with this option:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>There is a maximum size of 20GB for single retrieval via ECMWF Web API. Normally this is not a problem but for global fields with T1279 resolution and hourly time steps the limit may already apply.</li>
+<li>If the retrieved MARS files are large but the resulting files are relative small (small local domain) then the retrieval to the local host may be inefficient since all data must be transferred via the Internet. This scenario applies most notably if <code class="docutils literal notranslate"><span class="pre">etadot</span></code> has to be calculated via the continuity equation as this requires global fields even if the domain is local. In this case job submission via ecgate might be a better choice. It really depends on the use patterns and also on the internet connection speed.</li>
+</ol>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="selection-and-adjustment-of-control-files">
+<h2>Selection and adjustment of <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files<a class="headerlink" href="#selection-and-adjustment-of-control-files" title="Permalink to this headline">¶</a></h2>
+<p>This section describes how to work with the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files. A detailed explanation of <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters and naming compositions can be found <a class="reference external" href="Documentation/Input/control.html">here</a>. The more accurately the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file describes the retrieval needed, the fewer command-line parameters are needed to be set in the <code class="docutils literal notranslate"><span class="pre">run</span></code> scripts. With version <code class="docutils literal notranslate"><span class="pre">7.1</span></code> all <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters have default values. They can be found in section <a class="reference external" href="Documentation/Input/control_params.html">CONTROL parameters</a> or in the <code class="docutils literal notranslate"><span class="pre">CONTROL.documentation</span></code> file within the <code class="docutils literal notranslate"><span class="pre">Control</span></code> directory. Only those parameters which need to be changed for a dataset retrieval needs to be set in a <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file!</p>
+<p>The limitation of a dataset to be retrieved should be done very cautiously. The datasets can differ in many ways and vary over the time in resolution and parameterisations methods, especially the operational model cycles improves through a lot of changes over the time. If you are not familiar with the data it might be useful or necessary to check for availability of data in ECMWF’s MARS:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Public users</strong> can use a web mask to check on data or list available data at this <a class="reference external" href="https://apps.ecmwf.int/datasets/">Public datasets web interface</a>.</li>
+<li><strong>Member state users</strong> can check availability of data online in the <a class="reference external" href="https://apps.ecmwf.int/mars-catalogue/">MARS catalogue</a>.</li>
+</ul>
+</div></blockquote>
+<p>There you can select step by step what data suits your needs. This would be the most straightforeward way of checking for available data and therefore limit the possibility of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> to fail. The following figure gives an example how the web interface would look like:</p>
+<div class="figure" id="ref-fig-mars-catalogue-ss">
+<img alt="_images/MARS_catalogue_snapshot.png" src="_images/MARS_catalogue_snapshot.png" />
+</div>
+<p>!!!!!!!! ADD HERE ANOTHER SCREENSHOT OF THE PARAMETER SELECTION AREA ( HAS TO BE DONE AT HOME )</p>
+<p>Additionally, you can find a lot of helpful links to dataset documentations, direct links to specific dataset web catalogues or further general information at the <a class="reference external" href="Ecmwf/ec-links.html">link collection</a> in the ECMWF data section.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is specialised to retrieve a limited number of datasets, namely <em>ERA-Interim</em>, <em>CERA-20C</em>, <em>ERA5</em> and <em>HRES (operational data)</em> as well as the <em>ENS (operational data, 15-day forecast)</em>. The limitation relates mainly to the dataset itself, the stream (what kind of forecast or what subset of dataset) and the experiment number. Mostly, the experiment number is equal to <code class="docutils literal notranslate"><span class="pre">1</span></code> to signal that the actual version should be used.</p>
+<p>The next level of differentiation would be the field type, level type and time period. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> currently only supports the main streams for the re-analysis datasets and provides extraction of different streams for the operational dataset. The possibilities of compositions of dataset and stream selection are represented by the current list of example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files. You can see this in the naming of the example files:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">“Current example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files distributed with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. “</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_CERA
+CONTROL_CERA.global
+CONTROL_CERA.public
+CONTROL_EA5
+CONTROL_EA5.global
+CONTROL_EI
+CONTROL_EI.global
+CONTROL_EI.public
+CONTROL_OD.ELDA.FC.eta.ens.double
+CONTROL_OD.ENFO.CF
+CONTROL_OD.ENFO.CV
+CONTROL_OD.ENFO.PF
+CONTROL_OD.ENFO.PF.36hours
+CONTROL_OD.ENFO.PF.ens
+CONTROL_OD.OPER.4V.operational
+CONTROL_OD.OPER.FC.36hours
+CONTROL_OD.OPER.FC.eta.global
+CONTROL_OD.OPER.FC.eta.highres
+CONTROL_OD.OPER.FC.gauss.highres
+CONTROL_OD.OPER.FC.operational
+CONTROL_OD.OPER.FC.twiceaday.1hourly
+CONTROL_OD.OPER.FC.twiceaday.3hourly
+</pre></div>
+</div>
+</div>
+<p>The main differences and features in the datasets are listed in the table shown below:</p>
+<div class="figure" id="id5">
+<span id="ref-tab-dataset-cmp"></span><img alt="_images/dataset_cmp_table.png" src="_images/dataset_cmp_table.png" />
+<p class="caption"><span class="caption-text">DO THIS TABLE AGAIN BY HAND!</span></p>
+</div>
+<p>A common problem for beginners in retrieving ECMWF datasets is the mismatch in the definition of these parameters. For example, if you would like to retrieve operational data before <code class="docutils literal notranslate"><span class="pre">June</span> <span class="pre">25th</span> <span class="pre">2013</span></code> and set the maximum level to <code class="docutils literal notranslate"><span class="pre">137</span></code> you will get an error because this number of levels was first introduced at this effective day. So, be cautious in the combination of space and time resolution as well as the field types which are not available all the time.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Sometimes it might not be clear how specific parameters in the control file must be set in terms of format. Please see the description of the parameters in section <a class="reference external" href="Documentation/Input/control_params.html">CONTROL parameters</a> or have a look at the ECMWF user documentation for <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/MARS+keywords">MARS keywords</a></p>
+</div>
+<p>In the following we shortly discuss the main retrieval opportunities of the different datasets and  categoize the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files.</p>
+<div class="section" id="public-datasets">
+<h3>Public datasets<a class="headerlink" href="#public-datasets" title="Permalink to this headline">¶</a></h3>
+<p>The main difference in the definition of a <code class="docutils literal notranslate"><span class="pre">CONRTOL</span></code> file for a public dataset is the setting of the parameter <code class="docutils literal notranslate"><span class="pre">DATASET</span></code>. This specification enables the selection of a public dataset in MARS. Otherwise the request would not find the dataset.
+For the two public datasets <em>CERA-20C</em> and <em>ERA-Interim</em> an example file with the ending <code class="docutils literal notranslate"><span class="pre">.public</span></code> is provided and can be used straightaway.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_CERA.public
+CONTROL_EI.public
+</pre></div>
+</div>
+<p>For <em>CERA-20C</em> it seems that there are no differences in the dataset against the full dataset, while the <em>public ERA-Interim</em> has only analysis fields every 6 hour without filling forecasts in between for model levels. Therefore it is only possible to retrieve 6-hourly data for <em>public ERA-Interim</em>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In general, <em>ERA5</em> is a public dataset. However, since the model levels are not yet publicly available, it is not possible to retrieve <em>ERA5</em> data to drive the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> model. As soon as this is possible it will be announced at the community website and per newsletter.</p>
+</div>
+</div>
+<div class="section" id="cera">
+<h3>CERA<a class="headerlink" href="#cera" title="Permalink to this headline">¶</a></h3>
+<p>For this dataset it is important to keep in mind that the dataset is available for the period 09/1901 until 12/2010 and the temporal resolution is limited to 3-hourly fields.
+It is also a pure ensemble data assimilation dataset and is stored under the <code class="docutils literal notranslate"><span class="pre">enda</span></code> stream. It has <code class="docutils literal notranslate"><span class="pre">10</span></code> ensemble members. The example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files will only select the first member (<code class="docutils literal notranslate"><span class="pre">number=0</span></code>). You may change this to another number or a list of numbers (e.g. <code class="docutils literal notranslate"><span class="pre">NUMBER</span> <span class="pre">0/to/10</span></code>).
+Another important difference to all other datasets is the forecast starting time which is 18 UTC. Which means that the forecast in <em>CERA-20C</em> for flux fields is  12 hours long. Since the forecast extends over a single day we need to extract one day in advance and one day subsequently. This is automatically done in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
+</div>
+<div class="section" id="era-5">
+<h3>ERA 5<a class="headerlink" href="#era-5" title="Permalink to this headline">¶</a></h3>
+<p>This is the newest re-analysis dataset and has a temporal resolution of 1-hourly analysis fields. Up to date it is available until April 2019 with regular release of new months.
+The original horizontal resolution is <code class="docutils literal notranslate"><span class="pre">0.28125°</span></code> which needs some caution in the definition of the domain, since the length of the domain in longitude or latitude direction  must be an exact multiple of the resolution. It might be easier for users to use <code class="docutils literal notranslate"><span class="pre">0.25</span></code> for the resolution which MARS will automatically interpolate.
+The forecast starting time is <code class="docutils literal notranslate"><span class="pre">06/18</span> <span class="pre">UTC</span></code> which is important for the flux data. This should be set in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file via the <code class="docutils literal notranslate"><span class="pre">ACCTIME</span> <span class="pre">06/18</span></code> parameter in correspondence with <code class="docutils literal notranslate"><span class="pre">ACCMAXSTEP</span> <span class="pre">12</span></code> and <code class="docutils literal notranslate"><span class="pre">ACCTYPE</span> <span class="pre">FC</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We know that <em>ERA5</em> also has an ensemble data assimilation system but this is not yet retrievable with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> since the deaccumulation of the flux fields works differently in this stream. Ensemble retrieval for <em>ERA5</em> is a future ToDo.</p>
+</div>
+</div>
+<div class="section" id="era-interim">
+<h3>ERA-Interim<a class="headerlink" href="#era-interim" title="Permalink to this headline">¶</a></h3>
+<p>This re-analysis dataset will exceed its end of production at 31st August 2019!
+It is then available from 1st January 1979 to 31st August 2019. The <code class="docutils literal notranslate"><span class="pre">etadot</span></code> is not available in this dataset. Therefore <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> must select the <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> parameter to retrieve the divergence field in addition. The vertical velocity is the calculated with the continuity equation in the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>. Since the analysis fields are only available for every 6th hour, the dataset can be made 3 hourly by adding forecast fields in between. No ensemble members are available.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">&#64;LEO: please check the complete describtion and functionality of the CONTROL FILEs</p>
+</div>
+</div>
+<div class="section" id="operational-data">
+<h3>Operational data<a class="headerlink" href="#operational-data" title="Permalink to this headline">¶</a></h3>
+<p>This is the real time atmospheric model in high resolution with a 10-day forecast. This means it underwent regular adaptations and improvements over the years. Hence, retrieving data from this dataset needs extra attention in selecting correct settings of parameter. See <a class="reference internal" href="#ref-tab-dataset-cmp"><span class="std std-ref">DO THIS TABLE AGAIN BY HAND!</span></a> for the most important parameters.
+Nowadays, it is available 1 hourly by filling the gaps of the 6 hourly analysis fields with 1 hourly forecast fields. Since 4th June 2008 the eta coordinate is directly available so that <code class="docutils literal notranslate"><span class="pre">ETA</span></code> should be set to <code class="docutils literal notranslate"><span class="pre">1</span></code> to save computation time. The horizontal resolution can be up to <code class="docutils literal notranslate"><span class="pre">0.1°</span></code> and in combination with <code class="docutils literal notranslate"><span class="pre">137</span></code> vertical levels can lead to troubles in retrieving this high resolution dataset in terms of job duration and quota exceedence.
+It is recommended to submit such high resolution cases for single day retrievals (see <code class="docutils literal notranslate"><span class="pre">JOB_CHUNK</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> script) to avoid job failures due to exceeding limits.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files for normal daily retrievals with a mix of analysis and forecast fields are listed below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_OD.OPER.4V.eta.global
+CONTROL_OD.OPER.FC.eta.global
+CONTROL_OD.OPER.FC.eta.highres
+CONTROL_OD.OPER.FC.gauss.highres
+</pre></div>
+</div>
+<p>These files defines the minimum number of parameters necessary to retrieve a daily subset. The setup of field types is optimal and should only be changed if the user understands what he does. The grid, domain and temporal resolution can be changed according to availability.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">&#64;LEO - explain the setup with 4V fields! Who can extract it, when would this be useful?</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Please see <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Retrievalefficiency">Information about MARS retrievement</a> to get to know hints about retrieval efficiency and troubleshooting.</p>
+</div>
+<dl class="docutils">
+<dt>Pure forecast</dt>
+<dd><p class="first">It is possible to retrieve pure forecasts exceeding a day. The forecast period available depends on the date and forecast field type. Please use MARS catalogue to check the availability. Below are some examples for 36 hour forecast of <em>Forecast (FC)</em>, <em>Control forecast (CF)</em> and <em>Calibration/Validation forecast (CV)</em>.
+The <em>CV</em> field type was only available 3-hourly from 2006 up to 2016. It is recommended to use the <em>CF</em> type since this is available from 1992 (3-hourly) on up to today in 1-hourly temporal resolution. <em>CV</em> and <em>CF</em> field types belong to the <em>Ensemble prediction system (ENFO)</em> which contain 50 ensemble members.
+Please be aware that in this case it is necessary to set the specific type for flux fields explicitly, otherwise it could select a default value which might be different from what you expect!</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_OD.ENFO.CF.36hours
+CONTROL_OD.ENFO.CV.36hours
+CONTROL_OD.OPER.FC.36hours
+</pre></div>
+</div>
+</dd>
+<dt>Half-day retrievals</dt>
+<dd><p class="first">If a forecast for just half a day is wanted it can be done by substituting the analysis fields also by forecast fields as shown in files with <code class="docutils literal notranslate"><span class="pre">twiceaday</span></code> in it. They produce a full day retrieval with pure 12 hour forecasts twice a day. It is also possible to use the operational version which would get the time information from ECMWF’s environmental variables and therefore get the newest forecast per day. This version uses a <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> parameter which tells MARS to extract the exact 12 hours upfront to the selected date. If the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file with <code class="docutils literal notranslate"><span class="pre">basetime</span></code> in the filename is used this can be done for any other date too.</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_OD.OPER.FC.eta.basetime
+CONTROL_OD.OPER.FC.operational
+CONTROL_OD.OPER.FC.twiceaday.1hourly
+CONTROL_OD.OPER.FC.twiceaday.3hourly
+</pre></div>
+</div>
+</dd>
+<dt>Ensemble members</dt>
+<dd><p class="first">The retrieval of ensemble members were already mentioned in the pure forecast section and for <em>CERA-20C</em> data.
+In this <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> version there is an additional possibility to retrieve the <em>Ensemble Long window Data Assimilation (ELDA)</em> stream from the real-time dataset. This model version has (up to May 2019) 25 ensemble members and a control run (<code class="docutils literal notranslate"><span class="pre">number</span> <span class="pre">0</span></code>). Starting from June 2019 it has 50 ensemble members. Therefore we created the possibility to double up the 25 ensemble members (before June 2019) to 50 members by taking the original 25 members from MARS and subtracting 2 times the difference between the member value and the control value. This is done by selecting the parameter <code class="docutils literal notranslate"><span class="pre">DOUBLEELDA</span></code> and set it to <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_OD.ELDA.FC.eta.ens.double
+CONTROL_OD.ENFO.PF.ens
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">&#64;LEO: Please tell me why perturbed forecast are possible? Is it because of some user rights? I have no opportunity of retrieve PF data.</p>
+</div>
+</div>
+<div class="section" id="specific-features">
+<h3>Specific features<a class="headerlink" href="#specific-features" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>rrint</dt>
+<dd>Decides if the precipitation flux data uses the old (<code class="docutils literal notranslate"><span class="pre">0</span></code>) or new (<code class="docutils literal notranslate"><span class="pre">1</span></code>) disaggregation scheme. See <a class="reference internal" href="Documentation/disagg.html"><span class="doc">Disaggregation of Flux Data</span></a> for explanaition.</dd>
+<dt>cwc</dt>
+<dd>Decides if the total cloud water content will be retrieved (set to <code class="docutils literal notranslate"><span class="pre">1</span></code>) in addition. This is the sum of cloud liquid and cloud ice water content.</dd>
+<dt>addpar</dt>
+<dd>With this parameter an additional list of 2-dimensional, non-flux parameters can be retrieved. Use format <code class="docutils literal notranslate"><span class="pre">param1/param2/.../paramx</span></code> to list the parameters. Please be consistent in using either the parameter IDs or the short names.</dd>
+<dt>doubleelda</dt>
+<dd>Use this to double the ensemble member number by adding further disturbance to each member.</dd>
+<dt>debug</dt>
+<dd>If set to <code class="docutils literal notranslate"><span class="pre">1</span></code> all temporary files were kept at the end. Otherwise everything except the final output files will be deleted.</dd>
+<dt>request</dt>
+<dd>This produces an extra <em>csv</em> file <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> where the content of each mars request of the job is stored. Useful for debugging and documentation.</dd>
+<dt>mailfail</dt>
+<dd>At default the mail is send to the mail connected with the user account. Add additional email addresses if you want. But as soon as you enter a new mail, the default will be overwritten. If you would like to keep the mail from your user account, please add <code class="docutils literal notranslate"><span class="pre">${USER}</span></code> to the list ( comma seperated ) or mail addresses.</dd>
+</dl>
+</div>
+<div class="section" id="hints-for-definition-of-some-parameter-combinations">
+<h3>Hints for definition of some parameter combinations<a class="headerlink" href="#hints-for-definition-of-some-parameter-combinations" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>Field types and times</dt>
+<dd><p class="first">This combination is very important. It defines the temporal resolution and which field type is extracted per time step.
+The time declaration for analysis (AN) fields uses the times of the specific analysis and (forecast time) steps have to be <code class="docutils literal notranslate"><span class="pre">0</span></code>. The forecast field types (e.g. FC, CF, CV, PF) need to declare a combination of (forescast start) times and the (forecast) steps. Both of them together defines the actual time step. It is important to know the forecast starting times for the dataset to be retrieved, since they are different. In general it is enough to give information for the exact time steps, but it is also possible to have more time step combinations of <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>, <code class="docutils literal notranslate"><span class="pre">TIME</span></code> and <code class="docutils literal notranslate"><span class="pre">STEP</span></code> because the temporal (hourly) resolution with the <code class="docutils literal notranslate"><span class="pre">DTIME</span></code> parameter will select the correct combinations.</p>
+<div class="literal-block-wrapper last docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">Example of a setting for the field types and temporal resolution.</span><a class="headerlink" href="#id6" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> DTIME <span class="m">3</span>
+ TYPE AN FC FC FC AN FC FC FC
+ TIME <span class="m">00</span> <span class="m">00</span> <span class="m">00</span> <span class="m">00</span> <span class="m">12</span> <span class="m">12</span> <span class="m">12</span> <span class="m">12</span>
+ STEP <span class="m">00</span> <span class="m">03</span> <span class="m">06</span> <span class="m">09</span> <span class="m">00</span> <span class="m">03</span> <span class="m">06</span> <span class="m">09</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Vertical velocity</dt>
+<dd><p class="first">The vertical velocity for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> is not directly available from MARS. Therefore it has to be calculated. There are a couple of different options. The following parameters are responsible for the selection. See <a class="reference internal" href="Documentation/vertco.html"><span class="doc">Vertical Coordinate</span></a> for a detailed explanation. The <code class="docutils literal notranslate"><span class="pre">ETADIFF</span></code>, <code class="docutils literal notranslate"><span class="pre">OMEGA</span></code> and <code class="docutils literal notranslate"><span class="pre">OMEGADIFF</span></code> versions are only recommended for debugging and testing reasons. Usually it is a decision between <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> and <code class="docutils literal notranslate"><span class="pre">ETA</span></code>, where for <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> spectral fields of the horizontal wind fields and the divergence are to be retrieved and used with the continuity equation to calculate the vertical velocity. For <code class="docutils literal notranslate"><span class="pre">ETA</span></code> the latitude/longitude fields of horizontal wind fields and eta-coordinate are to be retrieved. It is recommended to use <code class="docutils literal notranslate"><span class="pre">ETA</span></code> where possible due to a reduced computation time.</p>
+<div class="literal-block-wrapper last docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">Example setting for the vertical coordinate retrieval.</span><a class="headerlink" href="#id7" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GAUSS <span class="m">0</span>
+ETA <span class="m">1</span>
+ETADIFF <span class="m">0</span>
+DPDETA <span class="m">1</span>
+OMEGA <span class="m">0</span>
+OMEGADIFF <span class="m">0</span>
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Grid resolution and domain</dt>
+<dd><p class="first">The grid and domain selection depends on each other. The grid can be defined in the format of normal degrees (e.g. <code class="docutils literal notranslate"><span class="pre">1.</span></code>) or as in older versions by 1/1000. degrees (e.g. <code class="docutils literal notranslate"><span class="pre">1000</span></code> for <code class="docutils literal notranslate"><span class="pre">1°</span></code>).
+After selecting the grid, the domain has to be defined in a way that the length of the domain in longitude or latitude direction  must be an exact multiple of the grid.
+The horizontal resolution for spectral fields will be set by the parameter <code class="docutils literal notranslate"><span class="pre">RESOL</span></code>. For information about how to select an appropriate value you can read the explanation of the MARS keyword <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol">here</a> and in <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation">this table</a>.</p>
+<div class="literal-block-wrapper last docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">Example setting for a northern hemisphere domain with a grid of <code class="docutils literal notranslate"><span class="pre">0.25°</span></code>.</span><a class="headerlink" href="#id8" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GRID <span class="m">0</span>.25
+RESOL <span class="m">799</span>
+SMOOTH <span class="m">0</span>
+UPPER <span class="m">90</span>.
+LOWER <span class="m">0</span>.
+LEFT -179.75
+RIGHT <span class="m">180</span>.
+</pre></div>
+</div>
+</div>
+</dd>
+<dt>Flux data</dt>
+<dd><p class="first">The flux fields are accumulated forecast fields all the time. Since some re-analysis dataset nowadays have complete set of analysis fields in their temporal resolution it was important to define a new parameter set to define the flux fields since the information could not be taken from <code class="docutils literal notranslate"><span class="pre">TYPE</span></code>, <code class="docutils literal notranslate"><span class="pre">TIME</span></code> and <code class="docutils literal notranslate"><span class="pre">STEP</span></code> any longer. Select a forecast field type <code class="docutils literal notranslate"><span class="pre">ACCTYPE</span></code>, the forecast starting time <code class="docutils literal notranslate"><span class="pre">ACCTIME</span></code> and the maximum forecast step <code class="docutils literal notranslate"><span class="pre">ACCMAXSTEP</span></code>. The <code class="docutils literal notranslate"><span class="pre">DTIME</span></code> parameter defines the temporal resolution for the whole period.</p>
+<div class="literal-block-wrapper last docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">Example setting for the definition of flux fields.</span><a class="headerlink" href="#id9" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> DTIME <span class="m">3</span>
+ ACCTYPE FC
+ ACCTIME <span class="m">00</span>/12
+ ACCMAXSTEP <span class="m">36</span>
+</pre></div>
+</div>
+</div>
+</dd>
+</dl>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ecmwf_data.html" class="btn btn-neutral float-right" title="ECMWF Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

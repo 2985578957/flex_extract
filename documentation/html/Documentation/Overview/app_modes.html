@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Application Modes &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Program Flow" href="prog_flow.html" />
+    <link rel="prev" title="Overview" href="../overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../overview.html">Overview</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Application Modes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="prog_flow.html">Program Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="convert.html">CONVERT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../input.html">Control &amp; Input Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="../overview.html">Overview</a> &raquo;</li>
+        
+      <li>Application Modes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Documentation/Overview/app_modes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="application-modes">
+<h1>Application Modes<a class="headerlink" href="#application-modes" title="Permalink to this headline">¶</a></h1>
+<p id="ref-app-modes">Arising from the two user groups described in <a class="reference internal" href="../../Ecmwf/access.html"><span class="doc">Access Modes</span></a>, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has 4 different <span class="underline">user application modes</span>:</p>
+<blockquote id="ref-remote-desc">
+<div><ol class="arabic simple">
+<li><dl class="first docutils">
+<dt>Remote (member)</dt>
+<dd>In the <strong>Remote mode</strong> the user works directly on ECMWF Linux member state server, such as <code class="docutils literal notranslate"><span class="pre">ecgate</span></code> or <code class="docutils literal notranslate"><span class="pre">cca</span></code>. The software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory. The user does not need to install any of the additional third-party libraries mentioned in <a class="reference internal" href="../../installation.html#ref-requirements"><span class="std std-ref">Environment requirements</span></a> as ECMWF provides everything with environment modules. The module selection will be done automatically in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<blockquote id="ref-gateway-desc">
+<div><ol class="arabic simple" start="2">
+<li><dl class="first docutils">
+<dt>Gateway (member)</dt>
+<dd>The <strong>Gateway mode</strong> can be used if a local member state gateway server is in place. Then the job scripts can be submitted to the ECMWF Linux member state server via the ECMWF web access tool <code class="docutils literal notranslate"><span class="pre">ecaccess</span></code>. The installation script of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> must be executed at the local gateway server such that the software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory at the ECMWF server and some extra setup is done in the local <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory at the local gateway server. For more information about establishing a gateway server please see section ???. For the <strong>Gateway mode</strong> the necessary environment has to be established which is described in <a class="reference internal" href="../../installation.html#ref-prep-gateway"><span class="std std-ref">Prepare gateway environment</span></a>.</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<blockquote id="ref-local-desc">
+<div><ol class="arabic simple" start="3">
+<li><dl class="first docutils">
+<dt>Local member</dt>
+<dd>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../installation.html#ref-local-mode"><span class="std std-ref">Local mode</span></a>.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Local public</dt>
+<dd>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../installation.html#ref-local-mode"><span class="std std-ref">Local mode</span></a>. In this case a direct registration at ECMWF is necessary and the user has to accept a specific license agreement for each dataset he/she intends to retrieve.</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+<p>An overview is sketched in figure <a class="reference internal" href="#ref-fig-marsaccess"><span class="std std-ref">Application modes</span></a>.</p>
+<div class="figure" id="id1">
+<span id="ref-fig-marsaccess"></span><img alt="../../_images/Diagramm_MarsAccess2.png" src="../../_images/Diagramm_MarsAccess2.png" />
+<p class="caption"><span class="caption-text">Application modes</span></p>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="prog_flow.html" class="btn btn-neutral float-right" title="Program Flow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

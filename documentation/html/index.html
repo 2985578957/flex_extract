@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to flex_extract’s user documentation! &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s user documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-flex-extract-s-user-documentation">
+<h1>Welcome to <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s user documentation!<a class="headerlink" href="#welcome-to-flex-extract-s-user-documentation" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is an open-source software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to serve as input files for the FLEXTRA/FLEXPART Atmospheric Transport Modelling system.</p>
+<table style="width:100%;">
+  <tr>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
+      </div>
+      <h2><a href="installation.html">Installation</a></h2>
+      <ul>
+        <li><a href="installation.html#ref-requirements">Environment requirements</a></li>
+        <li><a href="installation.html#ref-download">Download flex_extract</a></li>
+        <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
+      </ul>
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+      </div>
+      <h2><a href="ecmwf_data.html">ECMWF data</a></h2>
+      <ul>
+        <li><a href="ecmwf_data.html">Overview</a></li>
+        <li><a href="Ecmwf/access.html">Access Modes</a></li>
+        <li><a href="Ecmwf/ec-links.html">Link Collection</a></li>
+      </ul>
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+      </div>
+      <h2><a href="documentation.html">Documentation</a></h2>
+      <ul>
+        <li><a href="">Content</a></li>
+        <li><a href="">Configuration</a></li>
+        <li><a href="">Tutorials</a></li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
+      </div>
+      <h2><a href="quick_start.html">Quick Start</a></h2>
+      <ul>
+        <li><a href="">...</a></li>
+        <li><a href="">...</a></li>
+        <li><a href="">...</a></li>
+      </ul>
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+      </div>
+      <h2><a href="evaluation.html">Evaluation</a></h2>
+      <ul>
+        <li><a href="">Code</a></li>
+        <li><a href="">Functionality</a></li>
+        <li><a href="">Regression</a></li>
+      </ul>
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
+      </div>
+      <h2><a href="dev_guide.html">Developer</a></h2>
+      <ul>
+        <li><a href="">...</a></li>
+        <li><a href="">...</a></li>
+        <li><a href="">...</a></li>
+      </ul>
+    </td>
+  </tr>
+  </table>
+  <table style="width:100%;">
+  <tr>
+    <td style="width:15%">
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:10%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/change_icon.png">
+      </div>
+      <h2><a href="changelog.html">Changelog</a></h2>
+      <ul>
+        <li><a href="changelog.html#ref-v71">v7.1</a></li>
+        <li><a href="changelog.html#ref-v704">v7.0.4</a></li>
+        <li><a href="changelog.html#ref-v703">v7.0.3</a></li>
+        <li><a href="changelog.html#ref-v60">v6</a></li>
+      </ul>
+    </td>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:10%;position:relative;">
+      <img style="position:absolute;height:100%;vertical-align:bottom;" src="_static/help_icon.png">
+      </div>
+      <h2><a href="support.html">Support</a></h2>
+      <ul>
+        <li><a href="support.html#ref-ticket-system">Ticket system</a></li>
+        <li><a href="support.html#ref-mailing-list">Mailing list</a></li>
+        <li><a href="Support/known_bugs_issues.html">Known bugs or issues</a></li>
+        <li><a href="Support/faq.html">FAQ</a></li>
+      </ul>
+    </td>
+    <td style="width:10%">
+    </td>
+  </tr>
+</table>
+<p></p><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<div class="figure">
+<a class="reference internal image-reference" href="_images/cc-by-40.png"><img alt="_images/cc-by-40.png" src="_images/cc-by-40.png" style="width: 100px;" /></a>
+</div>
+<p class="last">This work is licensed under the Creative Commons Attribution 4.0
+International License. To view a copy of this license, visit
+<a class="reference external" href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a> or send a letter to
+Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#agree-on-licences-for-public-datasets">Agree on licences for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#environment-requirements">Environment requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#remote-mode">Remote mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#gateway-mode">Gateway mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#local-mode">Local mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#flex-extract-in-combination-with-flexpart"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> in combination with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#test-installation">Test installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#fortran-program-test">Fortran program test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#full-test">Full test</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick_start.html#job-preparation">Job preparation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#remote-and-gateway-modes">Remote and gateway modes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#local-mode">Local mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="quick_start.html#selection-and-adjustment-of-control-files">Selection and adjustment of <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#public-datasets">Public datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#cera">CERA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#era-5">ERA 5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#era-interim">ERA-Interim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#operational-data">Operational data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#specific-features">Specific features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#hints-for-definition-of-some-parameter-combinations">Hints for definition of some parameter combinations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-1">Release v7.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#changes">Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-4">Release v7.0.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#bug-fixes">Bug fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-3">Release v7.0.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">New Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-2">Release v7.0.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v0-1-v6-0">Release v0.1 - v6.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="support.html">Support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="support.html#ticket-system">Ticket system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#mailing-list">Mailing list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#reporting-an-issue">Reporting an issue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#known-bugs-and-issues">Known bugs and issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support.html#faq">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Support/faq.html">FAQ - Frequently asked questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Support/faq.html#what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages">What can I do if I can’t install the third party libraries from distribution packages?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Developer Team</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
