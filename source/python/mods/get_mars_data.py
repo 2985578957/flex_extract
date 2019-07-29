@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -56,6 +56,8 @@ Read the documentation for usage instructions.
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import sys
 import inspect
@@ -271,6 +273,10 @@ def mk_dates(c, fluxes):
 
     if c.basetime == 0:
         start = start - timedelta(days=1)
+
+    if c.purefc and fluxes and c.maxstep < 24:
+        start = start - timedelta(days=1)
+        end = end + timedelta(days=1)
 
     if not c.purefc and fluxes and not c.basetime == 0:
         start = start - timedelta(days=1)
