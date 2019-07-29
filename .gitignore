@@ -4,13 +4,45 @@
 
 # these dirs and files shouldn't be versionized at any time in this project!!!
 *.pyc
-source/fortran/*.o
-source/fortran/*.mod
-source/fortran/CONVERT2*
+Source/Fortran/*.o
+Source/Fortran/*.mod
+Source/Fortran/CONVERT2*
 *.tar*
-run/ECMWF_ENV
-run/workspace/*
-run/jobscripts/*
+Run/ECMWF_ENV
+Run/Workspace/*
+Run/Jobscripts/*
+Test/Installation/Convert/VERTICAL.EC
+Test/Installation/Convert/fort.15
+
+
+# Temporary ingorance of files!!!!
+Source/Fortran/Makefile.ecgate
+Source/Fortran/Makefile.local.gfortran.gw74
+Run/Control/Testgrid/
+Run/Control/notPublic/
+setup_local.sh
+Run/run.sh
+Run/run_local.sh
+setup.sh
+Source/Fortran/pycallgraph.png
+Source/Python/pylint_report_7.1.txt
+Source/.metrics
+For_developers/sphinx-fortran/
+
+
+For_developers/GUIDE.odt
+For_developers/COMMANDS
+For_developers/class_diagram
+For_developers/classes.dot
+For_developers/classes.png
+For_developers/gen_docu.sh
+For_developers/mk_pdf2png.sh
+For_developers/packages.dot
+For_developers/packages.png
+For_developers/Testcases.txt
+For_developers/Metriken.txt
+For_developers/FE_testing.txt
+For_developers/Liste_FE_Functions_Testcoverage.xlsx
 
 
 

@@ -100,7 +100,7 @@ def setup_controldata():
         Name of the job template file for submission to ECMWF server.
     '''
     import _config
-    from classes.ControlFile import ControlFile
+    from Classes.ControlFile import ControlFile
 
     args = get_cmdline_args()
     c = ControlFile(args.controlfile)

@@ -68,11 +68,11 @@ from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
 import _config
-from mods.tools import (setup_controldata, normal_exit, get_cmdline_args,
+from Mods.tools import (setup_controldata, normal_exit, get_cmdline_args,
                          submit_job_to_ecserver, read_ecenv)
-from mods.get_mars_data import get_mars_data
-from mods.prepare_flexpart import prepare_flexpart
-from classes.ControlFile import ControlFile
+from Mods.get_mars_data import get_mars_data
+from Mods.prepare_flexpart import prepare_flexpart
+from Classes.ControlFile import ControlFile
 
 
 # ------------------------------------------------------------------------------

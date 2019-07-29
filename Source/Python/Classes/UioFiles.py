@@ -40,7 +40,7 @@ import fnmatch
 
 # software specific modules from flex_extract
 sys.path.append('../')
-from mods.tools import silent_remove, get_list_as_string
+from Mods.tools import silent_remove, get_list_as_string
 
 # ------------------------------------------------------------------------------
 # CLASS

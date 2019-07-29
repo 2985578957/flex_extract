@@ -52,8 +52,8 @@ import inspect
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from mods.tools import my_error, silent_remove
-from mods.checks import (check_grid, check_area, check_levels, check_purefc,
+from Mods.tools import my_error, silent_remove
+from Mods.checks import (check_grid, check_area, check_levels, check_purefc,
                          check_step, check_mail, check_queue, check_pathes,
                          check_dates, check_maxstep, check_type, check_request,
                          check_basetime, check_public, check_acctype,

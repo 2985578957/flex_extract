@@ -33,7 +33,7 @@ try:
 except ImportError:
     import builtins as exceptions
 from datetime import datetime
-from mods.tools import my_error, silent_remove
+from Mods.tools import my_error, silent_remove
 # ------------------------------------------------------------------------------
 # FUNCTIONS
 # ------------------------------------------------------------------------------

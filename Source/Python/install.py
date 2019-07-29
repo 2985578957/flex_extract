@@ -73,9 +73,9 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # software specific classes and modules from flex_extract
 import _config
-from classes.ControlFile import ControlFile
-from classes.UioFiles import UioFiles
-from mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
+from Classes.ControlFile import ControlFile
+from Classes.UioFiles import UioFiles
+from Mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
                         silent_remove, execute_subprocess, none_or_str)
 
 # ------------------------------------------------------------------------------

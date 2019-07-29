@@ -70,7 +70,7 @@ FILE_GRIBTABLE = 'ecmwf_grib1_table_128'
 # ------------------------------------------------------------------------------
 
 FLEXEXTRACT_DIRNAME = 'flex_extract_v' + _VERSION_STR
-INPUT_DIRNAME_DEFAULT = 'workspace'
+INPUT_DIRNAME_DEFAULT = 'Workspace'
 
 # ------------------------------------------------------------------------------
 #  PATHES
@@ -85,23 +85,23 @@ if PATH_LOCAL_PYTHON not in sys.path:
     sys.path.append(PATH_LOCAL_PYTHON)
 PATH_FLEXEXTRACT_DIR = os.path.normpath(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../../')
-PATH_RUN_DIR = os.path.join(PATH_FLEXEXTRACT_DIR, 'run')
-PATH_SOURCES = os.path.join(PATH_FLEXEXTRACT_DIR, 'source')
-PATH_TEMPLATES = os.path.join(PATH_FLEXEXTRACT_DIR, 'templates')
+PATH_RUN_DIR = os.path.join(PATH_FLEXEXTRACT_DIR, 'Run')
+PATH_SOURCES = os.path.join(PATH_FLEXEXTRACT_DIR, 'Source')
+PATH_TEMPLATES = os.path.join(PATH_FLEXEXTRACT_DIR, 'Templates')
 PATH_ECMWF_ENV = os.path.join(PATH_RUN_DIR, FILE_USER_ENVVARS)
 PATH_GRIBTABLE = os.path.join(PATH_TEMPLATES, FILE_GRIBTABLE)
-PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'jobscripts')
-PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'fortran')
-PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'pythontest')
+PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'Jobscripts')
+PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'Fortran')
+PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'Pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
-PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'test')
+PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'Test')
 if os.getenv('CONTROL'):
     # this is only needed if (gateway) version with job script is used!
     # because job is directly submitted from SCRATCH and because the
     # CONTROL file is stored there, the normal path is not valid.
     PATH_CONTROLFILES = '.'
 else:
-    PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'control')
+    PATH_CONTROLFILES = os.path.join(PATH_RUN_DIR, 'Control')
 #
 # ------------------------------------------------------------------------------
 # RELATIVE PATHES FOR INSTALLATION TAR-BALL

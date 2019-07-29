@@ -32,7 +32,7 @@ CONTROLFILE='CONTROL_EA5'
 # -----------------------------------------------------------------
 
 # PATH TO INSTALLATION SCRIPT
-script="source/python/install.py"
+script="Source/Python/install.py"
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""

@@ -65,14 +65,14 @@ from datetime import datetime, timedelta
 # software specific classes and modules from flex_extract
 sys.path.append('../')
 import _config
-from classes.GribUtil import GribUtil
-from mods.tools import (init128, to_param_id, silent_remove, product,
+from Classes.GribUtil import GribUtil
+from Mods.tools import (init128, to_param_id, silent_remove, product,
                         my_error, make_dir, get_informations, get_dimensions,
                         execute_subprocess, to_param_id_with_tablenumber,
                         generate_retrieval_period_boundary)
-from classes.MarsRetrieval import MarsRetrieval
-from classes.UioFiles import UioFiles
-import mods.disaggregation as disaggregation
+from Classes.MarsRetrieval import MarsRetrieval
+from Classes.UioFiles import UioFiles
+import Mods.disaggregation as disaggregation
 
 # ------------------------------------------------------------------------------
 # CLASS

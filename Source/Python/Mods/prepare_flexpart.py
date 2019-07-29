@@ -72,12 +72,12 @@ import socket
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 import _config
-from mods.checks import check_ppid
-from classes.UioFiles import UioFiles
-from classes.ControlFile import ControlFile
-from mods.tools import (setup_controldata, clean_up, get_cmdline_args,
+from Mods.checks import check_ppid
+from Classes.UioFiles import UioFiles
+from Classes.ControlFile import ControlFile
+from Mods.tools import (setup_controldata, clean_up, get_cmdline_args,
                         read_ecenv, make_dir, normal_exit)
-from classes.EcFlexpart import EcFlexpart
+from Classes.EcFlexpart import EcFlexpart
 
 # ------------------------------------------------------------------------------
 # FUNCTION
