@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
@@ -23,15 +23,16 @@
 # MODULES
 # ------------------------------------------------------------------------------
 
+from __future__ import print_function
 import os
 import sys
+
 import _config
 try:
     import exceptions
 except ImportError:
     import builtins as exceptions
 from datetime import datetime
-import numpy as np
 from mods.tools import my_error, silent_remove
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -85,16 +86,27 @@ def check_grid(grid):
         if gridx == gridy:
             grid = gridx
         else:
-            raise ValueError('GRID parameter contains two values '
-                             'which are unequal %s' (grid))
+            raise ValueError('GRID parameter contains two '
+                             'different values: %s' (grid))
+    # # determine grid format
+    # if float(grid) / 100. >= 0.5:
+    #    # grid is defined in 1/1000 degrees; old format
+    #    grid = '{}/{}'.format(float(grid) / 1000.,
+    #                          float(grid) / 1000.)
+    # elif float(grid) / 100. < 0.5:
+    #    # grid is defined in normal degree; new format
+    #    grid = '{}/{}'.format(float(grid), float(grid))
+
+
     # determine grid format
-    if float(grid) / 100. >= 0.5:
-        # grid is defined in 1/1000 degrees; old format
-        grid = '{}/{}'.format(float(grid) / 1000.,
-                              float(grid) / 1000.)
-    elif float(grid) / 100. < 0.5:
-        # grid is defined in normal degree; new format
+    # assumes that nobody wants grid spacings of 20 deg or more
+    if float(grid) >= 20.:
+        # grid is defined in 1/1000 degree; old format
+        grid = '{}/{}'.format(float(grid) / 1000., float(grid) / 1000.)
+    else:
+        # grid is defined in degree; new format
         grid = '{}/{}'.format(float(grid), float(grid))
+
 
     return grid
 
@@ -289,6 +301,7 @@ def check_step(step, mailfail):
     step : list of str
         List of forecast steps in format e.g. [001, 002, ...]
     '''
+    import numpy as np
 
     if '/' in step:
         steps = step.split('/')
@@ -465,8 +478,8 @@ def check_queue(queue, gateway, destination, ecuid, ecgid):
 
     '''
     if queue in _config.QUEUES_LIST and \
-        not gateway or not destination or \
-        not ecuid or not ecgid:
+            (not gateway or not destination or
+             not ecuid or not ecgid):
         raise ValueError('\nEnvironment variables GATEWAY, DESTINATION, ECUID '
                          'and ECGID were not set properly! \n '
                          'Please check for existence of file "ECMWF_ENV" '
@@ -688,7 +701,7 @@ def check_acctype(acctype, ftype):
     return acctype
 
 
-def check_acctime(acctime, marsclass, purefc):
+def check_acctime(acctime, marsclass, purefc, time):
     '''Guarantees that the accumulation forecast times were set.
 
     If it is not set, it tries to set the value for some of the
@@ -723,6 +736,8 @@ def check_acctime(acctime, marsclass, purefc):
             acctime = '18'
         elif marsclass.upper() == 'OD' and not purefc: # On-demand
             acctime = '00/12'
+        elif marsclass.upper() == 'OD' and purefc: # On-demand
+            acctime = time[0]
         else:
             raise ValueError('ERROR: Accumulation forecast time can not '
                              'automatically be derived!')
@@ -819,6 +834,8 @@ def check_job_chunk(job_chunk):
     '''
     if not job_chunk:
         return job_chunk
+    else:
+        job_chunk = int(job_chunk)
 
     if job_chunk < 0:
         raise ValueError('ERROR: The number of job chunk is negative!\n'
