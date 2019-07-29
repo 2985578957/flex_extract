@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Philipp (University of Vienna)
@@ -58,6 +58,8 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
+from __future__ import print_function
+
 import os
 import errno
 import sys
@@ -70,8 +72,6 @@ except ImportError:
     import builtins as exceptions
 from datetime import datetime, timedelta
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-
-
 
 # ------------------------------------------------------------------------------
 # METHODS
@@ -182,14 +182,14 @@ def get_cmdline_args():
                         type=none_or_int, default=None,
                         help="# of days to be retrieved within a single job")
     parser.add_argument("--controlfile", dest="controlfile",
-                        type=none_or_str, default='CONTROL.temp',
-                        help="file with CONTROL parameters")
+                        type=none_or_str, default='CONTROL_EA5',
+                        help="The file with all CONTROL parameters.")
     parser.add_argument("--basetime", dest="basetime",
                         type=none_or_int, default=None,
                         help="base such as 0 or 12 (for half day retrievals)")
     parser.add_argument("--step", dest="step",
                         type=none_or_str, default=None,
-                        help="steps such as 00/to/48")
+                        help="Forecast steps such as 00/to/48")
     parser.add_argument("--levelist", dest="levelist",
                         type=none_or_str, default=None,
                         help="Vertical levels to be retrieved, e.g. 30/to/60")
@@ -203,8 +203,8 @@ def get_cmdline_args():
                         help="debug mode - leave temporary files intact")
     parser.add_argument("--oper", dest="oper",
                         type=none_or_int, default=None,
-                        help="operational mode - prepares dates with \
-                        environment variables")
+                        help='operational mode - prepares dates with '
+                        'environment variables')
     parser.add_argument("--request", dest="request",
                         type=none_or_int, default=None,
                         help="list all mars requests in file mars_requests.dat")
@@ -213,37 +213,38 @@ def get_cmdline_args():
                         help="public mode - retrieves the public datasets")
     parser.add_argument("--rrint", dest="rrint",
                         type=none_or_int, default=None,
-                        help="select old or new precipitation interpolation \
-                        0 - old method\
-                        1 - new method (additional subgrid points)")
+                        help='Selection of old or new precipitation '
+                        'interpolation:\n'
+                        '     0 - old method\n'
+                        '     1 - new method (additional subgrid points)')
 
     # set directories
     parser.add_argument("--inputdir", dest="inputdir",
                         type=none_or_str, default=None,
-                        help="root directory for storing intermediate files")
+                        help='Path to the temporary directory for the '
+                        'retrieval grib files and other processing files.')
     parser.add_argument("--outputdir", dest="outputdir",
                         type=none_or_str, default=None,
-                        help="root directory for storing output files")
-    parser.add_argument("--flexpartdir", dest="flexpartdir",
-                        type=none_or_str, default=None,
-                        help="FLEXPART root directory (to find grib2flexpart \
-                        and COMMAND file)\n Normally flex_extract resides in \
-                        the scripts directory of the FLEXPART distribution")
+                        help='Path to the final directory where the final '
+                        'FLEXPART ready input files are stored.')
 
     # this is only used by prepare_flexpart.py to rerun a postprocessing step
     parser.add_argument("--ppid", dest="ppid",
                         type=none_or_str, default=None,
-                        help="specify parent process id for \
-                        rerun of prepare_flexpart")
+                        help='This is the specify parent process id of a '
+                        'single flex_extract run to identify the files. '
+                        'It is the second number in the GRIB files.')
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
                         type=none_or_str, default="job.temp",
-                        help="job template file for submission to ECMWF")
+                        help='The job template file which are adapted to be '
+                        'submitted to the batch system on ECMWF server.')
     parser.add_argument("--queue", dest="queue",
                         type=none_or_str, default=None,
-                        help="queue for submission to ECMWF \
-                        (e.g. ecgate or cca )")
+                        help='The ECMWF server name for submission of the '
+                        'job script to the batch system '
+                        '(e.g. ecgate | cca | ccb)')
 
     args = parser.parse_args()
 
@@ -532,7 +533,10 @@ def to_param_id(pars, table):
     cpar = pars.upper().split('/')
     ipar = []
     for par in cpar:
+        par = par.strip()
         for k, v in table.items():
+            if par.isdigit():
+                par = str(int(par)).zfill(3)
             if par == k or par == v:
                 ipar.append(int(k))
                 break
@@ -574,6 +578,8 @@ def to_param_id_with_tablenumber(pars, table):
     spar = []
     for par in cpar:
         for k, v in table.items():
+            if par.isdigit():
+                par = str(int(par)).zfill(3)
             if par == k or par == v:
                 spar.append(k + '.128')
                 break
