@@ -5,12 +5,16 @@
 # @Date: September, 10 2018
 #
 # @Description: 
+#    This file defines the flex_extract's available installation
+#    parameters and puts them together for the call of the actual 
+#    python installation script. 
+#    It also does some checks to guarantees necessary parameters 
+#    were set.
 #
-
 # -----------------------------------------------------------------
 # AVAILABLE COMMANDLINE ARGUMENTS TO SET
 #
-# THE USER HAS TO SPECIFY THESE PARAMETER
+# THE USER HAS TO SPECIFY THESE PARAMETERS
 #
 TARGET='ecgate'
 MAKEFILE='Makefile.gfortran'
@@ -18,9 +22,9 @@ ECUID='km4a'
 ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
 DESTINATION='annep@genericSftp'
-FLEXPARTDIR=""
-JOB_TEMPLATE="job.template"
-CONTROLFILE="CONTROL_EA5.testgrid"
+INSTALLDIR=None
+JOB_TEMPLATE=''
+CONTROLFILE='CONTROL_EA5'
 # -----------------------------------------------------------------
 #
 # AFTER THIS LINE THE USER DOES NOT HAVE TO CHANGE ANYTHING !!!
@@ -28,7 +32,7 @@ CONTROLFILE="CONTROL_EA5.testgrid"
 # -----------------------------------------------------------------
 
 # PATH TO INSTALLATION SCRIPT
-script="source/python/install.py"
+script="Source/Python/install.py"
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""
@@ -71,7 +75,3 @@ fi
 
 $script $parameterlist
 
-# -----------------------------------------------------------------
-# CALL INSTALLATION TESTS
-
-# TODO !!!!

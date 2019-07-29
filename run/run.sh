@@ -10,25 +10,24 @@
 
 # -----------------------------------------------------------------
 # AVAILABLE COMMANDLINE ARGUMENTS TO SET
-#
+# 
 # THE USER HAS TO SPECIFY THESE PARAMETERS:
 
 QUEUE='ecgate'
-START_DATE=20190215
-END_DATE=20190215
+START_DATE=None
+END_DATE=None
 DATE_CHUNK=None
-JOB_CHUNK=1
+JOB_CHUNK=3
 BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
-INPUTDIR=''
+INPUTDIR=None
 OUTPUTDIR=None
-FLEXPARTDIR=None 
 PP_ID=None
 JOB_TEMPLATE='job.temp' 
-CONTROLFILE='CONTROL_OD.fastnet' 
-DEBUG=0 
+CONTROLFILE='CONTROL_CERA' 
+DEBUG=1
 REQUEST=2
 PUBLIC=0
 
@@ -39,7 +38,7 @@ PUBLIC=0
 # -----------------------------------------------------------------
 
 # PATH TO SUBMISSION SCRIPT
-pyscript=../source/python/submit.py
+pyscript=../Source/Python/submit.py
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""
@@ -74,9 +73,6 @@ if [ -n "$INPUTDIR" ]; then
 fi
 if [ -n "$OUTPUTDIR" ]; then
   parameterlist+=" --outputdir=$OUTPUTDIR"
-fi
-if [ -n "$FLEXPARTDIR" ]; then
-  parameterlist+=" --flexpartdir=$FLEXPARTDIR"
 fi
 if [ -n "$PP_ID" ]; then
   parameterlist+=" --ppid=$PP_ID"
