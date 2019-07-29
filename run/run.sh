@@ -38,7 +38,7 @@ PUBLIC=0
 # -----------------------------------------------------------------
 
 # PATH TO SUBMISSION SCRIPT
-pyscript=../Source/Python/submit.py
+pyscript=../source/python/submit.py
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""
