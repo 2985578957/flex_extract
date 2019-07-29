@@ -1,0 +1,62 @@
+###############################################################################
+#
+# Makefile for flex_extract, Fortran code to calculate etadot
+#
+# Copyright: Leopold Haimberger, Petra Seibert
+# SPDX-License-Identifier: GPL-2.0 
+# 
+# Version for a machine with grib_api installed on standard paths
+# compiled for fast runs
+#
+###############################################################################
+
+
+GRIB_API_INCLUDE_DIR=/usr/include
+GRIB_API_LIB=  -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper
+EMOSLIB=-lemosR64
+
+LIB     =  $(GRIB_API_LIB) $(EMOSLIB)
+
+F90 = gfortran -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore -ffixed-line-length-132 -fopenmp -fconvert=big-endian
+
+F90FLAGS =  -I. -I$(GRIB_API_INCLUDE_DIR)
+
+OPT = -O3
+
+BINDIR   =  .
+EXE      =  calc_etadot_fast.out
+
+.f.o:
+	$(F90) -c $(F90FLAGS) $(OPT) $*.f
+.f90.o:
+	$(F90) -c $(F90FLAGS) $(OPT) $*.f90
+
+all:	${EXE}
+
+clean:
+	rm *.o *.mod #${EXE}
+
+preconvert.o: preconvert.f90
+	$(F90) -c $(OPT) $(F90FLAGS) preconvert.f90
+        
+phgrreal.o: phgrreal.f
+	$(F90) -c $(OPT)   phgrreal.f
+
+rwGRIB2.o: rwGRIB2.f90
+	$(F90) -c $(OPT) $(F90FLAGS)  rwGRIB2.f90
+
+grphreal.o: grphreal.f
+	$(F90) -c $(OPT)   grphreal.f
+
+ftrafo.o: ftrafo.f
+	$(F90) -c $(OPT)   ftrafo.f
+
+$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
+	$(F90) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
+
+
+###############################################################################
+#
+# End of the Makefile
+#
+###############################################################################
