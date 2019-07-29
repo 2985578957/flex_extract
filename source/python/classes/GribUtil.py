@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -42,12 +42,9 @@
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
-import os
+from __future__ import print_function
 
-from eccodes import (codes_grib_new_from_file, codes_is_defined, codes_get,
-                     codes_release, codes_set, codes_write, codes_index_read,
-                     codes_index_new_from_file, codes_index_add_file,
-                     codes_index_write, codes_set_values)
+import os
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -97,6 +94,8 @@ class GribUtil(object):
         return_list : :obj:`list` of :obj:`string`
             List of keyvalues for given keynames.
         '''
+        from eccodes import (codes_new_from_file, codes_is_defined, codes_get,
+                             codes_release)
 
         fileid = open(self.filenames, 'r')
 
@@ -174,6 +173,10 @@ class GribUtil(object):
         ------
 
         '''
+        from eccodes import (codes_grib_new_from_file, codes_is_defined,
+                             codes_get, codes_set, codes_write,
+                             codes_set_values, codes_release)
+
         if len(wherekeynames) != len(wherekeyvalues):
             raise Exception("Give a value for each keyname!")
 
@@ -244,10 +247,13 @@ class GribUtil(object):
         ------
 
         '''
+        from eccodes import (codes_grib_new_from_file, codes_is_defined,
+                             codes_get, codes_release, codes_write)
+
         if len(keynames) != len(keyvalues):
             raise Exception("Give a value for each keyname!")
 
-        fin = open(filename_in)
+        fin = open(filename_in, 'rb')
         fout = open(self.filenames, filemode)
 
         fields = 0
@@ -303,6 +309,9 @@ class GribUtil(object):
         iid: :obj:`integer`
             Grib index id.
         '''
+        from eccodes import (codes_index_read, codes_index_new_from_file,
+                             codes_index_add_file, codes_index_write)
+
         print("... index will be done")
         iid = None
 
