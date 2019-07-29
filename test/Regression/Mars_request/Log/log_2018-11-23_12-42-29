@@ -1,8 +1,0 @@
-Compare mars requests between version 7.0.3 and version 7.1 : 
-... CONTROL_EA5.highres_mr ... FAILED!
-... 	Unconsistency happend to be in column: dataset
-
-... CONTROL_EA5_mr ... FAILED!
-... 	Unconsistency happend to be in column: dataset
-
-... CONTROL_EA5.public_mr ... OK!

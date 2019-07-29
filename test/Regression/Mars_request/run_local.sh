@@ -29,13 +29,13 @@ QUEUE=''
 START_DATE=None
 END_DATE=None
 DATE_CHUNK=None
+JOB_CHUNK=None
 BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
 INPUTDIR='./'${1}'/'
 OUTPUTDIR=None
-FLEXPART_ROOT_SCRIPTS=None 
 PP_ID=None
 JOB_TEMPLATE='' 
 CONTROLFILE=$2 
@@ -65,6 +65,9 @@ fi
 if [ -n "$DATE_CHUNK" ]; then
   parameterlist+=" --date_chunk=$DATE_CHUNK"
 fi
+if [ -n "$JOB_CHUNK" ]; then
+  parameterlist+=" --job_chunk=$JOB_CHUNK"
+fi
 if [ -n "$BASETIME" ]; then
   parameterlist+=" --basetime=$BASETIME"
 fi
@@ -82,9 +85,6 @@ if [ -n "$INPUTDIR" ]; then
 fi
 if [ -n "$OUTPUTDIR" ]; then
   parameterlist+=" --outputdir=$OUTPUTDIR"
-fi
-if [ -n "$FLEXPART_ROOT_SCRIPTS" ]; then
-  parameterlist+=" --flexpart_root_scripts=$FLEXPART_ROOT_SCRIPTS"
 fi
 if [ -n "$PP_ID" ]; then
   parameterlist+=" --ppid=$PP_ID"

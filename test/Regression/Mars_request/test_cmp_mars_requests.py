@@ -25,7 +25,7 @@ flex_extract. For example: "7.0.3" and "7.1".
 
 Example
 -------
-    python test_cmp_mars_requests.py 7.0.3 7.1
+    python test_cmp_mars_requests.py 7.0.4 7.1
 """
 
 # ------------------------------------------------------------------------------
@@ -40,6 +40,7 @@ from datetime import datetime
 
 sys.path.append('../../../source/python')
 import _config
+from  mods.tools import init128
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -128,13 +129,109 @@ def test_mr_content_equality(mr_old, mr_new):
     lresult = None
     columns = list(mr_new.columns.values)
     del columns[columns.index('target')]
+    mr_new = trim_all_columns(mr_new)
+    mr_old = trim_all_columns(mr_old)
     for col in columns:
         if mr_new[col].equals(mr_old[col]):
             lresult = True
         else:
             err_msg += 'Unconsistency happend to be in column: ' + col + '\n'
+            print mr_new[col]
+            print mr_old[col]
             return False
     return lresult
+
+
+def trim_all_columns(df):
+    """
+    Trim whitespace from ends of each value across all series in dataframe
+    """
+    trim_strings = lambda x: x.strip() if isinstance(x, str) else x
+    return df.applymap(trim_strings)
+
+def convert_param_numbers(mr_old):
+    """
+    Convert the numbers parameter into integers with 3 digits.
+    """
+
+    if str(mr_old).strip() != "OFF" and mr_old != None and '/' in str(mr_old) :
+        numbers = mr_old.split('/')
+        number = str(int(numbers[0])).zfill(3)+'/TO/'+str(int(numbers[2])).zfill(3)
+
+        return number
+
+    return mr_old
+
+def convert_param_step(mr_old):
+    """
+    For pure forecast with steps greater than 23 hours, the older versions 
+    writes out a list of steps instead with the syntax 'to' and 'by'. 
+    e.g. 000/003/006/009/012/015/018/021/024/027/030/033/036
+    
+    Convert this to 0/to/36/by/3
+    """
+
+    #if 'to' in str(mr_old) and 'by' in str(mr_old):
+    #    steps = mr_old.split('/')
+    #    step = []
+    #    for i in range(int(steps[0]),int(steps[2]),int(steps[4])):
+    #        step.append(str(int(i)).zfill(2))
+    #    return '/'.join(step)
+    
+    if not mr_old.isdigit() and 'to' not in mr_old.lower():
+        if int(mr_old.split('/')[-1]) > 23:
+    
+            steps = mr_old.split('/')
+            dtime = int(steps[1]) - int(steps[0])
+            
+            nsteps = str(int(steps[1]))+'/to/'+str(int(steps[-1]))+'/by/'+str(int(dtime))
+            return nsteps
+            
+    
+    return mr_old
+
+def to_param_id(pars, table):
+    '''Transform parameter names to parameter ids with ECMWF grib table 128.
+
+    Parameters
+    ----------
+    pars : str
+        Addpar argument from CONTROL file in the format of
+        parameter names instead of ids. The parameter short
+        names are sepearted with "/" and they are passed as
+        one single string.
+
+    table : dict
+        Contains the ECMWF grib table 128 information.
+        The key is the parameter number and the value is the
+        short name of the parameter.
+
+    Return
+    ------
+    ipar : list of int
+        List of addpar parameters from CONTROL file transformed to
+        parameter ids in the format of integer.
+    '''
+    if not pars:
+        return []
+    if not isinstance(pars, str):
+        pars=str(pars)
+
+    cpar = pars.upper().split('/')
+    spar = []
+    for par in cpar:
+        par = par.strip()
+        for k, v in table.items():
+            if par.isdigit():
+                par = str(int(par)).zfill(3)
+            if par == k or par == v:
+                spar.append(k + '.128')
+                break
+        else:
+            print('\n\Warning: par ' + par + ' not found in table 128\n\n”')
+
+    return '/'.join(str(l) for l in spar)
+
 
 
 if __name__ == '__main__':
@@ -142,7 +239,7 @@ if __name__ == '__main__':
     # basic values for paths and versions
     control_path = 'Controls'
     log_path = 'Log'
-    old_dir = sys.argv[1] # e.g. '7.0.3'
+    old_dir = sys.argv[1] # e.g. '7.0.4'
     new_dir = sys.argv[2] # e.g. '7.1'
     mr_filename = 'mars_requests.csv'
 
@@ -183,6 +280,18 @@ if __name__ == '__main__':
         mr_old.columns = mr_old.columns.str.strip()
         mr_new.columns = mr_new.columns.str.strip()
 
+        # convert names in old to ids
+        table128 = init128(_config.PATH_GRIBTABLE)
+        #print mr_old['param']
+
+        # some format corrections are necessary to compare older versions with 7.1
+        mr_old['param'] = mr_old['param'].apply(to_param_id, args=[table128])
+        mr_old['number'] = mr_old['number'].apply(convert_param_numbers)  
+        if '142' in mr_old.ix[0,'param']: # if flux request
+            mr_old.ix[0,'step'] = convert_param_step(mr_old.ix[0,'step'])
+
+        print 'Results: ', c
+
         # do tests on mr files
         lcoleq = test_mr_column_equality(mr_old, mr_new)
         lnoeq = test_mr_number_equality(mr_old, mr_new)
@@ -199,6 +308,8 @@ if __name__ == '__main__':
                 f.write('... ' + c + ' ... FAILED!' + '\n')
                 if err_msg:
                     f.write('... \t' + err_msg + '\n')
+
+        exit
 
     # exit with success or error status
     if lfinal:

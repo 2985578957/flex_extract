@@ -1,0 +1,53 @@
+./submit.py --controlfile=CONTROL_CERA_mr --request=1
+mv ../work/mars_requests.csv ../work/CERA_mr.csv
+
+./submit.py --controlfile=CONTROL_CERA.public_mr --public=1 --request=1
+mv ../work/mars_requests.csv ../work/CERA.public_mr.csv
+   
+./submit.py --controlfile=CONTROL_CF_mr --request=1
+mv ../work/mars_requests.csv ../work/CF_mr.csv
+
+./submit.py --controlfile=CONTROL_CV_mr --request=1
+mv ../work/mars_requests.csv ../work/CV_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5.highres_mr --request=1
+mv ../work/mars_requests.csv ../work/EA5.highres_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5_mr --request=1
+mv ../work/mars_requests.csv ../work/EA5_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5.public_mr --public=1 --request=1
+mv ../work/mars_requests.csv ../work/EA5.public_mr.csv
+
+./submit.py --controlfile=CONTROL_EI_mr --request=1 
+mv ../work/mars_requests.csv ../work/EI_mr.csv
+
+./submit.py --controlfile=CONTROL_EI.public_mr --request=1 --public=1
+mv ../work/mars_requests.csv ../work/EI.public_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ELDA.FC.eta.ens.double_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ELDA.FC.eta.ens.double_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ENFO.CF_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ENFO.CF_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ENFO.PF_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ENFO.PF_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.4V.operational_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.4V.operational_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.FC.36hours_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.FC.36hours_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.FC.twiceaday_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.FC.twiceaday_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.global.025_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.global.025_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.highres.eta_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.highres.eta_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.highres.gauss_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.highres.gauss_mr.csv

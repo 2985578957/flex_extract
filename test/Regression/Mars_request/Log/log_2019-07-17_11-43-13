@@ -1,0 +1,7 @@
+Compare mars requests between version 7.0.4 and version 7.1 : 
+... CONTROL_EA5.highres_mr ... OK!
+... CONTROL_EA5.public_mr ... OK!
+... CONTROL_EA5_mr ... OK!
+... CONTROL_CERA.public_mr ... OK!
+... CONTROL_CERA_mr ... OK!
+... CONTROL_EI_mr ... OK!
