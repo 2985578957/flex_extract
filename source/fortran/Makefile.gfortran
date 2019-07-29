@@ -10,7 +10,7 @@
 .SUFFIXES: .o .c .c~ .f .f~ .F90 .f90 .f90~ .f95 .f95~ .F .F~ .y .y~ .l .l~ \
            .s .s~ .sh .sh~ .h .h~ .C .C~ .a
 
-OPT	= -g
+OPT	= -O3
 DEBUG	= -g
 LIB     =  $(ECCODES_LIB) $(EMOSLIB)   
 
