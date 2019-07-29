@@ -113,11 +113,3 @@ CWC 0
 WRF 0
 DOUBLEELDA 0 
 ADDPAR None
-
-#===============================================================================
-# FLEXPART SECTION:
-# Information where to find FLEXPART software and  
-# if flexpart binary should be prepared.
-#-------------------------------------------------------------------------------
-FLEXPARTDIR None
-GRIB2FLEXPART 0

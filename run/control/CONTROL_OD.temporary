@@ -1,0 +1,70 @@
+accmaxstep 12
+acctime 00/12
+acctype FC
+accuracy 24
+addpar None
+area 90.0/-179.9/0.0/180.0
+basetime None
+cds_api None
+controlfile CONTROL_OD.etadothigh
+cwc 1
+dataset None
+date_chunk 3
+debug 1
+destination annep@genericSftp
+doubleelda 0
+dpdeta 1
+dtime 6
+ec_api None
+ecfsdir ectmp:/km4a/econdemand/
+ecgid at
+ecstorage 0
+ectrans 0
+ecuid km4a
+end_date 20190105
+eta 1
+etadiff 0
+etapar 77
+expver 1
+format GRIB1
+gateway srvx8.img.univie.ac.at
+gauss 0
+gaussian 
+grib2flexpart 0
+grid 0.1/0.1
+inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+install_target None
+job_chunk 3
+job_template job.temp
+left -179.9
+level 137
+levelist 1/to/137
+logicals gauss omega omegadiff eta etadiff dpdeta cwc wrf grib2flexpart ecstorage ectrans debug oper request public purefc rrint doubleelda 
+lower 0.
+mailfail km4a 
+mailops km4a 
+makefile Makefile.gfortran
+marsclass OD
+maxstep 6
+number OFF
+omega 0
+omegadiff 0
+oper 0
+outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+prefix EN
+public 0
+purefc 0
+queue ecgate
+request 2
+resol 1279
+right 180.
+rrint 0
+smooth 0
+start_date 20190105
+step 00 06 00 06 
+stream OPER
+time 00 00 12 12 
+type AN FC AN FC 
+upper 90.
+wrf 0
+
