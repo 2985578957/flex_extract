@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #*******************************************************************************
 # @Author: Anne Fouilloux (University of Oslo)
@@ -845,8 +845,8 @@ class EcFlexpart(object):
 
             if area[1] > area[3]:
                 area[1] -= 360
-            maxl = round((area[3] - area[1]) / grid[1]) + 1
-            maxb = round((area[0] - area[2]) / grid[0]) + 1
+            maxl = int(round((area[3] - area[1]) / grid[1])) + 1
+            maxb = int(round((area[0] - area[2]) / grid[0])) + 1
 
             stream = namelist_template.generate(
                 maxl = str(maxl),
