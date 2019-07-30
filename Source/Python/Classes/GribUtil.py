@@ -12,31 +12,15 @@
 #        - changed some naming
 #
 # @License:
-#    (C) Copyright 2014-2018.
+#    (C) Copyright 2014-2019.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    SPDX-License-Identifier: CC-BY-4.0
 #
-# @Class Description:
-#    The GRIB API provides all necessary tools to work directly with the
-#    grib files. Nevertheless, the GRIB API tools are very basic and are in
-#    direct connection with the grib files. This class provides some higher
-#    functions which apply a set of GRIB API tools together in the respective
-#    context. So, the class initially contains a list of grib files (their
-#    names) and the using program then applies the methods directly on the
-#    class objects without having to think about how the actual GRIB API
-#    tools have to be arranged.
-#
-# @Class Content:
-#    - __init__
-#    - get_keys
-#    - set_keys
-#    - copy_dummy_msg
-#    - index
-#
-# @Class Attributes:
-#    - filenames
-#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
 
 # ------------------------------------------------------------------------------
@@ -52,6 +36,15 @@ import os
 class GribUtil(object):
     '''
     Class for GRIB utilities (new methods) based on GRIB API
+
+    The GRIB API provides all necessary tools to work directly with the
+    grib files. Nevertheless, the GRIB API tools are very basic and are in
+    direct connection with the grib files. This class provides some higher
+    functions which apply a set of GRIB API tools together in the respective
+    context. So, the class initially contains a list of grib files (their
+    names) and the using program then applies the methods directly on the
+    class objects without having to think about how the actual GRIB API
+    tools have to be arranged.
     '''
     # --------------------------------------------------------------------------
     # CLASS FUNCTIONS

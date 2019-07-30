@@ -41,6 +41,8 @@
 #    (C) Copyright 2014-2019.
 #    Anne Philipp, Leopold Haimberger
 #
+#    SPDX-License-Identifier: CC-BY-4.0
+#
 #    This work is licensed under the Creative Commons Attribution 4.0
 #    International License. To view a copy of this license, visit
 #    http://creativecommons.org/licenses/by/4.0/ or send a letter to
@@ -414,15 +416,23 @@ class EcFlexpart(object):
         # ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)
         # -----------------------------------------------------------------------
         if wrf:
-            self.params['OG__ML'][0] += '/Z/VO'
-            if '/D' not in self.params['OG__ML'][0]:
-                self.params['OG__ML'][0] += '/D'
+            # @WRF
+            # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+            #
+            # UNDER CONSTRUCTION !!!
+            #
 
-            wrf_sfc = ['SP','SKT','SST','CI','STL1','STL2', 'STL3','STL4',
-                       'SWVL1','SWVL2','SWVL3','SWVL4']
-            for par in wrf_sfc:
-                if par not in self.params['OG__SL'][0]:
-                    self.params['OG__SL'][0] += '/' + par
+            print('WRF VERSION IS UNDER CONSTRUCTION!') # dummy argument
+
+            #self.params['OG__ML'][0] += '/Z/VO'
+            #if '/D' not in self.params['OG__ML'][0]:
+            #    self.params['OG__ML'][0] += '/D'
+
+            #wrf_sfc = ['SP','SKT','SST','CI','STL1','STL2', 'STL3','STL4',
+            #           'SWVL1','SWVL2','SWVL3','SWVL4']
+            #for par in wrf_sfc:
+            #    if par not in self.params['OG__SL'][0]:
+            #        self.params['OG__SL'][0] += '/' + par
 
         return
 
@@ -1501,11 +1511,16 @@ class EcFlexpart(object):
         end_period = datetime.strptime(c.end_date + c.time[-1], '%Y%m%d%H')
         end_period = end_period + timedelta(hours=int(c.step[-1]))
 
-        if c.wrf:
-            table128 = init128(_config.PATH_GRIBTABLE)
-            wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
-                                   stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
-                                  table128)
+        # @WRF
+        # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+        #
+        # UNDER CONSTRUCTION !!!
+        #
+        #if c.wrf:
+        #    table128 = init128(_config.PATH_GRIBTABLE)
+        #    wrfpars = to_param_id('sp/mslp/skt/2t/10u/10v/2d/z/lsm/sst/ci/sd/\
+        #                           stl1/stl2/stl3/stl4/swvl1/swvl2/swvl3/swvl4',
+        #                          table128)
 
         # these numbers are indices for the temporary files "fort.xx"
         # which are used to seperate the grib fields to,
@@ -1584,11 +1599,16 @@ class EcFlexpart(object):
                 if timestamp < start_time or timestamp > end_time:
                     continue
 
-            if c.wrf:
-                if 'olddate' not in locals() or cdate != olddate:
-                    fwrf = open(os.path.join(c.outputdir,
-                                'WRF' + cdate + '.' + ctime + '.000.grb2'), 'w')
-                    olddate = cdate[:]
+            # @WRF
+            # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+            #
+            # UNDER CONSTRUCTION !!!
+            #
+            #if c.wrf:
+            #    if 'olddate' not in locals() or cdate != olddate:
+            #        fwrf = open(os.path.join(c.outputdir,
+            #                    'WRF' + cdate + '.' + ctime + '.000.grb2'), 'w')
+            #        olddate = cdate[:]
 #============================================================================================
             # savedfields remembers which fields were already used.
             savedfields = []
@@ -1626,11 +1646,16 @@ class EcFlexpart(object):
                         codes_set(gid, 'paramId', 201031)
                         codes_write(gid, fdict['22'])
                         scwc = None
-                elif c.wrf and paramId in [129, 138, 155] and \
-                      levtype == 'hybrid': # Z, VO, D
-                    # do not do anything right now
-                    # these are specific parameter for WRF
-                    pass
+                # @WRF
+                # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+                #
+                # UNDER CONSTRUCTION !!!
+                #
+                #elif c.wrf and paramId in [129, 138, 155] and \
+                #      levtype == 'hybrid': # Z, VO, D
+                #    # do not do anything right now
+                #    # these are specific parameter for WRF
+                #    pass
                 else:
                     if paramId not in savedfields:
                         # SD/MSL/TCC/10U/10V/2T/2D/Z/LSM/SDOR/CVL/CVH/SR
@@ -1639,18 +1664,22 @@ class EcFlexpart(object):
                         savedfields.append(paramId)
                     else:
                         print('duplicate ' + str(paramId) + ' not written')
-
-                try:
-                    if c.wrf:
-                        # model layer
-                        if levtype == 'hybrid' and \
-                           paramId in [129, 130, 131, 132, 133, 138, 155]:
-                            codes_write(gid, fwrf)
-                        # sfc layer
-                        elif paramId in wrfpars:
-                            codes_write(gid, fwrf)
-                except AttributeError:
-                    pass
+                # @WRF
+                # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+                #
+                # UNDER CONSTRUCTION !!!
+                #
+                #try:
+                #    if c.wrf:
+                #        # model layer
+                #        if levtype == 'hybrid' and \
+                #           paramId in [129, 130, 131, 132, 133, 138, 155]:
+                #            codes_write(gid, fwrf)
+                #        # sfc layer
+                #        elif paramId in wrfpars:
+                #            codes_write(gid, fwrf)
+                #except AttributeError:
+                #    pass
 
                 codes_release(gid)
                 gid = codes_new_from_index(iid)
@@ -1720,8 +1749,14 @@ class EcFlexpart(object):
                     shutil.copyfileobj(open(os.path.join(c.inputdir, 'fort.25'),
                                             'rb'), fout)
 # ============================================================================================
-        if c.wrf:
-            fwrf.close()
+
+        # @WRF
+        # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
+        #
+        # UNDER CONSTRUCTION !!!
+        #
+        #if c.wrf:
+        #    fwrf.close()
 
         codes_index_release(iid)
 
