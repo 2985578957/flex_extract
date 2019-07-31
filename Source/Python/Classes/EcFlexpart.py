@@ -1790,6 +1790,7 @@ class EcFlexpart(object):
 
         # get a list of all prepared output files with control forecast (CF)
         CF_filelist = UioFiles(path, prefix + '*.N000')
+        CF_filelist.files = sorted(CF_filelist.files)
 
         for cffile in CF_filelist.files:
             with open(cffile, 'rb') as f:
@@ -1803,7 +1804,6 @@ class EcFlexpart(object):
 
             filename = cffile.split('N000')[0]
             for i in range(1, maxnum + 1):
-
                 # read an ensemble member
                 g = open(filename + 'N{:0>3}'.format(i), 'rb')
                 # create file for newly calculated ensemble member
