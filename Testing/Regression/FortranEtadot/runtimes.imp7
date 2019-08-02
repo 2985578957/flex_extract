@@ -1,0 +1,16 @@
+949379e, 'reference', 'etadot_debug', 0m0.572s, 0m7.520s, 0m0.172s
+949379e, 'reference', 'etadot_fast', 0m0.550s, 0m6.740s, 0m0.236s
+949379e, 'reference', 'etadotall_debug', 0m0.729s, 0m7.280s, 0m0.168s
+949379e, 'reference', 'etadotall_fast', 0m0.675s, 0m6.568s, 0m0.148s
+949379e, 'reference', 'etadothigh_debug', 17m0.724s, 32m54.368s, 0m48.492s
+949379e, 'reference', 'etadothigh_fast', 15m50.120s, 26m22.308s, 0m42.076s
+949379e, 'reference', 'gauss_debug', 0m2.532s, 0m25.768s, 0m1.452s
+949379e, 'reference', 'gauss_fast', 0m1.996s, 0m16.732s, 0m0.900s
+949379e, 'reference', 'gaussall_debug', 0m7.884s, 1m21.248s, 0m1.852s
+949379e, 'reference', 'gaussall_fast', 0m5.914s, 0m42.856s, 0m2.356s
+949379e, 'reference', 'gausshigh_debug', 2m35.415s, 37m38.284s, 4m54.992s
+949379e, 'reference', 'gausshigh_fast', 2m10.102s, 23m22.540s, 5m51.612s
+949379e, 'reference', 'latlon_debug', 0m0.691s, 0m7.176s, 0m0.172s
+949379e, 'reference', 'latlon_fast', 0m0.673s, 0m7.032s, 0m0.152s
+949379e, 'reference', 'latlonall_debug', 0m0.777s, 0m6.772s, 0m0.620s
+949379e, 'reference', 'latlonall_fast', 0m0.687s, 0m7.064s, 0m0.196s
