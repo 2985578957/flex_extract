@@ -90,15 +90,11 @@ class GribUtil(object):
         from eccodes import (codes_new_from_file, codes_is_defined, codes_get,
                              codes_release)
 
-        fileid = open(self.filenames, 'r')
-
         return_list = []
 
-        while 1:
-            gid = codes_new_from_file(fileid)
+        with open(self.filenames, 'rb') as fileid:
 
-            if gid is None:
-                break
+            gid = codes_new_from_file(fileid)
 
             if len(wherekeynames) != len(wherekeyvalues):
                 raise Exception("Number of key values and key names must be \
@@ -122,13 +118,11 @@ class GribUtil(object):
 
             codes_release(gid)
 
-        fileid.close()
-
         return return_list
 
 
     def set_keys(self, fromfile, keynames, keyvalues, wherekeynames=[],
-                 wherekeyvalues=[], strict=False, filemode='w'):
+                 wherekeyvalues=[], strict=False, filemode='wb'):
         '''Opens the file to read the grib messages and then write
         the selected messages (with wherekeys) to a new output file.
         Also, the keyvalues of the passed list of keynames are set.
@@ -160,7 +154,7 @@ class GribUtil(object):
             meeting the where statement (True). Default is False.
 
         filemode : :obj:`string`, optional
-            Sets the mode for the output file. Default is "w".
+            Sets the mode for the output file. Default is "wb".
 
         Return
         ------
@@ -174,13 +168,9 @@ class GribUtil(object):
             raise Exception("Give a value for each keyname!")
 
         fout = open(self.filenames, filemode)
-        fin = open(fromfile)
 
-        while 1:
+        with open(fromfile, 'rb') as fin:
             gid = codes_grib_new_from_file(fin)
-
-            if gid is None:
-                break
 
             select = True
             i = 0
@@ -205,13 +195,12 @@ class GribUtil(object):
 
             codes_release(gid)
 
-        fin.close()
         fout.close()
 
         return
 
     def copy_dummy_msg(self, filename_in, selectWhere=True,
-                 keynames=[], keyvalues=[], filemode='w'):
+                 keynames=[], keyvalues=[], filemode='wb'):
         '''Add the content of another input grib file to the objects file but
         only messages corresponding to keys/values passed to the function.
         The selectWhere switch decides if to copy the keys equal to (True) or
@@ -234,7 +223,7 @@ class GribUtil(object):
             List of keyvalues. Default is an empty list.
 
         filemode : :obj:`string`, optional
-            Sets the mode for the output file. Default is "w".
+            Sets the mode for the output file. Default is "wb".
 
         Return
         ------
@@ -246,16 +235,17 @@ class GribUtil(object):
         if len(keynames) != len(keyvalues):
             raise Exception("Give a value for each keyname!")
 
-        fin = open(filename_in, 'rb')
+
         fout = open(self.filenames, filemode)
 
         fields = 0
 
-        while fields < 1:
-            gid = codes_grib_new_from_file(fin)
+        with open(filename_in, 'rb') as fin:
+            if fields >= 1:
+                fout.close()
+                return
 
-            if gid is None:
-                break
+            gid = codes_grib_new_from_file(fin)
 
             select = True
             i = 0
@@ -277,7 +267,6 @@ class GribUtil(object):
 
             codes_release(gid)
 
-        fin.close()
         fout.close()
 
         return

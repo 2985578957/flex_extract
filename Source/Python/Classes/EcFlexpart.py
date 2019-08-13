@@ -1093,9 +1093,9 @@ class EcFlexpart(object):
                                      t_dt.strftime('%Y%m%d%H') + numbersuffix)
 
             print("outputfile = " + fnout)
-            f_handle = open(fnout, 'w')
-            h_handle = open(hnout, 'w')
-            g_handle = open(gnout, 'w')
+            f_handle = open(fnout, 'wb')
+            h_handle = open(hnout, 'wb')
+            g_handle = open(gnout, 'wb')
 
             # read message for message and store relevant data fields, where
             # data keywords are stored in pars
@@ -1401,13 +1401,13 @@ class EcFlexpart(object):
 
             # write original time step to flux file as usual
             fluxfile = GribUtil(os.path.join(c.inputdir, fluxfilename))
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[142],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb, int(date.strftime('%Y%m%d')),
                                          date.hour*100, 0, lsp_new_np[inumb,:,it]],
                              )
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[143],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb,int(date.strftime('%Y%m%d')),
@@ -1415,13 +1415,13 @@ class EcFlexpart(object):
                              )
 
             # rr for first subgrid point is identified by step = 1
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[142],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb,int(date.strftime('%Y%m%d')),
                                          date.hour*100, '1', lsp_new_np[inumb,:,it+1]]
                               )
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[143],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb,int(date.strftime('%Y%m%d')),
@@ -1429,13 +1429,13 @@ class EcFlexpart(object):
                               )
 
             # rr for second subgrid point is identified by step = 2
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[142],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb,int(date.strftime('%Y%m%d')),
                                          date.hour*100, '2', lsp_new_np[inumb,:,it+2]]
                               )
-            fluxfile.set_keys(tmpfile, filemode='a', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
                               wherekeynames=['paramId'], wherekeyvalues=[143],
                               keynames=['perturbationNumber','date','time','stepRange','values'],
                               keyvalues=[inumb,int(date.strftime('%Y%m%d')),
@@ -1465,10 +1465,10 @@ class EcFlexpart(object):
         gribfile = GribUtil(os.path.join(inputdir,'rr_grib_dummy.grb'))
 
         gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                      keyvalues=[142], filemode='w')
+                      keyvalues=[142], filemode='wb')
 
         gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                      keyvalues=[143], filemode='a')
+                      keyvalues=[143], filemode='ab')
 
         return
 
@@ -1572,7 +1572,7 @@ class EcFlexpart(object):
             for k, f in fdict.items():
                 fortfile = os.path.join(c.inputdir, 'fort.' + k)
                 silent_remove(fortfile)
-                fdict[k] = open(fortfile, 'w')
+                fdict[k] = open(fortfile, 'wb')
 #============================================================================================
             # create correct timestamp from the three time informations
             cdate = str(codes_get(gid, 'date'))
@@ -1607,7 +1607,7 @@ class EcFlexpart(object):
             #if c.wrf:
             #    if 'olddate' not in locals() or cdate != olddate:
             #        fwrf = open(os.path.join(c.outputdir,
-            #                    'WRF' + cdate + '.' + ctime + '.000.grb2'), 'w')
+            #                    'WRF' + cdate + '.' + ctime + '.000.grb2'), 'wb')
             #        olddate = cdate[:]
 #============================================================================================
             # savedfields remembers which fields were already used.

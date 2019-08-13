@@ -762,7 +762,7 @@ def get_informations(filename):
 
     # --- open file ---
     print("Opening file for getting information data --- %s" % filename)
-    with open(filename) as f:
+    with open(filename, 'rb') as f:
         # load first message from file
         gid = codes_grib_new_from_file(f)
 

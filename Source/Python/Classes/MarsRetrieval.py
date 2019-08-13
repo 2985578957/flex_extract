@@ -487,7 +487,7 @@ class MarsRetrieval(object):
         for key in empty_keys:
             del attrs[key]
 
-        attrs['ppengine'] = 'emos'
+#        attrs['ppengine'] = 'emos'
 
         # MARS request via Python script
         if self.server:
@@ -519,7 +519,7 @@ class MarsRetrieval(object):
             for key, value in attrs.items():
                 request_str = request_str + ',' + key + '=' + str(value)
             request_str += ',target="' + target + '"'
-            p = subprocess.Popen(['mars', '-e'],
+            p = subprocess.Popen(['mars'], #'-e'],
                                  stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
