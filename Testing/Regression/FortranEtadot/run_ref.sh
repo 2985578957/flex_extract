@@ -5,7 +5,7 @@
 # Copyright Petra Seibert, 2019
 # SPDX-License-Identifier: MIT-0 
 
-export OMP_NUM_THREADS=4 
+export OMP_NUM_THREADS=4  # you may want to change this
 export OMP_PLACES=sockets
 testhome=`pwd`
 path1=../../../Source/Fortran/
@@ -20,6 +20,7 @@ rm -f log.run_ref failed
 rm -f log.run_ref
 
 if [ "$1" = omithigh ]; then # for fast testing, not for production
+                             # requires > 16 GB 
   inputs=`ls Inputs |  grep -v high`
 else
   inputs=`ls Inputs`
