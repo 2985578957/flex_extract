@@ -5,9 +5,21 @@
 # @Date: October, 4 2018
 #
 # @Description: 
+#    This script defines the available command-line parameters
+#    for running flex_extract and combines them for the execution  
+#    of the Python program. It also does some checks to 
+#    guarantee necessary parameters were set and consistent.
 #
-
-
+# @Licence:
+#    (C) Copyright 2014-2019.
+#
+#    SPDX-License-Identifier: CC-BY-4.0
+#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+#
 # -----------------------------------------------------------------
 # AVAILABLE COMMANDLINE ARGUMENTS TO SET
 # 
@@ -26,9 +38,9 @@ INPUTDIR=None
 OUTPUTDIR=None
 PP_ID=None
 JOB_TEMPLATE='job.temp' 
-CONTROLFILE='CONTROL_CERA' 
-DEBUG=1
-REQUEST=2
+CONTROLFILE='CONTROL_EA5' 
+DEBUG=0
+REQUEST=0
 PUBLIC=0
 
 # -----------------------------------------------------------------
