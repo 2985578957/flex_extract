@@ -160,7 +160,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for GribUtil</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#*******************************************************************************</span>
 <span class="c1"># @Author: Anne Fouilloux (University of Oslo)</span>
@@ -174,31 +174,15 @@
 <span class="c1">#        - changed some naming</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2018.</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
-<span class="c1">#    This software is licensed under the terms of the Apache Licence Version 2.0</span>
-<span class="c1">#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.</span>
+<span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
 <span class="c1">#</span>
-<span class="c1"># @Class Description:</span>
-<span class="c1">#    The GRIB API provides all necessary tools to work directly with the</span>
-<span class="c1">#    grib files. Nevertheless, the GRIB API tools are very basic and are in</span>
-<span class="c1">#    direct connection with the grib files. This class provides some higher</span>
-<span class="c1">#    functions which apply a set of GRIB API tools together in the respective</span>
-<span class="c1">#    context. So, the class initially contains a list of grib files (their</span>
-<span class="c1">#    names) and the using program then applies the methods directly on the</span>
-<span class="c1">#    class objects without having to think about how the actual GRIB API</span>
-<span class="c1">#    tools have to be arranged.</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Content:</span>
-<span class="c1">#    - __init__</span>
-<span class="c1">#    - get_keys</span>
-<span class="c1">#    - set_keys</span>
-<span class="c1">#    - copy_dummy_msg</span>
-<span class="c1">#    - index</span>
-<span class="c1">#</span>
-<span class="c1"># @Class Attributes:</span>
-<span class="c1">#    - filenames</span>
-<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -214,6 +198,15 @@
 <div class="viewcode-block" id="GribUtil"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil">[docs]</a><span class="k">class</span> <span class="nc">GribUtil</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Class for GRIB utilities (new methods) based on GRIB API</span>
+
+<span class="sd">    The GRIB API provides all necessary tools to work directly with the</span>
+<span class="sd">    grib files. Nevertheless, the GRIB API tools are very basic and are in</span>
+<span class="sd">    direct connection with the grib files. This class provides some higher</span>
+<span class="sd">    functions which apply a set of GRIB API tools together in the respective</span>
+<span class="sd">    context. So, the class initially contains a list of grib files (their</span>
+<span class="sd">    names) and the using program then applies the methods directly on the</span>
+<span class="sd">    class objects without having to think about how the actual GRIB API</span>
+<span class="sd">    tools have to be arranged.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># CLASS FUNCTIONS</span>
@@ -259,15 +252,11 @@
         <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_release</span><span class="p">)</span>
 
-        <span class="n">fileid</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-
         <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_new_from_file</span><span class="p">(</span><span class="n">fileid</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fileid</span><span class="p">:</span>
 
-            <span class="k">if</span> <span class="n">gid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">break</span>
+            <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_new_from_file</span><span class="p">(</span><span class="n">fileid</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wherekeynames</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wherekeyvalues</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Number of key values and key names must be </span><span class="se">\</span>
@@ -291,13 +280,11 @@
 
             <span class="n">codes_release</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
 
-        <span class="n">fileid</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
         <span class="k">return</span> <span class="n">return_list</span></div>
 
 
 <div class="viewcode-block" id="GribUtil.set_keys"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.set_keys">[docs]</a>    <span class="k">def</span> <span class="nf">set_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fromfile</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">keyvalues</span><span class="p">,</span> <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[],</span>
-                 <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">):</span>
+                 <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Opens the file to read the grib messages and then write</span>
 <span class="sd">        the selected messages (with wherekeys) to a new output file.</span>
 <span class="sd">        Also, the keyvalues of the passed list of keynames are set.</span>
@@ -329,7 +316,7 @@
 <span class="sd">            meeting the where statement (True). Default is False.</span>
 
 <span class="sd">        filemode : :obj:`string`, optional</span>
-<span class="sd">            Sets the mode for the output file. Default is &quot;w&quot;.</span>
+<span class="sd">            Sets the mode for the output file. Default is &quot;wb&quot;.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
@@ -343,13 +330,9 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Give a value for each keyname!&quot;</span><span class="p">)</span>
 
         <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="n">filemode</span><span class="p">)</span>
-        <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fromfile</span><span class="p">)</span>
 
-        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fromfile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
             <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">gid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">break</span>
 
             <span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -374,13 +357,12 @@
 
             <span class="n">codes_release</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
 
-        <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="k">return</span></div>
 
 <div class="viewcode-block" id="GribUtil.copy_dummy_msg"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.copy_dummy_msg">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dummy_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_in</span><span class="p">,</span> <span class="n">selectWhere</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">keynames</span><span class="o">=</span><span class="p">[],</span> <span class="n">keyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">):</span>
+                 <span class="n">keynames</span><span class="o">=</span><span class="p">[],</span> <span class="n">keyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Add the content of another input grib file to the objects file but</span>
 <span class="sd">        only messages corresponding to keys/values passed to the function.</span>
 <span class="sd">        The selectWhere switch decides if to copy the keys equal to (True) or</span>
@@ -403,7 +385,7 @@
 <span class="sd">            List of keyvalues. Default is an empty list.</span>
 
 <span class="sd">        filemode : :obj:`string`, optional</span>
-<span class="sd">            Sets the mode for the output file. Default is &quot;w&quot;.</span>
+<span class="sd">            Sets the mode for the output file. Default is &quot;wb&quot;.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
@@ -415,16 +397,17 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keynames</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Give a value for each keyname!&quot;</span><span class="p">)</span>
 
-        <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_in</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+
         <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filenames</span><span class="p">,</span> <span class="n">filemode</span><span class="p">)</span>
 
         <span class="n">fields</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="k">while</span> <span class="n">fields</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename_in</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fin</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fields</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span>
 
-            <span class="k">if</span> <span class="n">gid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">break</span>
+            <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
 
             <span class="n">select</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -446,7 +429,6 @@
 
             <span class="n">codes_release</span><span class="p">(</span><span class="n">gid</span><span class="p">)</span>
 
-        <span class="n">fin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="k">return</span></div>

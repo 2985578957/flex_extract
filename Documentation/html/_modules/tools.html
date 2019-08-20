@@ -160,7 +160,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for tools</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#*******************************************************************************</span>
 <span class="c1"># @Author: Anne Philipp (University of Vienna)</span>
@@ -187,6 +187,8 @@
 <span class="c1"># @License:</span>
 <span class="c1">#    (C) Copyright 2014-2019.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
+<span class="c1">#</span>
+<span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
 <span class="c1">#</span>
 <span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
 <span class="c1">#    International License. To view a copy of this license, visit</span>
@@ -922,7 +924,7 @@
 
     <span class="c1"># --- open file ---</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Opening file for getting information data --- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="c1"># load first message from file</span>
         <span class="n">gid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 

@@ -2215,9 +2215,17 @@ command line.</li>
 <dt id="GribUtil.GribUtil">
 <em class="property">class </em><code class="descclassname">GribUtil.</code><code class="descname">GribUtil</code><span class="sig-paren">(</span><em>filenames</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class for GRIB utilities (new methods) based on GRIB API</p>
+<p>The GRIB API provides all necessary tools to work directly with the
+grib files. Nevertheless, the GRIB API tools are very basic and are in
+direct connection with the grib files. This class provides some higher
+functions which apply a set of GRIB API tools together in the respective
+context. So, the class initially contains a list of grib files (their
+names) and the using program then applies the methods directly on the
+class objects without having to think about how the actual GRIB API
+tools have to be arranged.</p>
 <dl class="method">
 <dt id="GribUtil.GribUtil.copy_dummy_msg">
-<code class="descname">copy_dummy_msg</code><span class="sig-paren">(</span><em>filename_in</em>, <em>selectWhere=True</em>, <em>keynames=[]</em>, <em>keyvalues=[]</em>, <em>filemode='w'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.copy_dummy_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.copy_dummy_msg" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy_dummy_msg</code><span class="sig-paren">(</span><em>filename_in</em>, <em>selectWhere=True</em>, <em>keynames=[]</em>, <em>keyvalues=[]</em>, <em>filemode='wb'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.copy_dummy_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.copy_dummy_msg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the content of another input grib file to the objects file but
 only messages corresponding to keys/values passed to the function.
 The selectWhere switch decides if to copy the keys equal to (True) or
@@ -2233,7 +2241,7 @@ different to (False) the keynames/keyvalues list passed to the
 function. Default is True.</li>
 <li><strong>keynames</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – List of keynames. Default is an empty list.</li>
 <li><strong>keyvalues</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – List of keyvalues. Default is an empty list.</li>
-<li><strong>filemode</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – Sets the mode for the output file. Default is “w”.</li>
+<li><strong>filemode</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – Sets the mode for the output file. Default is “wb”.</li>
 </ul>
 </td>
 </tr>
@@ -2297,7 +2305,7 @@ Default is “my.idx”.</li>
 
 <dl class="method">
 <dt id="GribUtil.GribUtil.set_keys">
-<code class="descname">set_keys</code><span class="sig-paren">(</span><em>fromfile</em>, <em>keynames</em>, <em>keyvalues</em>, <em>wherekeynames=[]</em>, <em>wherekeyvalues=[]</em>, <em>strict=False</em>, <em>filemode='w'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.set_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.set_keys" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_keys</code><span class="sig-paren">(</span><em>fromfile</em>, <em>keynames</em>, <em>keyvalues</em>, <em>wherekeynames=[]</em>, <em>wherekeyvalues=[]</em>, <em>strict=False</em>, <em>filemode='wb'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.set_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.set_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the file to read the grib messages and then write
 the selected messages (with wherekeys) to a new output file.
 Also, the keyvalues of the passed list of keynames are set.</p>
@@ -2318,7 +2326,7 @@ Default value is an empty list.</li>
 <li><strong>strict</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">boolean</span></code>, optional) – Decides if everything from keynames and keyvalues
 is written out the grib file (False) or only those
 meeting the where statement (True). Default is False.</li>
-<li><strong>filemode</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – Sets the mode for the output file. Default is “w”.</li>
+<li><strong>filemode</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">string</span></code>, optional) – Sets the mode for the output file. Default is “wb”.</li>
 </ul>
 </td>
 </tr>

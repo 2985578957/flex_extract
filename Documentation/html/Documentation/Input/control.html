@@ -226,6 +226,126 @@ For each main dataset there is an example and additionally some variances in res
 in grouped sections with their default values. In <a class="reference internal" href="control_params.html"><span class="doc">The CONTROL parameters</span></a> you can find a more
 detailed description with additional hints, possible values and some useful information about
 the setting of these parameters.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">CONTROL.documentation</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">################################################################################</span>
+<span class="c1"># Comprehensive list of relevant CONTROL file parameters with</span>
+<span class="c1"># short descriptions and default values. </span>
+<span class="c1">#</span>
+<span class="c1"># For more details on how to select and define parameters </span>
+<span class="c1"># please see Table of CONTROLparameters. </span>
+<span class="c1">#</span>
+<span class="c1"># AUTHOR: Anne Philipp</span>
+<span class="c1"># DATE:   05. February 2019</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># USER SECTION:</span>
+<span class="c1"># User specific information for ECMWF server.</span>
+<span class="c1"># Information are needed for storage or data transfer to local gateway server.</span>
+<span class="c1"># (OPTIONAL: INFORMATION ARE KNOWN THROUGH EXTRA FILE AFTER INSTALLATION)</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+ECUID None
+ECGID None
+DESTINATION None
+GATEWAY None
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># GENERAL SECTION:</span>
+<span class="c1"># Specific storage, notification and data transfer settings.</span>
+<span class="c1"># Selection of ECMWF access interface and extra output options. </span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+DEBUG <span class="m">0</span>
+REQUEST <span class="m">0</span>
+PUBLIC <span class="m">0</span>
+OPER <span class="m">0</span>
+ECSTORAGE <span class="m">0</span>
+ECTRANS <span class="m">0</span>
+PREFIX <span class="s1">&#39;EN&#39;</span>
+ECFSDIR <span class="s1">&#39;ectmp:/${USER}/econdemand/&#39;</span>
+MAILFAIL <span class="o">[</span><span class="s1">&#39;${USER}&#39;</span><span class="o">]</span>
+MAILOPS <span class="o">[</span><span class="s1">&#39;${USER}&#39;</span><span class="o">]</span>
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># TIME SECTION:</span>
+<span class="c1"># Selection of time period and temporal resolution for extraction period.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+START_DATE 
+END_DATE
+DATE_CHUNK <span class="m">3</span>
+DTIME None
+BASETIME None
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># DATA SECTION:</span>
+<span class="c1"># General description of data set.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+CLASS None
+DATASET None
+STREAM None
+NUMBER <span class="s1">&#39;OFF&#39;</span>
+EXPVER <span class="s1">&#39;1&#39;</span>
+FORMAT <span class="s1">&#39;GRIB1&#39;</span>
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># DATA FIELDS SECTION:</span>
+<span class="c1"># Specific selection of field composition regarding type, analysis or forecast </span>
+<span class="c1"># time and the forecast time step.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+TYPE None
+TIME None
+STEP None
+MAXSTEP None
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># FLUX DATA FIELDS SECTION:</span>
+<span class="c1"># Specific selection of flux field composition regarding forecast field type</span>
+<span class="c1"># the forecast start times and the maximum forecast step per start time.</span>
+<span class="c1"># Specification of disaggregation method of precipitation data.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+ACCTYPE None
+ACCTIME None
+ACCMAXSTEP None
+RRINT <span class="m">0</span>
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># DOMAIN SECTION: </span>
+<span class="c1"># Definition of horizontal area, spatial resolution and vertical levels. </span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+GRID None
+RESOL None
+SMOOTH <span class="m">0</span>
+LEFT None
+LOWER None
+UPPER None
+RIGHT None
+LEVEL None
+LEVELIST None
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># VERTICAL WIND SECTION:</span>
+<span class="c1"># Selection of vertical wind calculation method.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+GAUSS <span class="m">0</span>
+ACCURACY <span class="m">24</span>
+OMEGA <span class="m">0</span>
+OMEGADIFF <span class="m">0</span>
+ETA <span class="m">0</span>
+ETADIFF <span class="m">0</span>
+DPDETA <span class="m">1</span>
+ETAPAR <span class="m">77</span>
+
+<span class="c1">#===============================================================================</span>
+<span class="c1"># ADDITIONAL DATA SECTION:</span>
+<span class="c1"># Specification of extra data fields to be extracted.</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+CWC <span class="m">0</span>
+WRF <span class="m">0</span>
+DOUBLEELDA <span class="m">0</span> 
+ADDPAR None
+</pre></div>
+</div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>

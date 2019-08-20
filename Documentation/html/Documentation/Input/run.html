@@ -477,6 +477,113 @@ the command line parameters and the so-called <code class="docutils literal notr
 </div>
 <div class="section" id="content-of-run-sh">
 <h2>Content of <code class="docutils literal notranslate"><span class="pre">run.sh</span></code><a class="headerlink" href="#content-of-run-sh" title="Permalink to this headline">¶</a></h2>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">run.sh</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#</span>
+<span class="c1"># @Author: Anne Philipp</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: October, 4 2018</span>
+<span class="c1">#</span>
+<span class="c1"># @Description: </span>
+<span class="c1">#</span>
+
+
+<span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1"># </span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETERS:</span>
+
+<span class="nv">QUEUE</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
+<span class="nv">START_DATE</span><span class="o">=</span>None
+<span class="nv">END_DATE</span><span class="o">=</span>None
+<span class="nv">DATE_CHUNK</span><span class="o">=</span>None
+<span class="nv">JOB_CHUNK</span><span class="o">=</span><span class="m">3</span>
+<span class="nv">BASETIME</span><span class="o">=</span>None
+<span class="nv">STEP</span><span class="o">=</span>None
+<span class="nv">LEVELIST</span><span class="o">=</span>None
+<span class="nv">AREA</span><span class="o">=</span>None
+<span class="nv">INPUTDIR</span><span class="o">=</span>None
+<span class="nv">OUTPUTDIR</span><span class="o">=</span>None
+<span class="nv">PP_ID</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.temp&#39;</span> 
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_OD.OPER.FC.gauss.global&#39;</span> 
+<span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">REQUEST</span><span class="o">=</span><span class="m">2</span>
+<span class="nv">PUBLIC</span><span class="o">=</span><span class="m">0</span>
+
+<span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1"># AFTER THIS LINE THE USER DOES NOT HAVE TO CHANGE ANYTHING !!!</span>
+<span class="c1">#</span>
+<span class="c1"># -----------------------------------------------------------------</span>
+
+<span class="c1"># PATH TO SUBMISSION SCRIPT</span>
+<span class="nv">pyscript</span><span class="o">=</span>../Source/Python/submit.py
+
+<span class="c1"># INITIALIZE EMPTY PARAMETERLIST</span>
+<span class="nv">parameterlist</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># CHECK FOR MORE PARAMETER </span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$START_DATE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --start_date=</span><span class="nv">$START_DATE</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$END_DATE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --end_date=</span><span class="nv">$END_DATE</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$DATE_CHUNK</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --date_chunk=</span><span class="nv">$DATE_CHUNK</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$JOB_CHUNK</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --job_chunk=</span><span class="nv">$JOB_CHUNK</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$BASETIME</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --basetime=</span><span class="nv">$BASETIME</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$STEP</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --step=</span><span class="nv">$STEP</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$LEVELIST</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --levelist=</span><span class="nv">$LEVELIST</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$AREA</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --area=</span><span class="nv">$AREA</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$INPUTDIR</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --inputdir=</span><span class="nv">$INPUTDIR</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$OUTPUTDIR</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --outputdir=</span><span class="nv">$OUTPUTDIR</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$PP_ID</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --ppid=</span><span class="nv">$PP_ID</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$JOB_TEMPLATE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --job_template=</span><span class="nv">$JOB_TEMPLATE</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$QUEUE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --queue=</span><span class="nv">$QUEUE</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$CONTROLFILE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --controlfile=</span><span class="nv">$CONTROLFILE</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$DEBUG</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --debug=</span><span class="nv">$DEBUG</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$REQUEST</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --request=</span><span class="nv">$REQUEST</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+<span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$PUBLIC</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --public=</span><span class="nv">$PUBLIC</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+
+<span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1"># CALL SCRIPT WITH DETERMINED COMMANDLINE ARGUMENTS</span>
+
+<span class="nv">$pyscript</span> <span class="nv">$parameterlist</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="usage-of-submit-py-optional">
 <span id="ref-install-script"></span><h2>Usage of <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> (optional)<a class="headerlink" href="#usage-of-submit-py-optional" title="Permalink to this headline">¶</a></h2>

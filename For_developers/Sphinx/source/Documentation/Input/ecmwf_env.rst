@@ -2,7 +2,7 @@
 ECMWF User Credential file ``ECMWF_ENV``
 ****************************************
 
-This file contains the user credentials for working on ECMWF servers and transfering files between the ECMWF servers and the local gateway server. It is located in the ``flex_extract_vX.X/run`` directory and will be created in the installation process for the application modes **remote** and **gateway**.
+This file contains the user credentials for working on ECMWF servers and transferring files between the ECMWF servers and the local gateway server. It is located in the ``flex_extract_vX.X/run`` directory and will be created in the installation process for the application modes **remote** and **gateway**.
 
 This file is based on the template ``ECMWF_ENV.template`` which is located in the ``templates`` directory.
 

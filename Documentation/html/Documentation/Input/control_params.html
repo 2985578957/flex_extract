@@ -421,19 +421,6 @@ Possible selections are:
 <td><p class="first last">For the ECMWF server it is enough to give ${USER} as input. On local system an actual email is prefered to operate correctly. </p>
 </td>
 </tr>
-<tr class="row-odd"><td><p class="first last">MAILFAIL</p>
-</td>
-<td><p class="first last">list of String [m1, m2, …]</p>
-</td>
-<td><p class="first last">any number of mail addresses, seperated by comma</p>
-</td>
-<td><p class="first last">[‘”${USER}”]</p>
-</td>
-<td><p class="first last">If there will be an error log on ECMWF servers, the log file will be sent to the list of emails stored in this parameter. The email addresses should be seperated by a comma.</p>
-</td>
-<td><p class="first last">For the ECMWF server it is enough to give ${USER} as input. On local system an actual email is prefered to operate correctly. </p>
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1091,20 +1078,7 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><p class="first last">WRF</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">Switch to retrieve additional parameters needed to run WRF (1) or not (0).</p>
-</td>
-<td><p class="first last">Up to now, this is still experimental and not completely tested.</p>
-</td>
-</tr>
-<tr class="row-odd"><td><p class="first last">CWC</p>
+<tr class="row-even"><td><p class="first last">CWC</p>
 </td>
 <td><p class="first last">Integer</p>
 </td>
@@ -1117,7 +1091,7 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 <td><p class="first last"></p>
 </td>
 </tr>
-<tr class="row-even"><td><p class="first last">DOUBLEELDA</p>
+<tr class="row-odd"><td><p class="first last">DOUBLEELDA</p>
 </td>
 <td><p class="first last">Integer</p>
 </td>
@@ -1130,7 +1104,7 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 <td><p class="first last">Each ensemble member is used to create a new synthesized ensemble member by subtracting 2 * ( current time step value - last time step value ) from the current time step value</p>
 </td>
 </tr>
-<tr class="row-odd"><td><p class="first last">ADDPAR</p>
+<tr class="row-even"><td><p class="first last">ADDPAR</p>
 </td>
 <td><p class="first last">String [p1/p2/../pn]</p>
 </td>

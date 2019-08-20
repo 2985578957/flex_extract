@@ -128,7 +128,7 @@ Welcome to ``flex_extract``'s user documentation!
    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 4
    :caption: Table of Contents:
 
    installation

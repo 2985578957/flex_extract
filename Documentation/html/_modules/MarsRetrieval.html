@@ -160,7 +160,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for MarsRetrieval</h1><div class="highlight"><pre>
-<span></span><span class="ch">#!/usr/bin/env python</span>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1">#*******************************************************************************</span>
 <span class="c1"># @Author: Anne Fouilloux (University of Oslo)</span>
@@ -183,6 +183,8 @@
 <span class="c1"># @License:</span>
 <span class="c1">#    (C) Copyright 2014-2019.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
+<span class="c1">#</span>
+<span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
 <span class="c1">#</span>
 <span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
 <span class="c1">#    International License. To view a copy of this license, visit</span>
@@ -647,7 +649,7 @@
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">empty_keys</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
 
-        <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;ppengine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;emos&#39;</span>
+<span class="c1">#        attrs[&#39;ppengine&#39;] = &#39;emos&#39;</span>
 
         <span class="c1"># MARS request via Python script</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
@@ -679,7 +681,7 @@
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">request_str</span> <span class="o">=</span> <span class="n">request_str</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
             <span class="n">request_str</span> <span class="o">+=</span> <span class="s1">&#39;,target=&quot;&#39;</span> <span class="o">+</span> <span class="n">target</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
-            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mars&#39;</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">],</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mars&#39;</span><span class="p">],</span> <span class="c1">#&#39;-e&#39;],</span>
                                  <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                  <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
                                  <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>

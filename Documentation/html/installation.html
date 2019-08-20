@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Quick Start" href="quick_start.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="index.html" /> 
+    <link rel="next" title="Remote mode installation" href="Installation/remote.html" />
+    <link rel="prev" title="Welcome to flex_extract’s user documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,30 +91,13 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#registration-at-ecmwf">Registration at ECMWF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#agree-on-licences-for-public-datasets">Agree on licences for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#environment-requirements">Environment requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#remote-mode">Remote mode</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#remote-environment-requirements">Remote environment requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#prepare-remote-environment">Prepare remote environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#remote-installation">Remote installation</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#gateway-mode">Gateway mode</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#gateway-environment-requirements">Gateway environment requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#prepare-gateway-environment">Prepare gateway environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#test-gateway-environment">Test gateway environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#gateway-installation">Gateway installation</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#local-mode">Local mode</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#local-environment-requirements">Local environment requirements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#prepare-local-environment">Prepare local environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#test-local-environment">Test local environment</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#local-installation">Local installation</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Installation/remote.html">Remote mode installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Installation/gateway.html">Gateway mode installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Installation/local.html">Local mode installation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#flex-extract-in-combination-with-flexpart"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> in combination with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code></a></li>
@@ -202,58 +185,98 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is a software package which contains a mix of Python and Shell scripts as well as a Fortran program. These components rely on a couple of third party libraries which need to be prepared first before starting the installation process. For now, the software is only tested for a Linux/Unix environment. Feel free to try it out on other platforms.</p>
-<p>Start with the decision of which <a class="reference external" href="Ecmwf/access">user group</a> you belong to and follow the instructions at <a class="reference internal" href="#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a> to get an account at ECMWF. Considering your user group and the method of applying <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> there appear to be 4 application modes:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> software package contains python and shell scripts as well as a Fortran program. These components rely on several libraries which need to be available before starting the installation process. Currently, the software is only tested for a GNU/Linux environment. Feel free to try it out on other platforms.</p>
+<p>At first, go to the <a class="reference external" href="Ecmwf/access.html">user group</a> section and decide which group you belong to and follow the instructions at <a class="reference internal" href="#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a> to obtain an account at ECMWF (if you don’t have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a>:</p>
 <ul class="simple">
-<li>Remote (for member state users only) <a class="reference internal" href="#ref-remote-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Gateway (for member state users only) <a class="reference internal" href="#ref-gateway-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Local member <a class="reference internal" href="#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Local public <a class="reference internal" href="#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
+<li>Remote (member-state users only) <a class="reference internal" href="Installation/remote.html#ref-remote-mode"><span class="std std-ref">[installation]</span></a></li>
+<li>Gateway (member-state users only) <a class="reference internal" href="Installation/gateway.html#ref-gateway-mode"><span class="std std-ref">[installation]</span></a></li>
+<li>Local, member-state user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
+<li>Local, public user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
 </ul>
-<p>More information can be found in <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a>.</p>
+<p>Please follow the link <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> to get a description of the modes.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you encounter any problems in the installation process, you can ask for <a class="reference internal" href="support.html"><span class="doc">Support</span></a>.</p>
 </div>
 <div class="section" id="registration-at-ecmwf">
 <span id="ref-registration"></span><h2>Registration at ECMWF<a class="headerlink" href="#registration-at-ecmwf" title="Permalink to this headline">¶</a></h2>
-<p>Decide which user group you belong to and follow the instructions for registration:</p>
-<dl class="docutils">
-<dt><strong>Member state user</strong>:</dt>
-<dd>To get a member-state user account, users have to be a resident of a <a class="reference external" href="https://www.ecmwf.int/en/about/who-we-are/member-states">member state</a>. In that case, you can contact your <a class="reference external" href="https://www.ecmwf.int/en/about/contact-us/computing-representatives">Computing Representative</a> for granting access. If you would like to use the local application mode to retrieve <strong>ERA5</strong> data you’d have to register at the <a class="reference external" href="https://cds.climate.copernicus.eu/user/register">Copernicus Climate Data Store</a> also.</dd>
-<dt><strong>Public user</strong>:</dt>
-<dd><p class="first">To be able to download public datasets with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> such as <strong>ERA-Interim</strong> and <strong>CERA-20C</strong> (<strong>ERA5</strong> is not supported via ECMWF Web API anymore), the public user has to create an account at ECMWF.
-Use the registration at the ECMWF website by filling out this <cite>registration form</cite>.</p>
-<div class="last admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In the future retrievement of <em>ERA5</em> will be possible via the CDS API for public users also. Then a registration at the <a class="reference external" href="https://cds.climate.copernicus.eu/user/register">Copernicus Climate Data Store</a> is needed in addition.</p>
+<p>The registration depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and in case of the local mode also on the data set you’d like to retrieve. The following table gives an overview where you need to register.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="15%" />
+<col width="16%" />
+<col width="24%" />
+<col width="23%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td rowspan="2">Data sets</td>
+<td colspan="3">Member-state user</td>
+<td>Public user</td>
+</tr>
+<tr class="row-even"><td>Remote</td>
+<td>Gateway</td>
+<td>Local</td>
+<td>Local</td>
+</tr>
+<tr class="row-odd"><td>Operational</td>
+<td>1</td>
+<td>1</td>
+<td>1,2</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>ERA-Interim</td>
+<td>1</td>
+<td>1</td>
+<td>1,2</td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td>CERA-20C</td>
+<td>1</td>
+<td>1</td>
+<td>1,2</td>
+<td>2</td>
+</tr>
+<tr class="row-even"><td>ERA5</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Registration options:</p>
+<blockquote>
+<div><p>1.)  Access through a member-state user account granted by the <a class="reference external" href="https://www.ecmwf.int/en/about/contact-us/computing-representatives">Computing Representative</a>. The credentials have to be provided during installation.</p>
+<p>2.)  Access through the ECMWF Web API. Need to sign in at <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a> and configure the ECMWF key as described. Member-state users can sign in with their credentials from the <a class="reference external" href="https://www.ecmwf.int/en/about/contact-us/computing-representatives">Computing Representative</a> and public users have to fill out the <a class="reference external" href="https://apps.ecmwf.int/registration/">registration form</a> to get an account.</p>
+<p>3.) Access through the <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a>. Extra registration for member-state users is required at <a class="reference external" href="https://cds.climate.copernicus.eu/user/register">Copernicus Climate Data Store</a> including the configurations of the CDS key as described. This mode is currently not available for public users. See the note at <a class="reference external" href="Ecmwf/access.html">user group</a> for information.</p>
+</div></blockquote>
 </div>
-</dd>
-</dl>
-</div>
-<div class="section" id="agree-on-licences-for-public-datasets">
-<span id="ref-licence"></span><h2>Agree on licences for public datasets<a class="headerlink" href="#agree-on-licences-for-public-datasets" title="Permalink to this headline">¶</a></h2>
-<p>Each public dataset which is intended to be downloaded by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has its own licence which has to be accepted, regardless of the user group.</p>
+<div class="section" id="licence-agreement-for-public-datasets">
+<span id="ref-licence"></span><h2>Licence agreement for public datasets<a class="headerlink" href="#licence-agreement-for-public-datasets" title="Permalink to this headline">¶</a></h2>
+<p>Each ECMWF public dataset has its own licence which has to be accepted, regardless of the user group.</p>
 <p>For the <em>ERA-Interim</em> and <em>CERA-20C</em> datasets this can be done at the ECMWF website <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/Available+ECMWF+Public+Datasets">Available ECMWF Public Datasets</a>. Log in and follow the licence links on the right side for each dataset and accept it.</p>
-<p>For the <em>ERA5</em> dataset this has to be done at the <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset">Climate Data Store (CDS) website</a>. Log in with your credentials and then select on the left panel the product type “Reanalysis” for finding <em>ERA5</em> datasets. Then follow the link of a title with <em>ERA5</em> (anyone) to the full dataset record, click on tab “Download data” and scroll down. There is a section “Terms of use” where you have to click the <span class="underline">Accept terms</span> button.</p>
+<p>For the <em>ERA5</em> dataset this has to be done at the <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset">Climate Data Store (CDS) website</a>. Log in and select, on the left panel, product type “Reanalysis” for finding <em>ERA5</em> datasets. Then follow any link with <em>ERA5</em> to the full dataset record, click on tab “Download data” and scroll down. There is a section “Terms of use” where you have to click the <span class="underline">Accept terms</span> button.</p>
 </div>
 <div class="section" id="download-flex-extract">
 <span id="ref-download"></span><h2>Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code><a class="headerlink" href="#download-flex-extract" title="Permalink to this headline">¶</a></h2>
-<p>There are 2 options to download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>
+<p>There are two options to download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>
 <dl class="docutils">
 <dt>tar ball</dt>
-<dd><p class="first">You can download the latest prepared release tar ball from the <a class="reference external" href="https://www.flexpart.eu/downloads">download section</a>
-of our <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> community website and then untar the file. Substitute
-the <strong>&lt;ID&gt;</strong> in the <code class="docutils literal notranslate"><span class="pre">wget</span></code> command with the ID-number of the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>
-release tar ball in the list of downloads at the community website.</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>wget https://www.flexpart.eu/downloads/&lt;ID&gt;
-tar -xvf &lt;flex_extract_vX.X.tar&gt;
+<dd><p class="first">You can download a tar ball with the latest release from the <a class="reference external" href="https://www.flexpart.eu/wiki/FpInputMetEcmwf">flex_extract page</a> from our <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> community website and then untar the file.</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xvf &lt;flex_extract_vX.X.tar&gt;
 </pre></div>
 </div>
 </dd>
 <dt>git repo</dt>
-<dd><p class="first">Or you can clone the current release version from our git repository master branch.</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone https://www.flexpart.eu/gitmob/flexpart
+<dd><p class="first">Alternatively, if you have <code class="docutils literal notranslate"><span class="pre">git</span></code> installed on your machine, and if you are interested to keep the code in a version control system, you may clone the latest version from our git repository master branch.</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone --single-branch --branch master https://www.flexpart.eu/gitmob/flexpart
 </pre></div>
 </div>
 </dd>
@@ -261,606 +284,24 @@ tar -xvf &lt;flex_extract_vX.X.tar&gt;
 </div>
 <div class="section" id="environment-requirements">
 <span id="ref-requirements"></span><h2>Environment requirements<a class="headerlink" href="#environment-requirements" title="Permalink to this headline">¶</a></h2>
-<p>This is a list of the general environment requirements for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
-What is required exactly for each application mode will be described in the specifc installation section.</p>
-<p>To run the python part of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> a <a class="reference external" href="https://docs.python.org/3/">Python 3</a> environment is needed.
-We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with a normal Linux Python package distribution and Anaconda Python.
-Except for <a class="reference external" href="https://www.python.org/downloads/">Python3</a> all are python packages which can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
-<ul class="simple">
-<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a> or <a class="reference external" href="https://www.anaconda.com/distribution/#download-section">Anaconda Python3</a></li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
-<li><a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ecmwf-api-client</a> (Web Interface to ECMWF servers for datasets except ERA5)</li>
-<li><a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> (Web Interface to <a class="reference external" href="https://climate.copernicus.eu/">C3S</a> servers for ERA5)</li>
-<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
-<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
-</ul>
-<p>For the Fortran part of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> we need the following distribution packages:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
-<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
-</ul>
+<p>The software required for running <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and therefore is described in the respective specific installation sections.</p>
+<p>Generally speaking, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> requires <a class="reference external" href="https://docs.python.org/3/">Python 3</a> and Fortran together with certain modules / libraries.
+We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the python3 package from the the GNU/Linux distribution and Anaconda Python. The required python3 modules should prefarably be installed as distribution packages, or alternatively using Python’s own package manager <code class="docutils literal notranslate"><span class="pre">pip</span></code> (this may mess up some aspects of your python installation, especially if you use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as root. Think about using virtual environments.).</p>
 </div>
 <div class="section" id="installation-of-flex-extract">
 <span id="ref-install-fe"></span><h2>Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code><a class="headerlink" href="#installation-of-flex-extract" title="Permalink to this headline">¶</a></h2>
-<p>The actual installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> will be done by executing a <cite>Shell</cite> script called <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.
-It defines some parameters and calls a Python script by giving the parameters as command line arguments.
-More information on the script and its parameters can be found at <a class="reference internal" href="Documentation/Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a>.</p>
+<p>The actual installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by executing a shell script called <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.
+It defines some parameters and calls a Python script passing the parameters as command line arguments. For details, see <a class="reference internal" href="Documentation/Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a>.</p>
 <p>For each application mode installation section we describe the requirements for the explicit
 environment and how it is installed, test if it works and how the actual <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>
 installation has to be done. At the users local side not all software has to be present for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
-<div class="section" id="remote-mode">
-<span id="ref-remote-mode"></span><h3>Remote mode<a class="headerlink" href="#remote-mode" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="remote-environment-requirements">
-<span id="ref-req-remote"></span><h4>Remote environment requirements<a class="headerlink" href="#remote-environment-requirements" title="Permalink to this headline">¶</a></h4>
-<p>The environment for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> on ECMWF servers has to provide these
-software packages and libraries:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="61%" />
-<col width="39%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Python part</td>
-<td>Fortran part</td>
-</tr>
-<tr class="row-even"><td><ul class="first last simple">
-<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a></li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
-<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
-<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
-</ul>
-</td>
-<td><ul class="first last simple">
-<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
-<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="prepare-remote-environment">
-<span id="ref-prep-remote"></span><h4>Prepare remote environment<a class="headerlink" href="#prepare-remote-environment" title="Permalink to this headline">¶</a></h4>
-<p>The environment on the ECMWF server (such as <em>ecgate</em> or <em>cca</em>) is already
-prepared. ECMWF server provide all libraries via a module system which is
-going to be selected by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> automatically.</p>
-</div>
-<div class="section" id="remote-installation">
-<span id="ref-install-remote"></span><h4>Remote installation<a class="headerlink" href="#remote-installation" title="Permalink to this headline">¶</a></h4>
-<p>First, log in on one of the ECMWF Linux server, such as <em>ecgate</em> or <em>cca/ccb</em>.
-Substitute <em>&lt;ecuid&gt;</em> with your ECMWF user name:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh -X &lt;ecuid&gt;@ecaccess.ecmwf.int
-</pre></div>
-</div>
-<p>This will lead to the following output on the command line, asking for your
-password:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Authorized access only.
-
-***************************************************************
-   For further information, read the ECaccess documentation at:
-
-   https://software.ecmwf.int/wiki/display/ECAC/ECaccess+Home
-
-   You can also use ECaccess to load &amp; download files from your
-   EChome, ECscratch or ECfs directories using the ECaccess FTP
-   server:
-
-   ftp://uid@ecaccess.ecmwf.int/
-
-   Please note you must use your UID and ActivID code to login!
-***************************************************************
-
-&lt;ecuid&gt;@131.130.157.5&#39;s password: ***
-Select hostname (ecgate, cca, ccb) [ecgate]: ecgate
-
-[&lt;ecuid&gt;@ecgb11 ~]$
-</pre></div>
-</div>
-<p>Then, copy the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> tar ball (from section <a class="reference internal" href="#ref-download"><span class="std std-ref">Download flex_extract</span></a>)
-to the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory of the ECMWF Linux server via <code class="docutils literal notranslate"><span class="pre">scp</span></code>.
-Substitute the <em>&lt;localuser&gt;</em> and <em>&lt;server.edu&gt;</em> placeholders with your credentials.
-Untar the file and change into the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp &lt;localuser&gt;@&lt;server.edu&gt;:/path/to/tarfile/flex_extract_vX.X.tar.gz  <span class="nv">$HOME</span>/
-<span class="nb">cd</span> <span class="nv">$HOME</span>
-tar xvf flex_extract_vX.X.tar.gz
-<span class="nb">cd</span> flex_extract_vX.X
-</pre></div>
-</div>
-<p>On these ECMWF servers, it is not necessary to prepare the environment or the
-<code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for the Fortran program (<code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>) as described above.
-All third party libraries are available from a module system. The <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
-is optimized for ECMWF servers and the compilation
-script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code>, which will be submitted by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> to the
-batch job queue at ECMWF, does load all relevant modules from the ECMWF’s module system.</p>
-<p>So there is just the need to execute the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script from the
-<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory for installation.
-Before executing it, it is necessary to adapt some parameters from <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
-described in <a class="reference internal" href="Documentation/Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a>.</p>
-<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your editor and adapt the values:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Take this for target = <strong>ectrans</strong></td>
-<td>Take this for target = <strong>cca</strong></td>
-</tr>
-<tr class="row-even"><td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
-<span class="c1"># -----------------------------------------</span>
-<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
-<span class="c1">#</span>
-<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
-<span class="c1">#</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.gfortran&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span>None
-<span class="nv">DESTINATION</span><span class="o">=</span>None
-<span class="nv">INSTALLDIR</span><span class="o">=</span>None
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
-<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
-...
-</pre></div>
-</div>
-</td>
-<td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
-<span class="c1"># -----------------------------------------</span>
-<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
-<span class="c1">#</span>
-<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
-<span class="c1">#</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;cca&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.CRAY&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span>None
-<span class="nv">DESTINATION</span><span class="o">=</span>None
-<span class="nv">INSTALLDIR</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
-<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
-...
-</pre></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<p><span class="underline">Please substitute the values of ECUID and ECGID
-with your own credentials and settings.</span></p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If a local gateway server is available the transfer of files could be done
-via the <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. Therefore a valid <em>GATEWAY</em> and <em>DESTINATION</em>
-have to be present and should be set in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file.</p>
-</div>
-<p>Afterwards, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python3
-./setup.sh
-</pre></div>
-</div>
-<p>to start the installation. You should see the following output at the command line.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
-Create tarball ...
-Job compilation script has been submitted to ecgate <span class="k">for</span> installation in <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_vX.X
-You should get an email with subject <span class="s2">&quot;flexcompile&quot;</span> within the next few minutes!
-</pre></div>
-</div>
-<p>The email content should look like this with a “SUCCESS” statement in the last line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g rwGRIB2.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g posnam.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g preconvert.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -g -O3 -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3
--rwxr-x---. <span class="m">1</span> USER at <span class="m">353134</span> May <span class="m">23</span> <span class="m">12</span>:27 CONVERT2
-SUCCESS!
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="gateway-mode">
-<span id="ref-gateway-mode"></span><h3>Gateway mode<a class="headerlink" href="#gateway-mode" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="gateway-environment-requirements">
-<span id="ref-req-gateway"></span><h4>Gateway environment requirements<a class="headerlink" href="#gateway-environment-requirements" title="Permalink to this headline">¶</a></h4>
-<p>The environment on your local system has to provide these software packages
-and libraries, since <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> does only prepare the job script and send
-it to the ECMWF servers:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a> or <a class="reference external" href="https://www.anaconda.com/distribution/#download-section">Anaconda Python3</a></li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
-<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
-</ul>
-</div>
-<div class="section" id="prepare-gateway-environment">
-<span id="ref-prep-gateway"></span><h4>Prepare gateway environment<a class="headerlink" href="#prepare-gateway-environment" title="Permalink to this headline">¶</a></h4>
-<p>The easiest way to install all required packages is to use the package management system of your Linux distribution. To do so, it is necessary to use a user with admin rights.
-The installation was tested on a <em>GNU/Linux Debian buster</em> and an <em>Ubuntu 18.04 Bionic Beaver</em> system.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># On a Linux Debian or Ubuntu system do</span>
-<span class="c1"># (if not already available):</span>
-apt-get install python3
-apt-get install pip
-apt-get install genshi
-apt-get install numpy
-</pre></div>
-</div>
-</div>
-<div class="section" id="test-gateway-environment">
-<span id="ref-test-gateway"></span><h4>Test gateway environment<a class="headerlink" href="#test-gateway-environment" title="Permalink to this headline">¶</a></h4>
-<p>Check the availability of the python packages by typing <code class="docutils literal notranslate"><span class="pre">python3</span></code> in
-a terminal window and run the <code class="docutils literal notranslate"><span class="pre">import</span></code> commands in the python shell.
-If there are no error messages, you succeeded in setting up the environment.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check in python3 console</span>
-<span class="kn">import</span> <span class="nn">genshi</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="gateway-installation">
-<span id="ref-install-gateway"></span><h4>Gateway installation<a class="headerlink" href="#gateway-installation" title="Permalink to this headline">¶</a></h4>
-<p>In this mode, access to the ECMWF computing and archiving facilities is enabled through an ECaccess gateway server on a local member state server. The ECaccess framework is necessary to interactively submit jobs to the ECMWF batch system and to transfer files between ECMWF and local gateway server.</p>
-<p>Please see <a class="reference external" href="https://confluence.ecmwf.int/display/ECAC/ECaccess+Home">ECMWF’s instructions on gateway server</a> to establish the gateway server if not already in place.
-Additionally, to be able to use the Ecaccess file transfer service <strong>ectrans</strong> please also create an association.
-The easiest way is to visit the ECaccess Member State Gateway website (e.g. msgatway.ecmwf.int) and follow the instructions in the short <a class="reference external" href="https://confluence.ecmwf.int/download/attachments/45759146/ECaccess.pdf">ECaccess Presentation</a> (page 17 ff.). Additional documentation can be found on the <a class="reference external" href="https://confluence.ecmwf.int/display/ECAC/Unattended+file+transfer+-+ectrans">ECMWF ectrans site</a>.</p>
-<p>After everything is set up you have to create an <em>ecaccess certificate</em> to be able to send and receive files from and to the ECMWF server. You can do this by using the <code class="docutils literal notranslate"><span class="pre">ecaccess-certificate-create</span></code> command on the gateway server. You will be prompted for your ECMWF member state user name and a password (which will be usually generated by a Token). This certificate has to be re-newed periodically (every 7 days).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ecaccess-certificate-create
-Please enter your user-id: example_username
-Your passcode: ***
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> will be run on an ECMWF server which makes the setup the same as for the <strong>remote mode</strong>. In the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script <a class="reference external" href="Documentation/Input/setup.html">[ref]</a>, select the <code class="docutils literal notranslate"><span class="pre">Makefile.gfortran</span></code> for the <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> Fortran program and the ECMWF server (<em>target</em>) you would like to use.
-The job script, send to the job queue via the ECaccess software, selects again automatically the correct libraries from the module system. For enableing the file transfer you have to set the <em>ECUID</em>, <em>ECGID</em>, <em>GATEWAY</em> and <em>DESTINATION</em> parameter values.</p>
-<div class="literal-block-wrapper docutils container" id="setup-sh">
-<div class="code-block-caption"><span class="caption-text">‘Example settings for a gateway installation.’</span><a class="headerlink" href="#setup-sh" title="Permalink to this code">¶</a></div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># -----------------------------------------------------------------</span>
-<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
-<span class="c1">#</span>
-<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
-<span class="c1">#</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.gfortran&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;server.example.edu&#39;</span>
-<span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;example@genericSftp&#39;</span>
-<span class="nv">INSTALLDIR</span><span class="o">=</span>None
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
-<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
-</pre></div>
-</div>
-</div>
-<p>Afterwards, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup.sh
-</pre></div>
-</div>
-<p>to start the installation. You should see the following output at the command line.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
-Create tarball ...
-Job compilation script has been submitted to ecgate <span class="k">for</span> installation in <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_vX.X
-You should get an email with subject <span class="s2">&quot;flexcompile&quot;</span> within the next few minutes!
-</pre></div>
-</div>
-<p>The email content should look like this with a “SUCCESS” statement in the last line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g rwGRIB2.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g posnam.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g preconvert.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -g -O3 -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3
--rwxr-x---. <span class="m">1</span> USER at <span class="m">353134</span> May <span class="m">23</span> <span class="m">12</span>:27 CONVERT2
-SUCCESS!
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="local-mode">
-<span id="ref-local-mode"></span><h3>Local mode<a class="headerlink" href="#local-mode" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="local-environment-requirements">
-<span id="ref-req-local"></span><h4>Local environment requirements<a class="headerlink" href="#local-environment-requirements" title="Permalink to this headline">¶</a></h4>
-<p>For the local access modes <strong>member</strong> and <strong>public</strong> there is no difference in
-the installation process.</p>
-<p>The environment on your local system has to provide these software packages
-and libraries, since all extraction and preparation is done at the local system:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="74%" />
-<col width="26%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Python part</td>
-<td>Fortran part</td>
-</tr>
-<tr class="row-even"><td><ul class="first last simple">
-<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a></li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
-<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
-<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
-<li><a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ecmwf-api-client</a> (everything except ERA5)</li>
-<li><a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> (just for ERA5)</li>
-</ul>
-</td>
-<td><ul class="first last simple">
-<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
-<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="prepare-local-environment">
-<span id="ref-prep-local"></span><h4>Prepare local environment<a class="headerlink" href="#prepare-local-environment" title="Permalink to this headline">¶</a></h4>
-<p>The easiest way to install all required packages is to use the package management system of your Linux distribution. To do so, it is necessary to use a user with admin rights.
-The installation was tested on a <em>Debian GNU/Linux buster/sid</em> and an <em>Ubuntu 18.04 Bionic Beaver</em> system.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># On a Linux Debian or Ubuntu system do</span>
-<span class="c1"># (if not already available):</span>
-apt-get install python3 <span class="o">(</span>usually available on normal Linux systems<span class="o">)</span>
-apt-get install pip
-apt-get install gfortran
-apt-get install fftw3-dev
-apt-get install libeccodes-dev
-apt-get install libemos-dev
-apt-get install python3-eccodes
-apt-get install genshi
-apt-get install numpy
-pip install cdsapi
-pip install ecmwf-api-client
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>In case you would like to use Anaconda Python we recommend you follow the installation instructions of
-<a class="reference external" href="https://docs.anaconda.com/anaconda/install/linux/">Anaconda Python Installation for Linux</a> and then install the
-<code class="docutils literal notranslate"><span class="pre">eccodes</span></code> package from <code class="docutils literal notranslate"><span class="pre">conda</span></code> with:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install conda-forge::python-eccodes
-</pre></div>
-</div>
-</div>
-<p>The CDS API (cdsapi) and the ECMWF Web API (ecmwf-api-client) have both to be installed since ERA5 can only be retrieved with the <code class="docutils literal notranslate"><span class="pre">CDS</span> <span class="pre">API</span></code> and all other datasets with the <code class="docutils literal notranslate"><span class="pre">ECMWF</span> <span class="pre">Web</span> <span class="pre">API</span></code>.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Since <strong>public users</strong> currently don’t have access to the full <em>ERA5</em> dataset they can skip the installation of the <code class="docutils literal notranslate"><span class="pre">CDS</span> <span class="pre">API</span></code>.</p>
-</div>
-<p>Both user groups have to provide key’s with their credentials for the Web API’s in their home directory. Therefore, follow these instructions:</p>
-<dl class="docutils">
-<dt>ECMWF Web API:</dt>
-<dd>Go to <a class="reference external" href="https://confluence.ecmwf.int//display/WEBAPI/Access+MARS">MARS access</a> website and log in with your credentials. Afterwards, on this site in section “Install ECMWF KEY” the key for the ECMWF Web API should be listed. Please follow the instructions in this section under point 1 (save the key in a file <cite>.ecmwfapirc</cite> in your home directory).</dd>
-<dt>CDS API:</dt>
-<dd>Go to ‘CDS API registration’_ and register there too. Log in at the <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> website and follow the instructions at section “Install the CDS API key” to save your credentials in a <cite>.cdsapirc</cite> file.</dd>
-</dl>
-</div>
-<div class="section" id="test-local-environment">
-<span id="ref-test-local"></span><h4>Test local environment<a class="headerlink" href="#test-local-environment" title="Permalink to this headline">¶</a></h4>
-<p>Check the availability of the system packages with <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>, depending on your system. For example:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ dpkg -s libeccodes-dev <span class="p">|</span>  grep Status
-<span class="c1"># or</span>
-$ rpm -q libeccodes-dev
-</pre></div>
-</div>
-<p>Afterwards, check the availability of the python packages by typing <code class="docutils literal notranslate"><span class="pre">python3</span></code> in
-a terminal window and run the <code class="docutils literal notranslate"><span class="pre">import</span></code> commands in the python shell. If there are no error messages, you succeeded in setting up the environment.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check in python3 console</span>
-<span class="kn">import</span> <span class="nn">eccodes</span>
-<span class="kn">import</span> <span class="nn">genshi</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">cdsapi</span>
-<span class="kn">import</span> <span class="nn">ecmwfapi</span>
-</pre></div>
-</div>
-<div class="section" id="test-the-web-api-s">
-<h5>Test the Web API’s<a class="headerlink" href="#test-the-web-api-s" title="Permalink to this headline">¶</a></h5>
-<p>You can start very simple test retrievals for both Web API’s to be sure that everything works. This is recommended to minimize the range of possible errors using <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> later on.</p>
-</div>
-<div class="section" id="ecmwf-web-api">
-<h5>ECMWF Web API<a class="headerlink" href="#ecmwf-web-api" title="Permalink to this headline">¶</a></h5>
-<table border="1" class="docutils">
-<colgroup>
-<col width="50%" />
-<col width="50%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Please use this piece of python code for <strong>Member user</strong>:</td>
-<td>Please use this piece of python code for <strong>Public user</strong>:</td>
-</tr>
-<tr class="row-even"><td><div class="first last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecmwfapi</span> <span class="kn">import</span> <span class="n">ECMWFService</span>
-
-<span class="n">server</span> <span class="o">=</span> <span class="n">ECMWFService</span><span class="p">(</span><span class="s1">&#39;mars&#39;</span><span class="p">)</span>
-
-<span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span>
-    <span class="s1">&#39;stream&#39;</span>    <span class="p">:</span> <span class="s2">&quot;oper&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;levtype&#39;</span>   <span class="p">:</span> <span class="s2">&quot;sfc&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;param&#39;</span>     <span class="p">:</span> <span class="s2">&quot;165.128/166.128/167.128&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;dataset&#39;</span>   <span class="p">:</span> <span class="s2">&quot;interim&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;step&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;grid&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0.75/0.75&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="s2">&quot;00/06/12/18&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;date&#39;</span>      <span class="p">:</span> <span class="s2">&quot;2014-07-01/to/2014-07-31&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span>      <span class="p">:</span> <span class="s2">&quot;an&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;class&#39;</span>     <span class="p">:</span> <span class="s2">&quot;ei&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;target&#39;</span>    <span class="p">:</span> <span class="s2">&quot;download_erainterim_ecmwfapi.grib&quot;</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</td>
-<td><div class="first last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecmwfapi</span> <span class="kn">import</span> <span class="n">ECMWFDataServer</span>
-
-<span class="n">server</span> <span class="o">=</span> <span class="n">ECMWFDataServer</span><span class="p">()</span>
-
-<span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span>
-    <span class="s1">&#39;stream&#39;</span>    <span class="p">:</span> <span class="s2">&quot;enda&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;levtype&#39;</span>   <span class="p">:</span> <span class="s2">&quot;sfc&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;param&#39;</span>     <span class="p">:</span> <span class="s2">&quot;165.128/166.128/167.128&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;dataset&#39;</span>   <span class="p">:</span> <span class="s2">&quot;cera20c&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;step&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;grid&#39;</span>      <span class="p">:</span> <span class="s2">&quot;1./1.&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="s2">&quot;00/06/12/18&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;date&#39;</span>      <span class="p">:</span> <span class="s2">&quot;2000-07-01/to/2000-07-31&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span>      <span class="p">:</span> <span class="s2">&quot;an&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;class&#39;</span>     <span class="p">:</span> <span class="s2">&quot;ep&quot;</span><span class="p">,</span>
-    <span class="s1">&#39;target&#39;</span>    <span class="p">:</span> <span class="s2">&quot;download_cera20c_ecmwfapi.grib&quot;</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="cds-api">
-<h5>CDS API<a class="headerlink" href="#cds-api" title="Permalink to this headline">¶</a></h5>
-<p>Since ERA5 extraction with CDS API might take some time due to the very high number of requests, you can start by retrieving some online stored pressure levels (not from MARS). This is usually much faster and gives a quick result to find out if the web API works:</p>
-<p>Please use this piece of python code to retrieve a small sample of <em>ERA5</em> pressure levels:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
-
-<span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
-
-<span class="n">c</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;reanalysis-era5-pressure-levels&quot;</span><span class="p">,</span>
-<span class="p">{</span>
-<span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
-<span class="s2">&quot;pressure_level&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span><span class="p">,</span>
-<span class="s2">&quot;product_type&quot;</span><span class="p">:</span> <span class="s2">&quot;reanalysis&quot;</span><span class="p">,</span>
-<span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="s2">&quot;2008&quot;</span><span class="p">,</span>
-<span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="s2">&quot;01&quot;</span><span class="p">,</span>
-<span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="s2">&quot;01&quot;</span><span class="p">,</span>
-<span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;12:00&quot;</span><span class="p">,</span>
-<span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;grib&quot;</span>
-<span class="p">},</span>
-<span class="s2">&quot;download_cdsapi.grib&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Afterwards, when you know that the CDS API generally works, you can try to extract some
-data from the MARS archive. From the latest experience we know that this can take a while.</p>
-<p>Please use this piece of python code to retrieve a small <em>ERA5</em> data sample as a <strong>member user</strong>! The <strong>public user</strong> doesn’t have access to the full <em>ERA5</em> dataset!</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
-
-<span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
-
-<span class="n">c</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s1">&#39;reanalysis-era5-complete&#39;</span><span class="p">,</span>
-<span class="p">{</span>
-    <span class="s1">&#39;class&#39;</span>   <span class="p">:</span> <span class="s1">&#39;ea&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;expver&#39;</span>  <span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;stream&#39;</span>  <span class="p">:</span> <span class="s1">&#39;oper&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span>    <span class="p">:</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;step&#39;</span>    <span class="p">:</span> <span class="s1">&#39;3/to/12/by/3&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;param&#39;</span>   <span class="p">:</span> <span class="s1">&#39;130.128&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;levtype&#39;</span> <span class="p">:</span> <span class="s1">&#39;ml&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;levelist&#39;</span><span class="p">:</span> <span class="s1">&#39;135/to/137&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;date&#39;</span>    <span class="p">:</span> <span class="s1">&#39;2013-01-01&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;time&#39;</span>    <span class="p">:</span> <span class="s1">&#39;06/18&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;area&#39;</span>    <span class="p">:</span> <span class="s1">&#39;50/-5/40/5&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;grid&#39;</span>    <span class="p">:</span> <span class="s1">&#39;1.0/1.0&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;format&#39;</span>  <span class="p">:</span> <span class="s1">&#39;grib&#39;</span><span class="p">,</span>
-<span class="p">},</span> <span class="s1">&#39;download_era5_cdsapi.grib&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="local-installation">
-<span id="ref-install-local"></span><h4>Local installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h4>
-<p>First prepare the Fortran <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for your environment and set it
-in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script. (See section <span class="xref std std-ref">ref-convert</span> for information on
-the Fortran program.)
-<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has already two <code class="docutils literal notranslate"><span class="pre">Makefiles</span></code> prepared for te <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> and
-the <code class="docutils literal notranslate"><span class="pre">ifort</span></code> compiler:</p>
+<p>Select one of the following modes to install:</p>
 <blockquote>
-<div><ul class="simple">
-<li>Makefile.local.gfortran</li>
-<li>Makefile.local.ifort</li>
-</ul>
+<div><p><a class="reference internal" href="Installation/remote.html"><span class="doc">Remote mode installation</span></a></p>
+<p><a class="reference internal" href="Installation/gateway.html"><span class="doc">Gateway mode installation</span></a></p>
+<p><a class="reference internal" href="Installation/local.html"><span class="doc">Local mode installation</span></a></p>
 </div></blockquote>
-<p>They can be found in the path <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/fortran</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.</p>
-<div class="admonition caution">
-<p class="first admonition-title">Caution</p>
-<p class="last">It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
-<code class="docutils literal notranslate"><span class="pre">Makefiles</span></code>.</p>
-</div>
-<p>So starting from the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>,
-go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> of your
-choice to modify with an editor of your choice. We use the <code class="docutils literal notranslate"><span class="pre">nedit</span></code> in this case.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/source/fortran
-nedit Makefile.local.gfortran
-</pre></div>
-</div>
-<p>Edit the pathes to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine.</p>
-<div class="admonition caution">
-<p class="first admonition-title">Caution</p>
-<p>This can vary from system to system.
-It is suggested to use a command like</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the ECCODES_INCLUDE_DIR path do:</span>
-$ dpkg -L libeccodes-dev <span class="p">|</span> grep eccodes.mod
-<span class="c1"># for the ECCODES_LIB path do:</span>
-$ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
-</pre></div>
-</div>
-<p class="last">to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
-</div>
-<p>Substitute these paths in the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for parameters <strong>ECCODES_INCLUDE_DIR</strong>
-and <strong>ECCODES_LIB</strong> and save it.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on a current Debian 10 Testing system (May 2019)</span>
-<span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
-<span class="nv">ECCODES_LIB</span><span class="o">=</span> -L/usr/lib -leccodes_f90 -leccodes -lm
-</pre></div>
-</div>
-<p>The Fortran program called <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> will be compiled during the
-installation process to get an executable. Therefore the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
-has to be set in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script.</p>
-<p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script
-and adapt the installation parameters in the section labelled with
-“AVAILABLE COMMANDLINE ARGUMENTS TO SET” like shown below.</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">‘Example settings for a local installation.’</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
-<span class="c1"># -----------------------------------------------------------------</span>
-<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
-<span class="c1">#</span>
-<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
-<span class="c1">#</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;local&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.local.gfortran&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span>None
-<span class="nv">ECGID</span><span class="o">=</span>None
-<span class="nv">GATEWAY</span><span class="o">=</span>None
-<span class="nv">DESTINATION</span><span class="o">=</span>None
-<span class="nv">INSTALLDIR</span><span class="o">=</span>None
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
-<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
-...
-</pre></div>
-</div>
-</div>
-<p>Afterwards, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup.sh
-</pre></div>
-</div>
-<p>to start the installation. You should see the following output at the command line.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
-WARNING: installdir has not been specified
-flex_extract will be installed in here by compiling the Fortran <span class="nb">source</span> in /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/source/fortran
-Install flex_extract_v7.1 software at <span class="nb">local</span> in directory /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1
-
-Using makefile: Makefile.local.gfortran
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 rwGRIB2.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 posnam.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 preconvert.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -O3 -O3 -fopenmp -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper -lemosR64
-
--rwxrwxr-x. <span class="m">1</span> philipa8 tmc <span class="m">282992</span> May <span class="m">23</span> <span class="m">22</span>:27 ./CONVERT2
-</pre></div>
-</div>
-</div>
+<div class="toctree-wrapper compound">
 </div>
 </div>
 <div class="section" id="flex-extract-in-combination-with-flexpart">
@@ -896,7 +337,7 @@ STATISTICS:  <span class="m">98842</span>.4598 <span class="m">98709</span>.7359
 SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
 </pre></div>
 </div>
-<p>Now go back to the root directoy:</p>
+<p>Now go back to the root directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ../../../
 </pre></div>
 </div>
@@ -917,10 +358,10 @@ SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="quick_start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Installation/remote.html" class="btn btn-neutral float-right" title="Remote mode installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to flex_extract’s user documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

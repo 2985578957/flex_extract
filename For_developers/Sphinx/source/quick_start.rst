@@ -336,7 +336,7 @@ It is then available from 1st January 1979 to 31st August 2019. The ``etadot`` i
 
 .. todo::
 
-    @LEO: please check the complete describtion and functionality of the CONTROL FILEs
+    @LEO: please check the complete description and functionality of the CONTROL FILEs
     
 Operational data
 ----------------

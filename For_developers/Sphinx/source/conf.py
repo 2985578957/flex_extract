@@ -19,6 +19,7 @@ sys.path.insert(0, os.path.abspath('../../../Source/Python/Mods'))
 sys.path.insert(0, os.path.abspath('../../../Source/Python/Classes'))
 
 sys.path.insert(0, os.path.abspath('_static/python'))
+sys.setrecursionlimit(1500)
 
 #fortran_src = [f for f in os.listdir('../../../source/fortran') if '.f90' in f or '.f' in f]
 #print(fortran_src)
