@@ -17,7 +17,7 @@
 # THE USER HAS TO SPECIFY THESE PARAMETERS
 #
 TARGET='ecgate'
-MAKEFILE='Makefile.gfortran'
+MAKEFILE='makefile.eccodes'
 ECUID='km4a'
 ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
