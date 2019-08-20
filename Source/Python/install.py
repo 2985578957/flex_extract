@@ -374,7 +374,7 @@ def mk_tarball(tarball_path, target):
     hfiles = [os.path.relpath(x, ecd)
               for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.h').files]
     makefiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, 'Makefile*').files]
+                 for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, 'makefile*').files]
     jobdir = [_config.PATH_REL_JOBSCRIPTS]
 
     # concatenate single lists to one for a better looping
