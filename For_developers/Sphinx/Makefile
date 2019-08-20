@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -d build_temp
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = flex_extract
 SOURCEDIR     = source
