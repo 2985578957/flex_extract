@@ -1,15 +1,17 @@
-      MODULE RWGRIB2
+ MODULE RWGRIB2
 
-      CONTAINS
+ CONTAINS
 
-      SUBROUTINE READLATLON(FILENAME,FELD,MAXL,MAXB,MLEVEL,MPAR)
+ SUBROUTINE READLATLON(FILENAME,FELD,MAXL,MAXB,MLEVEL,MPAR)
 
-      USE GRIB_API
+!! Read a field from GRIB file on lat-lon grid
 
-      IMPLICIT NONE
+ USE GRIB_API
 
-        integer                            ::  ifile
-        integer                            ::  iret
+ IMPLICIT NONE
+
+   integer                            ::  ifile
+   integer                            ::  iret
    integer                            ::  n,mk,parid,nm
    integer                            ::  i,k
    integer,dimension(:),allocatable   ::  igrib
@@ -67,112 +69,112 @@
       call grib_get(igrib(i),'level',level)
 
  kloop:  do k=1,nm
-        if(parid .eq. mpar(k)) then
+        if (parid .eq. mpar(k)) then
 !         l(k)=l(k)+1
          feld(:,:,(k-1)*div+level)=reshape(values,(/maxl,maxb/))
 !         print*,(k-1)*div+l(k),parid
          exit kloop
-        endif
-      enddo kloop
-      if(k .gt. nm .and. parid .ne. mpar(nm)) then
+        end if
+      end do kloop
+      if (k .gt. nm .and. parid .ne. mpar(nm)) then
         write(*,*) k,nm,parid,mpar(nm)
         write(*,*) 'ERROR readlatlon: parameter ',parid,'is not',mpar
         stop
-      endif
+      end if
 
 !      print*,i
    END DO iloop
-   write(*,*) 'readlatlon: ',i-1,' records read'
+!!   write(*,*) 'readlatlon: ',i-1,' records read'
  
    DO i=1,n
      call grib_release(igrib(i))
    END DO
  
-   deallocate(values)
+   if (allocated(values)) deallocate(values)
    deallocate(igrib)
 
-      END SUBROUTINE READLATLON
+   END SUBROUTINE READLATLON
 
-      SUBROUTINE WRITELATLON(iunit,igrib,ogrib,FELD,MAXL,MAXB,MLEVEL,&
-      MLEVELIST,MSTRIDE,MPAR)
+   SUBROUTINE WRITELATLON(iunit,igrib,ogrib,FELD,MAXL,MAXB,MLEVEL,&
+   MLEVELIST,MSTRIDE,MPAR)
 
-      USE GRIB_API
+!! write a field on lat-lon grid to GRIB file
 
-      IMPLICIT NONE
+   USE GRIB_API
 
-      INTEGER IFIELD,MLEVEL,MNAUF,I,J,K,L,MSTRIDE,IERR,JOUT
-      INTEGER MPAR(MSTRIDE),MAXL,MAXB,LEVMIN,LEVMAX
-      INTEGER IUNIT,igrib,ogrib
-      REAL ZSEC4(MAXL*MAXB)
-      REAL    FELD(MAXL,MAXB,MLEVEL)
-      CHARACTER*(*) MLEVELIST
-      INTEGER ILEVEL(MLEVEL),MLINDEX(MLEVEL+1),LLEN
+   IMPLICIT NONE
 
-    ! parse MLEVELIST
-   
-      LLEN=len(trim(MLEVELIST))
-      if(index(MLEVELIST,'to') .ne. 0 .or. index(MLEVELIST,'TO') .ne. 0) THEN
-        i=index(MLEVELIST,'/')
-        read(MLEVELIST(1:i-1),*) LEVMIN
-        i=index(MLEVELIST,'/',.true.)
-        read(MLEVELIST(i+1:LLEN),*) LEVMAX
-        l=0
-        do i=LEVMIN,LEVMAX
-          l=l+1
-          ILEVEL(l)=i
-        enddo
-      else
-        l=1
-	MLINDEX(1)=0
-        do i=1,LLEN
-          if(MLEVELIST(i:i) .eq. '/') THEN
-	    l=l+1
-	    MLINDEX(l)=i
-	  endif
-	enddo
-	MLINDEX(l+1)=LLEN+1
-	do i=1,l
-	  read(MLEVELIST(MLINDEX(i)+1:MLINDEX(i+1)-1),*) ILEVEL(i)
-	enddo
-      endif 
+   INTEGER IFIELD,MLEVEL,MNAUF,I,J,K,L,MSTRIDE,IERR,JOUT
+   INTEGER MPAR(MSTRIDE),MAXL,MAXB,LEVMIN,LEVMAX
+   INTEGER IUNIT,igrib,ogrib
+   REAL ZSEC4(MAXL*MAXB)
+   REAL    FELD(MAXL,MAXB,MLEVEL)
+   CHARACTER*(*) MLEVELIST
+   INTEGER ILEVEL(MLEVEL),MLINDEX(MLEVEL+1),LLEN
 
-      DO k=1,l
-        call grib_set(igrib,"level",ILEVEL(k))
-        DO j=1,MSTRIDE
-         call grib_set(igrib,"paramId",MPAR(j))
-!         if(MPAR(j) .eq. 87) then
+ ! parse MLEVELIST
+
+   LLEN=len(trim(MLEVELIST))
+   if (index(MLEVELIST,'to') .ne. 0 .or. index(MLEVELIST,'TO') .ne. 0) THEN
+     i=index(MLEVELIST,'/')
+     read(MLEVELIST(1:i-1),*) LEVMIN
+     i=index(MLEVELIST,'/',.true.)
+     read(MLEVELIST(i+1:LLEN),*) LEVMAX
+     l=0
+     do i=LEVMIN,LEVMAX
+       l=l+1
+       ILEVEL(l)=i
+     end do
+   else
+     l=1
+     MLINDEX(1)=0
+     do i=1,LLEN
+       if (MLEVELIST(i:i) .eq. '/') THEN
+	        l=l+1
+	        MLINDEX(l)=i
+	      end if
+	    end do
+	    MLINDEX(l+1)=LLEN+1
+	    do i=1,l
+	      read(MLEVELIST(MLINDEX(i)+1:MLINDEX(i+1)-1),*) ILEVEL(i)
+	    end do
+   end if 
+
+   DO k=1,l
+     call grib_set(igrib,"level",ILEVEL(k))
+     DO j=1,MSTRIDE
+       call grib_set(igrib,"paramId",MPAR(j))
+!         if (MPAR(j) .eq. 87) then
 !           call grib_set(igrib,"shortName","etadot")
 !           call grib_set(igrib,"units","Pa,s**-1")
-!         endif
-!         if(MPAR(j) .eq. 77) then
+!         end if
+!         if (MPAR(j) .eq. 77) then
 !           call grib_set(igrib,"shortName","etadot")
 !           call grib_set(igrib,"units","s**-1")
-!         endif
-	 if(l .ne. mlevel) then
-           zsec4(1:maxl*maxb)=RESHAPE(FELD(:,:,ILEVEL(k)),(/maxl*maxb/))
-	 else
-	   zsec4(1:maxl*maxb)=RESHAPE(FELD(:,:,k),(/maxl*maxb/))
-	 endif
-         call grib_set(igrib,"values",zsec4)
+!         end if
+	      if (l .ne. mlevel) then
+         zsec4(1:maxl*maxb)=RESHAPE(FELD(:,:,ILEVEL(k)),(/maxl*maxb/))
+	      else
+	        zsec4(1:maxl*maxb)=RESHAPE(FELD(:,:,k),(/maxl*maxb/))
+	      end if
+       call grib_set(igrib,"values",zsec4)
 
-         call grib_write(igrib,iunit)
+       call grib_write(igrib,iunit)
 
-        ENDDO
-      ENDDO
+     END DO
+   END DO
 
+   END SUBROUTINE WRITELATLON
 
+   SUBROUTINE READSPECTRAL(FILENAME,CXMN,MNAUF,MLEVEL,MAXLEV,MPAR,A,B)
 
-      END SUBROUTINE WRITELATLON
+!!  read a GRIB file in spherical harmonics
 
-      SUBROUTINE READSPECTRAL(FILENAME,CXMN,MNAUF,MLEVEL,&
-        MAXLEV,MPAR,A,B)
+   USE GRIB_API
 
-      USE GRIB_API
+   IMPLICIT NONE
 
-      IMPLICIT NONE
-
-
-        integer                            ::  ifile
+   integer                            ::  ifile
    integer                            ::  iret
    integer                            ::  n,mk,div,nm,k
    integer                            ::  i,j,parid
@@ -181,8 +183,8 @@
    integer                            ::  numberOfValues,maxlev
    REAL :: A(MAXLEV+1),B(MAXLEV+1),pv(2*MAXLEV+2)
    REAL:: CXMN(0:(MNAUF+1)*(MNAUF+2)-1,MLEVEL)
-integer:: maxl,maxb,mlevel,mstride,mpar(:),mnauf,ioffset,ipar,ilev,l(size(mpar))
-character*(*):: filename                             
+  integer:: maxl,maxb,mlevel,mstride,mpar(:),mnauf,ioffset,ipar,ilev,l(size(mpar))
+   character*(*):: filename                             
  
    call grib_open_file(ifile, TRIM(FILENAME),'r')
  
@@ -225,28 +227,28 @@ character*(*):: filename
 !           CXMN(:,IOFFSET+ilev)=values(1:(MNAUF+1)*(MNAUF+2))
 
       call grib_get(igrib(i),'paramId',parid)
-    nm=size(mpar)
-    div=mlevel/nm
-    kloop:  do k=1,nm
-        if(parid .eq. mpar(k)) then
+      nm=size(mpar)
+      div=mlevel/nm
+      kloop:  do k=1,nm
+        if (parid .eq. mpar(k)) then
          l(k)=l(k)+1
          cxmn(:,(k-1)*div+l(k))=values(1:(MNAUF+1)*(MNAUF+2))
 !         print*,(k-1)*div+l(k),parid
          exit kloop
-        endif
+        end if
         
-      enddo kloop
-      if(k .gt. nm .and. parid .ne. mpar(nm)) then
+      end do kloop
+      if (k .gt. nm .and. parid .ne. mpar(nm)) then
         write(*,*) k,nm,parid,mpar(nm)
         write(*,*) 'ERROR readspectral: parameter ',parid,'is not',mpar
         stop
-      endif
+      end if
 
 !      print*,i
 
    END DO iloop
 
-   write(*,*) 'readspectral: ',i-1,' records read'
+!!   write(*,*) 'readspectral: ',i-1,' records read'
  
    DO i=1,n
      call grib_release(igrib(i))
@@ -255,11 +257,9 @@ character*(*):: filename
    deallocate(values)
    deallocate(igrib)
 
+   A=pv(1:1+MAXLEV)
+   B=pv(2+MAXLEV:2*MAXLEV+2)
 
+   END SUBROUTINE READSPECTRAL
 
-        A=pv(1:1+MAXLEV)
-        B=pv(2+MAXLEV:2*MAXLEV+2)
-
-      END SUBROUTINE READSPECTRAL
-
-      END MODULE RWGRIB2
+END MODULE RWGRIB2

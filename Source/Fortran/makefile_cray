@@ -10,22 +10,21 @@
 .SUFFIXES: .o .c .c~ .f .f~ .F90 .f90 .f90~ .f95 .f95~ .F .F~ .y .y~ .l .l~ \
            .s .s~ .sh .sh~ .h .h~ .C .C~ .a
 
-OPT	= -O3
+OPT	= 
 DEBUG	= -g
-LIB     =  $(ECCODES_LIB) $(EMOSLIB)   
+LIB     =  $(GRIB_API_LIBS) $(EMOSLIB)
 
-FC=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  
-F90C=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian 
+FC=ftn  $(F90FLAGS)
+F90C=ftn    $(F90FLAGS)
 
-FFLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR) 
-
-F90FLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR)
+FFLAGS =  $(OPT) -I. -r8 -I$(GRIB_API_INCLUDE_DIR)
+F90FLAGS =  $(OPT) -I. -r8 -I$(GRIB_API_INCLUDE_DIR)
 
 LDFLAGS =  $(OPT)
 
 BINDIR  =      .
 
-EXE	=      CONVERT2
+EXE	=      calc_etadot
 
 
 .f.o:
@@ -39,16 +38,16 @@ clean:
 	rm *.o *.mod ${EXE}
 
 phgrreal.o: phgrreal.f
-	$(F90C) -c -g -O3 -fopenmp phgrreal.f
+	$(F90C) -c -g -O3 phgrreal.f
 
 grphreal.o: grphreal.f
-	$(F90C) -c -g -O3 -fopenmp grphreal.f
+	$(F90C) -c -g -O3 grphreal.f
 
 ftrafo.o: ftrafo.f
-	$(F90C) -c -g -O3 -fopenmp ftrafo.f
+	$(F90C) -c -g -O3 ftrafo.f
 
-$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
-	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
+$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwgrib2.o  posnam.o calc_etadot.o
+	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwgrib2.o posnam.o calc_etadot.o ${LIB}
 
 
 ###############################################################################

@@ -28,7 +28,7 @@ LDFLAGS =  $(OPT)
 
 BINDIR  =      .
 
-EXE	=      CONVERT2.s8.ifort
+EXE	=      calc_etadot.s8.ifort
 
 
 .f.o:
@@ -50,8 +50,8 @@ grphreal.o: grphreal.f
 ftrafo.o: ftrafo.f
 	$(F90C) -c -g -O3 ftrafo.f
 
-$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwGRIB2.o  posnam.o preconvert.o
-	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o ${LIB}
+$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwgrib2.o  posnam.o calc_etadot.o
+	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwgrib2.o posnam.o calc_etadot.o ${LIB}
 
 
 ###############################################################################

@@ -8,7 +8,8 @@
 # SPDX-License-Identifier: MIT-0 
 
 export OMP_NUM_THREADS=4 # you may want to change this
-export OMP_PLACES=sockets
+export OMP_PLACES=cores
+export OMP_DISPLAY_ENV=verbose
 testhome=`pwd`
 path1=../../../Source/Fortran/
 path=../${path1}
