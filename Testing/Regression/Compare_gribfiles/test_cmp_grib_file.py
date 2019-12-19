@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
+"""Comparison of resulting Grib files of two flex_extract versions.
+
+
+
+The script should be called like:
+
+    python test_cmp_grib_files.py -r <path-to-reference-files> -n <path-to-new-files>  -p <file-pattern>
+
+Note
+----
+
+
+Example
+-------
+    python test_cmp_grib_file.py -r 7.0.4/EA5/ -n 7.1/EA5/ -p 'EA*'
 """
 
 # ------------------------------------------------------------------------------

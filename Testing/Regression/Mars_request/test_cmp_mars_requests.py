@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Comparison of the created MARS requests of two flex_extract versions.
 
@@ -38,9 +38,9 @@ import subprocess
 import shutil
 from datetime import datetime
 
-sys.path.append('../../../source/python')
+sys.path.append('../../../Source/Python')
 import _config
-from  mods.tools import init128
+from  Mods.tools import init128
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -136,8 +136,11 @@ def test_mr_content_equality(mr_old, mr_new):
             lresult = True
         else:
             err_msg += 'Unconsistency happend to be in column: ' + col + '\n'
-            print mr_new[col]
-            print mr_old[col]
+            print("THERE SEEMS TO BE AN ERROR:")
+            print("CONTENT OF NEW VERSION:")
+            print(mr_new[col])
+            print("CONTENT OF OLD VERSION:")
+            print(mr_old[col])
             return False
     return lresult
 
@@ -185,8 +188,7 @@ def convert_param_step(mr_old):
             dtime = int(steps[1]) - int(steps[0])
             
             nsteps = str(int(steps[1]))+'/to/'+str(int(steps[-1]))+'/by/'+str(int(dtime))
-            return nsteps
-            
+            return nsteps            
     
     return mr_old
 
@@ -251,7 +253,7 @@ if __name__ == '__main__':
     currenttime = datetime.now()
     time_str = currenttime.strftime('%Y-%m-%d_%H-%M-%S')
     logfile = os.path.join(log_path, 'log_' + time_str)
-    with open(logfile, 'aw') as f:
+    with open(logfile, 'a') as f:
         f.write('Compare mars requests between version ' + old_dir +
                 ' and version ' + new_dir + ' : \n')
 
@@ -287,10 +289,10 @@ if __name__ == '__main__':
         # some format corrections are necessary to compare older versions with 7.1
         mr_old['param'] = mr_old['param'].apply(to_param_id, args=[table128])
         mr_old['number'] = mr_old['number'].apply(convert_param_numbers)  
-        if '142' in mr_old.ix[0,'param']: # if flux request
-            mr_old.ix[0,'step'] = convert_param_step(mr_old.ix[0,'step'])
+        if '142' in mr_old.loc[0,'param']: # if flux request
+            mr_old.loc[0,'step'] = convert_param_step(mr_old.loc[0,'step'])
 
-        print 'Results: ', c
+        print('Results: ', c)
 
         # do tests on mr files
         lcoleq = test_mr_column_equality(mr_old, mr_new)
@@ -301,7 +303,7 @@ if __name__ == '__main__':
         lfinal = lfinal and lcoleq and lnoeq and lcoeq
 
         # write out result to logging file
-        with open(logfile, 'aw') as f:
+        with open(logfile, 'a') as f:
             if lcoleq and lnoeq and lcoeq:
                 f.write('... ' + c + ' ... OK!' + '\n')
             else:
