@@ -1,4 +1,0 @@
-ECUID testuser
-ECGID testgroup
-GATEWAY gateway.test.ac.at
-DESTINATION user@destination
