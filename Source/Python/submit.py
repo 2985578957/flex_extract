@@ -63,18 +63,15 @@ from __future__ import print_function
 
 import os
 import sys
-import subprocess
-import inspect
-import collections
 from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
 import _config
-from Mods.tools import (setup_controldata, normal_exit, get_cmdline_args,
-                         submit_job_to_ecserver, read_ecenv)
+from Mods.tools import (setup_controldata, normal_exit,
+                        submit_job_to_ecserver)
 from Mods.get_mars_data import get_mars_data
 from Mods.prepare_flexpart import prepare_flexpart
-from Classes.ControlFile import ControlFile
+#from Classes.ControlFile import ControlFile
 
 
 # ------------------------------------------------------------------------------

@@ -28,13 +28,16 @@
 from __future__ import print_function
 import os
 import sys
-
-import _config
+from datetime import datetime
+# pylint: disable=unused-import
 try:
     import exceptions
 except ImportError:
     import builtins as exceptions
-from datetime import datetime
+# pylint: enable=unused-import
+
+# software specific classes and modules from flex_extract
+import _config
 from Mods.tools import my_error, silent_remove
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -112,7 +115,7 @@ def check_grid(grid):
 
     return grid
 
-def check_area(grid, area, upper, lower, left , right):
+def check_area(grid, area, upper, lower, left, right):
     '''Defines the correct area string.
 
     Checks on the format of the four area components. Wether it is of
@@ -157,19 +160,19 @@ def check_area(grid, area, upper, lower, left , right):
         upper, left, lower, right = components
 
     # determine area format
-    if ((abs(float(upper) / 10000.) >= 0.01 or float(upper) / 1000. == 0. ) and
-        (abs(float(lower) / 10000.) >= 0.01 or float(lower) / 1000. == 0. ) and
-        (abs(float(left) / 10000.) >= 0.01 or float(left) / 1000. == 0. ) and
-        (abs(float(right) / 10000.) >= 0.01 or float(right) / 1000. == 0.)):
+    if all([(abs(float(upper) / 10000.) >= 0.01 or float(upper) / 1000. == 0.),
+            (abs(float(lower) / 10000.) >= 0.01 or float(lower) / 1000. == 0.),
+            (abs(float(left) / 10000.) >= 0.01 or float(left) / 1000. == 0.),
+            (abs(float(right) / 10000.) >= 0.01 or float(right) / 1000. == 0.)]):
         # area is defined in 1/1000 degrees; old format
         area = '{}/{}/{}/{}'.format(float(upper) / 1000.,
                                     float(left) / 1000.,
                                     float(lower) / 1000.,
                                     float(right) / 1000.)
-    elif (abs(float(upper) / 10000.) < 0.05 and
-          abs(float(lower) / 10000.) < 0.05 and
-          abs(float(left) / 10000.) < 0.05 and
-          abs(float(right) / 10000.) < 0.05):
+    elif all([abs(float(upper) / 10000.) < 0.05,
+              abs(float(lower) / 10000.) < 0.05,
+              abs(float(left) / 10000.) < 0.05,
+              abs(float(right) / 10000.) < 0.05]):
         # area is already in new format
         area = '{}/{}/{}/{}'.format(float(upper),
                                     float(left),
@@ -179,7 +182,7 @@ def check_area(grid, area, upper, lower, left , right):
         raise ValueError('The area components have different '
                          'formats (upper, lower, left, right): '
                          '{}/{}/{}/{}'.format(str(upper), str(lower),
-                                              str(left) , str(right)))
+                                              str(left), str(right)))
 
     return area
 
@@ -280,7 +283,7 @@ def check_purefc(ftype):
     return 0
 
 
-def check_step(step, mailfail):
+def check_step(step):
     '''Checks on step format and convert into a list of steps.
 
     If the steps were defined with "to" and "by" they are converted into
@@ -292,11 +295,6 @@ def check_step(step, mailfail):
     step : list of str or str
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
-
-    mailfail : list of str
-        Contains all email addresses which should be notified.
-        It might also contain just the ecmwf user name which will trigger
-        mailing to the associated email address for this user.
 
     Return
     ------
@@ -404,7 +402,7 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
         Specifies the forecast time step from forecast base time.
         Valid values are hours (HH) from forecast base time.
     '''
-    if not (len(ftype) == len(ftime) == len(steps)):
+    if not len(ftype) == len(ftime) == len(steps):
         raise ValueError('ERROR: The number of field types, times and steps '
                          'are not the same! Please check the setting in the '
                          'CONTROL file!')
@@ -552,7 +550,7 @@ def check_dates(start, end):
         raise ValueError('start_date was neither specified in command line nor '
                          'in CONTROL file.\n'
                          'Try "{} -h" to print usage information'
-                         .format(sys.argv[0].split('/')[-1]) )
+                         .format(sys.argv[0].split('/')[-1]))
 
     # retrieve just one day if end_date isn't set
     if not end:
@@ -789,8 +787,8 @@ def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
         if purefc and int(accmaxstep) != int(maxstep):
             accmaxstep = maxstep
             print('... For pure forecast mode, the accumulated forecast must '
-                          'have the same maxstep as the normal forecast fields!\n'
-                          '\t\t Accmaxstep was set to maxstep!')
+                  'have the same maxstep as the normal forecast fields!\n'
+                  '\t\t Accmaxstep was set to maxstep!')
     return accmaxstep
 
 def check_addpar(addpar):
@@ -850,18 +848,13 @@ def check_job_chunk(job_chunk):
     return job_chunk
 
 
-def check_number(number, mailfail):
+def check_number(number):
     '''Check for correct string format of ensemble member numbers.
 
     Parameters
     ----------
     number : str
         List of ensemble member forecast runs.
-
-    mailfail : list of str
-        Contains all email addresses which should be notified.
-        It might also contain just the ecmwf user name which will trigger
-        mailing to the associated email address for this user.
 
     Return
     ------

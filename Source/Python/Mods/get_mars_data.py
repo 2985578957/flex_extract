@@ -69,13 +69,14 @@ from datetime import datetime, timedelta
 # add path to local main python path for flex_extract to get full access
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
+# pylint: disable=wrong-import-position
 import _config
-from Mods.tools import (setup_controldata, my_error, normal_exit, get_cmdline_args,
-                   read_ecenv, make_dir)
+from Mods.tools import (setup_controldata, my_error, normal_exit, make_dir)
 from Classes.EcFlexpart import EcFlexpart
 from Classes.UioFiles import UioFiles
 from Classes.MarsRetrieval import MarsRetrieval
-
+# pylint: enable=wrong-import-position
+# pylint: disable=invalid-name
 try:
     ec_api = True
     import ecmwfapi
@@ -87,6 +88,7 @@ try:
     import cdsapi
 except ImportError:
     cds_api = False
+# pylint: enable=invalid-name
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
@@ -222,9 +224,22 @@ def mk_server(c):
 
 
 def check_dates_for_nonflux_fc_times(types, times):
+    '''Checks if the time 18UTC corresponds to forecast field.
+
+    Parameters
+    ----------
+    types : list of str
+        List of field types.
+
+    times : list of str or str
+        The time in hours of the field.
+
+    Return
+    ------
+    True or False
+
     '''
-    '''
-    for ty, ti in zip(types,times):
+    for ty, ti in zip(types, times):
         if ty.upper() == 'FC' and int(ti) == 18:
             return True
     return False
@@ -244,7 +259,7 @@ def mk_dates(c, fluxes):
     boundary conditions)
 
     Since for basetime the extraction contains the 12 hours upfront,
-    if basetime is 0, the starting date has to be the day before and
+    if basetime is 0, the starting date has to be the day before
 
     Parameters
     ----------

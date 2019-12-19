@@ -67,7 +67,7 @@ class GribUtil(object):
         return
 
 
-    def get_keys(self, keynames, wherekeynames=[], wherekeyvalues=[]):
+    def get_keys(self, keynames, wherekeynames, wherekeyvalues):
         '''Get keyvalues for a given list of keynames a where statement
         can be given (list of key and list of values)
 
@@ -76,11 +76,11 @@ class GribUtil(object):
         keynames : :obj:`list` of :obj:`string`
             List of keynames.
 
-        wherekeynames : :obj:`list` of :obj:`string`, optional
-            Default value is an empty list.
+        wherekeynames : :obj:`list` of :obj:`string`
+            List of key names for indexing grib message parameter.
 
-        wherekeyvalues : :obj:`list` of :obj:`string`, optional
-            Default value is an empty list.
+        wherekeyvalues : :obj:`list` of :obj:`string`
+            List of key values corresponding the key names.
 
         Return
         ------
@@ -121,8 +121,8 @@ class GribUtil(object):
         return return_list
 
 
-    def set_keys(self, fromfile, keynames, keyvalues, wherekeynames=[],
-                 wherekeyvalues=[], strict=False, filemode='wb'):
+    def set_keys(self, fromfile, keynames, keyvalues, wherekeynames,
+                 wherekeyvalues, filemode='wb'):
         '''Opens the file to read the grib messages and then write
         the selected messages (with wherekeys) to a new output file.
         Also, the keyvalues of the passed list of keynames are set.
@@ -140,18 +140,11 @@ class GribUtil(object):
             List of keyvalues to set in the selected messages.
             Default is an empty list.
 
-        wherekeynames : :obj:`list` of :obj:`string`, optional
+        wherekeynames : :obj:`list` of :obj:`string`
             List of keynames to select correct message.
-            Default value is an empty list.
 
-        wherekeyvalues : :obj:`list` of :obj:`string`, optional
+        wherekeyvalues : :obj:`list` of :obj:`string`
             List of keyvalues for keynames to select correct message.
-            Default value is an empty list.
-
-        strict : :obj:`boolean`, optional
-            Decides if everything from keynames and keyvalues
-            is written out the grib file (False) or only those
-            meeting the where statement (True). Default is False.
 
         filemode : :obj:`string`, optional
             Sets the mode for the output file. Default is "wb".
@@ -199,8 +192,8 @@ class GribUtil(object):
 
         return
 
-    def copy_dummy_msg(self, filename_in, selectWhere=True,
-                 keynames=[], keyvalues=[], filemode='wb'):
+    def copy_dummy_msg(self, filename_in, keynames, keyvalues,
+                       selectwhere=True, filemode='wb'):
         '''Add the content of another input grib file to the objects file but
         only messages corresponding to keys/values passed to the function.
         The selectWhere switch decides if to copy the keys equal to (True) or
@@ -211,16 +204,16 @@ class GribUtil(object):
         filename_in : :obj:`string`
             Filename of the input file to read the grib messages from.
 
-        selectWhere : :obj:`boolean`, optional
+        selectwhere : :obj:`boolean`, optional
             Decides if to copy the keynames and values equal to (True) or
             different to (False) the keynames/keyvalues list passed to the
             function. Default is True.
 
-        keynames : :obj:`list` of :obj:`string`, optional
-            List of keynames. Default is an empty list.
+        keynames : :obj:`list` of :obj:`string`
+            List of keynames.
 
-        keyvalues : :obj:`list` of :obj:`string`, optional
-            List of keyvalues. Default is an empty list.
+        keyvalues : :obj:`list` of :obj:`string`
+            List of keyvalues.
 
         filemode : :obj:`string`, optional
             Sets the mode for the output file. Default is "wb".
@@ -253,7 +246,7 @@ class GribUtil(object):
                 if not codes_is_defined(gid, key):
                     raise Exception("Key was not defined")
 
-                if selectWhere:
+                if selectwhere:
                     select = (select and (str(keyvalues[i]) ==
                                           str(codes_get(gid, key))))
                 else:
@@ -271,16 +264,15 @@ class GribUtil(object):
 
         return
 
-    def index(self, index_keys=["mars"], index_file="my.idx"):
+    def index(self, index_keys, index_file="my.idx"):
         '''Create index file from a list of files if it does not exist or
         read an index file.
 
         Parameters
         ----------
-        index_keys: :obj:`list` of :obj:`string`, optional
+        index_keys: :obj:`list` of :obj:`string`
             Contains the list of key parameter names from
             which the index is to be created.
-            Default is a list with a single entry string "mars".
 
         index_file: :obj:`string`, optional
             Filename where the indices are stored.

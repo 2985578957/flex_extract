@@ -36,12 +36,12 @@ import time
 # ------------------------------------------------------------------------------
 # FUNCTION
 # ------------------------------------------------------------------------------
-def timefn(fn):
+def timefn(func):
     '''
     @Description:
         Decorator function. It takes the inner function as an argument.
     '''
-    @wraps(fn)
+    @wraps(func)
     def measure_time(*args, **kwargs):
         '''
         @Descripton:
@@ -64,10 +64,11 @@ def timefn(fn):
             <nothing>
         '''
 
-        t1 = time.time()
-        result = fn(*args, **kwargs)
-        t2 = time.time()
-        print("@timefn:" + fn.__name__ + " took " + str(t2 - t1) + " seconds")
+        time1 = time.time()
+        result = func(*args, **kwargs)
+        time2 = time.time()
+        print("@timefn:" + func.__name__ + " took " +
+              str(time2 - time1) + " seconds")
 
         return result
 

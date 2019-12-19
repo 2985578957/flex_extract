@@ -68,10 +68,12 @@ import sys
 import glob
 import subprocess
 import traceback
+# pylint: disable=unused-import
 try:
     import exceptions
 except ImportError:
     import builtins as exceptions
+# pylint: enable=unused-import
 from datetime import datetime, timedelta
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -267,7 +269,7 @@ def read_ecenv(filepath):
         Contains the environment parameter ecuid, ecgid, gateway
         and destination for ECMWF server environments.
     '''
-    envs= {}
+    envs = {}
     try:
         with open(filepath, 'r') as f:
             for line in f:
@@ -278,7 +280,7 @@ def read_ecenv(filepath):
         print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
         sys.exit('\n... Error occured while trying to read ECMWF_ENV '
-                     'file: ' + str(filepath))
+                 'file: ' + str(filepath))
 
     return envs
 
@@ -301,8 +303,9 @@ def clean_up(c):
 
     print("... clean inputdir!")
 
-    cleanlist = [file for file in glob.glob(os.path.join(c.inputdir, "*"))
-                 if not os.path.basename(file).startswith(c.prefix)]
+    cleanlist = [filename for filename in
+                 glob.glob(os.path.join(c.inputdir, "*"))
+                 if not os.path.basename(filename).startswith(c.prefix)]
 
     if cleanlist:
         for element in cleanlist:
@@ -370,7 +373,7 @@ def send_mail(users, success_mode, message):
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  bufsize=1)
-            pout = p.communicate(input=message.encode() + '\n\n')[0]
+            pout = p.communicate(input=message + '\n\n')[0]
         except ValueError as e:
             print('... ERROR: ' + str(e))
             sys.exit('... Email could not be sent!')
@@ -530,7 +533,7 @@ def to_param_id(pars, table):
     if not pars:
         return []
     if not isinstance(pars, str):
-        pars=str(pars)
+        pars = str(pars)
 
     cpar = pars.upper().split('/')
     ipar = []
@@ -574,7 +577,7 @@ def to_param_id_with_tablenumber(pars, table):
     if not pars:
         return []
     if not isinstance(pars, str):
-        pars=str(pars)
+        pars = str(pars)
 
     cpar = pars.upper().split('/')
     spar = []
@@ -767,8 +770,7 @@ def get_informations(filename):
         gid = codes_grib_new_from_file(f)
 
         # information needed from grib message
-        keys = [
-                'Ni',
+        keys = ['Ni',
                 'Nj',
                 'latitudeOfFirstGridPointInDegrees',
                 'longitudeOfFirstGridPointInDegrees',
@@ -782,8 +784,8 @@ def get_informations(filename):
         print('\nInformations are: ')
         for key in keys:
             # Get the value of the key in a grib message.
-            data[key] = codes_get(gid,key)
-            print("%s = %s" % (key,data[key]))
+            data[key] = codes_get(gid, key)
+            print("%s = %s" % (key, data[key]))
 
         # Free the memory for the message referred as gribid.
         codes_release(gid)

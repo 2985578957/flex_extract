@@ -37,14 +37,13 @@
 from __future__ import print_function
 
 import os
-import re
 import sys
-import inspect
 
 # software specific classes and modules from flex_extract
+#pylint: disable=wrong-import-position
 sys.path.append('../')
 import _config
-from Mods.tools import my_error, silent_remove
+from Mods.tools import my_error
 from Mods.checks import (check_grid, check_area, check_levels, check_purefc,
                          check_step, check_mail, check_queue, check_pathes,
                          check_dates, check_maxstep, check_type, check_request,
@@ -52,6 +51,7 @@ from Mods.checks import (check_grid, check_area, check_levels, check_purefc,
                          check_acctime, check_accmaxstep, check_time,
                          check_logicals_type, check_len_type_time_step,
                          check_addpar, check_job_chunk, check_number)
+#pylint: enable=wrong-import-position
 
 # ------------------------------------------------------------------------------
 # CLASS
@@ -64,7 +64,7 @@ class ControlFile(object):
     software. All necessary parameters needed to retrieve the data fields
     from the MARS archive for driving FLEXPART are set in a CONTROL file.
     Some specific parameters like the start and end dates can be overwritten
-    by the command line parameters, but in generel all parameters needed
+    by the command line parameters, but in generall all parameters needed
     for a complete set of fields for FLEXPART can be set in the CONTROL file.
 
     Attributes
@@ -237,11 +237,6 @@ class ControlFile(object):
         The email addresses should be seperated by a comma.
         Default value is ['${USER}'].
 
-    grib2flexpart : int 0
-        Switch to select generation of preprocessed FLEXPART files ".fp".
-        If it is selected, the program grib2flexpart will try
-        to convert the flex_extract output files into ".fp" format.
-
     ecstorage : int
         Switch to select storage of FLEXPART ready output files
         in the ECFS file system. Default value is 0.
@@ -333,7 +328,7 @@ class ControlFile(object):
     logicals : list of str
         List of the names of logical switches which controls the flow
         of the program. Default list is ['gauss', 'omega', 'omegadiff', 'eta',
-        'etadiff', 'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
+        'etadiff', 'dpdeta', 'cwc', 'wrf', 'ecstorage',
         'ectrans', 'debug', 'request', 'public', 'purefc', 'rrint', 'doubleelda']
     '''
 
@@ -399,7 +394,6 @@ class ControlFile(object):
         self.ecfsdir = 'ectmp:/${USER}/econdemand/'
         self.mailfail = ['${USER}']
         self.mailops = ['${USER}']
-        self.grib2flexpart = 0
         self.ecstorage = 0
         self.ectrans = 0
         self.inputdir = _config.PATH_INPUT_DIR
@@ -424,7 +418,7 @@ class ControlFile(object):
         self.doubleelda = 0
 
         self.logicals = ['gauss', 'omega', 'omegadiff', 'eta', 'etadiff',
-                         'dpdeta', 'cwc', 'wrf', 'grib2flexpart', 'ecstorage',
+                         'dpdeta', 'cwc', 'wrf', 'ecstorage',
                          'ectrans', 'debug', 'oper', 'request', 'public',
                          'purefc', 'rrint', 'doubleelda']
 
@@ -601,7 +595,9 @@ class ControlFile(object):
                     self.ecuid, self.ecgid)
 
         self.outputdir, self.installdir = check_pathes(self.inputdir,
-             self.outputdir, self.installdir, self.flexextractdir)
+                                                       self.outputdir,
+                                                       self.installdir,
+                                                       self.flexextractdir)
 
         self.start_date, self.end_date = check_dates(self.start_date,
                                                      self.end_date)
@@ -610,7 +606,7 @@ class ControlFile(object):
 
         self.levelist, self.level = check_levels(self.levelist, self.level)
 
-        self.step = check_step(self.step, self.mailfail)
+        self.step = check_step(self.step)
 
         self.maxstep = check_maxstep(self.maxstep, self.step)
 
@@ -648,7 +644,7 @@ class ControlFile(object):
 
         self.job_chunk = check_job_chunk(self.job_chunk)
 
-        self.number = check_number(self.number, self.mailfail)
+        self.number = check_number(self.number)
 
         return
 
@@ -694,4 +690,3 @@ class ControlFile(object):
                     l.append("%s %s\n" % item)
 
         return sorted(l)
-

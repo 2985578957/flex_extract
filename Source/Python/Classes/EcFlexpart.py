@@ -52,6 +52,10 @@
 # this is disabled because for this specific case its an error in pylint
 #pylint: disable=consider-using-enumerate
 # this is not useful in this case
+#pylint: disable=unsubscriptable-object
+# this error is a bug
+#pylint: disable=ungrouped-imports
+# not necessary that we group the imports
 # ------------------------------------------------------------------------------
 # MODULES
 # ------------------------------------------------------------------------------
@@ -61,21 +65,21 @@ import os
 import sys
 import glob
 import shutil
-import subprocess
 from datetime import datetime, timedelta
 
 # software specific classes and modules from flex_extract
+#pylint: disable=wrong-import-position
 sys.path.append('../')
 import _config
 from Classes.GribUtil import GribUtil
 from Mods.tools import (init128, to_param_id, silent_remove, product,
-                        my_error, make_dir, get_informations, get_dimensions,
+                        my_error, get_informations, get_dimensions,
                         execute_subprocess, to_param_id_with_tablenumber,
                         generate_retrieval_period_boundary)
 from Classes.MarsRetrieval import MarsRetrieval
 from Classes.UioFiles import UioFiles
 import Mods.disaggregation as disaggregation
-
+#pylint: enable=wrong-import-position
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -400,8 +404,8 @@ class EcFlexpart(object):
             self.params['OG__ML'][0] += '/U/V'
         else:  # GAUSS and ETA
             print('Warning: Collecting etadot and parameters for gaussian grid '
-                           'is a very costly parameter combination, '
-                           'use this combination only for debugging!')
+                  'is a very costly parameter combination, '
+                  'use this combination only for debugging!')
             self.params['GG__SL'] = ['Q', 'ML', '1',
                                      '{}'.format((int(self.resol) + 1) // 2)]
             self.params['GG__ML'] = ['U/V/D/ETADOT', 'ML', self.glevelist,
@@ -414,7 +418,7 @@ class EcFlexpart(object):
             self.params['OG__ML'][0] += '/CLWC/CIWC'
 
         # ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)
-        # -----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         if wrf:
             # @WRF
             # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
@@ -709,7 +713,8 @@ class EcFlexpart(object):
                     retr_param_dict['step'] = '000'
                     retr_param_dict['date'] = self.dates.split('/')[0]
                     retr_param_dict['target'] = self._mk_targetname('',
-                                            pk, retr_param_dict['date'])
+                                                                    pk,
+                                                                    retr_param_dict['date'])
                 elif pk == 'OG_OROLSM__SL' and oro:
                     continue
                 if pk == 'GG__SL' and pv[0] == 'Q':
@@ -751,7 +756,7 @@ class EcFlexpart(object):
                         # --------------  flux data ----------------------------
                         if 'acc' in pk:
                             startdate = retr_param_dict['date'].split('/')[0]
-                            enddate = datetime.strftime(elimit - t24h,'%Y%m%d')
+                            enddate = datetime.strftime(elimit - t24h, '%Y%m%d')
                             retr_param_dict['date'] = '/'.join([startdate,
                                                                 'to',
                                                                 enddate])
@@ -780,9 +785,9 @@ class EcFlexpart(object):
 
                         timesave = ''.join(retr_param_dict['time'])
 
-                        if ('/' in retr_param_dict['time'] and
-                            pk != 'OG_OROLSM__SL' and
-                            'acc' not in pk ) :
+                        if all(['/' in retr_param_dict['time'],
+                                pk != 'OG_OROLSM__SL',
+                                'acc' not in pk]):
                             times = retr_param_dict['time'].split('/')
                             steps = retr_param_dict['step'].split('/')
 
@@ -793,9 +798,9 @@ class EcFlexpart(object):
                                 else:
                                     retr_param_dict['time'] = times[0]
 
-                        if (pk != 'OG_OROLSM__SL' and
-                            int(retr_param_dict['step'].split('/')[0]) == 0 and
-                            int(timesave.split('/')[0]) == 0):
+                        if all([pk != 'OG_OROLSM__SL',
+                                int(retr_param_dict['step'].split('/')[0]) == 0,
+                                int(timesave.split('/')[0]) == 0]):
 
                             retr_param_dict['date'] = \
                                 datetime.strftime(elimit, '%Y%m%d')
@@ -809,7 +814,7 @@ class EcFlexpart(object):
                         self._start_retrievement(request, retr_param_dict)
                     else:
                         raise ValueError('ERROR: Basetime has an invalid value '
-                                                 '-> {}'.format(str(basetime)))
+                                         '-> {}'.format(str(self.basetime)))
 
         if request == 0 or request == 2:
             print('MARS retrieve done ... ')
@@ -859,23 +864,23 @@ class EcFlexpart(object):
             maxb = int(round((area[0] - area[2]) / grid[0])) + 1
 
             stream = namelist_template.generate(
-                maxl = str(maxl),
-                maxb = str(maxb),
-                mlevel = str(self.level),
-                mlevelist = str(self.levelist),
-                mnauf = str(self.resol),
-                metapar = '77',
-                rlo0 = str(area[1]),
-                rlo1 = str(area[3]),
-                rla0 = str(area[2]),
-                rla1 = str(area[0]),
-                momega = str(c.omega),
-                momegadiff = str(c.omegadiff),
-                mgauss = str(c.gauss),
-                msmooth = str(c.smooth),
-                meta = str(c.eta),
-                metadiff = str(c.etadiff),
-                mdpdeta = str(c.dpdeta)
+                maxl=str(maxl),
+                maxb=str(maxb),
+                mlevel=str(self.level),
+                mlevelist=str(self.levelist),
+                mnauf=str(self.resol),
+                metapar='77',
+                rlo0=str(area[1]),
+                rlo1=str(area[3]),
+                rla0=str(area[2]),
+                rla1=str(area[0]),
+                momega=str(c.omega),
+                momegadiff=str(c.omegadiff),
+                mgauss=str(c.gauss),
+                msmooth=str(c.smooth),
+                meta=str(c.eta),
+                metadiff=str(c.etadiff),
+                mdpdeta=str(c.dpdeta)
             )
         except UndefinedError as e:
             print('... ERROR ' + str(e))
@@ -927,7 +932,7 @@ class EcFlexpart(object):
 
         '''
         import numpy as np
-        from eccodes import (codes_index_select, codes_new_from_index, codes_get,
+        from eccodes import (codes_index_select, codes_get,
                              codes_get_values, codes_set_values, codes_set,
                              codes_write, codes_release, codes_new_from_index,
                              codes_index_release)
@@ -1052,7 +1057,6 @@ class EcFlexpart(object):
             time = codes_get(gid, 'time') // 100  # integer
             step = codes_get(gid, 'step') # integer
             ctime = '{:0>2}'.format(time)
-            cstep = '{:0>3}'.format(step)
 
             t_date = datetime.strptime(cdate + ctime, '%Y%m%d%H')
             t_dt = t_date + timedelta(hours=step)
@@ -1131,7 +1135,7 @@ class EcFlexpart(object):
                     # do de-accumulation
                     deac_vals[parId].append(
                         (orig_vals[parId][-1] - orig_vals[parId][-2]) /
-                         int(c.dtime))
+                        int(c.dtime))
 
                 # store precipitation if new disaggregation method is selected
                 # only the exact days are needed
@@ -1331,12 +1335,12 @@ class EcFlexpart(object):
         if maxnum:
             for inum in range(maxnum):
                 for ix in range(ni*nj):
-                    lsp_new_np[inum,ix,:] = disaggregation.IA3(lsp_np[inum,ix,:])[:-1]
-                    cp_new_np[inum,ix,:] = disaggregation.IA3(cp_np[inum,ix,:])[:-1]
+                    lsp_new_np[inum, ix, :] = disaggregation.IA3(lsp_np[inum, ix, :])[:-1]
+                    cp_new_np[inum, ix, :] = disaggregation.IA3(cp_np[inum, ix, :])[:-1]
         else:
             for ix in range(ni*nj):
-                lsp_new_np[0,ix,:] = disaggregation.IA3(lsp_np[ix,:])[:-1]
-                cp_new_np[0,ix,:] = disaggregation.IA3(cp_np[ix,:])[:-1]
+                lsp_new_np[0, ix, :] = disaggregation.IA3(lsp_np[ix, :])[:-1]
+                cp_new_np[0, ix, :] = disaggregation.IA3(cp_np[ix, :])[:-1]
 
         # write to grib files (full/orig times to flux file and inbetween
         # times with step 1 and 2, respectively)
@@ -1401,46 +1405,52 @@ class EcFlexpart(object):
 
             # write original time step to flux file as usual
             fluxfile = GribUtil(os.path.join(c.inputdir, fluxfilename))
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[142],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
                               keyvalues=[inumb, int(date.strftime('%Y%m%d')),
-                                         date.hour*100, 0, lsp_new_np[inumb,:,it]],
+                                         date.hour*100, 0, lsp_new_np[inumb, :, it]],
                              )
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[143],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
-                              keyvalues=[inumb,int(date.strftime('%Y%m%d')),
-                                         date.hour*100, 0, cp_new_np[inumb,:,it]]
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
+                              keyvalues=[inumb, int(date.strftime('%Y%m%d')),
+                                         date.hour*100, 0, cp_new_np[inumb, :, it]]
                              )
 
             # rr for first subgrid point is identified by step = 1
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[142],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
-                              keyvalues=[inumb,int(date.strftime('%Y%m%d')),
-                                         date.hour*100, '1', lsp_new_np[inumb,:,it+1]]
-                              )
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
+                              keyvalues=[inumb, int(date.strftime('%Y%m%d')),
+                                         date.hour*100, '1', lsp_new_np[inumb, :, it+1]]
+                             )
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[143],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
-                              keyvalues=[inumb,int(date.strftime('%Y%m%d')),
-                                         date.hour*100, '1', cp_new_np[inumb,:,it+1]]
-                              )
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
+                              keyvalues=[inumb, int(date.strftime('%Y%m%d')),
+                                         date.hour*100, '1', cp_new_np[inumb, :, it+1]]
+                             )
 
             # rr for second subgrid point is identified by step = 2
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[142],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
-                              keyvalues=[inumb,int(date.strftime('%Y%m%d')),
-                                         date.hour*100, '2', lsp_new_np[inumb,:,it+2]]
-                              )
-            fluxfile.set_keys(tmpfile, filemode='ab', strict=True,
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
+                              keyvalues=[inumb, int(date.strftime('%Y%m%d')),
+                                         date.hour*100, '2', lsp_new_np[inumb, :, it+2]]
+                             )
+            fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[143],
-                              keynames=['perturbationNumber','date','time','stepRange','values'],
-                              keyvalues=[inumb,int(date.strftime('%Y%m%d')),
-                                         date.hour*100, '2', cp_new_np[inumb,:,it+2]]
-                              )
+                              keynames=['perturbationNumber', 'date', 'time',
+                                        'stepRange', 'values'],
+                              keyvalues=[inumb, int(date.strftime('%Y%m%d')),
+                                         date.hour*100, '2', cp_new_np[inumb, :, it+2]]
+                             )
 
             it = it + 3 # jump to next original time step in rr fields
         return
@@ -1462,13 +1472,13 @@ class EcFlexpart(object):
 
         '''
 
-        gribfile = GribUtil(os.path.join(inputdir,'rr_grib_dummy.grb'))
+        gribfile = GribUtil(os.path.join(inputdir, 'rr_grib_dummy.grb'))
 
         gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                      keyvalues=[142], filemode='wb')
+                                keyvalues=[142], filemode='wb')
 
         gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                      keyvalues=[143], filemode='ab')
+                                keyvalues=[143], filemode='ab')
 
         return
 
@@ -1500,7 +1510,7 @@ class EcFlexpart(object):
         ------
 
         '''
-        from eccodes import (codes_index_select, codes_new_from_index, codes_get,
+        from eccodes import (codes_index_select, codes_get,
                              codes_get_values, codes_set_values, codes_set,
                              codes_write, codes_release, codes_new_from_index,
                              codes_index_release)
@@ -1582,22 +1592,20 @@ class EcFlexpart(object):
             timestamp += timedelta(hours=int(cstep))
             cdate_hour = datetime.strftime(timestamp, '%Y%m%d%H')
 
+            # if basetime is used, adapt start/end date period
+            if c.basetime is not None:
+                time_delta = timedelta(hours=12-int(c.dtime))
+                start_period = datetime.strptime(c.end_date + str(c.basetime),
+                                               '%Y%m%d%H') - time_delta
+                end_period = datetime.strptime(c.end_date + str(c.basetime),
+                                             '%Y%m%d%H')
+
             # skip all temporary times
-            # which are outside the retrieval period
+            # which are outside the retrieval period                
             if timestamp < start_period or \
                timestamp > end_period:
                 continue
-
-            # if the timestamp is out of basetime start/end date period,
-            # skip this specific product
-            if c.basetime is not None:
-                time_delta = timedelta(hours=12-int(c.dtime))
-                start_time = datetime.strptime(c.end_date + str(c.basetime),
-                                                '%Y%m%d%H') - time_delta
-                end_time = datetime.strptime(c.end_date + str(c.basetime),
-                                             '%Y%m%d%H')
-                if timestamp < start_time or timestamp > end_time:
-                    continue
+                
 
             # @WRF
             # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
@@ -1619,7 +1627,6 @@ class EcFlexpart(object):
                     break
                 paramId = codes_get(gid, 'paramId')
                 gridtype = codes_get(gid, 'gridType')
-                levtype = codes_get(gid, 'typeOfLevel')
                 if paramId == 77: # ETADOT
                     codes_write(gid, fdict['21'])
                 elif paramId == 130: # T
@@ -1703,7 +1710,7 @@ class EcFlexpart(object):
 
             # Fortran program creates file fort.15 (with u,v,etadot,t,sp,q)
             execute_subprocess([os.path.join(c.exedir,
-                                _config.FORTRAN_EXECUTABLE)],
+                                             _config.FORTRAN_EXECUTABLE)],
                                error_msg='FORTRAN PROGRAM FAILED!')#shell=True)
 
             os.chdir(pwd)
@@ -1732,7 +1739,9 @@ class EcFlexpart(object):
             # create outputfile and copy all data from intermediate files
             # to the outputfile (final GRIB input files for FLEXPART)
             orolsm = os.path.basename(glob.glob(c.inputdir +
-                                        '/OG_OROLSM__SL.*.' + c.ppid + '*')[0])
+                                                '/OG_OROLSM__SL.*.' +
+                                                c.ppid +
+                                                '*')[0])
             fluxfile = 'flux' + cdate[0:2] + suffix
             if not c.cwc:
                 flist = ['fort.15', fluxfile, 'fort.16', orolsm]
@@ -1782,19 +1791,19 @@ class EcFlexpart(object):
 
         '''
         from eccodes import (codes_grib_new_from_file, codes_get_array,
-                             codes_set_array, codes_release, codes_set_values,
-                             codes_set, codes_write, codes_release)
+                             codes_set_array, codes_release,
+                             codes_set, codes_write)
 
         # max number
         maxnum = int(self.number.split('/')[-1])
 
         # get a list of all prepared output files with control forecast (CF)
-        CF_filelist = UioFiles(path, prefix + '*.N000')
-        CF_filelist.files = sorted(CF_filelist.files)
+        cf_filelist = UioFiles(path, prefix + '*.N000')
+        cf_filelist.files = sorted(cf_filelist.files)
 
-        for cffile in CF_filelist.files:
+        for cffile in cf_filelist.files:
             with open(cffile, 'rb') as f:
-                cfvalues=[]
+                cfvalues = []
                 while True:
                     fid = codes_grib_new_from_file(f)
                     if fid is None:
@@ -1899,4 +1908,3 @@ class EcFlexpart(object):
                                    'TO OUTPUTDIR FAILED!')
 
         return
-

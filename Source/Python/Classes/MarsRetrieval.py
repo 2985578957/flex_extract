@@ -41,8 +41,10 @@ import subprocess
 import traceback
 
 # software specific classes and modules from flex_extract
+#pylint: disable=wrong-import-position
 sys.path.append('../')
 import _config
+#pylint: disable=invalid-name
 try:
     ec_api = True
     import ecmwfapi
@@ -54,6 +56,8 @@ try:
     import cdsapi
 except ImportError:
     cds_api = False
+#pylint: enable=invalid-name
+#pylint: enable=wrong-import-position
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
@@ -509,7 +513,6 @@ class MarsRetrieval(object):
             except Exception as e:
                 print('\n\nMARS Request failed!')
                 print(e)
-                tb = sys.exc_info()[2]
                 print(traceback.format_exc())
                 sys.exit()
 

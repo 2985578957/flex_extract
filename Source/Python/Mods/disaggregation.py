@@ -246,7 +246,7 @@ def IA3(g):
             # the value at the end of the interval (fip1) is prescribed by the
             # geometric mean, restricted such that non-negativity is guaranteed
             # according to Eq. (25)
-            fip1=min( 3.*g[i] , 3.*g[i+1] , np.sqrt(g[i+1]*g[i]) )
+            fip1 = min(3. * g[i], 3. * g[i + 1], np.sqrt(g[i + 1] * g[i]))
 
             # the function value at the first sub-grid point (fi1) is determined
             # according to the equal area condition with Eq. (19)
@@ -280,10 +280,10 @@ def IA3(g):
 
                 # the monotonicity filter corrects the value at (fim1) by
                 # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
-                fmon = min(3.*g[i-2], \
-                           3.*g[i-1], \
-                           np.sqrt(max(0,(18./13.*g[i-2] - 5./13.*f[-7]) *
-                                         (18./13.*g[i-1] - 5./13.*f[-1]))))
+                fmon = min(3. * g[i - 2],
+                           3. * g[i - 1],
+                           np.sqrt(max(0, (18. / 13. * g[i - 2] - 5. / 13. * f[-7]) *
+                                       (18. / 13. * g[i - 1] - 5. / 13. * f[-1]))))
 
                 # recomputation of the sub-grid interval values while the
                 # interval boundaries (fi) and (fip2) remains unchanged
@@ -294,7 +294,7 @@ def IA3(g):
                 f[-3] = 3./2.*g[i-1]-5./12.*f[-1]-1./12.*fmon
                 f[-2] = f[-3]+(f[-1]-fmon)/3.
 
-            f.extend([0.,0.,0.])
+            f.extend([0., 0., 0.])
 
         # otherwise the sub-grid values are calculated and added to the list
         else:
@@ -305,7 +305,7 @@ def IA3(g):
             # the value at the end of the interval (fip1) is prescribed by the
             # geometric mean, restricted such that non-negativity is guaranteed
             # according to Eq. (25)
-            fip1 = min( 3.*g[i] , 3.*g[i+1] , np.sqrt(g[i+1]*g[i]) )
+            fip1 = min(3. * g[i], 3. * g[i + 1], np.sqrt(g[i + 1] * g[i]))
 
             # the function value at the first sub-grid point (fi1) is determined
             # according to the equal area condition with Eq. (19)
@@ -323,10 +323,10 @@ def IA3(g):
 
                 # the monotonicity filter corrects the value at (fim1) by
                 # substituting (fim1) with fmon, see Eq. (27), (28) and (29)
-                fmon = min(3.*g[i-2], \
-                           3.*g[i-1], \
-                           np.sqrt(max(0,(18./13.*g[i-2] - 5./13.*f[-7]) *
-                                         (18./13.*g[i-1] - 5./13.*f[-1]))))
+                fmon = min(3. * g[i - 2],
+                           3. * g[i - 1],
+                           np.sqrt(max(0, (18. / 13. * g[i - 2] - 5. / 13. * f[-7]) *
+                                       (18. / 13. * g[i - 1] - 5. / 13. * f[-1]))))
 
                 # recomputation of the sub-grid interval values while the
                 # interval boundaries (fi) and (fip2) remains unchanged
@@ -357,10 +357,10 @@ def IA3(g):
 
             # the monotonicity filter corrects the value at (fim1) by
             # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
-            fmon = min(3.*g[-3], \
-                       3.*g[-2], \
-                       np.sqrt(max(0,(18./13.*g[-3] - 5./13.*f[-7]) *
-                                     (18./13.*g[-2] - 5./13.*f[-1]))))
+            fmon = min(3. * g[-3],
+                       3. * g[-2],
+                       np.sqrt(max(0, (18. / 13. * g[-3] - 5. / 13. * f[-7]) *
+                                   (18. / 13. * g[-2] - 5. / 13. * f[-1]))))
 
             # recomputation of the sub-grid interval values while the
             # interval boundaries (fi) and (fip2) remains unchanged
@@ -371,7 +371,7 @@ def IA3(g):
             f[-3] = 3./2.*g[-2]-5./12.*f[-1]-1./12.*fmon
             f[-2] = f[-3]+(f[-1]-fmon)/3.
 
-        f.extend([0.,0.,0.])
+        f.extend([0., 0., 0.])
 
     # otherwise the sub-grid values are calculated and added to the list
     # using the persistence hypothesis as boundary condition
@@ -396,10 +396,10 @@ def IA3(g):
 
             # the monotonicity filter corrects the value at (fim1) by
             # substituting (fim1) with (fmon), see Eq. (27), (28) and (29)
-            fmon = min(3.*g[-3], \
-                       3.*g[-2], \
-                       np.sqrt(max(0,(18./13.*g[-3] - 5./13.*f[-7]) *
-                                     (18./13.*g[-2] - 5./13.*f[-1]))))
+            fmon = min(3. * g[-3],
+                       3. * g[-2],
+                       np.sqrt(max(0, (18. / 13. * g[-3] - 5. / 13. * f[-7]) *
+                                   (18. / 13. * g[-2] - 5. / 13. * f[-1]))))
 
             # recomputation of the sub-grid interval values while the
             # interval boundaries (fi) and (fip2) remains unchanged

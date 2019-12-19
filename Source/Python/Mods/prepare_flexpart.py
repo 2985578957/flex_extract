@@ -37,7 +37,9 @@
 #    International License. To view a copy of this license, visit
 #    http://creativecommons.org/licenses/by/4.0/ or send a letter to
 #    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
-#*******************************************************************************
+# *******************************************************************************
+# pylint: disable=ungrouped-imports
+# not necessary that we group the imports
 '''This script prepares the final version of the grib files which are
 then used by FLEXPART.
 
@@ -67,19 +69,19 @@ import datetime
 import os
 import inspect
 import sys
-import socket
 
 # software specific classes and modules from flex_extract
 # add path to local main python path for flex_extract to get full access
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
-import _config
+# pylint: disable=wrong-import-position
+#import _config
 from Mods.checks import check_ppid
 from Classes.UioFiles import UioFiles
-from Classes.ControlFile import ControlFile
-from Mods.tools import (setup_controldata, clean_up, get_cmdline_args,
-                        read_ecenv, make_dir, normal_exit)
+#from Classes.ControlFile import ControlFile
+from Mods.tools import (setup_controldata, clean_up, make_dir, normal_exit)
 from Classes.EcFlexpart import EcFlexpart
+# pylint: enable=wrong-import-position
 
 # ------------------------------------------------------------------------------
 # FUNCTION
@@ -145,7 +147,7 @@ def prepare_flexpart(ppid, c):
         start = start - datetime.timedelta(days=1)
 
     print('Prepare ' + start.strftime("%Y%m%d") +
-           "/to/" + end.strftime("%Y%m%d"))
+          '/to/' + end.strftime("%Y%m%d"))
 
     # create output dir if necessary
     if not os.path.exists(c.outputdir):
@@ -169,11 +171,6 @@ def prepare_flexpart(ppid, c):
     if c.stream.lower() == 'elda' and c.doubleelda:
         flexpart.calc_extra_elda(c.inputdir, c.prefix)
     flexpart.process_output(c)
-
-    # make use of a possible conversion to a
-    # specific flexpart binary format
-    if c.grib2flexpart:
-        flexpart.prepare_fp_files(c)
 
     # check if in debugging mode, then store all files
     # otherwise delete temporary files

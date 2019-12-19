@@ -53,7 +53,7 @@ MAX_LEVEL_LIST = [16, 19, 31, 40, 50, 60, 62, 91, 137]
 # ------------------------------------------------------------------------------
 
 FILE_MARS_REQUESTS = 'mars_requests.csv'
-FORTRAN_EXECUTABLE = 'CONVERT2'
+FORTRAN_EXECUTABLE = 'calc_etadot'
 TEMPFILE_USER_ENVVARS = 'ECMWF_ENV.template'
 FILE_USER_ENVVARS = 'ECMWF_ENV'
 TEMPFILE_INSTALL_COMPILEJOB = 'compilejob.template'
@@ -96,7 +96,7 @@ PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'Jobscripts')
 PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'Fortran')
 PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'Pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
-PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'Test')
+PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'Testing')
 if os.getenv('CONTROL'):
     # this is only needed if (gateway) version with job script is used!
     # because job is directly submitted from SCRATCH and because the

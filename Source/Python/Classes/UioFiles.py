@@ -41,15 +41,17 @@ import sys
 import fnmatch
 
 # software specific modules from flex_extract
+#pylint: disable=wrong-import-position
 sys.path.append('../')
 from Mods.tools import silent_remove, get_list_as_string
+#pylint: enable=wrong-import-position
 
 # ------------------------------------------------------------------------------
 # CLASS
 # ------------------------------------------------------------------------------
 
 class UioFiles(object):
-    '''Collection of files matching a specific pattern.
+    """Collection of files matching a specific pattern.
 
     The pattern can contain regular expressions for the files.
     The files are listed and can be transformed to a single string or
@@ -61,16 +63,16 @@ class UioFiles(object):
         Directory where to list the files.
 
     pattern : str
-        Regular expression pattern. For example: '\*.grb'
+        Regular expression pattern. For example: '*.grb'
 
     files : list of str
         List of files matching the pattern in the path.
-    '''
+    """
     # --------------------------------------------------------------------------
     # CLASS METHODS
     # --------------------------------------------------------------------------
     def __init__(self, path, pattern):
-        '''Assignes a specific pattern for these files.
+        """Assignes a specific pattern for these files.
 
         Parameters
         ----------
@@ -78,12 +80,12 @@ class UioFiles(object):
             Directory where to list the files.
 
         pattern : str
-            Regular expression pattern. For example: '\*.grb'
+            Regular expression pattern. For example: '*.grb'
 
         Return
         ------
 
-        '''
+        """
 
         self.path = path
         self.pattern = pattern
@@ -95,7 +97,7 @@ class UioFiles(object):
 
 
     def _list_files(self, path):
-        '''Lists all files in the directory with the matching
+        """Lists all files in the directory with the matching
         regular expression pattern.
 
         Parameters
@@ -106,11 +108,12 @@ class UioFiles(object):
         Return
         ------
 
-        '''
+        """
         # Get the absolute path
         path = os.path.abspath(path)
 
         # get all files in the dir and subdir as absolut path
+	    # pylint: disable=W0612
         for root, dirnames, filenames in os.walk(path):
             for filename in fnmatch.filter(filenames, self.pattern):
                 self.files.append(os.path.join(root, filename))
@@ -119,7 +122,7 @@ class UioFiles(object):
 
 
     def __str__(self):
-        '''Converts the list of files into a single string.
+        """Converts the list of files into a single string.
         The entries are sepereated by "," sign.
 
         Parameters
@@ -129,7 +132,7 @@ class UioFiles(object):
         ------
         files_string : str
             The content of the list as a single string.
-        '''
+        """
 
         filenames = [os.path.basename(f) for f in self.files]
         files_string = get_list_as_string(filenames, concatenate_sign=', ')
@@ -138,7 +141,7 @@ class UioFiles(object):
 
 
     def delete_files(self):
-        '''Deletes the files.
+        """Deletes the files.
 
         Parameters
         ----------
@@ -146,7 +149,7 @@ class UioFiles(object):
         Return
         ------
 
-        '''
+        """
 
         for old_file in self.files:
             silent_remove(old_file)

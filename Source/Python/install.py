@@ -67,9 +67,7 @@ from __future__ import print_function
 
 import os
 import sys
-import glob
 import subprocess
-import inspect
 import tarfile
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
@@ -178,16 +176,13 @@ def install_via_gateway(c):
     ------
 
     '''
-    import tarfile
 
     tarball_name = _config.FLEXEXTRACT_DIRNAME + '.tar'
     tar_file = os.path.join(_config.PATH_FLEXEXTRACT_DIR, tarball_name)
 
-    mk_compilejob(c.makefile, c.install_target, c.ecuid, c.ecgid,
-                  c.installdir)
+    mk_compilejob(c.makefile, c.ecuid, c.ecgid, c.installdir)
 
-    mk_job_template(c.ecuid, c.ecgid, c.gateway,
-                    c.destination, c.installdir)
+    mk_job_template(c.ecuid, c.ecgid, c.installdir)
 
     mk_env_vars(c.ecuid, c.ecgid, c.gateway, c.destination)
 
@@ -204,7 +199,7 @@ def install_via_gateway(c):
 
     print('Job compilation script has been submitted to ecgate for ' +
           'installation in ' + c.installdir +
-           '/' + _config.FLEXEXTRACT_DIRNAME)
+          '/' + _config.FLEXEXTRACT_DIRNAME)
     print('You should get an email with subject "flexcompile" within ' +
           'the next few minutes!')
 
@@ -223,12 +218,11 @@ def install_local(c):
     ------
 
     '''
-    import tarfile
 
     tar_file = os.path.join(_config.PATH_FLEXEXTRACT_DIR,
                             _config.FLEXEXTRACT_DIRNAME + '.tar')
 
-    if c.installdir == _config.PATH_FLEXEXTRACT_DIR :
+    if c.installdir == _config.PATH_FLEXEXTRACT_DIR:
         print('WARNING: installdir has not been specified')
         print('flex_extract will be installed in here by compiling the ' +
               'Fortran source in ' + _config.PATH_FORTRAN_SRC)
@@ -240,12 +234,12 @@ def install_local(c):
            os.path.abspath(c.installdir):
             mk_tarball(tar_file, c.install_target)
             make_dir(os.path.join(c.installdir,
-                                   _config.FLEXEXTRACT_DIRNAME))
+                                  _config.FLEXEXTRACT_DIRNAME))
             os.chdir(os.path.join(c.installdir,
-                                   _config.FLEXEXTRACT_DIRNAME))
+                                  _config.FLEXEXTRACT_DIRNAME))
             un_tarball(tar_file)
             os.chdir(os.path.join(c.installdir,
-                                   _config.FLEXEXTRACT_DIRNAME,
+                                  _config.FLEXEXTRACT_DIRNAME,
                                   _config.PATH_REL_FORTRAN_SRC))
 
     # Create Fortran executable - CONVERT2
@@ -285,7 +279,7 @@ def check_install_conditions(c):
         print('ERROR: unknown or missing installation target ')
         print('target: ', c.install_target)
         print('please specify correct installation target ' +
-              str(INSTALL_TARGETS))
+              str(_config.INSTALL_TARGETS))
         print('use -h or --help for help')
         sys.exit(1)
 
@@ -333,7 +327,6 @@ def mk_tarball(tarball_path, target):
     ------
 
     '''
-    from glob import glob
 
     print('Create tarball ...')
 
@@ -344,33 +337,33 @@ def mk_tarball(tarball_path, target):
 
     # get lists of the files to be added to the tar file
     if target == 'local':
-        ECMWF_ENV_FILE = []
+        ecmwf_env_file = []
         runfile = [os.path.relpath(x, ecd)
                    for x in UioFiles(_config.PATH_REL_RUN_DIR,
                                      'run_local.sh').files]
     else:
-        ECMWF_ENV_FILE = [_config.PATH_REL_ECMWF_ENV]
+        ecmwf_env_file = [_config.PATH_REL_ECMWF_ENV]
         runfile = [os.path.relpath(x, ecd)
-                       for x in UioFiles(_config.PATH_REL_RUN_DIR,
-                                         'run.sh').files]
+                   for x in UioFiles(_config.PATH_REL_RUN_DIR,
+                                     'run.sh').files]
 
     pyfiles = [os.path.relpath(x, ecd)
                for x in UioFiles(_config.PATH_REL_PYTHON_SRC, '*py').files]
     pytestfiles = [os.path.relpath(x, ecd)
-               for x in UioFiles(_config.PATH_REL_PYTHONTEST_SRC, '*py').files]
+                   for x in UioFiles(_config.PATH_REL_PYTHONTEST_SRC, '*py').files]
     controlfiles = [os.path.relpath(x, ecd)
                     for x in UioFiles(_config.PATH_REL_CONTROLFILES,
                                       'CONTROL*').files]
     testfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEST , '*').files]
+                 for x in UioFiles(_config.PATH_REL_TEST, '*').files]
     tempfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*.temp').files]
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.temp').files]
     nlfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*.nl').files]
+               for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.nl').files]
     gribtable = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEMPLATES , '*grib*').files]
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*grib*').files]
     ffiles = [os.path.relpath(x, ecd)
-              for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.f*').files]
+              for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.f90').files]
     hfiles = [os.path.relpath(x, ecd)
               for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.h').files]
     makefiles = [os.path.relpath(x, ecd)
@@ -379,23 +372,25 @@ def mk_tarball(tarball_path, target):
 
     # concatenate single lists to one for a better looping
     filelist = pyfiles + pytestfiles + controlfiles + tempfiles + nlfiles + \
-               ffiles + gribtable + hfiles + makefiles + ECMWF_ENV_FILE + \
+               ffiles + gribtable + hfiles + makefiles + ecmwf_env_file + \
                runfile + jobdir + testfiles +\
                ['CODE_OF_CONDUCT.md', 'LICENSE.md', 'README.md']
 
     # create installation tar-file
-    exclude_files = [".ksh"]
+    exclude_files = [".ksh", ".tar"]
     try:
         with tarfile.open(tarball_path, "w:gz") as tar_handle:
-            for file in filelist:
-                tar_handle.add(file, recursive=False,
+            for filename in filelist:
+                tar_handle.add(filename, recursive=False,
                                filter=lambda tarinfo: None
-                                      if os.path.splitext(tarinfo.name)[1]
-                                         in exclude_files
-                                      else tarinfo)
+                               if os.path.splitext(tarinfo.name)[1]
+                               in exclude_files
+                               else tarinfo)
     except tarfile.TarError as e:
+        print('... ERROR: ' + str(e))
+
         sys.exit('\n... error occured while trying to create the tar-file ' +
-                     str(tarball_path))
+                 str(tarball_path))
 
     return
 
@@ -421,7 +416,7 @@ def un_tarball(tarball_path):
             tar_handle.extractall()
     except tarfile.TarError as e:
         sys.exit('\n... error occured while trying to read tar-file ' +
-                     str(tarball_path))
+                 str(tarball_path))
     except OSError as e:
         print('... ERROR CODE: ' + str(e.errno))
         print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
@@ -464,11 +459,11 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
         ecmwfvars_template = loader.load(_config.TEMPFILE_USER_ENVVARS,
                                          cls=NewTextTemplate)
 
-        stream = ecmwfvars_template.generate(user_name = ecuid,
-                                             user_group = ecgid,
-                                             gateway_name = gateway,
-                                             destination_name = destination
-                                             )
+        stream = ecmwfvars_template.generate(user_name=ecuid,
+                                             user_group=ecgid,
+                                             gateway_name=gateway,
+                                             destination_name=destination
+                                            )
     except UndefinedError as e:
         print('... ERROR ' + str(e))
 
@@ -493,7 +488,7 @@ def mk_env_vars(ecuid, ecgid, gateway, destination):
 
     return
 
-def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
+def mk_compilejob(makefile, ecuid, ecgid, fp_root):
     '''Modifies the original job template file so that it is specified
     for the user and the environment were it will be applied. Result
     is stored in a new file "job.temp" in the python directory.
@@ -503,9 +498,6 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
     makefile : str
         Name of the makefile which should be used to compile FORTRAN
         CONVERT2 program.
-
-    target : str
-        The target where the installation should be done, e.g. the queue.
 
     ecuid : str
         The user id on ECMWF server.
@@ -534,12 +526,12 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
                                        cls=NewTextTemplate)
 
         stream = compile_template.generate(
-            usergroup = ecgid,
-            username = ecuid,
-            version_number = _config._VERSION_STR,
-            fp_root_scripts = fp_root,
-            makefile = makefile,
-            fortran_program = _config.FORTRAN_EXECUTABLE
+            usergroup=ecgid,
+            username=ecuid,
+            version_number=_config._VERSION_STR,
+            fp_root_scripts=fp_root,
+            makefile=makefile,
+            fortran_program=_config.FORTRAN_EXECUTABLE
         )
     except UndefinedError as e:
         print('... ERROR ' + str(e))
@@ -568,7 +560,7 @@ def mk_compilejob(makefile, target, ecuid, ecgid, fp_root):
 
     return
 
-def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
+def mk_job_template(ecuid, ecgid, fp_root):
     '''Modifies the original job template file so that it is specified
     for the user and the environment were it will be applied. Result
     is stored in a new file.
@@ -580,13 +572,6 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
 
     ecgid : str
         The group id on ECMWF server.
-
-    gateway : str
-        The gateway server the user is using.
-
-    destination : str
-        The remote destination which is used to transfer files
-        from ECMWF server to local gateway server.
 
     fp_root : str
        Path to the root directory of FLEXPART environment or flex_extract
@@ -614,10 +599,10 @@ def mk_job_template(ecuid, ecgid, gateway, destination, fp_root):
                                        cls=NewTextTemplate)
 
         stream = compile_template.generate(
-            usergroup = ecgid,
-            username = ecuid,
-            version_number = _config._VERSION_STR,
-            fp_root_path = fp_root_path_to_python,
+            usergroup=ecgid,
+            username=ecuid,
+            version_number=_config._VERSION_STR,
+            fp_root_path=fp_root_path_to_python,
         )
     except UndefinedError as e:
         print('... ERROR ' + str(e))
@@ -710,9 +695,9 @@ def mk_convert_build(src_path, makefile):
         print('ERROR: Makefile call failed:')
         print(e)
     else:
-        execute_subprocess(['ls', '-l', os.path.join(src_path,
-                            _config.FORTRAN_EXECUTABLE)], error_msg=
-                           'FORTRAN EXECUTABLE COULD NOT BE FOUND!')
+        execute_subprocess(['ls', '-l',
+                            os.path.join(src_path, _config.FORTRAN_EXECUTABLE)],
+                           error_msg='FORTRAN EXECUTABLE COULD NOT BE FOUND!')
 
     return
 
