@@ -26,7 +26,7 @@
 # THE USER HAS TO SPECIFY THESE PARAMETERS
 #
 TARGET='ecgate'
-MAKEFILE='makefile.eccodes'
+MAKEFILE='makefile_ecgate'
 ECUID='km4a'
 ECGID='at'
 GATEWAY='srvx8.img.univie.ac.at'
