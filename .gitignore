@@ -28,7 +28,7 @@ Source/Fortran/CONVERT2*
 *.tar*
 Run/ECMWF_ENV
 Run/Workspace/*
-Run/Jobscripts/*
+Run/Jobscripts/*sh
 Test/Installation/Convert/VERTICAL.EC
 Test/Installation/Convert/fort.15
 For_developers/Sphinx/build_temp
