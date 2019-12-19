@@ -41,11 +41,10 @@ Remote mode installation
 
 .. _ref-req-remote: 
  
-Remote environment requirements
-===============================
+Remote mode - dependencies
+==========================
 
-The environment for ``flex_extract`` on ECMWF servers has to provide these 
-software packages and libraries:
+The following software is required, and already available at the ECMWF servers:
     
 +---------------------------+-----------------+
 |  Python part              | Fortran part    |
@@ -62,9 +61,7 @@ software packages and libraries:
 Prepare remote environment
 ==========================
  
-The environment on the ECMWF server (such as *ecgate* or *cca*) is already 
-prepared. ECMWF server provide all libraries via a module system which is 
-going to be selected by ``flex_extract`` automatically.
+ECMWF servers provide all libraries via a module system. Loading the required modules is already built into ``flex_extract`` and no user action is needed.
 
 
 .. _ref-install-remote:
@@ -72,7 +69,7 @@ going to be selected by ``flex_extract`` automatically.
 Remote installation
 ===================
 
-First, log in on one of the ECMWF Linux server, such as *ecgate* or *cca/ccb*. 
+First, log in on one of the ECMWF servers, such as *ecgate* or *cca/ccb*. 
 Substitute *<ecuid>* with your ECMWF user name:
 
 .. code-block:: bash
@@ -100,41 +97,31 @@ password:
       Please note you must use your UID and ActivID code to login!
    ***************************************************************
 
-   <ecuid>@131.130.157.5's password: ***
+   <ecuid>@<ipname/address>'s password: ***
    Select hostname (ecgate, cca, ccb) [ecgate]: ecgate
 
    [<ecuid>@ecgb11 ~]$ 
    
-   
-Then, copy the ``flex_extract`` tar ball (from section :ref:`ref-download`) 
-to the ``$HOME`` directory of the ECMWF Linux server via ``scp``.
-Substitute the *<localuser>* and *<server.edu>* placeholders with your credentials. 
+Substitute the *<localuser>* and *<localmachine.tld>* placeholders with your local user name and the IP name or address of your local machine. 
 Untar the file and change into the ``flex_extract`` root directory. 
-
+   
 .. code-block:: bash
 
-   scp <localuser>@<server.edu>:/path/to/tarfile/flex_extract_vX.X.tar.gz  $HOME/
+   scp <localuser>@<localmachine.tld>:</path/to/tarfile/>flex_extract_vX.X.tar.gz  $HOME/
    cd $HOME
    tar xvf flex_extract_vX.X.tar.gz
    cd flex_extract_vX.X
    
 
-On these ECMWF servers, it is not necessary to prepare the environment or the 
-``Makefile`` for the Fortran program (``CONVERT2``) as described above. 
-All third party libraries are available from a module system. The ``Makefile``
-is optimized for ECMWF servers and the compilation 
-script ``compilejob.ksh``, which will be submitted by ``flex_extract`` to the 
-batch job queue at ECMWF, does load all relevant modules from the ECMWF's module system. 
-
-So there is just the need to execute the ``setup.sh`` script from the 
-``flex_extract`` root directory for installation. 
+   
+Execute the ``setup.sh`` script from the ``flex_extract``'s root directory. 
 Before executing it, it is necessary to adapt some parameters from ``setup.sh``
 described in :doc:`Documentation/Input/setup`. 
 
-Open ``setup.sh`` with your editor and adapt the values:  
-
+Open ``setup.sh`` with your preferred editor (e.g., ``nano'') and adapt the values:  
+   
 +----------------------------------------------+----------------------------------------------+   
-|   Take this for target = **ectrans**         |  Take this for target = **cca**              | 
+|   Use this for target = **ectrans**          |   Use this for target = **cca**              | 
 +----------------------------------------------+----------------------------------------------+
 | .. code-block:: bash                         | .. code-block:: bash                         | 
 |                                              |                                              | 
@@ -157,14 +144,11 @@ Open ``setup.sh`` with your editor and adapt the values:
 +----------------------------------------------+----------------------------------------------+
 
 :underline:`Please substitute the values of ECUID and ECGID
-with your own credentials and settings.`
+with your own ones (look at any of your files with ``ls -l'' to see uid and gid).`
 
 .. note::
 
-   If a local gateway server is available the transfer of files could be done
-   via the ``ECaccess`` commands. Therefore a valid *GATEWAY* and *DESTINATION*
-   have to be present and should be set in the ``setup.sh`` file. 
-
+   If a local gateway server is available, files can be transferred with ``ECaccess`` commands. In that case, a valid *GATEWAY* and *DESTINATION* have to be present in the ``setup.sh`` file (even if not used, the lines must not be deleted). 
 
 Afterwards, type:
 
@@ -173,7 +157,7 @@ Afterwards, type:
    module load python3   
    ./setup.sh
    
-to start the installation. You should see the following output at the command line. 
+to start the installation. You should see the following on standard output. 
     
     
 .. code-block:: bash
@@ -184,7 +168,7 @@ to start the installation. You should see the following output at the command li
    You should get an email with subject "flexcompile" within the next few minutes!
 
     
-The email content should look like this with a "SUCCESS" statement in the last line:
+``Flex_extract`` uses the email address connectd to the user account on ECMWF servers. The email content should look like this with a "SUCCESS" statement in the last line:
 
 .. code-block:: bash
 

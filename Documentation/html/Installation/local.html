@@ -93,12 +93,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#environment-requirements">Environment requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="remote.html">Remote mode installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gateway.html">Gateway mode installation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Local mode installation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#local-environment-requirements">Local environment requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#local-mode-dependencies">Local mode - dependencies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#prepare-local-environment">Prepare local environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#test-local-environment">Test local environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#local-installation">Local installation</a></li>
@@ -189,12 +189,11 @@
 <h1>Local mode installation<a class="headerlink" href="#local-mode-installation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="local-environment-requirements">
-<span id="ref-req-local"></span><span id="ref-local-mode"></span><h2>Local environment requirements<a class="headerlink" href="#local-environment-requirements" title="Permalink to this headline">¶</a></h2>
-<p>For the local access modes <strong>member</strong> and <strong>public</strong> there is no difference in
-the installation process.</p>
+<div class="section" id="local-mode-dependencies">
+<span id="ref-req-local"></span><span id="ref-local-mode"></span><h2>Local mode - dependencies<a class="headerlink" href="#local-mode-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The installation is the same for the access modes <strong>member</strong> and <strong>public</strong>.</p>
 <p>The environment on your local system has to provide these software packages
-and libraries, since all extraction and preparation is done at the local system:</p>
+and libraries, since the preparation of the extraction and the post-processing is done on the local machine:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="74%" />
@@ -226,21 +225,25 @@ and libraries, since all extraction and preparation is done at the local system:
 </div>
 <div class="section" id="prepare-local-environment">
 <span id="ref-prep-local"></span><h2>Prepare local environment<a class="headerlink" href="#prepare-local-environment" title="Permalink to this headline">¶</a></h2>
-<p>The easiest way to install all required packages is to use the package management system of your Linux distribution. To do so, it is necessary to use a user with admin rights.
-The installation was tested on a <em>Debian GNU/Linux buster/sid</em> and an <em>Ubuntu 18.04 Bionic Beaver</em> system.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># On a Linux Debian or Ubuntu system do</span>
+<p>The easiest way to install all required packages is to use the package management system of your Linux distribution  which requires admin rights.
+The installation was tested on a <em>Debian GNU/Linux buster</em> and an <em>Ubuntu 18.04 Bionic Beaver</em> system.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># On a Debian or Debian-derived sytem (e. g. Ubuntu) system you may use the following commands (or equivalent commands of your preferred package manager):</span>
 <span class="c1"># (if not already available):</span>
-apt-get install python3 <span class="o">(</span>usually available on normal Linux systems<span class="o">)</span>
-apt-get install pip
-apt-get install gfortran
-apt-get install fftw3-dev
-apt-get install libeccodes-dev
-apt-get install libemos-dev
-apt-get install python3-eccodes
-apt-get install genshi
-apt-get install numpy
-pip install cdsapi
-pip install ecmwf-api-client
+ apt-get install python3 <span class="o">(</span>usually already available on GNU/Linux systems<span class="o">)</span>
+ apt-get install python3-eccodes
+ apt-get install python3-genshi
+ apt-get install python3-numpy
+ apt-get install gfortran
+ apt-get install fftw3-dev
+ apt-get install libeccodes-dev
+ apt-get install libemos-dev
+<span class="c1"># Some of these packages will pull in further packages as dependencies. This is fine, and some are even needed by ``flex_extract&#39;&#39;.</span>
+
+
+<span class="c1"># As currently the CDS and ECMWF API packages are not available as Debian packages, they need to be installed outside of the Debian (Ubuntu etc.) package management system. The recommended way is:</span>
+ apt-get install pip
+ pip install cdsapi
+ pip install ecmwf-api-client
 </pre></div>
 </div>
 <div class="admonition note">
@@ -252,29 +255,22 @@ pip install ecmwf-api-client
 </pre></div>
 </div>
 </div>
-<p>The CDS API (cdsapi) and the ECMWF Web API (ecmwf-api-client) have both to be installed since ERA5 can only be retrieved with the <code class="docutils literal notranslate"><span class="pre">CDS</span> <span class="pre">API</span></code> and all other datasets with the <code class="docutils literal notranslate"><span class="pre">ECMWF</span> <span class="pre">Web</span> <span class="pre">API</span></code>.</p>
+<p>The CDS API (cdsapi) is required for ERA5 data and the ECMWF Web API (ecmwf-api-client) for all other public datasets.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Since <strong>public users</strong> currently don’t have access to the full <em>ERA5</em> dataset they can skip the installation of the <code class="docutils literal notranslate"><span class="pre">CDS</span> <span class="pre">API</span></code>.</p>
 </div>
-<p>Both user groups have to provide key’s with their credentials for the Web API’s in their home directory. Therefore, follow these instructions:</p>
+<p>Both user groups have to provide keys with their credentials for the Web API’s in their home directory. Therefore, follow these instructions:</p>
 <dl class="docutils">
 <dt>ECMWF Web API:</dt>
-<dd>Go to <a class="reference external" href="https://confluence.ecmwf.int//display/WEBAPI/Access+MARS">MARS access</a> website and log in with your credentials. Afterwards, on this site in section “Install ECMWF KEY” the key for the ECMWF Web API should be listed. Please follow the instructions in this section under point 1 (save the key in a file <cite>.ecmwfapirc</cite> in your home directory).</dd>
+<dd>Go to <a class="reference external" href="https://confluence.ecmwf.int//display/WEBAPI/Access+MARS">MARS access</a> website and log in with your credentials. Afterwards, on this site in section “Install ECMWF KEY” the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file <cite>.ecmwfapirc</cite> in your home directory).</dd>
 <dt>CDS API:</dt>
 <dd>Go to ‘CDS API registration’_ and register there too. Log in at the <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> website and follow the instructions at section “Install the CDS API key” to save your credentials in a <cite>.cdsapirc</cite> file.</dd>
 </dl>
 </div>
 <div class="section" id="test-local-environment">
 <span id="ref-test-local"></span><h2>Test local environment<a class="headerlink" href="#test-local-environment" title="Permalink to this headline">¶</a></h2>
-<p>Check the availability of the system packages with <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>, depending on your system. For example:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ dpkg -s libeccodes-dev <span class="p">|</span>  grep Status
-<span class="c1"># or</span>
-$ rpm -q libeccodes-dev
-</pre></div>
-</div>
-<p>Afterwards, check the availability of the python packages by typing <code class="docutils literal notranslate"><span class="pre">python3</span></code> in
-a terminal window and run the <code class="docutils literal notranslate"><span class="pre">import</span></code> commands in the python shell. If there are no error messages, you succeeded in setting up the environment.</p>
+<p>Check the availability of the python packages by typing <code class="docutils literal notranslate"><span class="pre">python3</span></code> in a terminal window and run the <code class="docutils literal notranslate"><span class="pre">import</span></code> commands in the python shell. If there are no error messages, you succeeded in setting up the environment.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check in python3 console</span>
 <span class="kn">import</span> <span class="nn">eccodes</span>
 <span class="kn">import</span> <span class="nn">genshi</span>
@@ -285,7 +281,7 @@ a terminal window and run the <code class="docutils literal notranslate"><span c
 </div>
 <div class="section" id="test-the-web-api-s">
 <h3>Test the Web API’s<a class="headerlink" href="#test-the-web-api-s" title="Permalink to this headline">¶</a></h3>
-<p>You can start very simple test retrievals for both Web API’s to be sure that everything works. This is recommended to minimize the range of possible errors using <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> later on.</p>
+<p>You can start very simple test retrievals for both Web APIs to be sure that everything works. This is recommended to minimise the range of possible errors using <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> later on.</p>
 <div class="section" id="ecmwf-web-api">
 <h4>ECMWF Web API<a class="headerlink" href="#ecmwf-web-api" title="Permalink to this headline">¶</a></h4>
 <table border="1" class="docutils">
@@ -294,8 +290,8 @@ a terminal window and run the <code class="docutils literal notranslate"><span c
 <col width="50%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td>Please use this piece of python code for <strong>Member user</strong>:</td>
-<td>Please use this piece of python code for <strong>Public user</strong>:</td>
+<tr class="row-odd"><td>Please use this piece of Python code for <strong>Member user</strong>:</td>
+<td>Please use this piece of Python code for <strong>Public user</strong>:</td>
 </tr>
 <tr class="row-even"><td><div class="first last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecmwfapi</span> <span class="kn">import</span> <span class="n">ECMWFService</span>
 
@@ -343,8 +339,8 @@ a terminal window and run the <code class="docutils literal notranslate"><span c
 </div>
 <div class="section" id="cds-api">
 <h4>CDS API<a class="headerlink" href="#cds-api" title="Permalink to this headline">¶</a></h4>
-<p>Since ERA5 extraction with CDS API might take some time due to the very high number of requests, you can start by retrieving some online stored pressure levels (not from MARS). This is usually much faster and gives a quick result to find out if the web API works:</p>
-<p>Please use this piece of python code to retrieve a small sample of <em>ERA5</em> pressure levels:</p>
+<p>Extraction of ERA5 data via CDS API might take time as currently there is a high demand for ERA5 data. Therefore, as a simple test for the API just retrieve pressure-level data (even if that is NOT what we need for FLEXPART), as they are stored on disk and don’t need to be retrieved from MARS (which is the time-consuming action):</p>
+<p>Please use this piece of Python code to retrieve a small sample of <em>ERA5</em> pressure levels:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
@@ -363,9 +359,8 @@ a terminal window and run the <code class="docutils literal notranslate"><span c
 <span class="s2">&quot;download_cdsapi.grib&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Afterwards, when you know that the CDS API generally works, you can try to extract some
-data from the MARS archive. From the latest experience we know that this can take a while.</p>
-<p>Please use this piece of python code to retrieve a small <em>ERA5</em> data sample as a <strong>member user</strong>! The <strong>public user</strong> doesn’t have access to the full <em>ERA5</em> dataset!</p>
+<p>If you know that your CDS API works, you can try to extract some data from MARS.</p>
+<p>Please use this piece of Python code to retrieve a small <em>ERA5</em> data sample as a <strong>member-state user</strong>! The <strong>Public user</strong> do not have access to the full <em>ERA5</em> dataset!</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
 
 <span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
@@ -393,32 +388,30 @@ data from the MARS archive. From the latest experience we know that this can tak
 </div>
 <div class="section" id="local-installation">
 <span id="ref-install-local"></span><h2>Local installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
-<p>First prepare the Fortran <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for your environment and set it
-in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script. (See section <span class="xref std std-ref">ref-convert</span> for information on
-the Fortran program.)
-<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has already two <code class="docutils literal notranslate"><span class="pre">Makefiles</span></code> prepared for te <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> and
-the <code class="docutils literal notranslate"><span class="pre">ifort</span></code> compiler:</p>
+<p>First prepare the Fortran <code class="docutils literal notranslate"><span class="pre">makefile</span></code> for your environment and set it in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script. (See section <span class="xref std std-ref">ref-convert</span> for information on the Fortran program.)
+<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> comes with two <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> prepared for the <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> and
+the <code class="docutils literal notranslate"><span class="pre">ifort</span></code> compiler. The <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> version assumes that <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> and <code class="docutils literal notranslate"><span class="pre">emoslib</span></code> are installed as distribution packages.</p>
 <blockquote>
 <div><ul class="simple">
-<li>Makefile.local.gfortran</li>
-<li>Makefile.local.ifort</li>
+<li>makefile.local.gfortran</li>
+<li>makefile.local.ifort</li>
 </ul>
 </div></blockquote>
-<p>They can be found in the path <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/fortran</span></code>, where
+<p>They can be found at <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran</span></code>, where
 <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.</p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
 <p class="last">It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
-<code class="docutils literal notranslate"><span class="pre">Makefiles</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">makefiles</span></code> if other than standard paths are used.</p>
 </div>
 <p>So starting from the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>,
-go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> of your
+go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> of your
 choice to modify with an editor of your choice. We use the <code class="docutils literal notranslate"><span class="pre">nedit</span></code> in this case.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/source/fortran
-nedit Makefile.local.gfortran
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/Source/Fortran
+nedit makefile.local.gfortran
 </pre></div>
 </div>
-<p>Edit the pathes to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine.</p>
+<p>Edit the paths to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine.</p>
 <div class="admonition caution">
 <p class="first admonition-title">Caution</p>
 <p>This can vary from system to system.
@@ -431,7 +424,7 @@ $ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
 </div>
 <p class="last">to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
 </div>
-<p>Substitute these paths in the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for parameters <strong>ECCODES_INCLUDE_DIR</strong>
+<p>Substitute these paths in the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> for parameters <strong>ECCODES_INCLUDE_DIR</strong>
 and <strong>ECCODES_LIB</strong> and save it.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on a current Debian 10 Testing system (May 2019)</span>
 <span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
@@ -439,8 +432,7 @@ and <strong>ECCODES_LIB</strong> and save it.</p>
 </pre></div>
 </div>
 <p>The Fortran program called <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> will be compiled during the
-installation process to get an executable. Therefore the <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
-has to be set in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script.</p>
+installation process.Therefore the name of the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> to be used needs to be given in  <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.</p>
 <p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script
 and adapt the installation parameters in the section labelled with
 “AVAILABLE COMMANDLINE ARGUMENTS TO SET” like shown below.</p>
@@ -453,7 +445,7 @@ and adapt the installation parameters in the section labelled with
 <span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
 <span class="c1">#</span>
 <span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;local&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.local.gfortran&#39;</span>
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile.local.gfortran&#39;</span>
 <span class="nv">ECUID</span><span class="o">=</span>None
 <span class="nv">ECGID</span><span class="o">=</span>None
 <span class="nv">GATEWAY</span><span class="o">=</span>None
@@ -469,7 +461,7 @@ and adapt the installation parameters in the section labelled with
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup.sh
 </pre></div>
 </div>
-<p>to start the installation. You should see the following output at the command line.</p>
+<p>to start the installation. You should see the following standard output.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
 WARNING: installdir has not been specified
 flex_extract will be installed in here by compiling the Fortran <span class="nb">source</span> in /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/source/fortran

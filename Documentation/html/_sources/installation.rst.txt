@@ -131,14 +131,21 @@ git repo
 
 .. _ref-requirements: 
  
-Environment requirements
-========================
+Dependencies
+============
 
 The software required for running ``flex_extract`` depends on the :doc:`Documentation/Overview/app_modes` and therefore is described in the respective specific installation sections. 
-
     
 Generally speaking, ``flex_extract`` requires `Python 3`_ and Fortran together with certain modules / libraries.
 We tested ``flex_extract`` with the python3 package from the the GNU/Linux distribution and Anaconda Python. The required python3 modules should prefarably be installed as distribution packages, or alternatively using Python's own package manager ``pip`` (this may mess up some aspects of your python installation, especially if you use ``pip`` as root. Think about using virtual environments.).
+
+Before installing the system packages check the availability with ``dpkg -s <package-name> |  grep Status`` or ``rpm -q <package_name>``, depending on your system. For example: 
+
+.. code-block:: sh
+
+   $ dpkg -s libeccodes-dev |  grep Status
+   # or
+   $ rpm -q libeccodes-dev
 
 
 
@@ -197,9 +204,7 @@ Select one of the following modes to install:
 ``Flex_extract`` in combination with ``FLEXPART``
 =================================================
 
-Some users might like to incorporate ``flex_extract`` directly into the ``FLEXPART``
-distribution. Then the installation path has to be changed by setting the parameter
-`installdir` in the ``setup.sh`` file to the ``script`` directory in the ``FLEXPART`` root directoy. 
+Some users might wish to incorporate ``flex_extract`` directly into the ``FLEXPART`` distribution. Then the installation path has to be changed by setting the parameter `installdir` in the ``setup.sh`` file to the ``script`` directory in the ``FLEXPART`` root directoy. 
 
 
 
@@ -217,22 +222,20 @@ Test installation
 Fortran program test
 --------------------
 
-To check if the compilation of the Fortran program ``CONVERT2`` was successful
-a quick program call on a minimal prepared dataset can be done.
+To check whether the Fortran program ``CONVERT2`` has been compiled and runs properly, it can be applied to a prepared minimal dataset.
 
-For this, go from the ``flex_extract`` root directory to the test 
-directory and call the executable of the Fortran program.
+For this, go from the ``flex_extract`` root directory to the ``Testing/Installation/Convert/`` directory and execute the Fortran program.
 
 .. note:: 
    Remember that you might have to log in at the ECMWF server if you used the installation for the **remote** or **gateway** mode. There you find the ``flex_extract`` root directory in your ``$HOME`` directory.
 
 .. code-block:: bash
    
-   cd test/Installation/Convert
-   # call the Fortran progam without arguments
-   ../../../source/fortran/CONVERT2
+   cd Testing/Installation/Convert
+   # execute the Fortran progam without arguments
+   ../../../Source/Fortran/CONVERT2
 
-The installation was successfull if it showed the following output:
+The installation was successfull if you obtain on standard output:
 
 .. code-block:: bash
 

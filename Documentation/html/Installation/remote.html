@@ -93,10 +93,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation.html#environment-requirements">Environment requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Remote mode installation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#remote-environment-requirements">Remote environment requirements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remote-mode-dependencies">Remote mode - dependencies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#prepare-remote-environment">Prepare remote environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#remote-installation">Remote installation</a></li>
 </ul>
@@ -188,10 +188,9 @@
 <h1>Remote mode installation<a class="headerlink" href="#remote-mode-installation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="remote-environment-requirements">
-<span id="ref-req-remote"></span><span id="ref-remote-mode"></span><h2>Remote environment requirements<a class="headerlink" href="#remote-environment-requirements" title="Permalink to this headline">¶</a></h2>
-<p>The environment for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> on ECMWF servers has to provide these
-software packages and libraries:</p>
+<div class="section" id="remote-mode-dependencies">
+<span id="ref-req-remote"></span><span id="ref-remote-mode"></span><h2>Remote mode - dependencies<a class="headerlink" href="#remote-mode-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The following software is required, and already available at the ECMWF servers:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="61%" />
@@ -221,13 +220,11 @@ software packages and libraries:</p>
 </div>
 <div class="section" id="prepare-remote-environment">
 <span id="ref-prep-remote"></span><h2>Prepare remote environment<a class="headerlink" href="#prepare-remote-environment" title="Permalink to this headline">¶</a></h2>
-<p>The environment on the ECMWF server (such as <em>ecgate</em> or <em>cca</em>) is already
-prepared. ECMWF server provide all libraries via a module system which is
-going to be selected by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> automatically.</p>
+<p>ECMWF servers provide all libraries via a module system. Loading the required modules is already built into <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and no user action is needed.</p>
 </div>
 <div class="section" id="remote-installation">
 <span id="ref-install-remote"></span><h2>Remote installation<a class="headerlink" href="#remote-installation" title="Permalink to this headline">¶</a></h2>
-<p>First, log in on one of the ECMWF Linux server, such as <em>ecgate</em> or <em>cca/ccb</em>.
+<p>First, log in on one of the ECMWF servers, such as <em>ecgate</em> or <em>cca/ccb</em>.
 Substitute <em>&lt;ecuid&gt;</em> with your ECMWF user name:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh -X &lt;ecuid&gt;@ecaccess.ecmwf.int
 </pre></div>
@@ -250,41 +247,32 @@ password:</p>
    Please note you must use your UID and ActivID code to login!
 ***************************************************************
 
-&lt;ecuid&gt;@131.130.157.5&#39;s password: ***
+&lt;ecuid&gt;@&lt;ipname/address&gt;&#39;s password: ***
 Select hostname (ecgate, cca, ccb) [ecgate]: ecgate
 
 [&lt;ecuid&gt;@ecgb11 ~]$
 </pre></div>
 </div>
-<p>Then, copy the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> tar ball (from section <a class="reference internal" href="../installation.html#ref-download"><span class="std std-ref">Download flex_extract</span></a>)
-to the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory of the ECMWF Linux server via <code class="docutils literal notranslate"><span class="pre">scp</span></code>.
-Substitute the <em>&lt;localuser&gt;</em> and <em>&lt;server.edu&gt;</em> placeholders with your credentials.
+<p>Substitute the <em>&lt;localuser&gt;</em> and <em>&lt;localmachine.tld&gt;</em> placeholders with your local user name and the IP name or address of your local machine.
 Untar the file and change into the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp &lt;localuser&gt;@&lt;server.edu&gt;:/path/to/tarfile/flex_extract_vX.X.tar.gz  <span class="nv">$HOME</span>/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp &lt;localuser&gt;@&lt;localmachine.tld&gt;:&lt;/path/to/tarfile/&gt;flex_extract_vX.X.tar.gz  <span class="nv">$HOME</span>/
 <span class="nb">cd</span> <span class="nv">$HOME</span>
 tar xvf flex_extract_vX.X.tar.gz
 <span class="nb">cd</span> flex_extract_vX.X
 </pre></div>
 </div>
-<p>On these ECMWF servers, it is not necessary to prepare the environment or the
-<code class="docutils literal notranslate"><span class="pre">Makefile</span></code> for the Fortran program (<code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>) as described above.
-All third party libraries are available from a module system. The <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>
-is optimized for ECMWF servers and the compilation
-script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code>, which will be submitted by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> to the
-batch job queue at ECMWF, does load all relevant modules from the ECMWF’s module system.</p>
-<p>So there is just the need to execute the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script from the
-<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory for installation.
+<p>Execute the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s root directory.
 Before executing it, it is necessary to adapt some parameters from <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
 described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p>
-<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your editor and adapt the values:</p>
+<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your preferred editor (e.g., <a href="#id1"><span class="problematic" id="id2">``</span></a>nano’‘) and adapt the values:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="50%" />
 <col width="50%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td>Take this for target = <strong>ectrans</strong></td>
-<td>Take this for target = <strong>cca</strong></td>
+<tr class="row-odd"><td>Use this for target = <strong>ectrans</strong></td>
+<td>Use this for target = <strong>cca</strong></td>
 </tr>
 <tr class="row-even"><td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
 <span class="c1"># -----------------------------------------</span>
@@ -328,26 +316,24 @@ described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p
 </tbody>
 </table>
 <p><span class="underline">Please substitute the values of ECUID and ECGID
-with your own credentials and settings.</span></p>
+with your own ones (look at any of your files with ``ls -l’’ to see uid and gid).</span></p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">If a local gateway server is available the transfer of files could be done
-via the <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. Therefore a valid <em>GATEWAY</em> and <em>DESTINATION</em>
-have to be present and should be set in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file.</p>
+<p class="last">If a local gateway server is available, files can be transferred with <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. In that case, a valid <em>GATEWAY</em> and <em>DESTINATION</em> have to be present in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file (even if not used, the lines must not be deleted).</p>
 </div>
 <p>Afterwards, type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python3
 ./setup.sh
 </pre></div>
 </div>
-<p>to start the installation. You should see the following output at the command line.</p>
+<p>to start the installation. You should see the following on standard output.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
 Create tarball ...
 Job compilation script has been submitted to ecgate <span class="k">for</span> installation in <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_vX.X
 You should get an email with subject <span class="s2">&quot;flexcompile&quot;</span> within the next few minutes!
 </pre></div>
 </div>
-<p>The email content should look like this with a “SUCCESS” statement in the last line:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the email address connectd to the user account on ECMWF servers. The email content should look like this with a “SUCCESS” statement in the last line:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
 gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
 gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f

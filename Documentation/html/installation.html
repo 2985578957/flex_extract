@@ -93,7 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#registration-at-ecmwf">Registration at ECMWF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#environment-requirements">Environment requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Installation/remote.html">Remote mode installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Installation/gateway.html">Gateway mode installation</a></li>
@@ -282,11 +282,17 @@
 </dd>
 </dl>
 </div>
-<div class="section" id="environment-requirements">
-<span id="ref-requirements"></span><h2>Environment requirements<a class="headerlink" href="#environment-requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dependencies">
+<span id="ref-requirements"></span><h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p>The software required for running <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and therefore is described in the respective specific installation sections.</p>
 <p>Generally speaking, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> requires <a class="reference external" href="https://docs.python.org/3/">Python 3</a> and Fortran together with certain modules / libraries.
 We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the python3 package from the the GNU/Linux distribution and Anaconda Python. The required python3 modules should prefarably be installed as distribution packages, or alternatively using Python’s own package manager <code class="docutils literal notranslate"><span class="pre">pip</span></code> (this may mess up some aspects of your python installation, especially if you use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as root. Think about using virtual environments.).</p>
+<p>Before installing the system packages check the availability with <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>, depending on your system. For example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ dpkg -s libeccodes-dev <span class="p">|</span>  grep Status
+<span class="c1"># or</span>
+$ rpm -q libeccodes-dev
+</pre></div>
+</div>
 </div>
 <div class="section" id="installation-of-flex-extract">
 <span id="ref-install-fe"></span><h2>Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code><a class="headerlink" href="#installation-of-flex-extract" title="Permalink to this headline">¶</a></h2>
@@ -306,28 +312,24 @@ installation has to be done. At the users local side not all software has to be 
 </div>
 <div class="section" id="flex-extract-in-combination-with-flexpart">
 <h2><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> in combination with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code><a class="headerlink" href="#flex-extract-in-combination-with-flexpart" title="Permalink to this headline">¶</a></h2>
-<p>Some users might like to incorporate <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly into the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>
-distribution. Then the installation path has to be changed by setting the parameter
-<cite>installdir</cite> in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file to the <code class="docutils literal notranslate"><span class="pre">script</span></code> directory in the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> root directoy.</p>
+<p>Some users might wish to incorporate <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly into the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> distribution. Then the installation path has to be changed by setting the parameter <cite>installdir</cite> in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file to the <code class="docutils literal notranslate"><span class="pre">script</span></code> directory in the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> root directoy.</p>
 </div>
 <div class="section" id="test-installation">
 <span id="ref-testinstallfe"></span><h2>Test installation<a class="headerlink" href="#test-installation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="fortran-program-test">
 <h3>Fortran program test<a class="headerlink" href="#fortran-program-test" title="Permalink to this headline">¶</a></h3>
-<p>To check if the compilation of the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> was successful
-a quick program call on a minimal prepared dataset can be done.</p>
-<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the test
-directory and call the executable of the Fortran program.</p>
+<p>To check whether the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> has been compiled and runs properly, it can be applied to a prepared minimal dataset.</p>
+<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Convert/</span></code> directory and execute the Fortran program.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Remember that you might have to log in at the ECMWF server if you used the installation for the <strong>remote</strong> or <strong>gateway</strong> mode. There you find the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in your <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory.</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> test/Installation/Convert
-<span class="c1"># call the Fortran progam without arguments</span>
-../../../source/fortran/CONVERT2
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Convert
+<span class="c1"># execute the Fortran progam without arguments</span>
+../../../Source/Fortran/CONVERT2
 </pre></div>
 </div>
-<p>The installation was successfull if it showed the following output:</p>
+<p>The installation was successfull if you obtain on standard output:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> readspectral:            <span class="m">1</span>  records <span class="nb">read</span>
  readlatlon:            <span class="m">8</span>  records <span class="nb">read</span>
 STATISTICS:  <span class="m">98842</span>.4598 <span class="m">98709</span>.7359  <span class="m">5120</span>.5385

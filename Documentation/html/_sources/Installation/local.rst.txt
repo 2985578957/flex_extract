@@ -45,14 +45,13 @@ Local mode installation
 
 .. _ref-req-local: 
  
-Local environment requirements
-==============================
+Local mode - dependencies
+=========================
 
-For the local access modes **member** and **public** there is no difference in 
-the installation process.
+The installation is the same for the access modes **member** and **public**.
 
 The environment on your local system has to provide these software packages
-and libraries, since all extraction and preparation is done at the local system:
+and libraries, since the preparation of the extraction and the post-processing is done on the local machine:
 
 +------------------------------------------------+-----------------+
 |  Python part                                   | Fortran part    |
@@ -71,25 +70,29 @@ and libraries, since all extraction and preparation is done at the local system:
 Prepare local environment
 =========================
 
-The easiest way to install all required packages is to use the package management system of your Linux distribution. To do so, it is necessary to use a user with admin rights.
-The installation was tested on a *Debian GNU/Linux buster/sid* and an *Ubuntu 18.04 Bionic Beaver* system.
+The easiest way to install all required packages is to use the package management system of your Linux distribution  which requires admin rights.
+The installation was tested on a *Debian GNU/Linux buster* and an *Ubuntu 18.04 Bionic Beaver* system.
 
 .. code-block:: sh
 
-   # On a Linux Debian or Ubuntu system do
-   # (if not already available):
-   apt-get install python3 (usually available on normal Linux systems)
-   apt-get install pip
+  # On a Debian or Debian-derived sytem (e. g. Ubuntu) system you may use the following commands (or equivalent commands of your preferred package manager):
+  # (if not already available):
+   apt-get install python3 (usually already available on GNU/Linux systems)
+   apt-get install python3-eccodes
+   apt-get install python3-genshi
+   apt-get install python3-numpy
    apt-get install gfortran
    apt-get install fftw3-dev 
    apt-get install libeccodes-dev
    apt-get install libemos-dev 
-   apt-get install python3-eccodes
-   apt-get install genshi
-   apt-get install numpy
+  # Some of these packages will pull in further packages as dependencies. This is fine, and some are even needed by ``flex_extract''.
+  
+
+  # As currently the CDS and ECMWF API packages are not available as Debian packages, they need to be installed outside of the Debian (Ubuntu etc.) package management system. The recommended way is:
+   apt-get install pip
    pip install cdsapi 
    pip install ecmwf-api-client 
-
+   
 .. note::
 
     In case you would like to use Anaconda Python we recommend you follow the installation instructions of 
@@ -98,39 +101,29 @@ The installation was tested on a *Debian GNU/Linux buster/sid* and an *Ubuntu 18
 
     .. code-block:: bash
 
-       conda install conda-forge::python-eccodes
-
-
-The CDS API (cdsapi) and the ECMWF Web API (ecmwf-api-client) have both to be installed since ERA5 can only be retrieved with the ``CDS API`` and all other datasets with the ``ECMWF Web API``.     
-       
+       conda install conda-forge::python-eccodes   
+   
+The CDS API (cdsapi) is required for ERA5 data and the ECMWF Web API (ecmwf-api-client) for all other public datasets.   
+    
 .. note:: 
 
     Since **public users** currently don't have access to the full *ERA5* dataset they can skip the installation of the ``CDS API``. 
-    
-Both user groups have to provide key's with their credentials for the Web API's in their home directory. Therefore, follow these instructions:
-   
+
+Both user groups have to provide keys with their credentials for the Web API's in their home directory. Therefore, follow these instructions:
+       
 ECMWF Web API:
-   Go to `MARS access`_ website and log in with your credentials. Afterwards, on this site in section "Install ECMWF KEY" the key for the ECMWF Web API should be listed. Please follow the instructions in this section under point 1 (save the key in a file `.ecmwfapirc` in your home directory). 
+   Go to `MARS access`_ website and log in with your credentials. Afterwards, on this site in section "Install ECMWF KEY" the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file `.ecmwfapirc` in your home directory). 
      
 CDS API:
    Go to 'CDS API registration'_ and register there too. Log in at the `cdsapi`_ website and follow the instructions at section "Install the CDS API key" to save your credentials in a `.cdsapirc` file.
-     
 
+   
 .. _ref-test-local:
    
 Test local environment
 ======================
 
-Check the availability of the system packages with ``dpkg -s <package-name> |  grep Status`` or ``rpm -q <package_name>``, depending on your system. For example: 
-
-.. code-block:: sh
-
-   $ dpkg -s libeccodes-dev |  grep Status
-   # or
-   $ rpm -q libeccodes-dev
- 
-Afterwards, check the availability of the python packages by typing ``python3`` in
-a terminal window and run the ``import`` commands in the python shell. If there are no error messages, you succeeded in setting up the environment.
+Check the availability of the python packages by typing ``python3`` in a terminal window and run the ``import`` commands in the python shell. If there are no error messages, you succeeded in setting up the environment.
 
 .. code-block:: python
     
@@ -146,14 +139,15 @@ a terminal window and run the ``import`` commands in the python shell. If there 
 Test the Web API's
 ------------------
 
-You can start very simple test retrievals for both Web API's to be sure that everything works. This is recommended to minimize the range of possible errors using ``flex_extract`` later on.
+You can start very simple test retrievals for both Web APIs to be sure that everything works. This is recommended to minimise the range of possible errors using ``flex_extract`` later on.
+
 
 ECMWF Web API
 ^^^^^^^^^^^^^
 
 
 +----------------------------------------------------------+----------------------------------------------------------+
-|Please use this piece of python code for **Member user**: |Please use this piece of python code for **Public user**: |
+|Please use this piece of Python code for **Member user**: |Please use this piece of Python code for **Public user**: |
 +----------------------------------------------------------+----------------------------------------------------------+
 |.. code-block:: python                                    |.. code-block:: python                                    |
 |                                                          |                                                          |
@@ -181,9 +175,9 @@ ECMWF Web API
 CDS API 
 ^^^^^^^
 
-Since ERA5 extraction with CDS API might take some time due to the very high number of requests, you can start by retrieving some online stored pressure levels (not from MARS). This is usually much faster and gives a quick result to find out if the web API works:
+Extraction of ERA5 data via CDS API might take time as currently there is a high demand for ERA5 data. Therefore, as a simple test for the API just retrieve pressure-level data (even if that is NOT what we need for FLEXPART), as they are stored on disk and don't need to be retrieved from MARS (which is the time-consuming action): 
 
-Please use this piece of python code to retrieve a small sample of *ERA5* pressure levels:
+Please use this piece of Python code to retrieve a small sample of *ERA5* pressure levels:
 
 .. code-block:: python
 
@@ -204,13 +198,12 @@ Please use this piece of python code to retrieve a small sample of *ERA5* pressu
     },
     "download_cdsapi.grib")
 
+    
+If you know that your CDS API works, you can try to extract some data from MARS. 
 
-Afterwards, when you know that the CDS API generally works, you can try to extract some
-data from the MARS archive. From the latest experience we know that this can take a while.    
+.. **Member-state user**
 
-.. **Member user**
-
-Please use this piece of python code to retrieve a small *ERA5* data sample as a **member user**! The **public user** doesn't have access to the full *ERA5* dataset!
+Please use this piece of Python code to retrieve a small *ERA5* data sample as a **member-state user**! The **Public user** do not have access to the full *ERA5* dataset!
 
 .. code-block:: python
 
@@ -240,7 +233,7 @@ Please use this piece of python code to retrieve a small *ERA5* data sample as a
     ********************** PUBLIC RETRIEVAL IS CURRENTLY NOT ACCESSIBLE 
    
     **Public user**
-    Please use this piece of python code: 
+    Please use this piece of Python code: 
 
     .. code-block:: python
 
@@ -276,33 +269,31 @@ Please use this piece of python code to retrieve a small *ERA5* data sample as a
 Local installation
 ==================
 
-First prepare the Fortran ``Makefile`` for your environment and set it
-in the ``setup.sh`` script. (See section :ref:`ref-convert` for information on 
-the Fortran program.)
-``flex_extract`` has already two ``Makefiles`` prepared for te ``gfortran`` and 
-the ``ifort`` compiler:
+First prepare the Fortran ``makefile`` for your environment and set it in the ``setup.sh`` script. (See section :ref:`ref-convert` for information on the Fortran program.)
+``flex_extract`` comes with two ``makefiles`` prepared for the ``gfortran`` and 
+the ``ifort`` compiler. The ``gfortran`` version assumes that ``eccodes`` and ``emoslib`` are installed as distribution packages.
 
- * Makefile.local.gfortran
- * Makefile.local.ifort
-
-They can be found in the path ``flex_extract_vX.X/source/fortran``, where
+ * makefile.local.gfortran
+ * makefile.local.ifort
+ 
+They can be found at ``flex_extract_vX.X/Source/Fortran``, where
 ``vX.X`` should be substituted with the current version number.
 
 .. caution::   
    It is necessary to adapt **ECCODES_INCLUDE_DIR** and **ECCODES_LIB** in these
-   ``Makefiles``.
-
+   ``makefiles`` if other than standard paths are used.
 
 So starting from the root directory of ``flex_extract``, 
-go to the ``Fortran`` source directory and open the ``Makefile`` of your 
+go to the ``Fortran`` source directory and open the ``makefile`` of your 
 choice to modify with an editor of your choice. We use the ``nedit`` in this case.
 
 .. code-block:: bash 
 
-   cd flex_extract_vX.X/source/fortran
-   nedit Makefile.local.gfortran
+   cd flex_extract_vX.X/Source/Fortran
+   nedit makefile.local.gfortran
+ 
+Edit the paths to the ``eccodes`` library on your local machine. 
 
-Edit the pathes to the ``eccodes`` library on your local machine. 
 
 .. caution::
    This can vary from system to system. 
@@ -317,7 +308,7 @@ Edit the pathes to the ``eccodes`` library on your local machine.
       
    to find out the path to the ``eccodes`` library.
    
-Substitute these paths in the ``Makefile`` for parameters **ECCODES_INCLUDE_DIR**
+Substitute these paths in the ``makefile`` for parameters **ECCODES_INCLUDE_DIR**
 and **ECCODES_LIB** and save it.
 
 .. code-block:: bash
@@ -328,8 +319,7 @@ and **ECCODES_LIB** and save it.
    
     
 The Fortran program called ``CONVERT2`` will be compiled during the 
-installation process to get an executable. Therefore the ``Makefile``
-has to be set in the ``setup.sh`` script.
+installation process.Therefore the name of the ``makefile`` to be used needs to be given in  ``setup.sh``.
 
 In the root directory of ``flex_extract``, open the ``setup.sh`` script 
 and adapt the installation parameters in the section labelled with 
@@ -347,7 +337,7 @@ and adapt the installation parameters in the section labelled with
    # THE USER HAS TO SPECIFY THESE PARAMETER
    #
    TARGET='local'
-   MAKEFILE='Makefile.local.gfortran'
+   MAKEFILE='makefile.local.gfortran'
    ECUID=None
    ECGID=None
    GATEWAY=None
@@ -364,7 +354,7 @@ Afterwards, type:
 
    $ ./setup.sh
    
-to start the installation. You should see the following output at the command line. 
+to start the installation. You should see the following standard output. 
     
     
 .. code-block:: bash
