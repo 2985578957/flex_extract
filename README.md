@@ -8,7 +8,7 @@
 ## Installation and Usage
 
 There is a documentation within the flex_extract directory which contain all information necessary. 
-Please open the file Documentation/html/index.html in your prefered browser to learn about installation and usage of flex_extract.
+Please open the file Documentation/html/index.html in your preferred browser to learn about installation and usage of flex_extract.
 
 ## Project website
 
