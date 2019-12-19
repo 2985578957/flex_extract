@@ -6,26 +6,31 @@
 import os
 import sys
 import errno
-from exceptions import OSError
+#from exceptions import OSError
 import subprocess
 import pipes
+
+try:
+    import exceptions
+except ImportError:
+    import builtins
+
 import pytest
 from mock import patch, call
 #from mock import PropertyMock
 
 
 import _config
-import _config_test
-from classes.ControlFile import ControlFile
-from mods.tools import (none_or_str, none_or_int, get_cmdline_arguments,
+from . import _config_test
+from Classes.ControlFile import ControlFile
+from Mods.tools import (none_or_str, none_or_int, get_cmdline_args,
                         read_ecenv, clean_up, my_error, send_mail,
                         normal_exit, product, silent_remove,
                         init128, to_param_id, get_list_as_string, make_dir,
                         put_file_to_ecserver, submit_job_to_ecserver)
 
 class TestTools(object):
-    '''
-    '''
+    """Test the tools module."""
 
     def setup_method(self):
         self.testdir = _config_test.PATH_TEST_DIR
@@ -47,51 +52,56 @@ class TestTools(object):
     def test_fail_get_cmdline_arguments(self):
         sys.argv = ['dummy.py', '--wrong=1']
         with pytest.raises(SystemExit):
-            results = get_cmdline_arguments()
+            results = get_cmdline_args()
 
     def test_default_get_cmdline_arguments(self):
-        cmd_dict_control = {'start_date':None,
-                            'end_date':None,
-                            'date_chunk':None,
-                            'basetime':None,
-                            'step':None,
-                            'levelist':None,
-                            'area':None,
-                            'inputdir':None,
-                            'outputdir':None,
-                            'flexpart_root_scripts':None,
-                            'ppid':None,
-                            'job_template':'job.temp',
-                            'queue':None,
-                            'controlfile':'CONTROL.temp',
-                            'debug':None,
-                            'public':None,
-                            'request':None}
+        cmd_dict_control = {'start_date': None,
+                            'end_date': None,
+                            'date_chunk': None,
+                            'basetime': None,
+                            'step': None,
+                            'levelist': None,
+                            'area': None,
+                            'inputdir': None,
+                            'outputdir': None,
+                            'job_template': None,
+                            'job_chunk': None,
+                            'ppid': None,
+                            'job_template': 'job.temp',
+                            'queue': None,
+                            'controlfile': 'CONTROL_EA5',
+                            'debug': None,
+                            'public': None,
+                            'request': None,
+                            'oper': None,
+                            'rrint': None}
 
         sys.argv = ['dummy.py']
 
-        results = get_cmdline_arguments()
+        results = get_cmdline_args()
 
         assert cmd_dict_control == vars(results)
 
     def test_input_get_cmdline_arguments(self):
-        cmd_dict_control = {'start_date':'20180101',
-                            'end_date':'20180101',
-                            'date_chunk':3,
-                            'basetime':12,
-                            'step':'1',
-                            'levelist':'1/to/10',
-                            'area':'50/10/60/20',
-                            'inputdir':'../work',
-                            'outputdir':None,
-                            'flexpart_root_scripts':'../',
-                            'ppid':1234,
-                            'job_template':'job.sh',
-                            'queue':'ecgate',
-                            'controlfile':'CONTROL.WORK',
-                            'debug':1,
-                            'public':None,
-                            'request':0}
+        cmd_dict_control = {'start_date': '20180101',
+                            'end_date': '20180101',
+                            'date_chunk': 3,
+                            'basetime': 12,
+                            'step': '1',
+                            'levelist': '1/to/10',
+                            'area': '50/10/60/20',
+                            'inputdir': '../work',
+                            'outputdir': None,
+                            'ppid': '1234',
+                            'job_template': 'job.sh',
+                            'queue': 'ecgate',
+                            'controlfile': 'CONTROL.WORK',
+                            'debug': 1,
+                            'public': None,
+                            'request': 0,
+                            'rrint': 0,
+                            'job_chunk': None,
+                            'oper': 0}
 
         sys.argv = ['dummy.py',
                     '--start_date=20180101',
@@ -103,16 +113,18 @@ class TestTools(object):
                     '--area=50/10/60/20',
                     '--inputdir=../work',
                     '--outputdir=None',
-                    '--flexpart_root_scripts=../',
                     '--ppid=1234',
                     '--job_template=job.sh',
                     '--queue=ecgate',
                     '--controlfile=CONTROL.WORK',
                     '--debug=1',
                     '--public=None',
-                    '--request=0']
+                    '--request=0',
+                    '--rrint=0',
+                    '--job_chunk=None',
+                    '--oper=0']
 
-        results = get_cmdline_arguments()
+        results = get_cmdline_args()
 
         assert cmd_dict_control == vars(results)
 
@@ -120,10 +132,10 @@ class TestTools(object):
         table128 = init128(_config.PATH_GRIBTABLE)
         expected_sample = {'078': 'TCLW', '130': 'T', '034': 'SST'}
         # check a sample of parameters which must have been read in
-        assert all((k in table128 and table128[k]==v)
-                   for k,v in expected_sample.iteritems())
+        assert all((k in table128 and table128[k] == v)
+                   for k, v in expected_sample.items())
 
-    @patch('__builtin__.open', side_effect=[OSError(errno.EEXIST)])
+    @patch('builtins.open', side_effect=[OSError(errno.EEXIST)])
     def test_fail_open_init128(self, mock_openfile):
         with pytest.raises(SystemExit):
             table128 = init128(_config.PATH_GRIBTABLE)
@@ -144,10 +156,10 @@ class TestTools(object):
         assert sorted(ipars) == sorted(opar_listint)
 
     @patch('traceback.format_stack', return_value='empty trace')
-    @patch('mods.tools.send_mail', return_value=0)
+    @patch('Mods.tools.send_mail', return_value=0)
     def test_success_my_error(self, mock_mail, mock_trace, capfd):
         with pytest.raises(SystemExit):
-            my_error(['any_user'], 'Failed!')
+            my_error('Failed!')
             out, err = capfd.readouterr()
             assert out == "Failed!\n\nempty_trace\n"
 
@@ -159,7 +171,7 @@ class TestTools(object):
                                                    stdout=subprocess.PIPE)
         send_mail(['${USER}', 'any_user'], 'ERROR', message='error mail')
         out, err = capfd.readouterr()
-        assert out == b'Email sent to user\nEmail sent to user\n'
+        assert out == 'Email sent to user\nEmail sent to user\n'
 
     @patch('subprocess.Popen')
     @patch('os.path.expandvars', return_value='any_user')
@@ -168,7 +180,7 @@ class TestTools(object):
                                                    stdout=subprocess.PIPE)
         send_mail(['any-user'], 'ERROR', message='error mail')
         out, err = capfd.readouterr()
-        assert out == b'Email sent to any_user\n'
+        assert out == 'Email sent to any_user\n'
 
     @patch('subprocess.Popen', side_effect=[ValueError, OSError])
     @patch('os.path.expandvars', return_value='any_user')
@@ -188,13 +200,13 @@ class TestTools(object):
 
         assert envs_ref == envs
 
-    @patch('__builtin__.open', side_effect=[OSError(errno.EPERM)])
+    @patch('builtins.open', side_effect=[OSError(errno.EPERM)])
     def test_fail_read_ecenv(self, mock_open):
         with pytest.raises(SystemExit):
             read_ecenv('any_file')
 
     @patch('glob.glob', return_value=[])
-    @patch('mods.tools.silent_remove')
+    @patch('Mods.tools.silent_remove')
     def test_empty_clean_up(self, mock_rm, mock_clean):
         clean_up(self.c)
         mock_rm.assert_not_called()
@@ -202,49 +214,13 @@ class TestTools(object):
     @patch('glob.glob', return_value=['any_file','EIfile'])
     @patch('os.remove', return_value=0)
     def test_success_clean_up(self, mock_rm, mock_glob):
-        # ectrans=0; ecstorage=0; ecapi=None; prefix not in filename
-        clean_up(self.c)
-        mock_rm.assert_has_calls([call('any_file'), call('EIfile')])
-        mock_rm.reset_mock()
 
-        # ectrans=0; ecstorage=0; ecapi=False; prefix in filename
         self.c.prefix = 'EI'
         self.c.ecapi = False
         clean_up(self.c)
         mock_rm.assert_has_calls([call('any_file')])
         mock_rm.reset_mock()
 
-        # ectrans=0; ecstorage=0; ecapi=True; prefix in filename
-        self.c.prefix = 'EI'
-        self.c.ecapi = True
-        clean_up(self.c)
-        mock_rm.assert_has_calls([call('any_file')])
-        mock_rm.reset_mock()
-
-        # ectrans=1; ecstorage=0; ecapi=True; prefix in filename
-        self.c.prefix = 'EI'
-        self.c.ecapi = True
-        self.c.ectrans = 1
-        clean_up(self.c)
-        mock_rm.assert_has_calls([call('any_file')])
-        mock_rm.reset_mock()
-
-        # ectrans=1; ecstorage=0; ecapi=False; prefix in filename
-        self.c.prefix = 'EI'
-        self.c.ecapi = False
-        self.c.ectrans = 1
-        clean_up(self.c)
-        mock_rm.assert_has_calls([call('any_file'), call('EIfile')])
-        mock_rm.reset_mock()
-
-        # ectrans=1; ecstorage=1; ecapi=False; prefix in filename
-        self.c.prefix = 'EI'
-        self.c.ecapi = False
-        self.c.ectrans = 1
-        self.c.ecstorage = 1
-        clean_up(self.c)
-        mock_rm.assert_has_calls([call('any_file'), call('EIfile')])
-        mock_rm.reset_mock()
 
     def test_default_normal_exit(self, capfd):
         normal_exit()

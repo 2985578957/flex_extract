@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -10,18 +10,22 @@ import tarfile
 import errno
 import shutil
 from genshi.template import TemplateLoader
-from genshi.template.eval import  UndefinedError
-from exceptions import OSError
+from genshi.template.eval import UndefinedError
+
+try:
+    import exceptions
+except ImportError:
+    import builtins
 import pytest
 from mock import patch
 
-sys.path.append('../python')
+sys.path.append('../Python')
 import _config
-import _config_test
+from . import _config_test
 from install import (mk_tarball, un_tarball, mk_env_vars, mk_compilejob,
                      mk_job_template)
 
-from mods.tools import make_dir, silent_remove
+from Mods.tools import make_dir, silent_remove
 
 #    - main
 #    - get_install_cmdline_arguments
@@ -43,8 +47,8 @@ class TestInstall():
                                               'mk_install_tar.sh')])
 
         # un tar the test tarballs from shell script
-        subprocess.check_output([os.path.join(self.testinstalldir,
-                                              'un_install_tar.sh')])
+#        subprocess.check_output([os.path.join(self.testinstalldir,
+#                                            'un_install_tar.sh')])
 
 
 
@@ -55,8 +59,6 @@ class TestInstall():
         # create test tarball and list its content files
         tarballname = _config.FLEXEXTRACT_DIRNAME + '_localtest.tar'
 
-        with pytest.raises(SystemExit):
-            mk_tarball(ecd + tarballname, 'local')
         with pytest.raises(SystemExit):
             mk_tarball(ecd + tarballname, 'local')
 
@@ -77,7 +79,7 @@ class TestInstall():
             tar_content_list = tar_handle.getnames()
 
         # remove test tar file from flex_extract directory
-        os.remove(ecd + tarballname)
+        #os.remove(ecd + tarballname)
 
         # test if comparison filelist is equal to the
         # filelist of tarball content
@@ -309,22 +311,22 @@ class TestInstall():
 
         test_dir = os.path.join(self.testinstalldir,
                                 _config.FLEXEXTRACT_DIRNAME + '_local')
-        shutil.rmtree(test_dir)
+#        shutil.rmtree(test_dir)
         test_dir = os.path.join(self.testinstalldir,
                                 _config.FLEXEXTRACT_DIRNAME + '_ecgate')
-        shutil.rmtree(test_dir)
+#        shutil.rmtree(test_dir)
 
         test_dir = os.path.join(self.testinstalldir,
                                 'test_local')
-        shutil.rmtree(test_dir)
+#        shutil.rmtree(test_dir)
         test_dir = os.path.join(self.testinstalldir,
                                 'test_ecgate')
-        shutil.rmtree(test_dir)
+#        shutil.rmtree(test_dir)
 
         tar_file = os.path.join(self.testinstalldir,
                      _config.FLEXEXTRACT_DIRNAME + '_local.tar')
-        os.remove(tar_file)
+#        os.remove(tar_file)
         tar_file = os.path.join(self.testinstalldir,
                                 _config.FLEXEXTRACT_DIRNAME + '_ecgate.tar')
-        os.remove(tar_file)
+#        os.remove(tar_file)
         pass

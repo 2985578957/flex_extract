@@ -1,13 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
 import sys
 import pytest
 
-sys.path.append('../python')
-from classes.ControlFile import ControlFile
-from mods.tools import get_cmdline_arguments
+sys.path.append('../Python')
+from Classes.ControlFile import ControlFile
+from Mods.tools import get_cmdline_args
 
 
 class TestInput():
@@ -20,7 +20,8 @@ class TestInput():
     # 1. nur controlfile reading
     # 2. check of parameter
 
-    def __init__(self):
+    @classmethod
+    def setup_class(self):
         # Default values for ArgumentParser
         self.args = {'start_date':None,
                      'end_date':None,
@@ -35,16 +36,16 @@ class TestInput():
                      'ppid':None,
                      'job_template':'job.temp',
                      'queue':None,
-                     'controlfile':'CONTROL.temp',
+                     'controlfile':'CONTROL.test',
                      'debug':0,
                      }
         #sys.argv = ['dummy.py', '--start_date=20180101', '--debug=1',
         #            '--step=0/to/11/BY/3', '--area=20./20./0./90.']
         sys.argv = ['dummy.py', '--start_date=20180101']
 
-        self.args = tools.get_commandline_arguments()
+        self.args = get_cmdline_args()
 
-        self.c = ControlFile('TestData/CONTROL.temp')
+        self.c = ControlFile('../../Testing/Regression/Unit/Testfiles/CONTROL.test')
 
         self.c.assign_args_to_control(self.args)
 
@@ -56,7 +57,7 @@ class TestInput():
         sys.argv = ['dummy.py', '--start_date=20180101', '--debug=1',
                     '--step=0/to/11/BY/3', '--area=20./20./0./90.']
 
-        arguments = tools.get_cmdline_arguments()
+        arguments = get_cmdline_args()
 
         args_exp = {'start_date':'20180101',
                     'end_date':None,
@@ -71,7 +72,7 @@ class TestInput():
                     'ppid':None,
                     'job_template':'job.temp',
                     'queue':None,
-                    'controlfile':'CONTROL.temp',
+                    'controlfile':'CONTROL.test',
                     'debug':1,
                     }
 
@@ -88,7 +89,7 @@ class TestInput():
                     'addpar': ['186', '187', '188', '235', '139', '39'],
                     'area': None,
                     'basetime': None,
-                    'controlfile': 'CONTROL.temp',
+                    'controlfile': 'CONTROL.test',
                     'cwc': 0,
                     'date_chunk': 3,
                     'debug': 0,
@@ -156,4 +157,9 @@ class TestInput():
         #assert cdict == exp_dict
         assert cdict == exp_dict
 
+        return
+
+    @classmethod
+    def teardown_class(self):
+ 
         return

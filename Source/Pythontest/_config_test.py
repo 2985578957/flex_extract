@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
 *******************************************************************************
@@ -26,7 +26,7 @@
 import os
 import sys
 
-sys.path.append('../python')
+sys.path.append('../Python')
 import _config
 
 # ------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ import _config
 # ------------------------------------------------------------------------------
 # DIRECTORY NAMES
 # ------------------------------------------------------------------------------
-TEST_DIR = 'test/Unit'
+TEST_DIR = 'Testing/Regression/Unit'
 TESTFILES_DIR = 'Testfiles'
 TESTINSTALL_DIR = 'InstallTar'
 # ------------------------------------------------------------------------------
