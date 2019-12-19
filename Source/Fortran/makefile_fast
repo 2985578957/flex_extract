@@ -12,14 +12,15 @@
 ###############################################################################
 
 
-EXE      =  calc_etadot_fast.out
+EXE      =  calc_etadot
 
-GRIB_API_LIB=  -Bstatic -lgrib_api_f90 -lgrib_api -Bdynamic -lm -ljasper
+#GRIB_API_LIB=  -Bstatic -lgrib_api_f90 -lgrib_api -Bdynamic -lm -ljasper
+ECCODES_LIB= -L/usr/local/lib -leccodes_f90 -leccodes -lm
 EMOSLIB=-lemosR64
-LIB =  $(GRIB_API_LIB) $(EMOSLIB)
+LIB =  $(ECCODES_LIB) $(EMOSLIB)
 
-GRIB_API_INCLUDE_DIR=/usr/include
-INC = -I. -I$(GRIB_API_INCLUDE_DIR)
+ECCODES_INCLUDE_DIR=/usr/local/include
+INC = -I. -I$(ECCODES_INCLUDE_DIR)
 
 FC = gfortran 
 OPT = -O3 -march=native
