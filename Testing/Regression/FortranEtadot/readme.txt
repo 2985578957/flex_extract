@@ -15,7 +15,7 @@ HOW TO DO REGRESSION TESTS OF THE FORTRAN CODE
    ./mk_outputdirs.sh
    ./run_ref.sh
    to create a new reference version. 
-6. Work on the code and use the 'run_ref.sh' script to test your results.
+6. Work on the code and use the 'run_regrtest.sh' script to test your results.
 
 Note 1: The regression tests except those with "high" in their name will
       altogether run in about 1 minute. The "high" tests (hemispherical data)
