@@ -508,6 +508,8 @@ class Control:
             if not hasattr(self,'etadiff'):
                 self.etadiff='0'
 
+            if not hasattr(self,'addpar'):
+                self.addpar=''
             if not isinstance(self.type, list):
                 self.type = [self.type]
             if not isinstance(self.time, list):
