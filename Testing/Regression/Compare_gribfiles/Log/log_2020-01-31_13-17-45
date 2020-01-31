@@ -1,0 +1,135 @@
+Compare GRIB files between version  + old_version +  and version  + new_version +  : \n
+
+
+Welcome!
+Reference path is:  7.0.4/BASETIME/
+New path is:  7.1/BASETIME/
+Filepattern is:  *
+The input files are: ['BT19063015', 'BT19063018', 'BT19063021', 'BT19070100']
+The input files are: ['BT19063015', 'BT19063018', 'BT19063021', 'BT19070100']
+
+-- GRIB #55 -- shortName=ssr paramId=176 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [totalLength]: [220] != [583]
+
+... FILES HAVE DIFFERENCES IN GRIB MESSAGES!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/CERA/
+New path is:  7.1/CERA/
+Filepattern is:  *
+The input files are: ['CE00090800', 'CE00090803', 'CE00090806', 'CE00090809', 'CE00090812', 'CE00090815', 'CE00090818', 'CE00090821']
+The input files are: ['CE00090800', 'CE00090803', 'CE00090806', 'CE00090809', 'CE00090812', 'CE00090815', 'CE00090818', 'CE00090821']
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+
+-- GRIB #548 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [tablesVersion]: [23] != [5]
+string [typeOfProcessedData]: [1] != [fc]
+string [typeOfFirstFixedSurface]: [1] != [sfc]
+
+... FILES HAVE DIFFERENCES IN GRIB MESSAGES!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/EA5/
+New path is:  7.1/EA5/
+Filepattern is:  *
+The input files are: ['EA18120100', 'EA18120103', 'EA18120106', 'EA18120109', 'EA18120112', 'EA18120115', 'EA18120118', 'EA18120121']
+The input files are: ['EA18120100', 'EA18120103', 'EA18120106', 'EA18120109', 'EA18120112', 'EA18120115', 'EA18120118', 'EA18120121']
+GRIB_COMPARISON: SUCCESSFULL!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/EI/
+New path is:  7.1/EI/
+Filepattern is:  *
+The input files are: ['EI15080900', 'EI15080903', 'EI15080906', 'EI15080909', 'EI15080912', 'EI15080915', 'EI15080918', 'EI15080921']
+The input files are: ['EI15080900', 'EI15080903', 'EI15080906', 'EI15080909', 'EI15080912', 'EI15080915', 'EI15080918', 'EI15080921']
+GRIB_COMPARISON: SUCCESSFULL!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/ETAOD/
+New path is:  7.1/ETAOD/
+Filepattern is:  *
+The input files are: ['ENE18080900', 'ENE18080901', 'ENE18080902', 'ENE18080903', 'ENE18080904', 'ENE18080905', 'ENE18080906', 'ENE18080907', 'ENE18080908', 'ENE18080909', 'ENE18080910', 'ENE18080911', 'ENE18080912', 'ENE18080913', 'ENE18080914', 'ENE18080915', 'ENE18080916', 'ENE18080917', 'ENE18080918', 'ENE18080919', 'ENE18080920', 'ENE18080921', 'ENE18080922', 'ENE18080923']
+The input files are: ['ENE18080900', 'ENE18080901', 'ENE18080902', 'ENE18080903', 'ENE18080904', 'ENE18080905', 'ENE18080906', 'ENE18080907', 'ENE18080908', 'ENE18080909', 'ENE18080910', 'ENE18080911', 'ENE18080912', 'ENE18080913', 'ENE18080914', 'ENE18080915', 'ENE18080916', 'ENE18080917', 'ENE18080918', 'ENE18080919', 'ENE18080920', 'ENE18080921', 'ENE18080922', 'ENE18080923']
+GRIB_COMPARISON: SUCCESSFULL!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/GAUSSOD/
+New path is:  7.1/GAUSSOD/
+Filepattern is:  *
+The input files are: ['ENG18080900', 'ENG18080901', 'ENG18080902', 'ENG18080903', 'ENG18080904', 'ENG18080905', 'ENG18080906', 'ENG18080907', 'ENG18080908', 'ENG18080909', 'ENG18080910', 'ENG18080911', 'ENG18080912', 'ENG18080913', 'ENG18080914', 'ENG18080915', 'ENG18080916', 'ENG18080917', 'ENG18080918', 'ENG18080919', 'ENG18080920', 'ENG18080921', 'ENG18080922', 'ENG18080923']
+The input files are: ['ENG18080900', 'ENG18080901', 'ENG18080902', 'ENG18080903', 'ENG18080904', 'ENG18080905', 'ENG18080906', 'ENG18080907', 'ENG18080908', 'ENG18080909', 'ENG18080910', 'ENG18080911', 'ENG18080912', 'ENG18080913', 'ENG18080914', 'ENG18080915', 'ENG18080916', 'ENG18080917', 'ENG18080918', 'ENG18080919', 'ENG18080920', 'ENG18080921', 'ENG18080922', 'ENG18080923']
+GRIB_COMPARISON: SUCCESSFULL!
+===================================================================================================
+
+
+Welcome!
+Reference path is:  7.0.4/PUREFC/
+New path is:  7.1/PUREFC/
+Filepattern is:  *
+The input files are: ['FC180809.00.000', 'FC180809.00.003', 'FC180809.00.006', 'FC180809.00.009', 'FC180809.00.012', 'FC180809.00.015', 'FC180809.00.018', 'FC180809.00.021', 'FC180809.00.024', 'FC180809.00.027', 'FC180809.00.030', 'FC180809.00.033', 'FC180809.00.036']
+The input files are: ['FC180809.00.000', 'FC180809.00.003', 'FC180809.00.006', 'FC180809.00.009', 'FC180809.00.012', 'FC180809.00.015', 'FC180809.00.018', 'FC180809.00.021', 'FC180809.00.024', 'FC180809.00.027', 'FC180809.00.030', 'FC180809.00.033', 'FC180809.00.036']
+
+-- GRIB #50 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [day]: [10] != [9]
+long [hour]: [9] != [0]
+long [forecastTime]: [0] != [33]
+
+
+-- GRIB #50 -- shortName=lsp paramId=142 stepRange=0 levelType=1 level=0 packingType= gridType=regular_ll --
+long [day]: [10] != [9]
+long [hour]: [12] != [0]
+long [forecastTime]: [0] != [36]
+
+... FILES HAVE DIFFERENCES IN GRIB MESSAGES!
+===================================================================================================

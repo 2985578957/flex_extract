@@ -320,11 +320,16 @@ class EcFlexpart(object):
         ------
 
         '''
+        if self.purefc:
+            # need to retrieve forecasts for step 000 in case of pure forecast
+            steps = '{}/to/{}/by/{}'.format(0, self.accmaxstep, self.dtime)
+        else:
+            steps = '{}/to/{}/by/{}'.format(self.dtime,
+                                            self.accmaxstep,
+                                            self.dtime)
+
         self.types[str(self.acctype)] = {'times': str(self.acctime),
-                                         'steps': '{}/to/{}/by/{}'.format(
-                                             self.dtime,
-                                             self.accmaxstep,
-                                             self.dtime)}
+                                         'steps': steps}
         return
 
     def _create_params(self, gauss, eta, omega, cwc, wrf):
@@ -780,8 +785,8 @@ class EcFlexpart(object):
                             self._start_retrievement(request, retr_param_dict)
 
                     elif self.basetime == 0:
-                        retr_param_dict['date'] = \
-                            datetime.strftime(elimit - t24h, '%Y%m%d')
+#                        retr_param_dict['date'] = \
+#                            datetime.strftime(elimit - t24h, '%Y%m%d')
 
                         timesave = ''.join(retr_param_dict['time'])
 
@@ -1601,11 +1606,11 @@ class EcFlexpart(object):
                                              '%Y%m%d%H')
 
             # skip all temporary times
-            # which are outside the retrieval period                
+            # which are outside the retrieval period
             if timestamp < start_period or \
                timestamp > end_period:
                 continue
-                
+
 
             # @WRF
             # THIS IS NOT YET CORRECTLY IMPLEMENTED !!!
