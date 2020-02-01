@@ -41,9 +41,9 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="documentation.html">Documentation</a></h2>
           <ul>
-            <li><a href="">Content</a></li>
-            <li><a href="">Configuration</a></li>
-            <li><a href="">Tutorials</a></li>
+            <li><a href="Documentation/overview.html">Overview</a></li>
+            <li><a href="Documentation/input.html">Control & Input Data</a></li>
+            <li><a href="Documentation/output.html">Output Data</a></li>
           </ul>
         </td>
       </tr>
@@ -54,9 +54,9 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="quick_start.html">Quick Start</a></h2>
           <ul>
-            <li><a href="">...</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">...</a></li>
+            <li><a href="quick_start.html#job-preparation">Job preparation</a></li>
+            <li><a href="quick_start.html#selection-and-adjustment-of-control-files">Handling CONTROL files</a></li>
+            <li><a href="quick_start.html#hints-for-definition-of-some-parameter-combinations">Hints on parameter combinations</a></li>
           </ul>
         </td>  
         <td style="width:30%;height:150px;">
@@ -65,9 +65,9 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="evaluation.html">Evaluation</a></h2>
           <ul>
-            <li><a href="">Code</a></li>
-            <li><a href="">Functionality</a></li>
-            <li><a href="">Regression</a></li>
+            <li><a href="Evaluation/staticcode.html">Code</a></li>
+            <li><a href="Evaluation/testcases.html">Functionality</a></li>
+            <li><a href="Evaluation/metrics.html">Regression</a></li>
           </ul>
         </td> 
         <td style="width:30%;height:150px;">
@@ -76,9 +76,9 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="dev_guide.html">Developer</a></h2>
           <ul>
-            <li><a href="">...</a></li>
-            <li><a href="">...</a></li>
-            <li><a href="">...</a></li>
+            <li><a href="Developers/gen_docu.html">Update Documentation</a></li>
+            <li><a href=""></a><Placeholder></li>
+            <li><a href=""></a><Placeholder></li>
           </ul>
         </td>
       </tr>

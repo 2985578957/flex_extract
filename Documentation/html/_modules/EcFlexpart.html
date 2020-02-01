@@ -214,6 +214,10 @@
 <span class="c1"># this is disabled because for this specific case its an error in pylint</span>
 <span class="c1">#pylint: disable=consider-using-enumerate</span>
 <span class="c1"># this is not useful in this case</span>
+<span class="c1">#pylint: disable=unsubscriptable-object</span>
+<span class="c1"># this error is a bug</span>
+<span class="c1">#pylint: disable=ungrouped-imports</span>
+<span class="c1"># not necessary that we group the imports</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -223,21 +227,21 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="c1">#pylint: disable=wrong-import-position</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
 <span class="kn">from</span> <span class="nn">Classes.GribUtil</span> <span class="k">import</span> <span class="n">GribUtil</span>
 <span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">init128</span><span class="p">,</span> <span class="n">to_param_id</span><span class="p">,</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span>
-                        <span class="n">my_error</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">,</span> <span class="n">get_informations</span><span class="p">,</span> <span class="n">get_dimensions</span><span class="p">,</span>
+                        <span class="n">my_error</span><span class="p">,</span> <span class="n">get_informations</span><span class="p">,</span> <span class="n">get_dimensions</span><span class="p">,</span>
                         <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">to_param_id_with_tablenumber</span><span class="p">,</span>
                         <span class="n">generate_retrieval_period_boundary</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">Classes.MarsRetrieval</span> <span class="k">import</span> <span class="n">MarsRetrieval</span>
 <span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
 <span class="kn">import</span> <span class="nn">Mods.disaggregation</span> <span class="k">as</span> <span class="nn">disaggregation</span>
-
+<span class="c1">#pylint: enable=wrong-import-position</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># CLASS</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -478,11 +482,16 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
+            <span class="c1"># need to retrieve forecasts for step 000 in case of pure forecast</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/to/</span><span class="si">{}</span><span class="s1">/by/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">steps</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/to/</span><span class="si">{}</span><span class="s1">/by/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctype</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;times&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">acctime</span><span class="p">),</span>
-                                         <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/to/</span><span class="si">{}</span><span class="s1">/by/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">,</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">accmaxstep</span><span class="p">,</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">dtime</span><span class="p">)}</span>
+                                         <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="n">steps</span><span class="p">}</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">_create_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gauss</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">cwc</span><span class="p">,</span> <span class="n">wrf</span><span class="p">):</span>
@@ -562,8 +571,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/U/V&#39;</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># GAUSS and ETA</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Collecting etadot and parameters for gaussian grid &#39;</span>
-                           <span class="s1">&#39;is a very costly parameter combination, &#39;</span>
-                           <span class="s1">&#39;use this combination only for debugging!&#39;</span><span class="p">)</span>
+                  <span class="s1">&#39;is a very costly parameter combination, &#39;</span>
+                  <span class="s1">&#39;use this combination only for debugging!&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__SL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
                                      <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resol</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;GG__ML&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;U/V/D/ETADOT&#39;</span><span class="p">,</span> <span class="s1">&#39;ML&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">glevelist</span><span class="p">,</span>
@@ -576,7 +585,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;OG__ML&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;/CLWC/CIWC&#39;</span>
 
         <span class="c1"># ADDITIONAL FIELDS FOR FLEXPART-WRF MODEL (IF QUESTIONED)</span>
-        <span class="c1"># -----------------------------------------------------------------------</span>
+        <span class="c1"># ----------------------------------------------------------------------</span>
         <span class="k">if</span> <span class="n">wrf</span><span class="p">:</span>
             <span class="c1"># @WRF</span>
             <span class="c1"># THIS IS NOT YET CORRECTLY IMPLEMENTED !!!</span>
@@ -871,7 +880,8 @@
                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;000&#39;</span>
                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dates</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mk_targetname</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-                                            <span class="n">pk</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+                                                                    <span class="n">pk</span><span class="p">,</span>
+                                                                    <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
                 <span class="k">elif</span> <span class="n">pk</span> <span class="o">==</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span> <span class="n">oro</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="k">if</span> <span class="n">pk</span> <span class="o">==</span> <span class="s1">&#39;GG__SL&#39;</span> <span class="ow">and</span> <span class="n">pv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Q&#39;</span><span class="p">:</span>
@@ -913,7 +923,7 @@
                         <span class="c1"># --------------  flux data ----------------------------</span>
                         <span class="k">if</span> <span class="s1">&#39;acc&#39;</span> <span class="ow">in</span> <span class="n">pk</span><span class="p">:</span>
                             <span class="n">startdate</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                            <span class="n">enddate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span> <span class="o">-</span> <span class="n">t24h</span><span class="p">,</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="n">enddate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span> <span class="o">-</span> <span class="n">t24h</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
                             <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">startdate</span><span class="p">,</span>
                                                                 <span class="s1">&#39;to&#39;</span><span class="p">,</span>
                                                                 <span class="n">enddate</span><span class="p">])</span>
@@ -937,14 +947,14 @@
                             <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
 
                     <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">basetime</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                            <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span> <span class="o">-</span> <span class="n">t24h</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#                        retr_param_dict[&#39;date&#39;] = \</span>
+<span class="c1">#                            datetime.strftime(elimit - t24h, &#39;%Y%m%d&#39;)</span>
 
                         <span class="n">timesave</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">])</span>
 
-                        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="ow">and</span>
-                            <span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span>
-                            <span class="s1">&#39;acc&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pk</span> <span class="p">)</span> <span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span>
+                                <span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;acc&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pk</span><span class="p">]):</span>
                             <span class="n">times</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
                             <span class="n">steps</span> <span class="o">=</span> <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
 
@@ -955,9 +965,9 @@
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-                        <span class="k">if</span> <span class="p">(</span><span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span> <span class="ow">and</span>
-                            <span class="nb">int</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span>
-                            <span class="nb">int</span><span class="p">(</span><span class="n">timesave</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">pk</span> <span class="o">!=</span> <span class="s1">&#39;OG_OROLSM__SL&#39;</span><span class="p">,</span>
+                                <span class="nb">int</span><span class="p">(</span><span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;step&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="nb">int</span><span class="p">(</span><span class="n">timesave</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]):</span>
 
                             <span class="n">retr_param_dict</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> \
                                 <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">elimit</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -971,7 +981,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">_start_retrievement</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">retr_param_dict</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Basetime has an invalid value &#39;</span>
-                                                 <span class="s1">&#39;-&gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">basetime</span><span class="p">)))</span>
+                                         <span class="s1">&#39;-&gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">basetime</span><span class="p">)))</span>
 
         <span class="k">if</span> <span class="n">request</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MARS retrieve done ... &#39;</span><span class="p">)</span>
@@ -1021,23 +1031,23 @@
             <span class="n">maxb</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">area</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">area</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="mi">1</span>
 
             <span class="n">stream</span> <span class="o">=</span> <span class="n">namelist_template</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
-                <span class="n">maxl</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">maxl</span><span class="p">),</span>
-                <span class="n">maxb</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">maxb</span><span class="p">),</span>
-                <span class="n">mlevel</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">),</span>
-                <span class="n">mlevelist</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">),</span>
-                <span class="n">mnauf</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resol</span><span class="p">),</span>
-                <span class="n">metapar</span> <span class="o">=</span> <span class="s1">&#39;77&#39;</span><span class="p">,</span>
-                <span class="n">rlo0</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-                <span class="n">rlo1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
-                <span class="n">rla0</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
-                <span class="n">rla1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                <span class="n">momega</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">omega</span><span class="p">),</span>
-                <span class="n">momegadiff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">omegadiff</span><span class="p">),</span>
-                <span class="n">mgauss</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">gauss</span><span class="p">),</span>
-                <span class="n">msmooth</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">smooth</span><span class="p">),</span>
-                <span class="n">meta</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">eta</span><span class="p">),</span>
-                <span class="n">metadiff</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">etadiff</span><span class="p">),</span>
-                <span class="n">mdpdeta</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dpdeta</span><span class="p">)</span>
+                <span class="n">maxl</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">maxl</span><span class="p">),</span>
+                <span class="n">maxb</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">maxb</span><span class="p">),</span>
+                <span class="n">mlevel</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">),</span>
+                <span class="n">mlevelist</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">),</span>
+                <span class="n">mnauf</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resol</span><span class="p">),</span>
+                <span class="n">metapar</span><span class="o">=</span><span class="s1">&#39;77&#39;</span><span class="p">,</span>
+                <span class="n">rlo0</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="n">rlo1</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span>
+                <span class="n">rla0</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="n">rla1</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">area</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="n">momega</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">omega</span><span class="p">),</span>
+                <span class="n">momegadiff</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">omegadiff</span><span class="p">),</span>
+                <span class="n">mgauss</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">gauss</span><span class="p">),</span>
+                <span class="n">msmooth</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">smooth</span><span class="p">),</span>
+                <span class="n">meta</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">eta</span><span class="p">),</span>
+                <span class="n">metadiff</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">etadiff</span><span class="p">),</span>
+                <span class="n">mdpdeta</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dpdeta</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">UndefinedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
@@ -1089,7 +1099,7 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_get_values</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span>
                              <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span>
                              <span class="n">codes_index_release</span><span class="p">)</span>
@@ -1214,7 +1224,6 @@
             <span class="n">time</span> <span class="o">=</span> <span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">)</span> <span class="o">//</span> <span class="mi">100</span>  <span class="c1"># integer</span>
             <span class="n">step</span> <span class="o">=</span> <span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;step&#39;</span><span class="p">)</span> <span class="c1"># integer</span>
             <span class="n">ctime</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;2}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
-            <span class="n">cstep</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
 
             <span class="n">t_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">cdate</span> <span class="o">+</span> <span class="n">ctime</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
             <span class="n">t_dt</span> <span class="o">=</span> <span class="n">t_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">step</span><span class="p">)</span>
@@ -1293,7 +1302,7 @@
                     <span class="c1"># do de-accumulation</span>
                     <span class="n">deac_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                         <span class="p">(</span><span class="n">orig_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">orig_vals</span><span class="p">[</span><span class="n">parId</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span>
-                         <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                        <span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
 
                 <span class="c1"># store precipitation if new disaggregation method is selected</span>
                 <span class="c1"># only the exact days are needed</span>
@@ -1493,12 +1502,12 @@
         <span class="k">if</span> <span class="n">maxnum</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">inum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxnum</span><span class="p">):</span>
                 <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="o">*</span><span class="n">nj</span><span class="p">):</span>
-                    <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span><span class="n">ix</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">lsp_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span><span class="n">ix</span><span class="p">,:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span><span class="n">ix</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">cp_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span><span class="n">ix</span><span class="p">,:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">lsp_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">cp_np</span><span class="p">[</span><span class="n">inum</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ni</span><span class="o">*</span><span class="n">nj</span><span class="p">):</span>
-                <span class="n">lsp_new_np</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ix</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">lsp_np</span><span class="p">[</span><span class="n">ix</span><span class="p">,:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">cp_new_np</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">ix</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">cp_np</span><span class="p">[</span><span class="n">ix</span><span class="p">,:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">lsp_new_np</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">lsp_np</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cp_new_np</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">disaggregation</span><span class="o">.</span><span class="n">IA3</span><span class="p">(</span><span class="n">cp_np</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:])[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1"># write to grib files (full/orig times to flux file and inbetween</span>
         <span class="c1"># times with step 1 and 2, respectively)</span>
@@ -1563,46 +1572,52 @@
 
             <span class="c1"># write original time step to flux file as usual</span>
             <span class="n">fluxfile</span> <span class="o">=</span> <span class="n">GribUtil</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">fluxfilename</span><span class="p">))</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
                               <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="p">]],</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="p">]],</span>
                              <span class="p">)</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
-                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="p">]]</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="p">]]</span>
                              <span class="p">)</span>
 
             <span class="c1"># rr for first subgrid point is identified by step = 1</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
-                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
-                              <span class="p">)</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+                             <span class="p">)</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
-                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
-                              <span class="p">)</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+                             <span class="p">)</span>
 
             <span class="c1"># rr for second subgrid point is identified by step = 2</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
-                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="o">+</span><span class="mi">2</span><span class="p">]]</span>
-                              <span class="p">)</span>
-            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="o">+</span><span class="mi">2</span><span class="p">]]</span>
+                             <span class="p">)</span>
+            <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span>
-                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;stepRange&#39;</span><span class="p">,</span><span class="s1">&#39;values&#39;</span><span class="p">],</span>
-                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,:,</span><span class="n">it</span><span class="o">+</span><span class="mi">2</span><span class="p">]]</span>
-                              <span class="p">)</span>
+                              <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                                        <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
+                              <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="n">cp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="o">+</span><span class="mi">2</span><span class="p">]]</span>
+                             <span class="p">)</span>
 
             <span class="n">it</span> <span class="o">=</span> <span class="n">it</span> <span class="o">+</span> <span class="mi">3</span> <span class="c1"># jump to next original time step in rr fields</span>
         <span class="k">return</span>
@@ -1624,13 +1639,13 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
-        <span class="n">gribfile</span> <span class="o">=</span> <span class="n">GribUtil</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span><span class="s1">&#39;rr_grib_dummy.grb&#39;</span><span class="p">))</span>
+        <span class="n">gribfile</span> <span class="o">=</span> <span class="n">GribUtil</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;rr_grib_dummy.grb&#39;</span><span class="p">))</span>
 
         <span class="n">gribfile</span><span class="o">.</span><span class="n">copy_dummy_msg</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span>
-                      <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+                                <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
 
         <span class="n">gribfile</span><span class="o">.</span><span class="n">copy_dummy_msg</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span>
-                      <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">)</span>
+                                <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">)</span>
 
         <span class="k">return</span>
 
@@ -1662,7 +1677,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_get_values</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span>
                              <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span>
                              <span class="n">codes_index_release</span><span class="p">)</span>
@@ -1744,22 +1759,20 @@
             <span class="n">timestamp</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">cstep</span><span class="p">))</span>
             <span class="n">cdate_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">timestamp</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
 
+            <span class="c1"># if basetime is used, adapt start/end date period</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">time_delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">12</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
+                <span class="n">start_period</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
+                                               <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">time_delta</span>
+                <span class="n">end_period</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
+                                             <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
+
             <span class="c1"># skip all temporary times</span>
             <span class="c1"># which are outside the retrieval period</span>
             <span class="k">if</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">start_period</span> <span class="ow">or</span> \
                <span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">end_period</span><span class="p">:</span>
                 <span class="k">continue</span>
 
-            <span class="c1"># if the timestamp is out of basetime start/end date period,</span>
-            <span class="c1"># skip this specific product</span>
-            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">basetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">time_delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">12</span><span class="o">-</span><span class="nb">int</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">dtime</span><span class="p">))</span>
-                <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
-                                                <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">time_delta</span>
-                <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">end_date</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">basetime</span><span class="p">),</span>
-                                             <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">timestamp</span> <span class="o">&lt;</span> <span class="n">start_time</span> <span class="ow">or</span> <span class="n">timestamp</span> <span class="o">&gt;</span> <span class="n">end_time</span><span class="p">:</span>
-                    <span class="k">continue</span>
 
             <span class="c1"># @WRF</span>
             <span class="c1"># THIS IS NOT YET CORRECTLY IMPLEMENTED !!!</span>
@@ -1781,7 +1794,6 @@
                     <span class="k">break</span>
                 <span class="n">paramId</span> <span class="o">=</span> <span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;paramId&#39;</span><span class="p">)</span>
                 <span class="n">gridtype</span> <span class="o">=</span> <span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;gridType&#39;</span><span class="p">)</span>
-                <span class="n">levtype</span> <span class="o">=</span> <span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="s1">&#39;typeOfLevel&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">paramId</span> <span class="o">==</span> <span class="mi">77</span><span class="p">:</span> <span class="c1"># ETADOT</span>
                     <span class="n">codes_write</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">fdict</span><span class="p">[</span><span class="s1">&#39;21&#39;</span><span class="p">])</span>
                 <span class="k">elif</span> <span class="n">paramId</span> <span class="o">==</span> <span class="mi">130</span><span class="p">:</span> <span class="c1"># T</span>
@@ -1865,7 +1877,7 @@
 
             <span class="c1"># Fortran program creates file fort.15 (with u,v,etadot,t,sp,q)</span>
             <span class="n">execute_subprocess</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">exedir</span><span class="p">,</span>
-                                <span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span><span class="p">)],</span>
+                                             <span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span><span class="p">)],</span>
                                <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;FORTRAN PROGRAM FAILED!&#39;</span><span class="p">)</span><span class="c1">#shell=True)</span>
 
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
@@ -1894,7 +1906,9 @@
             <span class="c1"># create outputfile and copy all data from intermediate files</span>
             <span class="c1"># to the outputfile (final GRIB input files for FLEXPART)</span>
             <span class="n">orolsm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">+</span>
-                                        <span class="s1">&#39;/OG_OROLSM__SL.*.&#39;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">+</span> <span class="s1">&#39;*&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                                                <span class="s1">&#39;/OG_OROLSM__SL.*.&#39;</span> <span class="o">+</span>
+                                                <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">+</span>
+                                                <span class="s1">&#39;*&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
             <span class="n">fluxfile</span> <span class="o">=</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">cwc</span><span class="p">:</span>
                 <span class="n">flist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fort.15&#39;</span><span class="p">,</span> <span class="n">fluxfile</span><span class="p">,</span> <span class="s1">&#39;fort.16&#39;</span><span class="p">,</span> <span class="n">orolsm</span><span class="p">]</span>
@@ -1944,19 +1958,19 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_get_array</span><span class="p">,</span>
-                             <span class="n">codes_set_array</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span>
-                             <span class="n">codes_set</span><span class="p">,</span> <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">)</span>
+                             <span class="n">codes_set_array</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span>
+                             <span class="n">codes_set</span><span class="p">,</span> <span class="n">codes_write</span><span class="p">)</span>
 
         <span class="c1"># max number</span>
         <span class="n">maxnum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="c1"># get a list of all prepared output files with control forecast (CF)</span>
-        <span class="n">CF_filelist</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;*.N000&#39;</span><span class="p">)</span>
-        <span class="n">CF_filelist</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">CF_filelist</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
+        <span class="n">cf_filelist</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;*.N000&#39;</span><span class="p">)</span>
+        <span class="n">cf_filelist</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">cf_filelist</span><span class="o">.</span><span class="n">files</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">cffile</span> <span class="ow">in</span> <span class="n">CF_filelist</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">cffile</span> <span class="ow">in</span> <span class="n">cf_filelist</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cffile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">cfvalues</span><span class="o">=</span><span class="p">[]</span>
+                <span class="n">cfvalues</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                     <span class="n">fid</span> <span class="o">=</span> <span class="n">codes_grib_new_from_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">fid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2061,7 +2075,6 @@
                                    <span class="s1">&#39;TO OUTPUTDIR FAILED!&#39;</span><span class="p">)</span>
 
         <span class="k">return</span></div></div>
-
 </pre></div>
 
            </div>

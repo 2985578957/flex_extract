@@ -190,13 +190,16 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-
-<span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="c1"># pylint: disable=unused-import</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">exceptions</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">builtins</span> <span class="k">as</span> <span class="nn">exceptions</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="c1"># pylint: enable=unused-import</span>
+
+<span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="kn">import</span> <span class="nn">_config</span>
 <span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># FUNCTIONS</span>
@@ -274,7 +277,7 @@
 
     <span class="k">return</span> <span class="n">grid</span></div>
 
-<div class="viewcode-block" id="check_area"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_area">[docs]</a><span class="k">def</span> <span class="nf">check_area</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">left</span> <span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+<div class="viewcode-block" id="check_area"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_area">[docs]</a><span class="k">def</span> <span class="nf">check_area</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Defines the correct area string.</span>
 
 <span class="sd">    Checks on the format of the four area components. Wether it is of</span>
@@ -319,19 +322,19 @@
         <span class="n">upper</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">components</span>
 
     <span class="c1"># determine area format</span>
-    <span class="k">if</span> <span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span> <span class="p">)</span> <span class="ow">and</span>
-        <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span> <span class="p">)</span> <span class="ow">and</span>
-        <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span> <span class="p">)</span> <span class="ow">and</span>
-        <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)]):</span>
         <span class="c1"># area is defined in 1/1000 degrees; old format</span>
         <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
                                     <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
                                     <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
                                     <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="ow">and</span>
-          <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="ow">and</span>
-          <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="ow">and</span>
-          <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]):</span>
         <span class="c1"># area is already in new format</span>
         <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">),</span>
                                     <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
@@ -341,7 +344,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The area components have different &#39;</span>
                          <span class="s1">&#39;formats (upper, lower, left, right): &#39;</span>
                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upper</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
-                                              <span class="nb">str</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">right</span><span class="p">)))</span>
+                                              <span class="nb">str</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">right</span><span class="p">)))</span>
 
     <span class="k">return</span> <span class="n">area</span></div>
 
@@ -442,7 +445,7 @@
     <span class="k">return</span> <span class="mi">0</span></div>
 
 
-<div class="viewcode-block" id="check_step"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_step">[docs]</a><span class="k">def</span> <span class="nf">check_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">mailfail</span><span class="p">):</span>
+<div class="viewcode-block" id="check_step"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_step">[docs]</a><span class="k">def</span> <span class="nf">check_step</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Checks on step format and convert into a list of steps.</span>
 
 <span class="sd">    If the steps were defined with &quot;to&quot; and &quot;by&quot; they are converted into</span>
@@ -454,11 +457,6 @@
 <span class="sd">    step : list of str or str</span>
 <span class="sd">        Specifies the forecast time step from forecast base time.</span>
 <span class="sd">        Valid values are hours (HH) from forecast base time.</span>
-
-<span class="sd">    mailfail : list of str</span>
-<span class="sd">        Contains all email addresses which should be notified.</span>
-<span class="sd">        It might also contain just the ecmwf user name which will trigger</span>
-<span class="sd">        mailing to the associated email address for this user.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -566,7 +564,7 @@
 <span class="sd">        Specifies the forecast time step from forecast base time.</span>
 <span class="sd">        Valid values are hours (HH) from forecast base time.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftime</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftime</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of field types, times and steps &#39;</span>
                          <span class="s1">&#39;are not the same! Please check the setting in the &#39;</span>
                          <span class="s1">&#39;CONTROL file!&#39;</span><span class="p">)</span>
@@ -714,7 +712,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;start_date was neither specified in command line nor &#39;</span>
                          <span class="s1">&#39;in CONTROL file.</span><span class="se">\n</span><span class="s1">&#39;</span>
                          <span class="s1">&#39;Try &quot;</span><span class="si">{}</span><span class="s1"> -h&quot; to print usage information&#39;</span>
-                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
     <span class="c1"># retrieve just one day if end_date isn&#39;t set</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">end</span><span class="p">:</span>
@@ -951,8 +949,8 @@
         <span class="k">if</span> <span class="n">purefc</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">accmaxstep</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxstep</span><span class="p">):</span>
             <span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">maxstep</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... For pure forecast mode, the accumulated forecast must &#39;</span>
-                          <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
-                          <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
+                  <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">accmaxstep</span></div>
 
 <div class="viewcode-block" id="check_addpar"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_addpar">[docs]</a><span class="k">def</span> <span class="nf">check_addpar</span><span class="p">(</span><span class="n">addpar</span><span class="p">):</span>
@@ -1012,18 +1010,13 @@
     <span class="k">return</span> <span class="n">job_chunk</span></div>
 
 
-<div class="viewcode-block" id="check_number"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_number">[docs]</a><span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">mailfail</span><span class="p">):</span>
+<div class="viewcode-block" id="check_number"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_number">[docs]</a><span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Check for correct string format of ensemble member numbers.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    number : str</span>
 <span class="sd">        List of ensemble member forecast runs.</span>
-
-<span class="sd">    mailfail : list of str</span>
-<span class="sd">        Contains all email addresses which should be notified.</span>
-<span class="sd">        It might also contain just the ecmwf user name which will trigger</span>
-<span class="sd">        mailing to the associated email address for this user.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>

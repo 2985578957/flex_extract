@@ -203,15 +203,17 @@
 <span class="kn">import</span> <span class="nn">fnmatch</span>
 
 <span class="c1"># software specific modules from flex_extract</span>
+<span class="c1">#pylint: disable=wrong-import-position</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">get_list_as_string</span>
+<span class="c1">#pylint: enable=wrong-import-position</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># CLASS</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="UioFiles"><a class="viewcode-back" href="../Documentation/Api/api_python.html#UioFiles.UioFiles">[docs]</a><span class="k">class</span> <span class="nc">UioFiles</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Collection of files matching a specific pattern.</span>
+    <span class="sd">&quot;&quot;&quot;Collection of files matching a specific pattern.</span>
 
 <span class="sd">    The pattern can contain regular expressions for the files.</span>
 <span class="sd">    The files are listed and can be transformed to a single string or</span>
@@ -223,16 +225,16 @@
 <span class="sd">        Directory where to list the files.</span>
 
 <span class="sd">    pattern : str</span>
-<span class="sd">        Regular expression pattern. For example: &#39;\*.grb&#39;</span>
+<span class="sd">        Regular expression pattern. For example: &#39;*.grb&#39;</span>
 
 <span class="sd">    files : list of str</span>
 <span class="sd">        List of files matching the pattern in the path.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># CLASS METHODS</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Assignes a specific pattern for these files.</span>
+        <span class="sd">&quot;&quot;&quot;Assignes a specific pattern for these files.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -240,12 +242,12 @@
 <span class="sd">            Directory where to list the files.</span>
 
 <span class="sd">        pattern : str</span>
-<span class="sd">            Regular expression pattern. For example: &#39;\*.grb&#39;</span>
+<span class="sd">            Regular expression pattern. For example: &#39;*.grb&#39;</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span>
@@ -257,7 +259,7 @@
 
 
     <span class="k">def</span> <span class="nf">_list_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Lists all files in the directory with the matching</span>
+        <span class="sd">&quot;&quot;&quot;Lists all files in the directory with the matching</span>
 <span class="sd">        regular expression pattern.</span>
 
 <span class="sd">        Parameters</span>
@@ -268,11 +270,12 @@
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the absolute path</span>
         <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
         <span class="c1"># get all files in the dir and subdir as absolut path</span>
+	    <span class="c1"># pylint: disable=W0612</span>
         <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirnames</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span>
@@ -281,7 +284,7 @@
 
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Converts the list of files into a single string.</span>
+        <span class="sd">&quot;&quot;&quot;Converts the list of files into a single string.</span>
 <span class="sd">        The entries are sepereated by &quot;,&quot; sign.</span>
 
 <span class="sd">        Parameters</span>
@@ -291,7 +294,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        files_string : str</span>
 <span class="sd">            The content of the list as a single string.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
         <span class="n">files_string</span> <span class="o">=</span> <span class="n">get_list_as_string</span><span class="p">(</span><span class="n">filenames</span><span class="p">,</span> <span class="n">concatenate_sign</span><span class="o">=</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
@@ -300,7 +303,7 @@
 
 
 <div class="viewcode-block" id="UioFiles.delete_files"><a class="viewcode-back" href="../Documentation/Api/api_python.html#UioFiles.UioFiles.delete_files">[docs]</a>    <span class="k">def</span> <span class="nf">delete_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;Deletes the files.</span>
+        <span class="sd">&quot;&quot;&quot;Deletes the files.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -308,7 +311,7 @@
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">old_file</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">:</span>
             <span class="n">silent_remove</span><span class="p">(</span><span class="n">old_file</span><span class="p">)</span>

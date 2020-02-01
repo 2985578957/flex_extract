@@ -199,7 +199,9 @@
 <span class="c1">#    International License. To view a copy of this license, visit</span>
 <span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
 <span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
-<span class="c1">#*******************************************************************************</span>
+<span class="c1"># *******************************************************************************</span>
+<span class="c1"># pylint: disable=ungrouped-imports</span>
+<span class="c1"># not necessary that we group the imports</span>
 <span class="sd">&#39;&#39;&#39;This script prepares the final version of the grib files which are</span>
 <span class="sd">then used by FLEXPART.</span>
 
@@ -229,19 +231,19 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">socket</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="c1"># add path to local main python path for flex_extract to get full access</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
     <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">_config</span>
+<span class="c1"># pylint: disable=wrong-import-position</span>
+<span class="c1">#import _config</span>
 <span class="kn">from</span> <span class="nn">Mods.checks</span> <span class="k">import</span> <span class="n">check_ppid</span>
 <span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
-<span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
-                        <span class="n">read_ecenv</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">)</span>
+<span class="c1">#from Classes.ControlFile import ControlFile</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">clean_up</span><span class="p">,</span> <span class="n">make_dir</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">Classes.EcFlexpart</span> <span class="k">import</span> <span class="n">EcFlexpart</span>
+<span class="c1"># pylint: enable=wrong-import-position</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># FUNCTION</span>
@@ -307,7 +309,7 @@
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Prepare &#39;</span> <span class="o">+</span> <span class="n">start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span>
-           <span class="s2">&quot;/to/&quot;</span> <span class="o">+</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
+          <span class="s1">&#39;/to/&#39;</span> <span class="o">+</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>
 
     <span class="c1"># create output dir if necessary</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">outputdir</span><span class="p">):</span>
@@ -331,11 +333,6 @@
     <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;elda&#39;</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">doubleelda</span><span class="p">:</span>
         <span class="n">flexpart</span><span class="o">.</span><span class="n">calc_extra_elda</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
     <span class="n">flexpart</span><span class="o">.</span><span class="n">process_output</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-
-    <span class="c1"># make use of a possible conversion to a</span>
-    <span class="c1"># specific flexpart binary format</span>
-    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">grib2flexpart</span><span class="p">:</span>
-        <span class="n">flexpart</span><span class="o">.</span><span class="n">prepare_fp_files</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
     <span class="c1"># check if in debugging mode, then store all files</span>
     <span class="c1"># otherwise delete temporary files</span>

@@ -199,14 +199,13 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="c1">#pylint: disable=wrong-import-position</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span>
 <span class="kn">from</span> <span class="nn">Mods.checks</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_grid</span><span class="p">,</span> <span class="n">check_area</span><span class="p">,</span> <span class="n">check_levels</span><span class="p">,</span> <span class="n">check_purefc</span><span class="p">,</span>
                          <span class="n">check_step</span><span class="p">,</span> <span class="n">check_mail</span><span class="p">,</span> <span class="n">check_queue</span><span class="p">,</span> <span class="n">check_pathes</span><span class="p">,</span>
                          <span class="n">check_dates</span><span class="p">,</span> <span class="n">check_maxstep</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">check_request</span><span class="p">,</span>
@@ -214,6 +213,7 @@
                          <span class="n">check_acctime</span><span class="p">,</span> <span class="n">check_accmaxstep</span><span class="p">,</span> <span class="n">check_time</span><span class="p">,</span>
                          <span class="n">check_logicals_type</span><span class="p">,</span> <span class="n">check_len_type_time_step</span><span class="p">,</span>
                          <span class="n">check_addpar</span><span class="p">,</span> <span class="n">check_job_chunk</span><span class="p">,</span> <span class="n">check_number</span><span class="p">)</span>
+<span class="c1">#pylint: enable=wrong-import-position</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># CLASS</span>
@@ -226,7 +226,7 @@
 <span class="sd">    software. All necessary parameters needed to retrieve the data fields</span>
 <span class="sd">    from the MARS archive for driving FLEXPART are set in a CONTROL file.</span>
 <span class="sd">    Some specific parameters like the start and end dates can be overwritten</span>
-<span class="sd">    by the command line parameters, but in generel all parameters needed</span>
+<span class="sd">    by the command line parameters, but in generall all parameters needed</span>
 <span class="sd">    for a complete set of fields for FLEXPART can be set in the CONTROL file.</span>
 
 <span class="sd">    Attributes</span>
@@ -399,11 +399,6 @@
 <span class="sd">        The email addresses should be seperated by a comma.</span>
 <span class="sd">        Default value is [&#39;${USER}&#39;].</span>
 
-<span class="sd">    grib2flexpart : int 0</span>
-<span class="sd">        Switch to select generation of preprocessed FLEXPART files &quot;.fp&quot;.</span>
-<span class="sd">        If it is selected, the program grib2flexpart will try</span>
-<span class="sd">        to convert the flex_extract output files into &quot;.fp&quot; format.</span>
-
 <span class="sd">    ecstorage : int</span>
 <span class="sd">        Switch to select storage of FLEXPART ready output files</span>
 <span class="sd">        in the ECFS file system. Default value is 0.</span>
@@ -495,7 +490,7 @@
 <span class="sd">    logicals : list of str</span>
 <span class="sd">        List of the names of logical switches which controls the flow</span>
 <span class="sd">        of the program. Default list is [&#39;gauss&#39;, &#39;omega&#39;, &#39;omegadiff&#39;, &#39;eta&#39;,</span>
-<span class="sd">        &#39;etadiff&#39;, &#39;dpdeta&#39;, &#39;cwc&#39;, &#39;wrf&#39;, &#39;grib2flexpart&#39;, &#39;ecstorage&#39;,</span>
+<span class="sd">        &#39;etadiff&#39;, &#39;dpdeta&#39;, &#39;cwc&#39;, &#39;wrf&#39;, &#39;ecstorage&#39;,</span>
 <span class="sd">        &#39;ectrans&#39;, &#39;debug&#39;, &#39;request&#39;, &#39;public&#39;, &#39;purefc&#39;, &#39;rrint&#39;, &#39;doubleelda&#39;]</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -561,7 +556,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ecfsdir</span> <span class="o">=</span> <span class="s1">&#39;ectmp:/$</span><span class="si">{USER}</span><span class="s1">/econdemand/&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;$</span><span class="si">{USER}</span><span class="s1">&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mailops</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;$</span><span class="si">{USER}</span><span class="s1">&#39;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">grib2flexpart</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ecstorage</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ectrans</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_INPUT_DIR</span>
@@ -586,7 +580,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">doubleelda</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logicals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gauss&#39;</span><span class="p">,</span> <span class="s1">&#39;omega&#39;</span><span class="p">,</span> <span class="s1">&#39;omegadiff&#39;</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">,</span> <span class="s1">&#39;etadiff&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;dpdeta&#39;</span><span class="p">,</span> <span class="s1">&#39;cwc&#39;</span><span class="p">,</span> <span class="s1">&#39;wrf&#39;</span><span class="p">,</span> <span class="s1">&#39;grib2flexpart&#39;</span><span class="p">,</span> <span class="s1">&#39;ecstorage&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;dpdeta&#39;</span><span class="p">,</span> <span class="s1">&#39;cwc&#39;</span><span class="p">,</span> <span class="s1">&#39;wrf&#39;</span><span class="p">,</span> <span class="s1">&#39;ecstorage&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;ectrans&#39;</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="s1">&#39;oper&#39;</span><span class="p">,</span> <span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;purefc&#39;</span><span class="p">,</span> <span class="s1">&#39;rrint&#39;</span><span class="p">,</span> <span class="s1">&#39;doubleelda&#39;</span><span class="p">]</span>
 
@@ -763,7 +757,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ecgid</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="n">check_pathes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span>
-             <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">installdir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flexextractdir</span><span class="p">)</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">outputdir</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">installdir</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">flexextractdir</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span> <span class="o">=</span> <span class="n">check_dates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_date</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span>
@@ -772,7 +768,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">check_levels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levelist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">check_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="n">check_step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span> <span class="o">=</span> <span class="n">check_maxstep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxstep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
 
@@ -810,7 +806,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span> <span class="o">=</span> <span class="n">check_job_chunk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job_chunk</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">check_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mailfail</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">check_number</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
@@ -856,7 +852,6 @@
                     <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">l</span><span class="p">)</span></div></div>
-
 </pre></div>
 
            </div>

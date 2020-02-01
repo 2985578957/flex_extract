@@ -225,18 +225,15 @@
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span> <span class="n">get_cmdline_args</span><span class="p">,</span>
-                         <span class="n">submit_job_to_ecserver</span><span class="p">,</span> <span class="n">read_ecenv</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span>
+                        <span class="n">submit_job_to_ecserver</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">Mods.get_mars_data</span> <span class="k">import</span> <span class="n">get_mars_data</span>
 <span class="kn">from</span> <span class="nn">Mods.prepare_flexpart</span> <span class="k">import</span> <span class="n">prepare_flexpart</span>
-<span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
+<span class="c1">#from Classes.ControlFile import ControlFile</span>
 
 
 <span class="c1"># ------------------------------------------------------------------------------</span>

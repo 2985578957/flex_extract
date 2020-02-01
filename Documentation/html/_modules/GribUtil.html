@@ -229,7 +229,7 @@
         <span class="k">return</span>
 
 
-<div class="viewcode-block" id="GribUtil.get_keys"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.get_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[]):</span>
+<div class="viewcode-block" id="GribUtil.get_keys"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.get_keys">[docs]</a>    <span class="k">def</span> <span class="nf">get_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">wherekeynames</span><span class="p">,</span> <span class="n">wherekeyvalues</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Get keyvalues for a given list of keynames a where statement</span>
 <span class="sd">        can be given (list of key and list of values)</span>
 
@@ -238,11 +238,11 @@
 <span class="sd">        keynames : :obj:`list` of :obj:`string`</span>
 <span class="sd">            List of keynames.</span>
 
-<span class="sd">        wherekeynames : :obj:`list` of :obj:`string`, optional</span>
-<span class="sd">            Default value is an empty list.</span>
+<span class="sd">        wherekeynames : :obj:`list` of :obj:`string`</span>
+<span class="sd">            List of key names for indexing grib message parameter.</span>
 
-<span class="sd">        wherekeyvalues : :obj:`list` of :obj:`string`, optional</span>
-<span class="sd">            Default value is an empty list.</span>
+<span class="sd">        wherekeyvalues : :obj:`list` of :obj:`string`</span>
+<span class="sd">            List of key values corresponding the key names.</span>
 
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
@@ -283,8 +283,8 @@
         <span class="k">return</span> <span class="n">return_list</span></div>
 
 
-<div class="viewcode-block" id="GribUtil.set_keys"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.set_keys">[docs]</a>    <span class="k">def</span> <span class="nf">set_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fromfile</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">keyvalues</span><span class="p">,</span> <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[],</span>
-                 <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GribUtil.set_keys"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.set_keys">[docs]</a>    <span class="k">def</span> <span class="nf">set_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fromfile</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">keyvalues</span><span class="p">,</span> <span class="n">wherekeynames</span><span class="p">,</span>
+                 <span class="n">wherekeyvalues</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Opens the file to read the grib messages and then write</span>
 <span class="sd">        the selected messages (with wherekeys) to a new output file.</span>
 <span class="sd">        Also, the keyvalues of the passed list of keynames are set.</span>
@@ -302,18 +302,11 @@
 <span class="sd">            List of keyvalues to set in the selected messages.</span>
 <span class="sd">            Default is an empty list.</span>
 
-<span class="sd">        wherekeynames : :obj:`list` of :obj:`string`, optional</span>
+<span class="sd">        wherekeynames : :obj:`list` of :obj:`string`</span>
 <span class="sd">            List of keynames to select correct message.</span>
-<span class="sd">            Default value is an empty list.</span>
 
-<span class="sd">        wherekeyvalues : :obj:`list` of :obj:`string`, optional</span>
+<span class="sd">        wherekeyvalues : :obj:`list` of :obj:`string`</span>
 <span class="sd">            List of keyvalues for keynames to select correct message.</span>
-<span class="sd">            Default value is an empty list.</span>
-
-<span class="sd">        strict : :obj:`boolean`, optional</span>
-<span class="sd">            Decides if everything from keynames and keyvalues</span>
-<span class="sd">            is written out the grib file (False) or only those</span>
-<span class="sd">            meeting the where statement (True). Default is False.</span>
 
 <span class="sd">        filemode : :obj:`string`, optional</span>
 <span class="sd">            Sets the mode for the output file. Default is &quot;wb&quot;.</span>
@@ -361,8 +354,8 @@
 
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GribUtil.copy_dummy_msg"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.copy_dummy_msg">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dummy_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_in</span><span class="p">,</span> <span class="n">selectWhere</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">keynames</span><span class="o">=</span><span class="p">[],</span> <span class="n">keyvalues</span><span class="o">=</span><span class="p">[],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GribUtil.copy_dummy_msg"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.copy_dummy_msg">[docs]</a>    <span class="k">def</span> <span class="nf">copy_dummy_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename_in</span><span class="p">,</span> <span class="n">keynames</span><span class="p">,</span> <span class="n">keyvalues</span><span class="p">,</span>
+                       <span class="n">selectwhere</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Add the content of another input grib file to the objects file but</span>
 <span class="sd">        only messages corresponding to keys/values passed to the function.</span>
 <span class="sd">        The selectWhere switch decides if to copy the keys equal to (True) or</span>
@@ -373,16 +366,16 @@
 <span class="sd">        filename_in : :obj:`string`</span>
 <span class="sd">            Filename of the input file to read the grib messages from.</span>
 
-<span class="sd">        selectWhere : :obj:`boolean`, optional</span>
+<span class="sd">        selectwhere : :obj:`boolean`, optional</span>
 <span class="sd">            Decides if to copy the keynames and values equal to (True) or</span>
 <span class="sd">            different to (False) the keynames/keyvalues list passed to the</span>
 <span class="sd">            function. Default is True.</span>
 
-<span class="sd">        keynames : :obj:`list` of :obj:`string`, optional</span>
-<span class="sd">            List of keynames. Default is an empty list.</span>
+<span class="sd">        keynames : :obj:`list` of :obj:`string`</span>
+<span class="sd">            List of keynames.</span>
 
-<span class="sd">        keyvalues : :obj:`list` of :obj:`string`, optional</span>
-<span class="sd">            List of keyvalues. Default is an empty list.</span>
+<span class="sd">        keyvalues : :obj:`list` of :obj:`string`</span>
+<span class="sd">            List of keyvalues.</span>
 
 <span class="sd">        filemode : :obj:`string`, optional</span>
 <span class="sd">            Sets the mode for the output file. Default is &quot;wb&quot;.</span>
@@ -415,7 +408,7 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">codes_is_defined</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Key was not defined&quot;</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">selectWhere</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">selectwhere</span><span class="p">:</span>
                     <span class="n">select</span> <span class="o">=</span> <span class="p">(</span><span class="n">select</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span>
                                           <span class="nb">str</span><span class="p">(</span><span class="n">codes_get</span><span class="p">(</span><span class="n">gid</span><span class="p">,</span> <span class="n">key</span><span class="p">))))</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -433,16 +426,15 @@
 
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="GribUtil.index"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mars&quot;</span><span class="p">],</span> <span class="n">index_file</span><span class="o">=</span><span class="s2">&quot;my.idx&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="GribUtil.index"><a class="viewcode-back" href="../Documentation/Api/api_python.html#GribUtil.GribUtil.index">[docs]</a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_keys</span><span class="p">,</span> <span class="n">index_file</span><span class="o">=</span><span class="s2">&quot;my.idx&quot;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create index file from a list of files if it does not exist or</span>
 <span class="sd">        read an index file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        index_keys: :obj:`list` of :obj:`string`, optional</span>
+<span class="sd">        index_keys: :obj:`list` of :obj:`string`</span>
 <span class="sd">            Contains the list of key parameter names from</span>
 <span class="sd">            which the index is to be created.</span>
-<span class="sd">            Default is a list with a single entry string &quot;mars&quot;.</span>
 
 <span class="sd">        index_file: :obj:`string`, optional</span>
 <span class="sd">            Filename where the indices are stored.</span>
