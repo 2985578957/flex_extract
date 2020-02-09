@@ -27,7 +27,7 @@ cd ../..
 tar -zcvf $tarname $tardir\
     --exclude=$tardir'/Source/Fortran/*.o' \
     --exclude=$tardir'/Source/Fortran/*.mod' \
-    --exclude=$tardir'/Source/Fortran/CONVERT2*' \
+    --exclude=$tardir'/Source/Fortran/calc_etadot' \
     --exclude=$tardir'/Source/Python/*.pyc' \
     --exclude=$tardir'/Source/Pythontest/*.pyc' \
     --exclude=$tardir'/Source/Pythontest/__pycache__' \
@@ -36,15 +36,22 @@ tar -zcvf $tarname $tardir\
     --exclude=$tardir'/.gitignore' \
     --exclude=$tardir'/Run/ECMWF_ENV' \
     --exclude=$tardir'/Run/Workspace' \
-    --exclude=$tardir'/Run/Jobscripts/*' \
-    --exclude=$tardir'/Testing/Testcases' \
-    --exclude=$tardir'/Testing/Controls' \
-    --exclude=$tardir'/Testing/Dir' \
-    --exclude=$tardir'/Run/fontconfig' \
-    --exclude=$tardir'/Run/run_local.sh' \
-    --exclude=$tardir'/Run/Control/Testgrid' \
-    --exclude=$tardir'/Run/Control/notPublic' \
-    --exclude=$tardir'setup_local.sh' \
+    --exclude=$tardir'/Run/Jobscripts/*sh' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/BASETIME' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/CERA' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/EA5' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/EI' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/ETAOD' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/GAUSSOD' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.0.4/PUREFC' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/BASETIME' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/CERA' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/EA5' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/EI' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/ETAOD' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/GAUSSOD' \
+    --exclude=$tardir'/Testing/Regression/Compare_gribfiles/7.1/PUREFC' \
+    --exclude=$tardir'/setup_local.sh' \
     --exclude=$tardir'/.empty' \
     
      
