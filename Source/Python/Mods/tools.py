@@ -417,6 +417,9 @@ def product(*args, **kwds):
     This method is taken from an example at the ECMWF wiki website.
     https://software.ecmwf.int/wiki/display/GRIB/index.py; 2018-03-16
 
+    It was released under the following license:
+    https://confluence.ecmwf.int/display/ECC/License
+
     Example
     -------
     product('ABCD', 'xy') --> Ax Ay Bx By Cx Cy Dx Dy
