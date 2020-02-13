@@ -146,7 +146,7 @@ def test_mr_content_equality(mr_old, mr_new):
         if mr_new[col].equals(mr_old[col]):
             lresult = True
         else:
-            err_msg += 'Unconsistency happend to be in column: ' + col + '\n'
+            err_msg += 'Inconsistency in column: ' + col + '\n'
             print("THERE SEEMS TO BE AN ERROR:")
             print("CONTENT OF NEW VERSION:")
             print(mr_new[col])
@@ -320,7 +320,7 @@ if __name__ == '__main__':
             else:
                 f.write('... ' + c + ' ... FAILED!' + '\n')
                 if err_msg:
-                    f.write('... \t' + err_msg + '\n')
+                    f.write('...    ' + err_msg + '\n')
 
         exit
 

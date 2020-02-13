@@ -4,8 +4,8 @@ The CONTROL file
     
   
 
-.. MARS user documentation				https://confluence.ecmwf.int/display/UDOC/MARS+user+documentation
-.. MARS keywords and explanation				https://confluence.ecmwf.int/display/UDOC/MARS+keywords
+.. MARS user documentation https://confluence.ecmwf.int/display/UDOC/MARS+user+documentation
+.. MARS keywords and explanation https://confluence.ecmwf.int/display/UDOC/MARS+keywords
  
  
 This file is an input file for :literal:`flex_extract's` main script :literal:`submit.py`.

@@ -113,7 +113,7 @@ class UioFiles(object):
         path = os.path.abspath(path)
 
         # get all files in the dir and subdir as absolut path
-	    # pylint: disable=W0612
+        # pylint: disable=W0612
         for root, dirnames, filenames in os.walk(path):
             for filename in fnmatch.filter(filenames, self.pattern):
                 self.files.append(os.path.join(root, filename))

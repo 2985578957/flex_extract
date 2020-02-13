@@ -103,7 +103,7 @@ Figure 3 shows an overview of the new algorithm and its components.
 .. _ref-fig-IA3:                       
 
 .. figure:: ../_files/IA3.png         
-    :figclass: align-center		  
+    :figclass: align-center
    
     Fig. 3: Schematic overview of the basic notation in a precipitation interval with the original precipitation rate g (green) as a step function and the interpolated data :math:`f` (dark blue) as the piecewise linear function. The original time interval with fixed grid length :math:`\delta t` is split equidistantly in three subintervals denoted by :math:`I_i^{1,2,3}`, with the slopes in the subintervals as denoted by :math:`k_i^{1,2,3}` . The sub-grid function values :math:`f_i, f_i^{1,2}, f_{i+1}` are marked by red diamonds (Hittmeir et al. 2018).
    

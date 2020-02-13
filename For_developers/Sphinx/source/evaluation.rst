@@ -29,11 +29,11 @@ Evaluation
     - radon
         
     Performance analysis:
-    -	Whole software
-    -	Disaggregation
-    -	Convert2
-    -   prepare_flexpart
-    -	Andere komponenten
+    - Whole software
+    - Disaggregation
+    - Convert2
+    - prepare_flexpart
+    - Andere komponenten
 
     
     
