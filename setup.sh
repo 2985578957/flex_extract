@@ -27,10 +27,10 @@
 #
 TARGET='ecgate'
 MAKEFILE='makefile_ecgate'
-ECUID='km4a'
-ECGID='at'
-GATEWAY='srvx8.img.univie.ac.at'
-DESTINATION='annep@genericSftp'
+ECUID='<username>'
+ECGID='<groupID>'
+GATEWAY='<gatewayname>'
+DESTINATION='<name>@genericSftp'
 INSTALLDIR=None
 JOB_TEMPLATE=''
 CONTROLFILE='CONTROL_EA5'
