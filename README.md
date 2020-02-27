@@ -1,25 +1,29 @@
-# README #
+# flex_extract
 
-This software retrieves ECMWF data and generates FLEXPART specific data files. 
-For each time stamp the software combines all model level and surface level 
-data fields which were modified to match FLEXPART's needs and were then 
-stored in single files with the format prefixYYMMDDHH.
+`flex_extract` is a software package to support retrieving meteorological fields from the European Centre for Medium-Range Weather Forecasts' (ECMWF) Meteorological Archival and Retrieval System (MARS) as input for the `FLEXTRA`/`FLEXPART` Atmospheric Transport Modelling system.
 
-
-This directory contains the following sub-directories:
-
-+ `python: It contains the python scripts which manage the extraction and 
-           the generation of FLEXPART input data files. It also includes the 
-           CONTROL files which contain the controlling parameters.
-+ `src:    It contains the Fortran source code and Makefile templates 
-           to create the CONVERT2 executable (used by the python scripts) to
-           process the ECMWF grib fields, e.g. convert from reduced gaussian to 
-           regular latitude-longitude grid.
-+ `grib_templates: It contains a reference table for the ECMWF parameter.
+`FLEXPART` (“FLEXible PARTicle dispersion model”, http://flexpart.eu) is a Lagrangian transport and dispersion model suitable for the simulation of a large range of atmospheric transport processes.
 
 
-For more detailed installation instructions and the user guide please read 
-SIP.pdf and SUT.pdf.
+## Installation and Usage
 
-Please report any problems via the ticket system at www.flexpart.eu.
+There is a documentation within the flex_extract directory which contain all information necessary. 
+Please open the file Documentation/html/index.html in your preferred browser to learn about installation and usage of flex_extract.
 
+## Project website
+
+https://www.flexpart.eu/wiki/FpInputMetEcmwf
+
+## Authors
+
+Anne Philipp, Leopold Haimberger and Petra Seibert
+
+## License
+    (C) Copyright 2014-2019.
+
+    SPDX-License-Identifier: CC-BY-4.0
+
+    This work is licensed under the Creative Commons Attribution 4.0
+    International License. To view a copy of this license, visit
+    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.

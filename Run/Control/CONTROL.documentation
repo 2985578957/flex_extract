@@ -1,0 +1,115 @@
+################################################################################
+# Comprehensive list of relevant CONTROL file parameters with
+# short descriptions and default values. 
+#
+# For more details on how to select and define parameters 
+# please see Table of CONTROLparameters. 
+#
+# AUTHOR: Anne Philipp
+# DATE:   05. February 2019
+################################################################################
+
+#===============================================================================
+# USER SECTION:
+# User specific information for ECMWF server.
+# Information are needed for storage or data transfer to local gateway server.
+# (OPTIONAL: INFORMATION ARE KNOWN THROUGH EXTRA FILE AFTER INSTALLATION)
+#-------------------------------------------------------------------------------
+ECUID None
+ECGID None
+DESTINATION None
+GATEWAY None
+
+#===============================================================================
+# GENERAL SECTION:
+# Specific storage, notification and data transfer settings.
+# Selection of ECMWF access interface and extra output options. 
+#-------------------------------------------------------------------------------
+DEBUG 0
+REQUEST 0
+PUBLIC 0
+OPER 0
+ECSTORAGE 0
+ECTRANS 0
+PREFIX 'EN'
+ECFSDIR 'ectmp:/${USER}/econdemand/'
+MAILFAIL ['${USER}']
+MAILOPS ['${USER}']
+
+#===============================================================================
+# TIME SECTION:
+# Selection of time period and temporal resolution for extraction period.
+#-------------------------------------------------------------------------------
+START_DATE 
+END_DATE
+DATE_CHUNK 3
+DTIME None
+BASETIME None
+
+#===============================================================================
+# DATA SECTION:
+# General description of data set.
+#-------------------------------------------------------------------------------
+CLASS None
+DATASET None
+STREAM None
+NUMBER 'OFF'
+EXPVER '1'
+FORMAT 'GRIB1'
+
+#===============================================================================
+# DATA FIELDS SECTION:
+# Specific selection of field composition regarding type, analysis or forecast 
+# time and the forecast time step.
+#-------------------------------------------------------------------------------
+TYPE None
+TIME None
+STEP None
+MAXSTEP None
+
+#===============================================================================
+# FLUX DATA FIELDS SECTION:
+# Specific selection of flux field composition regarding forecast field type
+# the forecast start times and the maximum forecast step per start time.
+# Specification of disaggregation method of precipitation data.
+#-------------------------------------------------------------------------------
+ACCTYPE None
+ACCTIME None
+ACCMAXSTEP None
+RRINT 0
+
+#===============================================================================
+# DOMAIN SECTION: 
+# Definition of horizontal area, spatial resolution and vertical levels. 
+#-------------------------------------------------------------------------------
+GRID None
+RESOL None
+SMOOTH 0
+LEFT None
+LOWER None
+UPPER None
+RIGHT None
+LEVEL None
+LEVELIST None
+
+#===============================================================================
+# VERTICAL WIND SECTION:
+# Selection of vertical wind calculation method.
+#-------------------------------------------------------------------------------
+GAUSS 0
+ACCURACY 24
+OMEGA 0
+OMEGADIFF 0
+ETA 0
+ETADIFF 0
+DPDETA 1
+ETAPAR 77
+
+#===============================================================================
+# ADDITIONAL DATA SECTION:
+# Specification of extra data fields to be extracted.
+#-------------------------------------------------------------------------------
+CWC 0
+WRF 0
+DOUBLEELDA 0 
+ADDPAR None

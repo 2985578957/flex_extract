@@ -1,0 +1,25 @@
+2019-08-19 PS
+rwGRIB2.f90 subroutine readlatlon: check alloc status deallocate values
+  - in case of empty input file 
+  NOTE: check why we run into that at all!
+  Improve by realloc only if dim has changed
+
+2019-08-21 PS
+  introduce the "new" versions of source files: 
+    all .f90 free format
+    code beautification
+    regression test is OK
+  
+   make new local gfortran makefiles, remove parameters not needed anymore
+   
+   change filenames rwgrib.f90 (all lower), preconvert to calc_etadot,
+   adapt messages and comments in calc_etadot.f90
+   adapt all makefiles to new filenames
+   adapt success message of logfiles in regression test references
+   redo regression test OK
+   
+   provide softlinks for standards:
+     calc_etadot.out -> calc_etadot_fast.out
+     makefile_local_gfortran -> makefile_fast
+   
+   

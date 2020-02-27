@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# @Author: Anne Philipp
+#
+# @Date: October, 10 2019
+#
+# @Description: Creates the mars request files with the older (7.0.4) 
+#               version of flex_extract and places them in the test directory
+#               of mars request  comparsion tests.
+#
+# @License:
+#    (C) Copyright 2014-2019.
+#
+#    SPDX-License-Identifier: CC-BY-4.0
+#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+#               
+# @ChangeHistory:  
+#
+# @Usage: 
+#        start script within the old flex_extract python directory
+#        ./create_old_mars_request.txt  <path to mars request test directory of old version>
+#        e.g. ./create_old_mars_request.txt <local_path>/flex_extract_v7.1/Testing/Regression/Mars_request/7.0.4/
+#
+
+
+./submit.py --controlfile=CONTROL_CERA_mr --request=1
+mv ../work/mars_requests.csv ../work/CERA_mr.csv
+
+./submit.py --controlfile=CONTROL_CERA.public_mr --public=1 --request=1
+mv ../work/mars_requests.csv ../work/CERA.public_mr.csv
+   
+./submit.py --controlfile=CONTROL_CF_mr --request=1
+mv ../work/mars_requests.csv ../work/CF_mr.csv
+
+./submit.py --controlfile=CONTROL_CV_mr --request=1
+mv ../work/mars_requests.csv ../work/CV_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5.highres_mr --request=1
+mv ../work/mars_requests.csv ../work/EA5.highres_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5_mr --request=1
+mv ../work/mars_requests.csv ../work/EA5_mr.csv
+
+./submit.py --controlfile=CONTROL_EA5.public_mr --public=1 --request=1
+mv ../work/mars_requests.csv ../work/EA5.public_mr.csv
+
+./submit.py --controlfile=CONTROL_EI_mr --request=1 
+mv ../work/mars_requests.csv ../work/EI_mr.csv
+
+./submit.py --controlfile=CONTROL_EI.public_mr --request=1 --public=1
+mv ../work/mars_requests.csv ../work/EI.public_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ELDA.FC.eta.ens.double_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ELDA.FC.eta.ens.double_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ENFO.CF_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ENFO.CF_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.ENFO.PF_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.ENFO.PF_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.4V.operational_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.4V.operational_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.FC.36hours_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.FC.36hours_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.FC.twiceaday_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.FC.twiceaday_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.global.025_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.global.025_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.highres.eta_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.highres.eta_mr.csv
+
+./submit.py --controlfile=CONTROL_OD.OPER.highres.gauss_mr --request=1
+mv ../work/mars_requests.csv ../work/OD.OPER.highres.gauss_mr.csv
+
+
+mv ./work/*_mr.csv ${1}

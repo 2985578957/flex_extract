@@ -1,0 +1,1086 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>checks &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>checks</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for checks</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="c1"># @Author: Anne Philipp (University of Vienna)</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: November 2018</span>
+<span class="c1">#</span>
+<span class="c1"># @Change History:</span>
+<span class="c1">#</span>
+<span class="c1"># @License:</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
+<span class="c1">#</span>
+<span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
+<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;This module contains check methods for the CONTROL paramaters.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># MODULES</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="c1"># pylint: disable=unused-import</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">exceptions</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">builtins</span> <span class="k">as</span> <span class="nn">exceptions</span>
+<span class="c1"># pylint: enable=unused-import</span>
+
+<span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># FUNCTIONS</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="check_logicals_type"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_logicals_type">[docs]</a><span class="k">def</span> <span class="nf">check_logicals_type</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">logicals</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check that the logical variables have correct type integer.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    logicals : list of (str or int)</span>
+<span class="sd">        Names of the switches that are used to control the flow of the</span>
+<span class="sd">        program.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">logicals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">var</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">var</span><span class="p">)))</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="check_grid"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_grid">[docs]</a><span class="k">def</span> <span class="nf">check_grid</span><span class="p">(</span><span class="n">grid</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert grid into correct Lat/Lon format. E.g. &#39;0.5/0.5&#39;</span>
+
+<span class="sd">    Checks on format of original grid. Wether it is in the order of 1000 or 1.</span>
+<span class="sd">    Convert to correct grid format and substitute into &quot;Lat/Lon&quot; format string.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grid : str</span>
+<span class="sd">        Contains grid information</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    grid : str</span>
+<span class="sd">        Contains grid in format Lat/lon. E.g. 0.1/0.1</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">grid</span>
+    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>
+        <span class="n">gridx</span><span class="p">,</span> <span class="n">gridy</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gridx</span> <span class="o">==</span> <span class="n">gridy</span><span class="p">:</span>
+            <span class="n">grid</span> <span class="o">=</span> <span class="n">gridx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;GRID parameter contains two &#39;</span>
+                             <span class="s1">&#39;different values: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="p">(</span><span class="n">grid</span><span class="p">))</span>
+    <span class="c1"># # determine grid format</span>
+    <span class="c1"># if float(grid) / 100. &gt;= 0.5:</span>
+    <span class="c1">#    # grid is defined in 1/1000 degrees; old format</span>
+    <span class="c1">#    grid = &#39;{}/{}&#39;.format(float(grid) / 1000.,</span>
+    <span class="c1">#                          float(grid) / 1000.)</span>
+    <span class="c1"># elif float(grid) / 100. &lt; 0.5:</span>
+    <span class="c1">#    # grid is defined in normal degree; new format</span>
+    <span class="c1">#    grid = &#39;{}/{}&#39;.format(float(grid), float(grid))</span>
+
+
+    <span class="c1"># determine grid format</span>
+    <span class="c1"># assumes that nobody wants grid spacings of 20 deg or more</span>
+    <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">20.</span><span class="p">:</span>
+        <span class="c1"># grid is defined in 1/1000 degree; old format</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># grid is defined in degree; new format</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">grid</span><span class="p">))</span>
+
+
+    <span class="k">return</span> <span class="n">grid</span></div>
+
+<div class="viewcode-block" id="check_area"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_area">[docs]</a><span class="k">def</span> <span class="nf">check_area</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Defines the correct area string.</span>
+
+<span class="sd">    Checks on the format of the four area components. Wether it is of</span>
+<span class="sd">    the order of 1000 or 1. Also checks wether area was already set by command</span>
+<span class="sd">    line, then the four components are overwritten.</span>
+<span class="sd">    Convert to correct format of the order of magnitude &quot;1&quot; and sets the</span>
+<span class="sd">    area parameter (North/West/South/East).</span>
+<span class="sd">    E.g.: -5./20./10./10.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    grid : str</span>
+<span class="sd">        Contains grid information.</span>
+
+<span class="sd">    area : str</span>
+<span class="sd">        Contains area informtion.</span>
+
+<span class="sd">    upper : str</span>
+<span class="sd">        The northern most latitude.</span>
+
+<span class="sd">    lower : str</span>
+<span class="sd">        The souther most latitude.</span>
+
+<span class="sd">    left : str</span>
+<span class="sd">        The western most longitude.</span>
+
+<span class="sd">    right : str</span>
+<span class="sd">        The eastern most longiude.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    grid : str</span>
+<span class="sd">        Contains grid in format Lat/lon. E.g. 0.1/0.1</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>  <span class="c1"># Gaussian output grid</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span>
+        <span class="k">return</span> <span class="n">area</span>
+
+    <span class="c1"># if area was provided decompose area into its 4 components</span>
+    <span class="k">if</span> <span class="n">area</span><span class="p">:</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="n">area</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">upper</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">components</span>
+
+    <span class="c1"># determine area format</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">([(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">),</span>
+            <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.01</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)]):</span>
+        <span class="c1"># area is defined in 1/1000 degrees; old format</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">,</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">,</span>
+              <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10000.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]):</span>
+        <span class="c1"># area is already in new format</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">left</span><span class="p">),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
+                                    <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The area components have different &#39;</span>
+                         <span class="s1">&#39;formats (upper, lower, left, right): &#39;</span>
+                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upper</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
+                                              <span class="nb">str</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">right</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">area</span></div>
+
+<div class="viewcode-block" id="check_levels"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_levels">[docs]</a><span class="k">def</span> <span class="nf">check_levels</span><span class="p">(</span><span class="n">levelist</span><span class="p">,</span> <span class="n">level</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Defines correct level list and guarantees that the maximum level is</span>
+<span class="sd">    one of the available maximum levels.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    levelist : str</span>
+<span class="sd">        Specifies the level list.</span>
+<span class="sd">        Examples: model level: 1/to/137, pressure levels: 500/to/1000</span>
+
+<span class="sd">    level : str</span>
+<span class="sd">        Specifies the maximum level.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    levelist : str</span>
+<span class="sd">        Specifies the required levels. It has to have a valid</span>
+<span class="sd">        correspondence to the selected levtype.</span>
+<span class="sd">        Examples: model level: 1/to/137, pressure levels: 500/to/1000</span>
+
+<span class="sd">    level : str</span>
+<span class="sd">        Specifies the maximum level. It has to be one of the</span>
+<span class="sd">        available maximum level number as contained in the variable</span>
+<span class="sd">        MAX_LEVEL_LIST in &quot;_config&quot;. E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># assure consistency of levelist and level</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">levelist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">level</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: neither levelist nor level &#39;</span>
+                         <span class="s1">&#39;specified in CONTROL file&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">levelist</span> <span class="ow">and</span> <span class="n">level</span><span class="p">:</span>
+        <span class="n">levelist</span> <span class="o">=</span> <span class="s1">&#39;1/to/&#39;</span> <span class="o">+</span> <span class="n">level</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">levelist</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">level</span><span class="p">)</span> <span class="ow">or</span> \
+         <span class="p">(</span><span class="n">levelist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">level</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">levelist</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># check if max level is a valid level</span>
+    <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">MAX_LEVEL_LIST</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: </span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;LEVEL must be the maximum level of a specified &#39;</span>
+                         <span class="s1">&#39;level list from ECMWF, e.g. </span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Check parameter &quot;LEVEL&quot; or the max level of &#39;</span>
+                         <span class="s1">&#39;&quot;LEVELIST&quot;!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">MAX_LEVEL_LIST</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">levelist</span><span class="p">,</span> <span class="n">level</span></div>
+
+
+<div class="viewcode-block" id="check_ppid"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_ppid">[docs]</a><span class="k">def</span> <span class="nf">check_ppid</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ppid</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Sets the current PPID.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">            Contains all the parameters of CONTROL file and</span>
+<span class="sd">            command line.</span>
+
+<span class="sd">    ppid : int or None</span>
+<span class="sd">        Contains the ppid number provided by the command line parameter</span>
+<span class="sd">        of is None otherwise.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ppid</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getppid</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">=</span> <span class="n">ppid</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="check_purefc"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_purefc">[docs]</a><span class="k">def</span> <span class="nf">check_purefc</span><span class="p">(</span><span class="n">ftype</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check for a pure forecast mode.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ftype : list of str</span>
+<span class="sd">        List of field types.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    True or False:</span>
+<span class="sd">        True if pure forecasts are to be retrieved. False if there are</span>
+<span class="sd">        analysis fields in between.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ftype</span> <span class="ow">and</span> <span class="s1">&#39;4V&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ftype</span><span class="p">:</span>
+        <span class="c1"># pure forecast</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="check_step"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_step">[docs]</a><span class="k">def</span> <span class="nf">check_step</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks on step format and convert into a list of steps.</span>
+
+<span class="sd">    If the steps were defined with &quot;to&quot; and &quot;by&quot; they are converted into</span>
+<span class="sd">    a list of steps. If the steps were set in a string, it is</span>
+<span class="sd">    converted into a list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step : list of str or str</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+<span class="sd">        Valid values are hours (HH) from forecast base time.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    step : list of str</span>
+<span class="sd">        List of forecast steps in format e.g. [001, 002, ...]</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="p">:</span>
+        <span class="n">steps</span> <span class="o">=</span> <span class="n">step</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">ilist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                              <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                              <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ilist</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">my_error</span><span class="p">(</span><span class="n">step</span> <span class="o">+</span> <span class="s1">&#39;:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                     <span class="s1">&#39;if &quot;to&quot; is used in steps parameter, &#39;</span>
+                     <span class="s1">&#39;please use &quot;by&quot; as well&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">steps</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="p">[</span><span class="n">step</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">step</span></div>
+
+<div class="viewcode-block" id="check_type"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_type">[docs]</a><span class="k">def</span> <span class="nf">check_type</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if type variable is of type list and if analysis field has</span>
+<span class="sd">    forecast step 0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ftype : list of str or str</span>
+<span class="sd">        List of field types.</span>
+
+<span class="sd">    steps : str</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+<span class="sd">        Valid values are hours (HH) from forecast base time.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    ftype : list of str</span>
+<span class="sd">        List of field types.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">ftype</span> <span class="o">=</span> <span class="p">[</span><span class="n">ftype</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ftype</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ftype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Analysis retrievals must have STEP = 0 (now set to 0)&#39;</span><span class="p">)</span>
+            <span class="n">ftype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">ftype</span></div>
+
+<div class="viewcode-block" id="check_time"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_time">[docs]</a><span class="k">def</span> <span class="nf">check_time</span><span class="p">(</span><span class="n">ftime</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if time variable is of type list. Otherwise convert to list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ftime : list of str or str</span>
+<span class="sd">        The time in hours of the field.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    ftime : list of str</span>
+<span class="sd">        The time in hours of the field.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ftime</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">ftime</span> <span class="o">=</span> <span class="p">[</span><span class="n">ftime</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ftime</span></div>
+
+<div class="viewcode-block" id="check_len_type_time_step"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_len_type_time_step">[docs]</a><span class="k">def</span> <span class="nf">check_len_type_time_step</span><span class="p">(</span><span class="n">ftype</span><span class="p">,</span> <span class="n">ftime</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">maxstep</span><span class="p">,</span> <span class="n">purefc</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ftype : list of str</span>
+<span class="sd">        List of field types.</span>
+
+<span class="sd">    ftime : list of str or str</span>
+<span class="sd">        The time in hours of the field.</span>
+
+<span class="sd">    steps : str</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+<span class="sd">        Valid values are hours (HH) from forecast base time.</span>
+
+<span class="sd">    maxstep : int</span>
+<span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
+<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+
+<span class="sd">    purefc : int</span>
+<span class="sd">        Switch for definition of pure forecast mode or not.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    ftype : list of str</span>
+<span class="sd">        List of field types.</span>
+
+<span class="sd">    ftime : list of str</span>
+<span class="sd">        The time in hours of the field.</span>
+
+<span class="sd">    steps : str</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+<span class="sd">        Valid values are hours (HH) from forecast base time.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftime</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of field types, times and steps &#39;</span>
+                         <span class="s1">&#39;are not the same! Please check the setting in the &#39;</span>
+                         <span class="s1">&#39;CONTROL file!&#39;</span><span class="p">)</span>
+
+    <span class="c1"># if pure forecast is selected and only one field type/time is set</span>
+    <span class="c1"># prepare a complete list of type/time/step combination upto maxstep</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">purefc</span><span class="p">:</span>
+        <span class="n">nftype</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nftime</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxstep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">nftype</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ftype</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">nsteps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">nftime</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ftime</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">nftype</span><span class="p">,</span> <span class="n">nftime</span><span class="p">,</span> <span class="n">nsteps</span>
+
+    <span class="k">return</span> <span class="n">ftype</span><span class="p">,</span> <span class="n">ftime</span><span class="p">,</span> <span class="n">steps</span></div>
+
+<div class="viewcode-block" id="check_mail"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_mail">[docs]</a><span class="k">def</span> <span class="nf">check_mail</span><span class="p">(</span><span class="n">mail</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check the string of mail addresses, seperate them and convert to a list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mail : list of str or str</span>
+<span class="sd">        Contains email addresses for notifications.</span>
+<span class="sd">        It might also contain just the ecmwf user name which will trigger</span>
+<span class="sd">        mailing to the associated email address for this user.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    mail : list of str</span>
+<span class="sd">        Contains email addresses for notifications.</span>
+<span class="sd">        It might also contain just the ecmwf user name which will trigger</span>
+<span class="sd">        mailing to the associated email address for this user.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mail</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">mail</span><span class="p">:</span>
+            <span class="n">mail</span> <span class="o">=</span> <span class="n">mail</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="n">mail</span><span class="p">:</span>
+            <span class="n">mail</span> <span class="o">=</span> <span class="n">mail</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mail</span> <span class="o">=</span> <span class="p">[</span><span class="n">mail</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">mail</span></div>
+
+<div class="viewcode-block" id="check_queue"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_queue">[docs]</a><span class="k">def</span> <span class="nf">check_queue</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if the necessary ECMWF parameters are set if the queue is</span>
+<span class="sd">    one of the QUEUES_LIST (in _config).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    queue : str</span>
+<span class="sd">        Name of the queue if submitted to the ECMWF servers.</span>
+<span class="sd">        Used to check if ecuid, ecgid, gateway and destination</span>
+<span class="sd">        are set correctly and are not empty.</span>
+
+<span class="sd">    gateway : str</span>
+<span class="sd">        The address of the gateway server.</span>
+
+<span class="sd">    destination : str</span>
+<span class="sd">        The name of the destination of the gateway server for data</span>
+<span class="sd">        transfer through ectrans. E.g. name@genericSftp</span>
+
+<span class="sd">    ecuid : str</span>
+<span class="sd">        ECMWF user id.</span>
+
+<span class="sd">    ecgid : str</span>
+<span class="sd">        ECMWF group id.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">QUEUES_LIST</span> <span class="ow">and</span> \
+            <span class="p">(</span><span class="ow">not</span> <span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">destination</span> <span class="ow">or</span>
+             <span class="ow">not</span> <span class="n">ecuid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ecgid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment variables GATEWAY, DESTINATION, ECUID &#39;</span>
+                         <span class="s1">&#39;and ECGID were not set properly! </span><span class="se">\n</span><span class="s1"> &#39;</span>
+                         <span class="s1">&#39;Please check for existence of file &quot;ECMWF_ENV&quot; &#39;</span>
+                         <span class="s1">&#39;in the run directory!&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="check_pathes"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_pathes">[docs]</a><span class="k">def</span> <span class="nf">check_pathes</span><span class="p">(</span><span class="n">idir</span><span class="p">,</span> <span class="n">odir</span><span class="p">,</span> <span class="n">fpdir</span><span class="p">,</span> <span class="n">fedir</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if output and flexpart pathes are set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    idir : str</span>
+<span class="sd">        Path to the temporary directory for MARS retrieval data.</span>
+
+<span class="sd">    odir : str</span>
+<span class="sd">        Path to the final output directory where the FLEXPART input files</span>
+<span class="sd">        will be stored.</span>
+
+<span class="sd">    fpdir : str</span>
+<span class="sd">        Path to FLEXPART root directory.</span>
+
+<span class="sd">    fedir : str</span>
+<span class="sd">        Path to flex_extract root directory.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    odir : str</span>
+<span class="sd">        Path to the final output directory where the FLEXPART input files</span>
+<span class="sd">        will be stored.</span>
+
+<span class="sd">    fpdir : str</span>
+<span class="sd">        Path to FLEXPART root directory.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fpdir</span><span class="p">:</span>
+        <span class="n">fpdir</span> <span class="o">=</span> <span class="n">fedir</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">odir</span><span class="p">:</span>
+        <span class="n">odir</span> <span class="o">=</span> <span class="n">idir</span>
+
+    <span class="k">return</span> <span class="n">odir</span><span class="p">,</span> <span class="n">fpdir</span></div>
+
+<div class="viewcode-block" id="check_dates"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_dates">[docs]</a><span class="k">def</span> <span class="nf">check_dates</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks if there is at least a start date for a one day retrieval.</span>
+
+<span class="sd">    Checks if end date lies after start date and end date is set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    start : str</span>
+<span class="sd">        The start date of the retrieval job.</span>
+
+<span class="sd">    end : str</span>
+<span class="sd">        The end date of the retrieval job.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    start : str</span>
+<span class="sd">        The start date of the retrieval job.</span>
+
+<span class="sd">    end : str</span>
+<span class="sd">        The end date of the retrieval job.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># check for having at least a starting date</span>
+    <span class="c1"># otherwise program is not allowed to run</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;start_date was neither specified in command line nor &#39;</span>
+                         <span class="s1">&#39;in CONTROL file.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Try &quot;</span><span class="si">{}</span><span class="s1"> -h&quot; to print usage information&#39;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># retrieve just one day if end_date isn&#39;t set</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">end</span><span class="p">:</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span>
+
+    <span class="n">dstart</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">dend</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dstart</span> <span class="o">&gt;</span> <span class="n">dend</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Start date is after end date! </span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;Please adapt the dates in CONTROL file or &#39;</span>
+                         <span class="s1">&#39;command line! (start=</span><span class="si">{}</span><span class="s1">; end=</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span></div>
+
+<div class="viewcode-block" id="check_maxstep"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_maxstep">[docs]</a><span class="k">def</span> <span class="nf">check_maxstep</span><span class="p">(</span><span class="n">maxstep</span><span class="p">,</span> <span class="n">steps</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Convert maxstep into integer if it is already given. Otherwise, select</span>
+<span class="sd">    maxstep by going through the steps list.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    maxstep : str</span>
+<span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
+<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+
+<span class="sd">    steps : str</span>
+<span class="sd">        Specifies the forecast time step from forecast base time.</span>
+<span class="sd">        Valid values are hours (HH) from forecast base time.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    maxstep : int</span>
+<span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
+<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># if maxstep wasn&#39;t provided</span>
+    <span class="c1"># search for it in the &quot;step&quot; parameter</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">maxstep</span><span class="p">:</span>
+        <span class="n">maxstep</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxstep</span><span class="p">:</span>
+                <span class="n">maxstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">maxstep</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxstep</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">maxstep</span></div>
+
+<div class="viewcode-block" id="check_basetime"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_basetime">[docs]</a><span class="k">def</span> <span class="nf">check_basetime</span><span class="p">(</span><span class="n">basetime</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if basetime is set and contains one of the two</span>
+<span class="sd">    possible values (0, 12).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    basetime : int or str or None</span>
+<span class="sd">        The time for a half day retrieval. The 12 hours upfront are to be</span>
+<span class="sd">        retrieved.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    basetime : int or None</span>
+<span class="sd">        The time for a half day retrieval. The 12 hours upfront are to be</span>
+<span class="sd">        retrieved.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">basetime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">basetime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">basetime</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">basetime</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">basetime</span> <span class="o">!=</span> <span class="mi">12</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Basetime has an invalid value &#39;</span>
+                             <span class="s1">&#39;-&gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">basetime</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">basetime</span></div>
+
+<div class="viewcode-block" id="check_request"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_request">[docs]</a><span class="k">def</span> <span class="nf">check_request</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">marsfile</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check if there is an old mars request file and remove it.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    request : int</span>
+<span class="sd">        Selects the mode of retrieval.</span>
+<span class="sd">        0: Retrieves the data from ECMWF.</span>
+<span class="sd">        1: Prints the mars requests to an output file.</span>
+<span class="sd">        2: Retrieves the data and prints the mars request.</span>
+
+<span class="sd">    marsfile : str</span>
+<span class="sd">        Path to the mars request file.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">request</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">marsfile</span><span class="p">):</span>
+            <span class="n">silent_remove</span><span class="p">(</span><span class="n">marsfile</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="check_public"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_public">[docs]</a><span class="k">def</span> <span class="nf">check_public</span><span class="p">(</span><span class="n">public</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check wether the dataset parameter is set for a</span>
+<span class="sd">    public data set retrieval.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    public : int</span>
+<span class="sd">        Specifies if public data are to be retrieved or not.</span>
+
+<span class="sd">    dataset : str</span>
+<span class="sd">        Specific name which identifies the public dataset.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">public</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dataset</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: If public mars data wants to be retrieved, &#39;</span>
+                         <span class="s1">&#39;the &quot;dataset&quot;-parameter has to be set too!&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="check_acctype"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_acctype">[docs]</a><span class="k">def</span> <span class="nf">check_acctype</span><span class="p">(</span><span class="n">acctype</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation field type is set.</span>
+
+<span class="sd">    If not set, it is derivated as in the old method (TYPE[1]).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    acctype : str</span>
+<span class="sd">        The field type for the accumulated forecast fields.</span>
+
+<span class="sd">    ftype : list of str</span>
+<span class="sd">        List of field types.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    acctype : str</span>
+<span class="sd">        The field type for the accumulated forecast fields.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">acctype</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCTYPE was not defined.&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ftype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;AN&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Use same field type as for the non-flux fields.&#39;</span><span class="p">)</span>
+                <span class="n">acctype</span> <span class="o">=</span> <span class="n">ftype</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">ftype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;AN&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Use old setting by using TYPE[1] for flux forecast!&#39;</span><span class="p">)</span>
+                <span class="n">acctype</span> <span class="o">=</span> <span class="n">ftype</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation field type could not be set!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">acctype</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;AN&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast fields can not be &#39;</span>
+                             <span class="s1">&#39;of type &quot;analysis&quot;!&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">acctype</span></div>
+
+
+<div class="viewcode-block" id="check_acctime"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_acctime">[docs]</a><span class="k">def</span> <span class="nf">check_acctime</span><span class="p">(</span><span class="n">acctime</span><span class="p">,</span> <span class="n">marsclass</span><span class="p">,</span> <span class="n">purefc</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation forecast times were set.</span>
+
+<span class="sd">    If it is not set, it tries to set the value for some of the</span>
+<span class="sd">    most commonly used data sets. Otherwise it raises an error.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    acctime : str</span>
+<span class="sd">        The starting time from the accumulated forecasts.</span>
+
+<span class="sd">    marsclass : str</span>
+<span class="sd">        ECMWF data classification identifier.</span>
+
+<span class="sd">    purefc : int</span>
+<span class="sd">        Switch for definition of pure forecast mode or not.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    acctime : str</span>
+<span class="sd">        The starting time from the accumulated forecasts.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">acctime</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCTIME was not defined.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Value will be set depending on field type:</span><span class="se">\n</span><span class="s1"> &#39;</span>
+              <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> EA=06/18</span><span class="se">\n\t\t</span><span class="s1"> EI/OD=00/12</span><span class="se">\n\t\t</span><span class="s1"> EP=18&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EA&#39;</span><span class="p">:</span> <span class="c1"># Era 5</span>
+            <span class="n">acctime</span> <span class="o">=</span> <span class="s1">&#39;06/18&#39;</span>
+        <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EI&#39;</span><span class="p">:</span> <span class="c1"># Era-Interim</span>
+            <span class="n">acctime</span> <span class="o">=</span> <span class="s1">&#39;00/12&#39;</span>
+        <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EP&#39;</span><span class="p">:</span> <span class="c1"># CERA</span>
+            <span class="n">acctime</span> <span class="o">=</span> <span class="s1">&#39;18&#39;</span>
+        <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;OD&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">purefc</span><span class="p">:</span> <span class="c1"># On-demand</span>
+            <span class="n">acctime</span> <span class="o">=</span> <span class="s1">&#39;00/12&#39;</span>
+        <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;OD&#39;</span> <span class="ow">and</span> <span class="n">purefc</span><span class="p">:</span> <span class="c1"># On-demand</span>
+            <span class="n">acctime</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast time can not &#39;</span>
+                             <span class="s1">&#39;automatically be derived!&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">acctime</span></div>
+
+<div class="viewcode-block" id="check_accmaxstep"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_accmaxstep">[docs]</a><span class="k">def</span> <span class="nf">check_accmaxstep</span><span class="p">(</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="n">marsclass</span><span class="p">,</span> <span class="n">purefc</span><span class="p">,</span> <span class="n">maxstep</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation forecast step were set.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    accmaxstep : str</span>
+<span class="sd">        The maximum forecast step for the accumulated forecast fields.</span>
+
+<span class="sd">    marsclass : str</span>
+<span class="sd">        ECMWF data classification identifier.</span>
+
+<span class="sd">    purefc : int</span>
+<span class="sd">        Switch for definition of pure forecast mode or not.</span>
+
+<span class="sd">    maxstep : str</span>
+<span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
+<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    accmaxstep : str</span>
+<span class="sd">        The maximum forecast step for the accumulated forecast fields.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">accmaxstep</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCMAXSTEP was not defined.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Value will be set depending on field type/time: &#39;</span>
+              <span class="s1">&#39;</span><span class="se">\n\t\t</span><span class="s1"> EA/EI/OD=12</span><span class="se">\n\t\t</span><span class="s1"> EP=24&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;EA&#39;</span><span class="p">,</span> <span class="s1">&#39;EI&#39;</span><span class="p">,</span> <span class="s1">&#39;OD&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">purefc</span><span class="p">:</span>
+            <span class="c1"># Era 5, Era-Interim, On-demand operational</span>
+            <span class="n">accmaxstep</span> <span class="o">=</span> <span class="s1">&#39;12&#39;</span>
+        <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EP&#39;</span><span class="p">:</span> <span class="c1"># CERA</span>
+            <span class="n">accmaxstep</span> <span class="o">=</span> <span class="s1">&#39;24&#39;</span>
+        <span class="k">elif</span> <span class="n">purefc</span> <span class="ow">and</span> <span class="n">accmaxstep</span> <span class="o">!=</span> <span class="n">maxstep</span><span class="p">:</span>
+            <span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">maxstep</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... For pure forecast mode, the accumulated forecast must &#39;</span>
+                  <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast step can not &#39;</span>
+                             <span class="s1">&#39;automatically be derived!&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">purefc</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">accmaxstep</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxstep</span><span class="p">):</span>
+            <span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">maxstep</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... For pure forecast mode, the accumulated forecast must &#39;</span>
+                  <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">accmaxstep</span></div>
+
+<div class="viewcode-block" id="check_addpar"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_addpar">[docs]</a><span class="k">def</span> <span class="nf">check_addpar</span><span class="p">(</span><span class="n">addpar</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check that addpar has correct format of additional parameters in</span>
+<span class="sd">    a single string, so that it can be easily appended to the hard coded</span>
+<span class="sd">    parameters that are retrieved in any case.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    addpar : str or list of str</span>
+<span class="sd">        List of additional parameters to be retrieved.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    addpar : str</span>
+<span class="sd">        List of additional parameters to be retrieved.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">addpar</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addpar</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">addpar</span><span class="p">:</span>
+            <span class="n">parlist</span> <span class="o">=</span> <span class="n">addpar</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="n">parlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parlist</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">addpar</span><span class="p">]</span>
+
+        <span class="n">addpar</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parlist</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">addpar</span></div>
+
+
+<div class="viewcode-block" id="check_job_chunk"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_job_chunk">[docs]</a><span class="k">def</span> <span class="nf">check_job_chunk</span><span class="p">(</span><span class="n">job_chunk</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks that if job chunk is set, the number is positive and non zero.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    job_chunk : int</span>
+<span class="sd">        The number of days for a single job script.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    job_chunk : int</span>
+<span class="sd">        The number of days for a single job script.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">job_chunk</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">job_chunk</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">job_chunk</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">job_chunk</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">job_chunk</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of job chunk is negative!</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="s1">&#39;It has to be a positive number!&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">job_chunk</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">job_chunk</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">job_chunk</span></div>
+
+
+<div class="viewcode-block" id="check_number"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_number">[docs]</a><span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Check for correct string format of ensemble member numbers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    number : str</span>
+<span class="sd">        List of ensemble member forecast runs.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    number : str</span>
+<span class="sd">        String with list of ensemble member forecast runs. E.g. &#39;01/02/03/04&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">number</span><span class="p">:</span>
+        <span class="n">numbers</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="n">number</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">in</span> <span class="n">number</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="s1">&#39;/TO/&#39;</span> <span class="o">+</span> \
+                     <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="o">+</span> <span class="s1">&#39;/BY/&#39;</span> <span class="o">+</span> \
+                     <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="s1">&#39;to&#39;</span> <span class="ow">in</span> <span class="n">number</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;by&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">number</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">+</span> <span class="s1">&#39;/TO/&#39;</span> <span class="o">+</span> \
+                     <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">]</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">number</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">number</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:0&gt;3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">number</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

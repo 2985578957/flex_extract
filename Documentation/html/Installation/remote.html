@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Remote mode installation &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gateway mode installation" href="gateway.html" />
+    <link rel="prev" title="Installation" href="../installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../installation.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Remote mode installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#remote-mode-dependencies">Remote mode - dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-remote-environment">Prepare remote environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remote-installation">Remote installation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="gateway.html">Gateway mode installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="local.html">Local mode installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#flex-extract-in-combination-with-flexpart"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> in combination with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#test-installation">Test installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../installation.html">Installation</a> &raquo;</li>
+        
+      <li>Remote mode installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/Installation/remote.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="remote-mode-installation">
+<h1>Remote mode installation<a class="headerlink" href="#remote-mode-installation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="remote-mode-dependencies">
+<span id="ref-req-remote"></span><span id="ref-remote-mode"></span><h2>Remote mode - dependencies<a class="headerlink" href="#remote-mode-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The following software is required, and already available at the ECMWF servers:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="61%" />
+<col width="39%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Python part</td>
+<td>Fortran part</td>
+</tr>
+<tr class="row-even"><td><ul class="first last simple">
+<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a></li>
+<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
+<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
+<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
+<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
+<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
+<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="prepare-remote-environment">
+<span id="ref-prep-remote"></span><h2>Prepare remote environment<a class="headerlink" href="#prepare-remote-environment" title="Permalink to this headline">¶</a></h2>
+<p>ECMWF servers provide all libraries via a module system. Loading the required modules is already built into <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and no user action is needed.</p>
+</div>
+<div class="section" id="remote-installation">
+<span id="ref-install-remote"></span><h2>Remote installation<a class="headerlink" href="#remote-installation" title="Permalink to this headline">¶</a></h2>
+<p>First, log in on one of the ECMWF servers, such as <em>ecgate</em> or <em>cca/ccb</em>.
+Substitute <em>&lt;ecuid&gt;</em> with your ECMWF user name:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh -X &lt;ecuid&gt;@ecaccess.ecmwf.int
+</pre></div>
+</div>
+<p>This will lead to the following output on the command line, asking for your
+password:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Authorized access only.
+
+***************************************************************
+   For further information, read the ECaccess documentation at:
+
+   https://software.ecmwf.int/wiki/display/ECAC/ECaccess+Home
+
+   You can also use ECaccess to load &amp; download files from your
+   EChome, ECscratch or ECfs directories using the ECaccess FTP
+   server:
+
+   ftp://uid@ecaccess.ecmwf.int/
+
+   Please note you must use your UID and ActivID code to login!
+***************************************************************
+
+&lt;ecuid&gt;@&lt;ipname/address&gt;&#39;s password: ***
+Select hostname (ecgate, cca, ccb) [ecgate]: ecgate
+
+[&lt;ecuid&gt;@ecgb11 ~]$
+</pre></div>
+</div>
+<p>Substitute the <em>&lt;localuser&gt;</em> and <em>&lt;localmachine.tld&gt;</em> placeholders with your local user name and the IP name or address of your local machine.
+Untar the file and change into the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp &lt;localuser&gt;@&lt;localmachine.tld&gt;:&lt;/path/to/tarfile/&gt;flex_extract_vX.X.tar.gz  <span class="nv">$HOME</span>/
+<span class="nb">cd</span> <span class="nv">$HOME</span>
+tar xvf flex_extract_vX.X.tar.gz
+<span class="nb">cd</span> flex_extract_vX.X
+</pre></div>
+</div>
+<p>Execute the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s root directory.
+Before executing it, it is necessary to adapt some parameters from <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
+described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p>
+<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your preferred editor (e.g., <a href="#id1"><span class="problematic" id="id2">``</span></a>nano’‘) and adapt the values:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Use this for target = <strong>ectrans</strong></td>
+<td>Use this for target = <strong>cca</strong></td>
+</tr>
+<tr class="row-even"><td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<span class="c1"># -----------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
+<span class="c1">#</span>
+<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.gfortran&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
+<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
+<span class="nv">GATEWAY</span><span class="o">=</span>None
+<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">INSTALLDIR</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
+...
+</pre></div>
+</div>
+</td>
+<td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<span class="c1"># -----------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
+<span class="c1">#</span>
+<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;cca&#39;</span>
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.CRAY&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
+<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
+<span class="nv">GATEWAY</span><span class="o">=</span>None
+<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">INSTALLDIR</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
+...
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span class="underline">Please substitute the values of ECUID and ECGID
+with your own ones (look at any of your files with ``ls -l’’ to see uid and gid).</span></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If a local gateway server is available, files can be transferred with <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. In that case, a valid <em>GATEWAY</em> and <em>DESTINATION</em> have to be present in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file (even if not used, the lines must not be deleted).</p>
+</div>
+<p>Afterwards, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python3
+./setup.sh
+</pre></div>
+</div>
+<p>to start the installation. You should see the following on standard output.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
+Create tarball ...
+Job compilation script has been submitted to ecgate <span class="k">for</span> installation in <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_vX.X
+You should get an email with subject <span class="s2">&quot;flexcompile&quot;</span> within the next few minutes!
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the email address connectd to the user account on ECMWF servers. The email content should look like this with a “SUCCESS” statement in the last line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g rwGRIB2.f90
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g posnam.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g preconvert.f90
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -g -O3 -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3
+-rwxr-x---. <span class="m">1</span> USER at <span class="m">353134</span> May <span class="m">23</span> <span class="m">12</span>:27 CONVERT2
+SUCCESS!
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gateway.html" class="btn btn-neutral float-right" title="Gateway mode installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

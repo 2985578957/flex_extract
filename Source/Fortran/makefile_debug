@@ -1,0 +1,52 @@
+###############################################################################
+#
+# Makefile for flex_extract, Fortran code to calculate etadot
+# Makefile created using by mkmf 19.3.0
+#
+# Copyright: Leopold Haimberger, Petra Seibert
+# SPDX-License-Identifier: GPL-2.0 
+# 
+# Version for a machine with grib_api and emoslib installed on standard paths
+# full debugging
+#
+###############################################################################
+
+
+EXE      =  calc_etadot_debug.out
+
+GRIB_API_LIB=  -Bstatic -lgrib_api_f90 -lgrib_api -Bdynamic -lm -ljasper
+EMOSLIB=-lemosR64
+LIB =  $(GRIB_API_LIB) $(EMOSLIB)
+
+GRIB_API_INCLUDE_DIR=/usr/include
+INC = -I. -I$(GRIB_API_INCLUDE_DIR)
+
+FC = gfortran 
+OPT = -g -Og -fbacktrace -fcheck=all
+FFLAGS =   $(OPT) $(LIB) $(INC) -fdefault-real-8 -fopenmp -fconvert=big-endian 
+LDFLAGS =  $(OPT) $(LIB) -fopenmp
+SRC = ./rwgrib2.f90 ./calc_etadot.f90 ./ftrafo.f90 ./grphreal.f90 ./posnam.f90 ./phgrreal.f90
+OBJ = rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o
+MOD = ftrafo.mod  grtoph.mod	phtogr.mod  rwgrib2.mod
+
+.DEFAULT:
+	-echo $@ does not exist.
+
+all: ${EXE}
+ftrafo.o: ./ftrafo.f90 phgrreal.o
+	$(FC)  $(FFLAGS)  -c	./ftrafo.f90
+grphreal.o: ./grphreal.f90 phgrreal.o
+	$(FC)  $(FFLAGS)  -c	./grphreal.f90
+phgrreal.o: ./phgrreal.f90
+	$(FC)  $(FFLAGS)  -c	./phgrreal.f90
+posnam.o: ./posnam.f90
+	$(FC)  $(FFLAGS)  -c	./posnam.f90
+calc_etadot.o: ./calc_etadot.f90 phgrreal.o grphreal.o ftrafo.o rwgrib2.o
+	$(FC)  $(FFLAGS)  -c	./calc_etadot.f90
+rwgrib2.o: ./rwgrib2.f90
+	$(FC)  $(FFLAGS)  -c	./rwgrib2.f90
+
+clean: -rm -f $(OBJ) ${EXE} $(MOD)
+
+${EXE}: $(OBJ)
+	$(FC) $(OBJ) -o ${EXE}  $(LDFLAGS)

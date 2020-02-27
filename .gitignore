@@ -1,14 +1,71 @@
+#!/bin/bash
 #
-# gitignore lists all directories and files which should not be versionized!!! 
+# @Author: Anne Philipp
 #
+# @Date: January 2018
+#
+# @Description: 
+#    gitignore lists all directories and files which should 
+#    not be versionized!!! 
+#
+# @Licence:
+#    (C) Copyright 2014-2019.
+#
+#    SPDX-License-Identifier: CC-BY-4.0
+#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+#
+# -----------------------------------------------------------------
 
 # these dirs and files shouldn't be versionized at any time in this project!!!
 *.pyc
-*.o
-*.mod
+Source/Fortran/*.o
+Source/Fortran/*.mod
+Source/Fortran/calc_etadot*
 *.tar*
-*.ksh
-mk_upload_tarball.sh
-/work*
-/src/CONVERT2
-/python/ECMWF_ENV
+Run/ECMWF_ENV
+Run/Workspace/*
+Run/Jobscripts/*sh
+Test/Installation/Convert/VERTICAL.EC
+Test/Installation/Convert/fort.15
+For_developers/Sphinx/build_temp
+
+# Temporary ignorance of files!!!!
+Source/Fortran/Makefile.ecgate
+Source/Fortran/Makefile.local.gfortran.gw74
+Run/Control/Testgrid/
+Run/Control/notPublic/
+setup_local.sh
+Run/run.sh
+Run/run_local.sh
+setup.sh
+Source/Fortran/pycallgraph.png
+Source/Python/pylint_report_7.1.txt
+Source/.metrics
+For_developers/sphinx-fortran/
+
+
+For_developers/GUIDE.odt
+For_developers/COMMANDS
+For_developers/class_diagram
+For_developers/classes.dot
+For_developers/classes.png
+For_developers/gen_docu.sh
+For_developers/mk_pdf2png.sh
+For_developers/packages.dot
+For_developers/packages.png
+For_developers/Testcases.txt
+For_developers/Metriken.txt
+For_developers/FE_testing.txt
+For_developers/Liste_FE_Functions_Testcoverage.xlsx
+
+
+
+
+
+Emoslib
+Unused_input_files
+Unused_output

@@ -1,0 +1,1177 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The CONTROL parameters &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CONTROL file examples" href="examples.html" />
+    <link rel="prev" title="The CONTROL file" href="control.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The CONTROL parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#user-section">User Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#general-section">General Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#time-section">Time Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-section">Data Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-field-section">Data field Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flux-data-section">Flux data Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#domain-section">Domain Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vertical-wind-section">Vertical wind Section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-data-section">Additional data Section</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+        
+      <li>The CONTROL parameters</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Documentation/Input/control_params.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-control-parameters">
+<h1>The CONTROL parameters<a class="headerlink" href="#the-control-parameters" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="user-section">
+<span id="ref-control-user"></span><h2>User Section<a class="headerlink" href="#user-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">User parameter in CONTROL file</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="18%" />
+<col width="10%" />
+<col width="15%" />
+<col width="8%" />
+<col width="16%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">ECUID</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ECGID</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">DESTINATION</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">&lt;name&gt;&#64; generic&lt;scope&gt;</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The remote destination which is used to transfer files from ECMWF server to local gateway server. </p>
+</td>
+<td><p class="first last">This has to be set up by the user on the local gateway server. See installation instruction for more information of how to set it up.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">GATEWAY</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">server address</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The gateway server the user is using.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="general-section">
+<span id="ref-control-general"></span><h2>General Section<a class="headerlink" href="#general-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">General parameter in CONTROL file</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="13%" />
+<col width="7%" />
+<col width="9%" />
+<col width="9%" />
+<col width="25%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">DEBUG</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">If set to “1” all temporary output files from the mars requests are kept and some extra information is written out to the log file.</p>
+</td>
+<td><p class="first last">Usually all temporary files except the FLEXPART ready output files are deleted at the end of flex_extract.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">REQUEST</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1,2]</p>
+</td>
+<td><p class="first last">2</p>
+</td>
+<td><p class="first last">This parameter allows to write out the mars requests in a seperate file.</p>
+</td>
+<td><p class="first last">The requests are stored in the file “mars_requests.csv”. 
+Possible selections are: 
+1: normal data retrievement; 
+2: neglect data retrievement and just writes out the mars requests;
+3: retrieve data and write out the mars requests.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">PUBLIC</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">This specifies the selection of the kind of ECMWF Web Api access and therefore the kind of available datasets. Public data sets (1) and Memberstate data sets (0).</p>
+</td>
+<td><p class="first last">Selecting the public access method, the DATASET parameter has explicitly to be set to select the dataset. (CLASS is not enough.) ATTENTION: For public datasets, the user has to accept the license of the dataset to be retrieved. See here for available datasets and their licenses:  https://software.ecmwf.int/wiki/display/WEBAPI/ Available+ECMWF+ Public+Datasets</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">OPER</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to prepare the operational job script. Start date, end date and basetime will be prepared with environment variables at ecgate.</p>
+</td>
+<td><p class="first last">This is only necessary if extraction of half-day retrievals should be done automatically. Specific extra feature which is usually not used by normal flex_extract users.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">ECSTORAGE</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to store FLEXPART ready output files in the ECFS file system.</p>
+</td>
+<td><p class="first last">Mind the data limit.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ECTRANS</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to transfer FLEXPART ready input files to the gateway server.</p>
+</td>
+<td><p class="first last">The gateway server has to be up and running. A destination has to be installed. See installation instructions for more information.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">PREFIX</p>
+</td>
+<td><p class="first last">String [xx]</p>
+</td>
+<td><p class="first last">anything</p>
+</td>
+<td><p class="first last">EN</p>
+</td>
+<td><p class="first last">Prefix of FLEXPART ready input files</p>
+</td>
+<td><p class="first last">The output files usually have the format &lt;PREFIX&gt;YYMMDDHH. Sometimes it also has some more information, e.g. to distinguish between numbers or in pure forecast mode.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ECFSDIR</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">any path available</p>
+</td>
+<td><p class="first last">ectmp:/${USER}/econdemand/</p>
+</td>
+<td><p class="first last">The destination directory on ECFS file system if the retrieved data should be stored on ECMWF servers. This is only used if parameter ECSTORAGE is set to “1”.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">MAILOPS</p>
+</td>
+<td><p class="first last">list of String [m1, m2, …]</p>
+</td>
+<td><p class="first last">any number of mail addresses, seperated by comma</p>
+</td>
+<td><p class="first last">[‘”${USER}”]</p>
+</td>
+<td><p class="first last">Email list for operational log files on ECMWF servers. The email addresses should be seperated by a comma.</p>
+</td>
+<td><p class="first last">For the ECMWF server it is enough to give ${USER} as input. On local system an actual email is prefered to operate correctly. </p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="time-section">
+<span id="ref-control-time"></span><h2>Time Section<a class="headerlink" href="#time-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id3">
+<caption><span class="caption-text">Time parameter in CONTROL file</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="15%" />
+<col width="8%" />
+<col width="12%" />
+<col width="8%" />
+<col width="28%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">START_DATE</p>
+</td>
+<td><p class="first last">String [YYYYMMDD]</p>
+</td>
+<td><p class="first last">depends on dataset</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The first day of the retrieval period.</p>
+</td>
+<td><p class="first last">If END_DATE is set, START_DATE must be greater than END_DATE.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">END_DATE</p>
+</td>
+<td><p class="first last">String [YYYYMMDD]</p>
+</td>
+<td><p class="first last">depends on dataset</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p>
+</td>
+<td><p class="first last">Doesn’t have to be set. If set, it has to be greater or equal than START_DATE.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">DTIME</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">1, 3, 6</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Time step of retrieved data. Detects TYPE, TIME, STEP, ACCTYPE, ACCTIME according to DTIME. Therefore CONTROL file can have more values than needed.</p>
+</td>
+<td><p class="first last">Available resolution in time depends on availability in the data set. Coarser resolution can always be selected.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">DATE_CHUNK</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">depends on resolution</p>
+</td>
+<td><p class="first last">3</p>
+</td>
+<td><p class="first last">Maximum number of days retrieved within one MARS request. </p>
+</td>
+<td><p class="first last">This number is limited due to maximum allowed memory and time limit for one MARS request. Be careful in changing this number.  It can be  larger for reanalysis data but may be too large for very high resolution retrievals.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">BASETIME</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0; 12]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p>
+</td>
+<td><p class="first last">Can be set to 00 or 12 only.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="data-section">
+<span id="ref-control-data"></span><h2>Data Section<a class="headerlink" href="#data-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id4">
+<caption><span class="caption-text">Data parameter in CONTROL file</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="13%" />
+<col width="7%" />
+<col width="12%" />
+<col width="6%" />
+<col width="36%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">CLASS</p>
+</td>
+<td><p class="first last">String [xx]</p>
+</td>
+<td><p class="first last">EI, E4, EA, EP, OD </p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">ECMWF data classification identifier for data sets.</p>
+</td>
+<td><p class="first last">EI: ERA-Interim; E4: ERA-40; EA: ERA5; EP: CERA-20C; OD: operational; </p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">DATASET</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">CERA20C, INTERIM, ERA5</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This keyword has to be defined as soon as you want to retrieve public data sets. Public data are stored on a different server and are available for everyone after registration at ECMWF (see installation plan). </p>
+</td>
+<td><p class="first last">A list of available public dataset can be found here: 
+https://software.ecmwf.int/wiki/display/WEBAPI/Available+ECMWF+Public+Datasets</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">STREAM</p>
+</td>
+<td><p class="first last">String [xxxx]</p>
+</td>
+<td><p class="first last">OPER, ENFO, ENDO</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Identifies the forecasting system used to generate the data. </p>
+</td>
+<td><p class="first last">Most times the operational data stream OPER is appropriate. Use ENFO for ensemble forecasts and ENDO for CERA data.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">EXPVER</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">1</p>
+</td>
+<td><p class="first last">“1”</p>
+</td>
+<td><p class="first last">Experiment number, necessary for R&amp;D experiments, E-suites</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">NUMBER</p>
+</td>
+<td><p class="first last">String [i/to/i]</p>
+</td>
+<td><p class="first last">depends on availability</p>
+</td>
+<td><p class="first last">“OFF”</p>
+</td>
+<td><p class="first last">In most cases this can be set to “OFF” but for access to individual ensemble members of ensemble forecasts it is necessary to select numbers. Note, however, that model level data are not stored in MARS for individual ensemble  members except the control run. They exist only for a few days before they are discarded. </p>
+</td>
+<td><p class="first last">For retrieving CERA data, a number has to be selected explicitly. Usually “0” is enough. 
+For operational data just one number or a list of number can be selected. You can use the syntax “1/to/9” for example.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">FORMAT</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">[GRIB1, GRIB2]</p>
+</td>
+<td><p class="first last">“GRIB1”</p>
+</td>
+<td><p class="first last">Output format (either GRIB1 or GRIB2). Use GRIB2
+only when using FLEXPART versions &gt;9.2 or FLEXPART hast to be adapted for reading GRIB2</p>
+</td>
+<td><p class="first last">GRIB2 is only available for 3D model level fields, not for surface fields.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="data-field-section">
+<span id="ref-control-datafield"></span><h2>Data field Section<a class="headerlink" href="#data-field-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id5">
+<caption><span class="caption-text">Data field parameter in CONTROL file</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="15%" />
+<col width="8%" />
+<col width="10%" />
+<col width="6%" />
+<col width="24%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">TYPE</p>
+</td>
+<td><p class="first last">list of String [xx xx … xx]</p>
+</td>
+<td><p class="first last">[AN, FC, CV, CF, 4V, PF]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">A list of field types for each retrieving hour per day. E.g. AN FC FC FC AN FC FC FC  for a day with 3-hourly retrieval DTIME . At 0 and 12 UTC we retrieve analysis fields and at 3, 6, 9, 15, 18 and 21 UTC forecast fields. </p>
+</td>
+<td><p class="first last">So far flex_extract is using ANalysis (AN), ForeCast (FC),  Control Forecast (CF), Perturbed Forecast (PF), Calibration/Validation forecast (CV) and 4D Variational analysis (4V). Other types might be also possible but were not tested. The analysis fields are usually (depending on data set) available at 00/06/12/18 UTC. For better  temporal resolution, the time inbetween the AN fields can be filled with forecasts (FC). Additionally, it is recommended to use analysis fields only at 00 and 12 UTC and fill the rest of the times with other field types, such as forecasts. </p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">TIME</p>
+</td>
+<td><p class="first last">list of String [xx xx … xx]</p>
+</td>
+<td><p class="first last">[00 - 23]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The time of the corresponding field type (TYPE) in hours. It is important to set the correct forecast times. E.g. In Era-Interim data set, to get forecast fields between 1 and 11 hours, forecast times starting at 00 UTC are normally used. To get fields between 13 and 23 hours, forecast times starting at 12 UTC are used.  Mostly there are two forecasts starting per day. </p>
+</td>
+<td><p class="first last">Has to have the same amount of values as in TYPE! The start times of forecasts can vary from one data set to another. It is also possible to have just one forecast per day, such as in the CERA data set.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">STEP</p>
+</td>
+<td><p class="first last">list of String [xx xx … xx]</p>
+</td>
+<td><p class="first last">[00 - max available STEP in data set]</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This is the forecast time step in hours for each corresponding field type (TYPE). Counting of the steps starts from the forecast times.  E.g. In Era-Interim, for forecasts at 3, 6, 9 UTC the STEPS 3,6 and 9 are used and the forecast TIME 00 UTC.</p>
+</td>
+<td><p class="first last">Has to have the same amount of values as in TYPE and TIME! For analysis (AN) fields the STEP has to be 00 always!</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">MAXSTEP</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">&gt; 24</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This parameter allows to retrieve data from forecasts longer than 24 hours.
+With MAXSTEP &gt; 24 the forecasts from different days overlap, the naming scheme of the output files changes from &lt;PREFIX&gt;YYMMDD to &lt;PREFIX&gt;YYMMDD.HH.SSS where HH is the hour of the start of the forecast and SSS is the forecast step in hours.</p>
+</td>
+<td><p class="first last">Optional parameter.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="flux-data-section">
+<span id="ref-control-fluxdata"></span><h2>Flux data Section<a class="headerlink" href="#flux-data-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id6">
+<caption><span class="caption-text">Flux data parameter in CONTROL file</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="15%" />
+<col width="8%" />
+<col width="12%" />
+<col width="7%" />
+<col width="25%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">ACCTYPE</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">[FC, CV, CF, 4V, PF] - just one of them</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">The type of field for accumulated data retrieval. The accumulated data fields are only available from forecast fields. Therefore it is seperated from the normal TYPE parameter to allow, for example, retrievment solely of hourly analysis fields in the Era5 data set. </p>
+</td>
+<td><p class="first last">For downward compatibility  to older versions: if ACCTYPE is not specified,  the default value is taken form the second position of the original TYPE parameter (TYPE[2]).  NOTE: This is important at the moment the original TYPE parameter is changed from FC to AN for example.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ACCTIME</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">E.g.:  Operational,  Era-Interim: 00/12            CERA: 18       ERA5 06/18</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Start times of accumulated forecast fields (fluxes).  The starting times of forecast fields varies between different datasets. </p>
+</td>
+<td><p class="first last">For downward compatibility to older versions: if ACCTIME is not specified,  the default value is 00/12 for ERA-Interim and operational data, 06/18 for ERA5 data and 18 for CERA-20C data.  </p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">ACCMAXSTEP</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">12, 24 or larger</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">This parameter specifies the maximum step in hours for a specific accumulated forecast start time. For daily retrievals with one forecast time the step shouldn’t be greater than 24h. For two forecast times the ACCMAXSTEP should be 12. If the parameter MAXSTEP is specified to retrieve forecasts longer than 24 hours, this parameter must have the same value. </p>
+</td>
+<td><p class="first last">For downward compatibility to older versions: if ACCMAXSTEP is not specified,  the default value is set to 12 for ERA5, Era-Interim and operational data or 24 for CERA-20C data, according to one or two forecast times of the data set.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">RRINT</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">1</p>
+</td>
+<td><p class="first last">Switch to select method of disaggregation for precipitation fields. Old method (0) with a simple linear disaggregation or new method (1) with 2 additional subsequent intervals per time interval.</p>
+</td>
+<td><p class="first last">For more information see article:
+Hittmeir, S.; Philipp, A.; Seibert, P. (2017): A conservative interpolation scheme for extensive quantities with application to the Lagrangian particle dispersion model FLEXPART., Geoscientific Model Development. https://doi.org/10.5194/gmd-11-2503-2018</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="domain-section">
+<span id="ref-control-domain"></span><h2>Domain Section<a class="headerlink" href="#domain-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="colwidths-given docutils" id="id7">
+<caption><span class="caption-text">Domain parameter in CONTROL file</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+<col width="7%" />
+<col width="27%" />
+<col width="27%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">GRID</p>
+</td>
+<td><p class="first last">String [i/i]</p>
+</td>
+<td><p class="first last">0.1° - appropriate value e.g. 2°</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Horizontal resolution of Latitude/Longitude grid. Best possible resolution varies for different data sets. E.g in operational data it’s 0.1° whereas in Era-Interim it is 0.75°.</p>
+</td>
+<td><p class="first last">It can be specified in tenth degrees (1°) or thousandth degrees (1000 for 1°).</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">RESOL</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">depends on GRID</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Horizontal resolution of spectral fields.  Specifies the desired triangular truncation of retrieved data, before carrying out any other selected post-processing.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">SMOOTH</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">approriate number</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Spectral truncation of ETADOT after calculation on
+Gaussian grid</p>
+</td>
+<td><p class="first last">For more information see: Sardeshmukh and Hoskins, (1984): Spatial Smoothing on the Sphere, Monthly Weather Review, Vol. 112, No.12, P. 2524-2529</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">UPPER</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">-90+GRID 
+to 90</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Latitude of upper right corner of grid area. </p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">LOWER</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">-90+GRID 
+to 90</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Latitude of lower left corner of grid area.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">LEFT</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">-180+GRID 
+to 180</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Longitude of lower left corner of grid area.</p>
+</td>
+<td><p class="first last">For cyclic (global) grids, use e.g. LEFT = - 180 + GRID, RIGHT = 180. For noncyclic grids crossing the dateline (180W), RIGHT may be smaller than LEFT.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">RIGHT</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">-180+GRID 
+to 180</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Longitude of upper right corner of grid area.</p>
+</td>
+<td><p class="first last">For cyclic (global) grids, use e.g. LEFT = - 180 + GRID, RIGHT = 180. For noncyclic grids crossing the dateline (180W), RIGHT may be smaller than LEFT.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">LEVEL</p>
+</td>
+<td><p class="first last">String</p>
+</td>
+<td><p class="first last">60, 91, 137
+depends on data set</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Maximum number of vertical levels.</p>
+</td>
+<td><p class="first last">ERA-Interim has 60 levels; ERA5 has 137 levels; CERA-20C has 91 levels; Operational data can have different number of model levels depending on the date. Check upfront in the MARS catalogue. If LEVELIST is set , this parameter is not needed.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">LEVELIST</p>
+</td>
+<td><p class="first last">String [start/to/end]</p>
+</td>
+<td><p class="first last">1/to/137</p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">List of vertical levels for MARS request. It can be a subset of levels but it has to include the maximum level (end).</p>
+</td>
+<td><p class="first last">If full list of levels is needed and parameter LEVEL is set, the LEVELIST parameter is not needed. “end” has to be the maximum number of possible levels and has to be the same as in LEVEL, if specified.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="vertical-wind-section">
+<span id="ref-control-verticalwind"></span><h2>Vertical wind Section<a class="headerlink" href="#vertical-wind-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id8">
+<caption><span class="caption-text">Vertical wind parameter in CONTROL file</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="15%" />
+<col width="9%" />
+<col width="10%" />
+<col width="9%" />
+<col width="29%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">GAUSS</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">A switch to calculate ETADOT from Lat/Lon grid (0) or from Gaussian grid (1)</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ACCURACY</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last">24</p>
+</td>
+<td><p class="first last">Specifies the number of bits per value to be used in the generated GRIB coded fields.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">OMEGA</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Retrieve Omega from MARS and put it to file
+OMEGAyymmddhh</p>
+</td>
+<td><p class="first last">Only useful for debugging reasons.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">OMEGADIFF</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Calculate Omega and Dps/Dt from continuity
+equation for diagnostic purposes and include it in file OMEGAyymmddhh</p>
+</td>
+<td><p class="first last">Only useful for debugging reasons.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">ETA</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to read ETADOT precalculated by ECMWF and multiply it with DPDETA to be compatible with ETADOT calculated from continuity equation.
+ETADOT calculation from continuity equation on either Gaussian or lat/lon grid is disabled unless ETADIFF is set to 1 as well.</p>
+</td>
+<td><p class="first last">ETADOT is available in ERA5, CERA-20C and operational data sets. Precalculated ETADOT is operationally available from September 2008 onwards. However, it is not available in the ERA-40 and ERA-Interim data set. If ETA is selected in the last two data sets, flex_extract fails.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ETADIFF</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to calculate etadot and Dps/Dt from continuity equation for diagnostic purposes and include it in file ETAyymmddhh. Expensive option, only for debugging purposes.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">DPDETA</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">1</p>
+</td>
+<td><p class="first last">Switch to multiply etadot with dpdeta – this is the default. In some future version this may change.</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ETAPAR</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">77</p>
+</td>
+<td><p class="first last">77</p>
+</td>
+<td><p class="first last">GRIB parameter number for ETADOT/DPDETA </p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="additional-data-section">
+<span id="ref-control-adddata"></span><h2>Additional data Section<a class="headerlink" href="#additional-data-section" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils" id="id9">
+<caption><span class="caption-text">Additional data parameter in CONTROL file</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="17%" />
+<col width="9%" />
+<col width="13%" />
+<col width="11%" />
+<col width="15%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PARAMETER</th>
+<th class="head">Format</th>
+<th class="head">Possible value range</th>
+<th class="head">Default</th>
+<th class="head">Description</th>
+<th class="head">Information / Conditions</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">CWC</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to retrieve cloud water content (sum of cloud liquid water and cloud ice) (1) or not (0).</p>
+</td>
+<td><p class="first last"></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">DOUBLEELDA</p>
+</td>
+<td><p class="first last">Integer</p>
+</td>
+<td><p class="first last">[0,1]</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+<td><p class="first last">Switch to select the calculation of extra ensemble members for the ELDA stream. It doubles the amount of retrieved ensemble members.</p>
+</td>
+<td><p class="first last">Each ensemble member is used to create a new synthesized ensemble member by subtracting 2 * ( current time step value - last time step value ) from the current time step value</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">ADDPAR</p>
+</td>
+<td><p class="first last">String [p1/p2/../pn]</p>
+</td>
+<td><p class="first last"></p>
+</td>
+<td><p class="first last">None</p>
+</td>
+<td><p class="first last">Additional optional surface parameters (2D fields, non-accumulated)
+Mostly: 27/28/173/186/187/188/235/139/39</p>
+</td>
+<td><p class="first last">Parameters can be specified as the Integer IDs or with the short names.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="CONTROL file examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="control.html" class="btn btn-neutral float-left" title="The CONTROL file" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

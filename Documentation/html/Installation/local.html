@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Local mode installation &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Quick Start" href="../quick_start.html" />
+    <link rel="prev" title="Gateway mode installation" href="gateway.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../installation.html">Installation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="remote.html">Remote mode installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gateway.html">Gateway mode installation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Local mode installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#local-mode-dependencies">Local mode - dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prepare-local-environment">Prepare local environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-local-environment">Test local environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#local-installation">Local installation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#flex-extract-in-combination-with-flexpart"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> in combination with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#test-installation">Test installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../installation.html">Installation</a> &raquo;</li>
+        
+      <li>Local mode installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/Installation/local.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="local-mode-installation">
+<h1>Local mode installation<a class="headerlink" href="#local-mode-installation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="local-mode-dependencies">
+<span id="ref-req-local"></span><span id="ref-local-mode"></span><h2>Local mode - dependencies<a class="headerlink" href="#local-mode-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The installation is the same for the access modes <strong>member</strong> and <strong>public</strong>.</p>
+<p>The environment on your local system has to provide these software packages
+and libraries, since the preparation of the extraction and the post-processing is done on the local machine:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="74%" />
+<col width="26%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Python part</td>
+<td>Fortran part</td>
+</tr>
+<tr class="row-even"><td><ul class="first last simple">
+<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a></li>
+<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
+<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
+<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
+<li><a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ecmwf-api-client</a> (everything except ERA5)</li>
+<li><a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> (just for ERA5)</li>
+</ul>
+</td>
+<td><ul class="first last simple">
+<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
+<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
+<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
+<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="prepare-local-environment">
+<span id="ref-prep-local"></span><h2>Prepare local environment<a class="headerlink" href="#prepare-local-environment" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to install all required packages is to use the package management system of your Linux distribution  which requires admin rights.
+The installation was tested on a <em>Debian GNU/Linux buster</em> and an <em>Ubuntu 18.04 Bionic Beaver</em> system.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># On a Debian or Debian-derived sytem (e. g. Ubuntu) system you may use the following commands (or equivalent commands of your preferred package manager):</span>
+<span class="c1"># (if not already available):</span>
+ apt-get install python3 <span class="o">(</span>usually already available on GNU/Linux systems<span class="o">)</span>
+ apt-get install python3-eccodes
+ apt-get install python3-genshi
+ apt-get install python3-numpy
+ apt-get install gfortran
+ apt-get install fftw3-dev
+ apt-get install libeccodes-dev
+ apt-get install libemos-dev
+<span class="c1"># Some of these packages will pull in further packages as dependencies. This is fine, and some are even needed by ``flex_extract&#39;&#39;.</span>
+
+
+<span class="c1"># As currently the CDS and ECMWF API packages are not available as Debian packages, they need to be installed outside of the Debian (Ubuntu etc.) package management system. The recommended way is:</span>
+ apt-get install pip
+ pip install cdsapi
+ pip install ecmwf-api-client
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In case you would like to use Anaconda Python we recommend you follow the installation instructions of
+<a class="reference external" href="https://docs.anaconda.com/anaconda/install/linux/">Anaconda Python Installation for Linux</a> and then install the
+<code class="docutils literal notranslate"><span class="pre">eccodes</span></code> package from <code class="docutils literal notranslate"><span class="pre">conda</span></code> with:</p>
+<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install conda-forge::python-eccodes
+</pre></div>
+</div>
+</div>
+<p>The CDS API (cdsapi) is required for ERA5 data and the ECMWF Web API (ecmwf-api-client) for all other public datasets.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Since <strong>public users</strong> currently don’t have access to the full <em>ERA5</em> dataset they can skip the installation of the <code class="docutils literal notranslate"><span class="pre">CDS</span> <span class="pre">API</span></code>.</p>
+</div>
+<p>Both user groups have to provide keys with their credentials for the Web API’s in their home directory. Therefore, follow these instructions:</p>
+<dl class="docutils">
+<dt>ECMWF Web API:</dt>
+<dd>Go to <a class="reference external" href="https://confluence.ecmwf.int//display/WEBAPI/Access+MARS">MARS access</a> website and log in with your credentials. Afterwards, on this site in section “Install ECMWF KEY” the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file <cite>.ecmwfapirc</cite> in your home directory).</dd>
+<dt>CDS API:</dt>
+<dd>Go to ‘CDS API registration’_ and register there too. Log in at the <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> website and follow the instructions at section “Install the CDS API key” to save your credentials in a <cite>.cdsapirc</cite> file.</dd>
+</dl>
+</div>
+<div class="section" id="test-local-environment">
+<span id="ref-test-local"></span><h2>Test local environment<a class="headerlink" href="#test-local-environment" title="Permalink to this headline">¶</a></h2>
+<p>Check the availability of the python packages by typing <code class="docutils literal notranslate"><span class="pre">python3</span></code> in a terminal window and run the <code class="docutils literal notranslate"><span class="pre">import</span></code> commands in the python shell. If there are no error messages, you succeeded in setting up the environment.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># check in python3 console</span>
+<span class="kn">import</span> <span class="nn">eccodes</span>
+<span class="kn">import</span> <span class="nn">genshi</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">cdsapi</span>
+<span class="kn">import</span> <span class="nn">ecmwfapi</span>
+</pre></div>
+</div>
+<div class="section" id="test-the-web-api-s">
+<h3>Test the Web API’s<a class="headerlink" href="#test-the-web-api-s" title="Permalink to this headline">¶</a></h3>
+<p>You can start very simple test retrievals for both Web APIs to be sure that everything works. This is recommended to minimise the range of possible errors using <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> later on.</p>
+<div class="section" id="ecmwf-web-api">
+<h4>ECMWF Web API<a class="headerlink" href="#ecmwf-web-api" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Please use this piece of Python code for <strong>Member user</strong>:</td>
+<td>Please use this piece of Python code for <strong>Public user</strong>:</td>
+</tr>
+<tr class="row-even"><td><div class="first last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecmwfapi</span> <span class="kn">import</span> <span class="n">ECMWFService</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">ECMWFService</span><span class="p">(</span><span class="s1">&#39;mars&#39;</span><span class="p">)</span>
+
+<span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span>
+    <span class="s1">&#39;stream&#39;</span>    <span class="p">:</span> <span class="s2">&quot;oper&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;levtype&#39;</span>   <span class="p">:</span> <span class="s2">&quot;sfc&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;param&#39;</span>     <span class="p">:</span> <span class="s2">&quot;165.128/166.128/167.128&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;dataset&#39;</span>   <span class="p">:</span> <span class="s2">&quot;interim&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;step&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;grid&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0.75/0.75&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="s2">&quot;00/06/12/18&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;date&#39;</span>      <span class="p">:</span> <span class="s2">&quot;2014-07-01/to/2014-07-31&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span>      <span class="p">:</span> <span class="s2">&quot;an&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;class&#39;</span>     <span class="p">:</span> <span class="s2">&quot;ei&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;target&#39;</span>    <span class="p">:</span> <span class="s2">&quot;download_erainterim_ecmwfapi.grib&quot;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</td>
+<td><div class="first last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ecmwfapi</span> <span class="kn">import</span> <span class="n">ECMWFDataServer</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">ECMWFDataServer</span><span class="p">()</span>
+
+<span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">({</span>
+    <span class="s1">&#39;stream&#39;</span>    <span class="p">:</span> <span class="s2">&quot;enda&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;levtype&#39;</span>   <span class="p">:</span> <span class="s2">&quot;sfc&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;param&#39;</span>     <span class="p">:</span> <span class="s2">&quot;165.128/166.128/167.128&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;dataset&#39;</span>   <span class="p">:</span> <span class="s2">&quot;cera20c&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;step&#39;</span>      <span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;grid&#39;</span>      <span class="p">:</span> <span class="s2">&quot;1./1.&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;time&#39;</span>      <span class="p">:</span> <span class="s2">&quot;00/06/12/18&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;date&#39;</span>      <span class="p">:</span> <span class="s2">&quot;2000-07-01/to/2000-07-31&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span>      <span class="p">:</span> <span class="s2">&quot;an&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;class&#39;</span>     <span class="p">:</span> <span class="s2">&quot;ep&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;target&#39;</span>    <span class="p">:</span> <span class="s2">&quot;download_cera20c_ecmwfapi.grib&quot;</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cds-api">
+<h4>CDS API<a class="headerlink" href="#cds-api" title="Permalink to this headline">¶</a></h4>
+<p>Extraction of ERA5 data via CDS API might take time as currently there is a high demand for ERA5 data. Therefore, as a simple test for the API just retrieve pressure-level data (even if that is NOT what we need for FLEXPART), as they are stored on disk and don’t need to be retrieved from MARS (which is the time-consuming action):</p>
+<p>Please use this piece of Python code to retrieve a small sample of <em>ERA5</em> pressure levels:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s2">&quot;reanalysis-era5-pressure-levels&quot;</span><span class="p">,</span>
+<span class="p">{</span>
+<span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+<span class="s2">&quot;pressure_level&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span><span class="p">,</span>
+<span class="s2">&quot;product_type&quot;</span><span class="p">:</span> <span class="s2">&quot;reanalysis&quot;</span><span class="p">,</span>
+<span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="s2">&quot;2008&quot;</span><span class="p">,</span>
+<span class="s2">&quot;month&quot;</span><span class="p">:</span> <span class="s2">&quot;01&quot;</span><span class="p">,</span>
+<span class="s2">&quot;day&quot;</span><span class="p">:</span> <span class="s2">&quot;01&quot;</span><span class="p">,</span>
+<span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="s2">&quot;12:00&quot;</span><span class="p">,</span>
+<span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;grib&quot;</span>
+<span class="p">},</span>
+<span class="s2">&quot;download_cdsapi.grib&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you know that your CDS API works, you can try to extract some data from MARS.</p>
+<p>Please use this piece of Python code to retrieve a small <em>ERA5</em> data sample as a <strong>member-state user</strong>! The <strong>Public user</strong> do not have access to the full <em>ERA5</em> dataset!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cdsapi</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">()</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="s1">&#39;reanalysis-era5-complete&#39;</span><span class="p">,</span>
+<span class="p">{</span>
+    <span class="s1">&#39;class&#39;</span>   <span class="p">:</span> <span class="s1">&#39;ea&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;expver&#39;</span>  <span class="p">:</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;stream&#39;</span>  <span class="p">:</span> <span class="s1">&#39;oper&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span>    <span class="p">:</span> <span class="s1">&#39;fc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;step&#39;</span>    <span class="p">:</span> <span class="s1">&#39;3/to/12/by/3&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;param&#39;</span>   <span class="p">:</span> <span class="s1">&#39;130.128&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;levtype&#39;</span> <span class="p">:</span> <span class="s1">&#39;ml&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;levelist&#39;</span><span class="p">:</span> <span class="s1">&#39;135/to/137&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;date&#39;</span>    <span class="p">:</span> <span class="s1">&#39;2013-01-01&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;time&#39;</span>    <span class="p">:</span> <span class="s1">&#39;06/18&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;area&#39;</span>    <span class="p">:</span> <span class="s1">&#39;50/-5/40/5&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;grid&#39;</span>    <span class="p">:</span> <span class="s1">&#39;1.0/1.0&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;format&#39;</span>  <span class="p">:</span> <span class="s1">&#39;grib&#39;</span><span class="p">,</span>
+<span class="p">},</span> <span class="s1">&#39;download_era5_cdsapi.grib&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="local-installation">
+<span id="ref-install-local"></span><h2>Local installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
+<p>First prepare the Fortran <code class="docutils literal notranslate"><span class="pre">makefile</span></code> for your environment and set it in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script. (See section <span class="xref std std-ref">ref-convert</span> for information on the Fortran program.)
+<code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> comes with two <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> prepared for the <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> and
+the <code class="docutils literal notranslate"><span class="pre">ifort</span></code> compiler. The <code class="docutils literal notranslate"><span class="pre">gfortran</span></code> version assumes that <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> and <code class="docutils literal notranslate"><span class="pre">emoslib</span></code> are installed as distribution packages.</p>
+<blockquote>
+<div><ul class="simple">
+<li>makefile.local.gfortran</li>
+<li>makefile.local.ifort</li>
+</ul>
+</div></blockquote>
+<p>They can be found at <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.</p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p class="last">It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
+<code class="docutils literal notranslate"><span class="pre">makefiles</span></code> if other than standard paths are used.</p>
+</div>
+<p>So starting from the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>,
+go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> of your
+choice to modify with an editor of your choice. We use the <code class="docutils literal notranslate"><span class="pre">nedit</span></code> in this case.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/Source/Fortran
+nedit makefile.local.gfortran
+</pre></div>
+</div>
+<p>Edit the paths to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine.</p>
+<div class="admonition caution">
+<p class="first admonition-title">Caution</p>
+<p>This can vary from system to system.
+It is suggested to use a command like</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the ECCODES_INCLUDE_DIR path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep eccodes.mod
+<span class="c1"># for the ECCODES_LIB path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
+</pre></div>
+</div>
+<p class="last">to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
+</div>
+<p>Substitute these paths in the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> for parameters <strong>ECCODES_INCLUDE_DIR</strong>
+and <strong>ECCODES_LIB</strong> and save it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on a current Debian 10 Testing system (May 2019)</span>
+<span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
+<span class="nv">ECCODES_LIB</span><span class="o">=</span> -L/usr/lib -leccodes_f90 -leccodes -lm
+</pre></div>
+</div>
+<p>The Fortran program called <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> will be compiled during the
+installation process.Therefore the name of the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> to be used needs to be given in  <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.</p>
+<p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script
+and adapt the installation parameters in the section labelled with
+“AVAILABLE COMMANDLINE ARGUMENTS TO SET” like shown below.</p>
+<div class="literal-block-wrapper docutils container" id="setup-sh">
+<div class="code-block-caption"><span class="caption-text">‘Example settings for a local installation.’</span><a class="headerlink" href="#setup-sh" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
+<span class="c1">#</span>
+<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;local&#39;</span>
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile.local.gfortran&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span>None
+<span class="nv">ECGID</span><span class="o">=</span>None
+<span class="nv">GATEWAY</span><span class="o">=</span>None
+<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">INSTALLDIR</span><span class="o">=</span>None
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
+...
+</pre></div>
+</div>
+</div>
+<p>Afterwards, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup.sh
+</pre></div>
+</div>
+<p>to start the installation. You should see the following standard output.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
+WARNING: installdir has not been specified
+flex_extract will be installed in here by compiling the Fortran <span class="nb">source</span> in /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/source/fortran
+Install flex_extract_v7.1 software at <span class="nb">local</span> in directory /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1
+
+Using makefile: Makefile.local.gfortran
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 rwGRIB2.f90
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 posnam.f
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 preconvert.f90
+gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -O3 -O3 -fopenmp -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper -lemosR64
+
+-rwxrwxr-x. <span class="m">1</span> philipa8 tmc <span class="m">282992</span> May <span class="m">23</span> <span class="m">22</span>:27 ./CONVERT2
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../quick_start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gateway.html" class="btn btn-neutral float-left" title="Gateway mode installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

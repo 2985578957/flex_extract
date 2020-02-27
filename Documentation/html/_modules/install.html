@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>install &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>install</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for install</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="c1"># @Author: Leopold Haimberger (University of Vienna)</span>
+<span class="c1">#</span>
+<span class="c1"># @Date: November 2015</span>
+<span class="c1">#</span>
+<span class="c1"># @Change History:</span>
+<span class="c1">#</span>
+<span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#        - applied PEP8 style guide</span>
+<span class="c1">#        - added documentation</span>
+<span class="c1">#        - moved install_args_and_control in here</span>
+<span class="c1">#        - splitted code in smaller functions</span>
+<span class="c1">#        - delete convert build files in here instead of compile job script</span>
+<span class="c1">#        - changed static path names to variables from config file</span>
+<span class="c1">#        - splitted install function into several smaller pieces</span>
+<span class="c1">#        - use of tarfile package in python</span>
+<span class="c1">#</span>
+<span class="c1"># @License:</span>
+<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    Anne Philipp, Leopold Haimberger</span>
+<span class="c1">#</span>
+<span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
+<span class="c1">#</span>
+<span class="c1">#    This work is licensed under the Creative Commons Attribution 4.0</span>
+<span class="c1">#    International License. To view a copy of this license, visit</span>
+<span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
+<span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
+<span class="c1">#</span>
+<span class="c1"># @Methods:</span>
+<span class="c1">#    main</span>
+<span class="c1">#    get_install_cmdline_args</span>
+<span class="c1">#    install_via_gateway</span>
+<span class="c1">#    check_install_conditions</span>
+<span class="c1">#    mk_tarball</span>
+<span class="c1">#    un_tarball</span>
+<span class="c1">#    mk_env_vars</span>
+<span class="c1">#    mk_compilejob</span>
+<span class="c1">#    mk_job_template</span>
+<span class="c1">#    del_convert_build</span>
+<span class="c1">#    mk_convert_build</span>
+<span class="c1">#</span>
+<span class="c1">#*******************************************************************************</span>
+<span class="sd">&#39;&#39;&#39;This script installs the flex_extract program.</span>
+
+<span class="sd">Depending on the selected installation environment (locally or on the</span>
+<span class="sd">ECMWF server ecgate or cca) the program extracts the commandline</span>
+<span class="sd">arguments and the CONTROL file parameter and prepares the corresponding</span>
+<span class="sd">environment.</span>
+<span class="sd">The necessary files are collected in a tar-ball and placed</span>
+<span class="sd">at the target location. There its untared, the environment variables will</span>
+<span class="sd">be set and the Fortran code will be compiled.</span>
+<span class="sd">If the ECMWF environment is selected a job script is prepared and submitted</span>
+<span class="sd">for the remaining configurations after putting the tar-ball to the</span>
+<span class="sd">target ECMWF server.</span>
+
+<span class="sd">Type: install.py --help</span>
+<span class="sd">to get information about command line parameters.</span>
+<span class="sd">Read the documentation for usage instructions.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># MODULES</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
+
+<span class="c1"># software specific classes and modules from flex_extract</span>
+<span class="kn">import</span> <span class="nn">_config</span>
+<span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
+<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">make_dir</span><span class="p">,</span> <span class="n">put_file_to_ecserver</span><span class="p">,</span> <span class="n">submit_job_to_ecserver</span><span class="p">,</span>
+                        <span class="n">silent_remove</span><span class="p">,</span> <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">none_or_str</span><span class="p">)</span>
+
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># FUNCTIONS</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Controls the installation process. Calls the installation function</span>
+<span class="sd">    if target is specified.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">get_install_cmdline_args</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">assign_args_to_control</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">check_install_conditions</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span> <span class="c1"># ecgate or cca</span>
+        <span class="n">install_via_gateway</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># local</span>
+        <span class="n">install_local</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="get_install_cmdline_args"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.get_install_cmdline_args">[docs]</a><span class="k">def</span> <span class="nf">get_install_cmdline_args</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Decomposes the command line arguments and assigns them to variables.</span>
+<span class="sd">    Apply default values for non mentioned arguments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+<span class="sd">    args : Namespace</span>
+<span class="sd">        Contains the commandline arguments from script/program call.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Install flex_extract software &#39;</span>
+                                        <span class="s1">&#39;locally or on ECMWF machines&#39;</span><span class="p">,</span>
+                            <span class="n">formatter_class</span><span class="o">=</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--target&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;install_target&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Valid targets: local | ecgate | cca , </span><span class="se">\</span>
+<span class="s2">                        the latter two are at ECMWF&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--makefile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;makefile&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of Makefile to use for compiling the &#39;</span>
+                        <span class="s1">&#39;Fortran program&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ecuid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ecuid&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The user id at ECMWF.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ecgid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ecgid&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The group id at ECMWF.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--gateway&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The name of the local gateway server.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--destination&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The ecaccess association, e.g. &#39;</span>
+                        <span class="s1">&#39;myUser@genericSftp&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--installdir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;installdir&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Root directory where &#39;</span>
+                        <span class="s1">&#39;flex_extract will be installed to.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># arguments for job submission to ECMWF, only needed by submit.py</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--job_template&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;job_template&#39;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;job.template&quot;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The rudimentary template file to create a batch &#39;</span>
+                        <span class="s1">&#39;job template for submission to ECMWF servers.&#39;</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--controlfile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;controlfile&quot;</span><span class="p">,</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The file with all CONTROL parameters.&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">args</span></div>
+
+
+<div class="viewcode-block" id="install_via_gateway"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.install_via_gateway">[docs]</a><span class="k">def</span> <span class="nf">install_via_gateway</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Prepare data transfer to remote gate and submit a job script which will</span>
+<span class="sd">    install everything on the remote gate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">tarball_name</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span> <span class="o">+</span> <span class="s1">&#39;.tar&#39;</span>
+    <span class="n">tar_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">,</span> <span class="n">tarball_name</span><span class="p">)</span>
+
+    <span class="n">mk_compilejob</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">makefile</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">)</span>
+
+    <span class="n">mk_job_template</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">)</span>
+
+    <span class="n">mk_env_vars</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">gateway</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">destination</span><span class="p">)</span>
+
+    <span class="n">mk_tarball</span><span class="p">(</span><span class="n">tar_file</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="p">)</span>
+
+    <span class="n">put_file_to_ecserver</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">,</span> <span class="n">tarball_name</span><span class="p">,</span>
+                         <span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span><span class="p">)</span>
+
+    <span class="n">submit_job_to_ecserver</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="p">,</span>
+                           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_JOBSCRIPTS</span><span class="p">,</span>
+                                        <span class="n">_config</span><span class="o">.</span><span class="n">FILE_INSTALL_COMPILEJOB</span><span class="p">))</span>
+
+    <span class="n">silent_remove</span><span class="p">(</span><span class="n">tar_file</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Job compilation script has been submitted to ecgate for &#39;</span> <span class="o">+</span>
+          <span class="s1">&#39;installation in &#39;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">+</span>
+          <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;You should get an email with subject &quot;flexcompile&quot; within &#39;</span> <span class="o">+</span>
+          <span class="s1">&#39;the next few minutes!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="install_local"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.install_local">[docs]</a><span class="k">def</span> <span class="nf">install_local</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Perform the actual installation on a local machine.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">tar_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">,</span>
+                            <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span> <span class="o">+</span> <span class="s1">&#39;.tar&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">==</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: installdir has not been specified&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;flex_extract will be installed in here by compiling the &#39;</span> <span class="o">+</span>
+              <span class="s1">&#39;Fortran source in &#39;</span> <span class="o">+</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FORTRAN_SRC</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FORTRAN_SRC</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># creates the target working directory for flex_extract</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">)</span> <span class="o">!=</span> \
+           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">):</span>
+            <span class="n">mk_tarball</span><span class="p">(</span><span class="n">tar_file</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="p">)</span>
+            <span class="n">make_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">,</span>
+                                  <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">,</span>
+                                  <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">))</span>
+            <span class="n">un_tarball</span><span class="p">(</span><span class="n">tar_file</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">,</span>
+                                  <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">,</span>
+                                  <span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">))</span>
+
+    <span class="c1"># Create Fortran executable - CONVERT2</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Install &#39;</span> <span class="o">+</span>  <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span> <span class="o">+</span> <span class="s1">&#39; software at &#39;</span> <span class="o">+</span>
+          <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">+</span> <span class="s1">&#39; in directory &#39;</span> <span class="o">+</span>
+          <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">del_convert_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">mk_convert_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">makefile</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tar_file</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tar_file</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="check_install_conditions"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.check_install_conditions">[docs]</a><span class="k">def</span> <span class="nf">check_install_conditions</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks a couple of necessary attributes and conditions</span>
+<span class="sd">    for the installation such as if they exist and contain values.</span>
+<span class="sd">    Otherwise set default values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    c : ControlFile</span>
+<span class="sd">        Contains all the parameters of CONTROL file and</span>
+<span class="sd">        command line.</span>
+
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">and</span> \
+       <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">INSTALL_TARGETS</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: unknown or missing installation target &#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;target: &#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;please specify correct installation target &#39;</span> <span class="o">+</span>
+              <span class="nb">str</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">INSTALL_TARGETS</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;use -h or --help for help&#39;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">!=</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecuid</span> <span class="ow">or</span> \
+           <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please enter your ECMWF user id and group id as well &#39;</span> <span class="o">+</span>
+                  <span class="s1">&#39;as the </span><span class="se">\n</span><span class="s1">name of the local gateway and the ectrans &#39;</span> <span class="o">+</span>
+                  <span class="s1">&#39;destination &#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;with command line options --ecuid --ecgid </span><span class="se">\</span>
+<span class="s1">                   --gateway --destination&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Try &quot;&#39;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> \
+                  <span class="s1">&#39; -h&quot; to print usage information&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please consult ecaccess documentation or ECMWF user </span><span class="se">\</span>
+<span class="s1">                   support for further details&#39;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{HOME}</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># local</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="mk_tarball"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_tarball">[docs]</a><span class="k">def</span> <span class="nf">mk_tarball</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates a tarball with all necessary files which need to be sent to the</span>
+<span class="sd">    installation directory.</span>
+<span class="sd">    It does not matter if this is local or remote.</span>
+<span class="sd">    Collects all python files, the Fortran source and makefiles,</span>
+<span class="sd">    the ECMWF_ENV file, the CONTROL files as well as the</span>
+<span class="sd">    template files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tarball_path : str</span>
+<span class="sd">        The complete path to the tar file which will contain all</span>
+<span class="sd">        relevant data for flex_extract.</span>
+
+<span class="sd">    target : str</span>
+<span class="sd">        The queue where the job is submitted to.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Create tarball ...&#39;</span><span class="p">)</span>
+
+    <span class="c1"># change to FLEXEXTRACT directory so that the tar can contain</span>
+    <span class="c1"># relative pathes to the files and directories</span>
+    <span class="n">ecd</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">ecd</span><span class="p">)</span>
+
+    <span class="c1"># get lists of the files to be added to the tar file</span>
+    <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+        <span class="n">ecmwf_env_file</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">runfile</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_RUN_DIR</span><span class="p">,</span>
+                                     <span class="s1">&#39;run_local.sh&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ecmwf_env_file</span> <span class="o">=</span> <span class="p">[</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_ECMWF_ENV</span><span class="p">]</span>
+        <span class="n">runfile</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_RUN_DIR</span><span class="p">,</span>
+                                     <span class="s1">&#39;run.sh&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+
+    <span class="n">pyfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_PYTHON_SRC</span><span class="p">,</span> <span class="s1">&#39;*py&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">pytestfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                   <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_PYTHONTEST_SRC</span><span class="p">,</span> <span class="s1">&#39;*py&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">controlfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_CONTROLFILES</span><span class="p">,</span>
+                                      <span class="s1">&#39;CONTROL*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">testfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEST</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">tempfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*.temp&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">nlfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*.nl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">gribtable</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*grib*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">ffiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">,</span> <span class="s1">&#39;*.f90&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">hfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+              <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">,</span> <span class="s1">&#39;*.h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">makefiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">,</span> <span class="s1">&#39;makefile*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+    <span class="n">jobdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_JOBSCRIPTS</span><span class="p">]</span>
+
+    <span class="c1"># concatenate single lists to one for a better looping</span>
+    <span class="n">filelist</span> <span class="o">=</span> <span class="n">pyfiles</span> <span class="o">+</span> <span class="n">pytestfiles</span> <span class="o">+</span> <span class="n">controlfiles</span> <span class="o">+</span> <span class="n">tempfiles</span> <span class="o">+</span> <span class="n">nlfiles</span> <span class="o">+</span> \
+               <span class="n">ffiles</span> <span class="o">+</span> <span class="n">gribtable</span> <span class="o">+</span> <span class="n">hfiles</span> <span class="o">+</span> <span class="n">makefiles</span> <span class="o">+</span> <span class="n">ecmwf_env_file</span> <span class="o">+</span> \
+               <span class="n">runfile</span> <span class="o">+</span> <span class="n">jobdir</span> <span class="o">+</span> <span class="n">testfiles</span> <span class="o">+</span>\
+               <span class="p">[</span><span class="s1">&#39;CODE_OF_CONDUCT.md&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.md&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">]</span>
+
+    <span class="c1"># create installation tar-file</span>
+    <span class="n">exclude_files</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.ksh&quot;</span><span class="p">,</span> <span class="s2">&quot;.tar&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">,</span> <span class="s2">&quot;w:gz&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar_handle</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">:</span>
+                <span class="n">tar_handle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="nb">filter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">tarinfo</span><span class="p">:</span> <span class="kc">None</span>
+                               <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">tarinfo</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                               <span class="ow">in</span> <span class="n">exclude_files</span>
+                               <span class="k">else</span> <span class="n">tarinfo</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">TarError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to create the tar-file &#39;</span> <span class="o">+</span>
+                 <span class="nb">str</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">))</span>
+
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="un_tarball"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.un_tarball">[docs]</a><span class="k">def</span> <span class="nf">un_tarball</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Extracts the given tarball into current directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tarball_path : str</span>
+<span class="sd">        The complete path to the tar file which will contain all</span>
+<span class="sd">        relevant data for flex_extract.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Untar ...&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar_handle</span><span class="p">:</span>
+            <span class="n">tar_handle</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">TarError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to read tar-file &#39;</span> <span class="o">+</span>
+                 <span class="nb">str</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to read tar-file &#39;</span> <span class="o">+</span>
+                 <span class="nb">str</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">))</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_env_vars"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_env_vars">[docs]</a><span class="k">def</span> <span class="nf">mk_env_vars</span><span class="p">(</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Creates a file named ECMWF_ENV which contains the</span>
+<span class="sd">    necessary environmental variables at ECMWF servers.</span>
+<span class="sd">    It is based on the template ECMWF_ENV.template.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ecuid : str</span>
+<span class="sd">        The user id on ECMWF server.</span>
+
+<span class="sd">    ecgid : str</span>
+<span class="sd">        The group id on ECMWF server.</span>
+
+<span class="sd">    gateway : str</span>
+<span class="sd">        The gateway server the user is using.</span>
+
+<span class="sd">    destination : str</span>
+<span class="sd">        The remote destination which is used to transfer files</span>
+<span class="sd">        from ECMWF server to local gateway server.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span> <span class="n">UndefinedError</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">TemplateLoader</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span> <span class="n">auto_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">ecmwfvars_template</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_USER_ENVVARS</span><span class="p">,</span>
+                                         <span class="bp">cls</span><span class="o">=</span><span class="n">NewTextTemplate</span><span class="p">)</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">ecmwfvars_template</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">user_name</span><span class="o">=</span><span class="n">ecuid</span><span class="p">,</span>
+                                             <span class="n">user_group</span><span class="o">=</span><span class="n">ecgid</span><span class="p">,</span>
+                                             <span class="n">gateway_name</span><span class="o">=</span><span class="n">gateway</span><span class="p">,</span>
+                                             <span class="n">destination_name</span><span class="o">=</span><span class="n">destination</span>
+                                            <span class="p">)</span>
+    <span class="k">except</span> <span class="n">UndefinedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to write &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">PATH_ECMWF_ENV</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_compilejob"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_compilejob">[docs]</a><span class="k">def</span> <span class="nf">mk_compilejob</span><span class="p">(</span><span class="n">makefile</span><span class="p">,</span> <span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">,</span> <span class="n">fp_root</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Modifies the original job template file so that it is specified</span>
+<span class="sd">    for the user and the environment were it will be applied. Result</span>
+<span class="sd">    is stored in a new file &quot;job.temp&quot; in the python directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    makefile : str</span>
+<span class="sd">        Name of the makefile which should be used to compile FORTRAN</span>
+<span class="sd">        CONVERT2 program.</span>
+
+<span class="sd">    ecuid : str</span>
+<span class="sd">        The user id on ECMWF server.</span>
+
+<span class="sd">    ecgid : str</span>
+<span class="sd">        The group id on ECMWF server.</span>
+
+<span class="sd">    fp_root : str</span>
+<span class="sd">       Path to the root directory of FLEXPART environment or flex_extract</span>
+<span class="sd">       environment.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span>  <span class="n">UndefinedError</span>
+
+    <span class="k">if</span> <span class="n">fp_root</span> <span class="o">==</span> <span class="s1">&#39;../&#39;</span><span class="p">:</span>
+        <span class="n">fp_root</span> <span class="o">=</span> <span class="s1">&#39;$HOME&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">TemplateLoader</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span> <span class="n">auto_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">compile_template</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_COMPILEJOB</span><span class="p">,</span>
+                                       <span class="bp">cls</span><span class="o">=</span><span class="n">NewTextTemplate</span><span class="p">)</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">compile_template</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">usergroup</span><span class="o">=</span><span class="n">ecgid</span><span class="p">,</span>
+            <span class="n">username</span><span class="o">=</span><span class="n">ecuid</span><span class="p">,</span>
+            <span class="n">version_number</span><span class="o">=</span><span class="n">_config</span><span class="o">.</span><span class="n">_VERSION_STR</span><span class="p">,</span>
+            <span class="n">fp_root_scripts</span><span class="o">=</span><span class="n">fp_root</span><span class="p">,</span>
+            <span class="n">makefile</span><span class="o">=</span><span class="n">makefile</span><span class="p">,</span>
+            <span class="n">fortran_program</span><span class="o">=</span><span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">UndefinedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_COMPILEJOB</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_COMPILEJOB</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">compilejob</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_JOBSCRIPTS</span><span class="p">,</span>
+                                  <span class="n">_config</span><span class="o">.</span><span class="n">FILE_INSTALL_COMPILEJOB</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">compilejob</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to write &#39;</span> <span class="o">+</span>
+                 <span class="n">compilejob</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_job_template"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_job_template">[docs]</a><span class="k">def</span> <span class="nf">mk_job_template</span><span class="p">(</span><span class="n">ecuid</span><span class="p">,</span> <span class="n">ecgid</span><span class="p">,</span> <span class="n">fp_root</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Modifies the original job template file so that it is specified</span>
+<span class="sd">    for the user and the environment were it will be applied. Result</span>
+<span class="sd">    is stored in a new file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ecuid : str</span>
+<span class="sd">        The user id on ECMWF server.</span>
+
+<span class="sd">    ecgid : str</span>
+<span class="sd">        The group id on ECMWF server.</span>
+
+<span class="sd">    fp_root : str</span>
+<span class="sd">       Path to the root directory of FLEXPART environment or flex_extract</span>
+<span class="sd">       environment.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span>  <span class="n">UndefinedError</span>
+
+    <span class="n">fp_root_path_to_python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fp_root</span><span class="p">,</span>
+                                          <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">,</span>
+                                          <span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_PYTHON_SRC</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;$&#39;</span> <span class="ow">in</span> <span class="n">fp_root_path_to_python</span><span class="p">:</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">fp_root_path_to_python</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)</span>
+        <span class="n">fp_root_path_to_python</span> <span class="o">=</span> <span class="n">fp_root_path_to_python</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">ind</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;$&#39;</span> <span class="o">+</span> \
+                                 <span class="n">fp_root_path_to_python</span><span class="p">[</span><span class="n">ind</span><span class="p">:]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">TemplateLoader</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span> <span class="n">auto_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">compile_template</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_JOB</span><span class="p">,</span>
+                                       <span class="bp">cls</span><span class="o">=</span><span class="n">NewTextTemplate</span><span class="p">)</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="n">compile_template</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">usergroup</span><span class="o">=</span><span class="n">ecgid</span><span class="p">,</span>
+            <span class="n">username</span><span class="o">=</span><span class="n">ecuid</span><span class="p">,</span>
+            <span class="n">version_number</span><span class="o">=</span><span class="n">_config</span><span class="o">.</span><span class="n">_VERSION_STR</span><span class="p">,</span>
+            <span class="n">fp_root_path</span><span class="o">=</span><span class="n">fp_root_path_to_python</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="n">UndefinedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_JOB</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to generate template &#39;</span> <span class="o">+</span>
+                 <span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_INSTALL_JOB</span><span class="p">)</span>
+
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tempjobfile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span>
+                                   <span class="n">_config</span><span class="o">.</span><span class="n">TEMPFILE_JOB</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tempjobfile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR CODE: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">errno</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... ERROR MESSAGE:</span><span class="se">\n</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">strerror</span><span class="p">))</span>
+
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">... error occured while trying to write &#39;</span> <span class="o">+</span>
+                 <span class="n">tempjobfile</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="del_convert_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.del_convert_build">[docs]</a><span class="k">def</span> <span class="nf">del_convert_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Clean up the Fortran source directory and remove all</span>
+<span class="sd">    build files (e.g. \*.o, \*.mod and CONVERT2)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src_path : str</span>
+<span class="sd">        Path to the fortran source directory.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">modfiles</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;*.mod&#39;</span><span class="p">)</span>
+    <span class="n">objfiles</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;*.o&#39;</span><span class="p">)</span>
+    <span class="n">exefile</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span><span class="p">)</span>
+
+    <span class="n">modfiles</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+    <span class="n">objfiles</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+    <span class="n">exefile</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="mk_convert_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_convert_build">[docs]</a><span class="k">def</span> <span class="nf">mk_convert_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">makefile</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Compiles the Fortran code and generates the executable.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src_path : str</span>
+<span class="sd">        Path to the fortran source directory.</span>
+
+<span class="sd">    makefile : str</span>
+<span class="sd">        The name of the makefile which should be used.</span>
+
+<span class="sd">    Return</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using makefile: &#39;</span> <span class="o">+</span> <span class="n">makefile</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;make&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+                              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">makefile</span><span class="p">)],</span>
+                             <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                             <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                             <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                             <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">pout</span><span class="p">,</span> <span class="n">perr</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">pout</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">perr</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please edit &#39;</span> <span class="o">+</span> <span class="n">makefile</span> <span class="o">+</span>
+                  <span class="s1">&#39; or try another Makefile in the src directory.&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB &#39;</span>
+                  <span class="s1">&#39;and EMOSLIB must be adapted.&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available Makefiles:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;Makefile*&#39;</span><span class="p">))</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Compilation failed!&#39;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Makefile call failed:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span><span class="p">)],</span>
+                           <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;FORTRAN EXECUTABLE COULD NOT BE FOUND!&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

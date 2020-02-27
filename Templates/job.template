@@ -1,0 +1,80 @@
+#!/bin/ksh
+
+# ON ECGB:
+# start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server
+# start with sbatch NAME_OF_THIS_FILE directly on machine
+
+#SBATCH --workdir=/scratch/ms/$usergroup/$username
+#SBATCH --qos=normal
+#SBATCH --job-name=flex_ecmwf
+#SBATCH --output=flex_ecmwf.%j.out
+#SBATCH --error=flex_ecmwf.%j.out
+#SBATCH --mail-type=FAIL
+#SBATCH --time=12:00:00
+
+## CRAY specific batch requests
+##PBS -N flex_ecmwf
+##PBS -q np
+##PBS -S /usr/bin/ksh
+## -o /scratch/ms/$usergroup/$username/flex_ecmwf.$$$${PBS_JOBID}.out
+## job output is in .ecaccess_DO_NOT_REMOVE
+##PBS -j oe
+##PBS -V
+##PBS -l EC_threads_per_task=24
+##PBS -l EC_memory_per_task=32000MB
+
+set -x
+export VERSION=$version_number
+case $$$${HOST} in
+  *ecg*)
+  module unload grib_api
+  module unload eccodes
+  module unload python
+  module unload emos
+  module load python3/3.6.8-01
+  module load eccodes/2.13.0
+  module load emos/455-r64
+  export PATH=$$$${PATH}:$fp_root_path
+  ;;
+  *cca*)
+  module unload python
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes/2.13.0
+  module load emos/455-r64
+  export SCRATCH=$$$${TMPDIR}
+  export PATH=$$$${PATH}:$fp_root_path
+  ;;
+esac
+
+cd $$$${SCRATCH}
+mkdir -p python$$$$$$$$
+cd python$$$$$$$$
+
+export CONTROL=CONTROL
+
+cat >$$$${CONTROL}<<EOF
+$$control_content
+EOF
+
+
+submit.py --controlfile=$$$${CONTROL} --inputdir=./work --outputdir=./work 1> prot 2>&1
+
+if [ $? -eq 0 ] ; then
+  l=0
+  for muser in `grep -i MAILOPS $$$${CONTROL}`; do
+      if [ $$$${l} -gt 0 ] ; then 
+         mail -s flex.$$$${HOST}.$$$$$$$$ $$$${muser} <prot
+      fi
+      l=$(($$$${l}+1))
+  done
+else
+  l=0
+  for muser in `grep -i MAILFAIL $$$${CONTROL}`; do
+      if [ $$$${l} -gt 0 ] ; then 
+         mail -s "ERROR! flex.$$$${HOST}.$$$$$$$$" $$$${muser} <prot
+      fi
+      l=$(($$$${l}+1))
+  done
+fi
+

@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Templates &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Output Data" href="../output.html" />
+    <link rel="prev" title="ECMWF User Credential file ECMWF_ENV" href="ecmwf_env.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="control_params.html">The CONTROL parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Templates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#convert-nl">convert.nl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecmwf-env-template">ecmwf_env.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compilejob-template">compilejob.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-temp">job.temp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-template">job.template</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+        
+      <li>Templates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Documentation/Input/templates.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="templates">
+<h1>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h1>
+<p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> we use the Python package <code class="docutils literal notranslate"><span class="pre">genshi</span></code> (<a class="reference external" href="https://genshi.edgewall.org/">ref</a>) to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Usually it is not recommended to change anything in these files without being able to understand the effects.</p>
+</div>
+<p>Each template file has its content framework and keeps so-called placeholder variables in the positions where the values needs to be substituted at run time. These placeholders are marked by a leading <code class="docutils literal notranslate"><span class="pre">$</span></code> sign. In case of the Kornshell job scripts, where (environment) variables are used the <code class="docutils literal notranslate"><span class="pre">$</span></code> sign needs to be doubled to <cite>escape</cite> and keep a single <code class="docutils literal notranslate"><span class="pre">$</span></code> sign as it is.</p>
+<p>The following templates are used and can be found in directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Templates</span></code>:</p>
+<div class="section" id="convert-nl">
+<h2>convert.nl<a class="headerlink" href="#convert-nl" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This is the template for a Fortran namelist file called <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> which will be read by <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>.
+It contains all the parameters <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> needs.</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span>&amp;NAMGEN
+  maxl = $maxl,
+  maxb = $maxb,
+  mlevel = $mlevel,
+  mlevelist = &quot;$mlevelist&quot;,
+  mnauf = $mnauf,
+  metapar = $metapar,
+  rlo0 = $rlo0,
+  rlo1 = $rlo1,
+  rla0 = $rla0,
+  rla1 = $rla1,
+  momega = $momega,
+  momegadiff = $momegadiff,
+  mgauss = $mgauss,
+  msmooth = $msmooth,
+  meta = $meta,
+  metadiff = $metadiff,
+  mdpdeta = $mdpdeta
+/
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="ecmwf-env-template">
+<h2>ecmwf_env.template<a class="headerlink" href="#ecmwf-env-template" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This template is used to create the <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> file in the application modes <strong>gateway</strong> and <strong>remote</strong>. It contains the user credentials and gateway server settings for the file transfers.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ECUID <span class="nv">$user_name</span>
+ECGID <span class="nv">$user_group</span>
+GATEWAY <span class="nv">$gateway_name</span>
+DESTINATION <span class="nv">$destination_name</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="compilejob-template">
+<h2>compilejob.template<a class="headerlink" href="#compilejob-template" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This template is used to create the job script file called <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code> during the installation process for the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
+<p>At the beginning some directives for the batch system are set.
+On the <strong>ecgate</strong> server the <code class="docutils literal notranslate"><span class="pre">SBATCH</span></code> comments are the directives for the SLURM workload manager. A description of the single lines can be found at <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs">SLURM directives</a>.
+For the high performance computers <strong>cca</strong> and <strong>ccb</strong> the <code class="docutils literal notranslate"><span class="pre">PBS</span></code> comments are necessary and can be view at <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS">PBS directives</a>.</p>
+<p>The software environment requirements mentioned in <a class="reference internal" href="../../installation.html#ref-requirements"><span class="std std-ref">Dependencies</span></a> are prepared by loading the corresponding modules depending in the <code class="docutils literal notranslate"><span class="pre">HOST</span></code>. It should not be changed without testing.</p>
+<p>Afterwards the installation steps as such are done. Including the generation of the root directory, putting files in place, compiling the Fortran program and sending a log file via email.</p>
+<div class="highlight-ksh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/ksh</span>
+
+<span class="c1"># ON ECGB:</span>
+<span class="c1"># start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server</span>
+<span class="c1"># start with sbatch NAME_OF_THIS_FILE directly on machine</span>
+
+<span class="c1">#SBATCH --workdir=/scratch/ms/$usergroup/$username</span>
+<span class="c1">#SBATCH --qos=normal</span>
+<span class="c1">#SBATCH --job-name=flex_ecmwf</span>
+<span class="c1">#SBATCH --output=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --error=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --mail-type=FAIL</span>
+<span class="c1">#SBATCH --time=12:00:00</span>
+
+<span class="c1">## CRAY specific batch requests</span>
+<span class="c1">##PBS -N flex_ecmwf</span>
+<span class="c1">##PBS -q ns</span>
+<span class="c1">##PBS -S /usr/bin/ksh</span>
+<span class="c1">##PBS -o /scratch/ms/$usergroup/$username/flex_ecmwf.$${Jobname}.$${Job_ID}.out</span>
+<span class="c1"># job output is in .ecaccess_DO_NOT_REMOVE</span>
+<span class="c1">##PBS -j oe</span>
+<span class="c1">##PBS -V</span>
+<span class="c1">##PBS -l EC_threads_per_task=1</span>
+<span class="c1">##PBS -l EC_memory_per_task=3200MB</span>
+
+<span class="nb">set</span> -x
+<span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="nv">$version_number</span>
+<span class="k">case</span> <span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span> in
+  *ecg*<span class="o">)</span>
+  module unload grib_api
+  module unload eccodes
+  module unload python
+  module unload emos
+  module load python3
+  module load eccodes/2.12.0
+  module load emos/455-r64
+  <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="nv">$fp_root_scripts</span>
+  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span><span class="nv">$makefile</span>
+  <span class="p">;;</span>
+  *cca*<span class="o">)</span>
+  module unload python
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes/2.12.0
+  module load emos
+  <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>GROUP<span class="o">}</span>
+  <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>
+  <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span> <span class="p">|</span> awk -F / <span class="s1">&#39;{print $1, $2, $3, $4}&#39;</span>
+  <span class="nb">export</span> <span class="nv">GROUP</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span> <span class="p">|</span> awk -F / <span class="s1">&#39;{print $4}&#39;</span><span class="sb">`</span>
+  <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span>/scratch/ms/<span class="nv">$$</span><span class="o">{</span>GROUP<span class="o">}</span>/<span class="nv">$$</span><span class="o">{</span>USER<span class="o">}</span>
+  <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="nv">$fp_root_scripts</span>
+  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span><span class="nv">$makefile</span>
+  <span class="p">;;</span>
+<span class="k">esac</span>
+
+mkdir -p <span class="nv">$$</span><span class="o">{</span>FLEXPART_ROOT_SCRIPTS<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>
+<span class="nb">cd</span> <span class="nv">$$</span><span class="o">{</span>FLEXPART_ROOT_SCRIPTS<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>   <span class="c1"># if FLEXPART_ROOT is not set this means cd to the home directory</span>
+tar -xvf <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>.tar
+<span class="nb">cd</span> source/fortran
+<span class="se">\r</span>m *.o *.mod <span class="nv">$fortran_program</span>
+make -f <span class="nv">$$</span><span class="o">{</span>MAKEFILE<span class="o">}</span> &gt;flexcompile <span class="m">2</span>&gt;flexcompile
+
+ls -l <span class="nv">$fortran_program</span> &gt;&gt;flexcompile
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$$</span>? -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+  <span class="nb">echo</span> <span class="s1">&#39;SUCCESS!&#39;</span> &gt;&gt;flexcompile
+  mail -s flexcompile.<span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span>.<span class="nv">$$$$</span> <span class="nv">$$</span><span class="o">{</span>USER<span class="o">}</span> &lt;flexcompile
+<span class="k">else</span>
+  <span class="nb">echo</span> Environment: &gt;&gt;flexcompile
+  env &gt;&gt; flexcompile
+  mail -s <span class="s2">&quot;ERROR! flexcompile.</span><span class="nv">$$</span><span class="s2">{HOST}.</span><span class="nv">$$$$</span><span class="s2">&quot;</span> <span class="nv">$$</span><span class="o">{</span>USER<span class="o">}</span> &lt;flexcompile
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="job-temp">
+<h2>job.temp<a class="headerlink" href="#job-temp" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This template is used to create the actual job script file called <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code> for the execution of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> in the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
+<p>At the beginning some directives for the batch system are set.
+On the <strong>ecgate</strong> server the <code class="docutils literal notranslate"><span class="pre">SBATCH</span></code> comments are the directives for the SLURM workload manager. A description of the single lines can be found at <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs">SLURM directives</a>.
+For the high performance computers <strong>cca</strong> and <strong>ccb</strong> the <code class="docutils literal notranslate"><span class="pre">PBS</span></code> comments are necessary and can be view at <a class="reference external" href="https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS">PBS directives</a>.</p>
+<p>The software environment requirements mentioned in <a class="reference internal" href="../../installation.html#ref-requirements"><span class="std std-ref">Dependencies</span></a> are prepared by loading the corresponding modules depending in the <code class="docutils literal notranslate"><span class="pre">HOST</span></code>. It should not be changed without testing.</p>
+<p>Afterwards the run directory and the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file are created and <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is executed. In the end a log file is send via email.</p>
+<div class="highlight-ksh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/ksh</span>
+
+<span class="c1"># ON ECGB:</span>
+<span class="c1"># start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server</span>
+<span class="c1"># start with sbatch NAME_OF_THIS_FILE directly on machine</span>
+
+<span class="c1">#SBATCH --workdir=/scratch/ms/at/km4a</span>
+<span class="c1">#SBATCH --qos=normal</span>
+<span class="c1">#SBATCH --job-name=flex_ecmwf</span>
+<span class="c1">#SBATCH --output=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --error=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --mail-type=FAIL</span>
+<span class="c1">#SBATCH --time=12:00:00</span>
+
+<span class="c1">## CRAY specific batch requests</span>
+<span class="c1">##PBS -N flex_ecmwf</span>
+<span class="c1">##PBS -q np</span>
+<span class="c1">##PBS -S /usr/bin/ksh</span>
+<span class="c1">## -o /scratch/ms/at/km4a/flex_ecmwf.$${PBS_JOBID}.out</span>
+<span class="c1">## job output is in .ecaccess_DO_NOT_REMOVE</span>
+<span class="c1">##PBS -j oe</span>
+<span class="c1">##PBS -V</span>
+<span class="c1">##PBS -l EC_threads_per_task=24</span>
+<span class="c1">##PBS -l EC_memory_per_task=32000MB</span>
+
+<span class="nb">set</span> -x
+<span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="m">7</span>.1
+<span class="k">case</span> <span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span> in
+  *ecg*<span class="o">)</span>
+  module unload grib_api
+  module unload eccodes
+  module unload python
+  module unload emos
+  module load python3
+  module load eccodes/2.12.0
+  module load emos/455-r64
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/source/python
+  <span class="p">;;</span>
+  *cca*<span class="o">)</span>
+  module unload python
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes/2.12.0
+  module load emos
+  <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/source/python
+  <span class="p">;;</span>
+<span class="k">esac</span>
+
+<span class="nb">cd</span> <span class="nv">$$</span><span class="o">{</span>SCRATCH<span class="o">}</span>
+mkdir -p python<span class="nv">$$$$</span>
+<span class="nb">cd</span> python<span class="nv">$$$$</span>
+
+<span class="nb">export</span> <span class="nv">CONTROL</span><span class="o">=</span>CONTROL
+
+cat &gt;<span class="nv">$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="s">&lt;&lt;EOF</span>
+<span class="s">$control_content</span>
+<span class="s">EOF</span>
+
+
+submit.py --controlfile<span class="o">=</span><span class="nv">$$</span><span class="o">{</span>CONTROL<span class="o">}</span> --inputdir<span class="o">=</span>./work --outputdir<span class="o">=</span>./work <span class="m">1</span>&gt; prot <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+  <span class="nv">l</span><span class="o">=</span><span class="m">0</span>
+  <span class="k">for</span> muser in <span class="sb">`</span>grep -i MAILOPS <span class="nv">$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="o">[</span> <span class="nv">$$</span><span class="o">{</span>l<span class="o">}</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+         mail -s flex.<span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span>.<span class="nv">$$$$</span> <span class="nv">$$</span><span class="o">{</span>muser<span class="o">}</span> &lt;prot
+      <span class="k">fi</span>
+      <span class="nv">l</span><span class="o">=</span><span class="k">$((</span><span class="nv">$$</span><span class="o">{</span>l<span class="o">}+</span><span class="m">1</span><span class="k">))</span>
+  <span class="k">done</span>
+<span class="k">else</span>
+  <span class="nv">l</span><span class="o">=</span><span class="m">0</span>
+  <span class="k">for</span> muser in <span class="sb">`</span>grep -i MAILFAIL <span class="nv">$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="o">[</span> <span class="nv">$$</span><span class="o">{</span>l<span class="o">}</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+         mail -s <span class="s2">&quot;ERROR! flex.</span><span class="nv">$$</span><span class="s2">{HOST}.</span><span class="nv">$$$$</span><span class="s2">&quot;</span> <span class="nv">$$</span><span class="o">{</span>muser<span class="o">}</span> &lt;prot
+      <span class="k">fi</span>
+      <span class="nv">l</span><span class="o">=</span><span class="k">$((</span><span class="nv">$$</span><span class="o">{</span>l<span class="o">}+</span><span class="m">1</span><span class="k">))</span>
+  <span class="k">done</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="job-template">
+<h2>job.template<a class="headerlink" href="#job-template" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>This template is used to create the template for the execution job script <code class="docutils literal notranslate"><span class="pre">job.temp</span></code> for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> in the installation process. A description of the file can be found under <code class="docutils literal notranslate"><span class="pre">job.temp</span></code>. A couple of parameters are set in this process, such as the user credentials and the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> version number.</p>
+<div class="highlight-ksh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/ksh</span>
+
+<span class="c1"># ON ECGB:</span>
+<span class="c1"># start with ecaccess-job-submit -queueName ecgb NAME_OF_THIS_FILE  on gateway server</span>
+<span class="c1"># start with sbatch NAME_OF_THIS_FILE directly on machine</span>
+
+<span class="c1">#SBATCH --workdir=/scratch/ms/$usergroup/$username</span>
+<span class="c1">#SBATCH --qos=normal</span>
+<span class="c1">#SBATCH --job-name=flex_ecmwf</span>
+<span class="c1">#SBATCH --output=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --error=flex_ecmwf.%j.out</span>
+<span class="c1">#SBATCH --mail-type=FAIL</span>
+<span class="c1">#SBATCH --time=12:00:00</span>
+
+<span class="c1">## CRAY specific batch requests</span>
+<span class="c1">##PBS -N flex_ecmwf</span>
+<span class="c1">##PBS -q np</span>
+<span class="c1">##PBS -S /usr/bin/ksh</span>
+<span class="c1">## -o /scratch/ms/$usergroup/$username/flex_ecmwf.$$$${PBS_JOBID}.out</span>
+<span class="c1">## job output is in .ecaccess_DO_NOT_REMOVE</span>
+<span class="c1">##PBS -j oe</span>
+<span class="c1">##PBS -V</span>
+<span class="c1">##PBS -l EC_threads_per_task=24</span>
+<span class="c1">##PBS -l EC_memory_per_task=32000MB</span>
+
+<span class="nb">set</span> -x
+<span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="nv">$version_number</span>
+<span class="k">case</span> <span class="nv">$$$$</span><span class="o">{</span>HOST<span class="o">}</span> in
+  *ecg*<span class="o">)</span>
+  module unload grib_api
+  module unload eccodes
+  module unload python
+  module unload emos
+  module load python3
+  module load eccodes/2.12.0
+  module load emos/455-r64
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
+  <span class="p">;;</span>
+  *cca*<span class="o">)</span>
+  module unload python
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes/2.12.0
+  module load emos
+  <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
+  <span class="p">;;</span>
+<span class="k">esac</span>
+
+<span class="nb">cd</span> <span class="nv">$$$$</span><span class="o">{</span>SCRATCH<span class="o">}</span>
+mkdir -p python<span class="nv">$$$$$$$$</span>
+<span class="nb">cd</span> python<span class="nv">$$$$$$$$</span>
+
+<span class="nb">export</span> <span class="nv">CONTROL</span><span class="o">=</span>CONTROL
+
+cat &gt;<span class="nv">$$$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="s">&lt;&lt;EOF</span>
+<span class="s">$$control_content</span>
+<span class="s">EOF</span>
+
+
+submit.py --controlfile<span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>CONTROL<span class="o">}</span> --inputdir<span class="o">=</span>./work --outputdir<span class="o">=</span>./work <span class="m">1</span>&gt; prot <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+  <span class="nv">l</span><span class="o">=</span><span class="m">0</span>
+  <span class="k">for</span> muser in <span class="sb">`</span>grep -i MAILOPS <span class="nv">$$$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="o">[</span> <span class="nv">$$$$</span><span class="o">{</span>l<span class="o">}</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+         mail -s flex.<span class="nv">$$$$</span><span class="o">{</span>HOST<span class="o">}</span>.<span class="nv">$$$$$$$$</span> <span class="nv">$$$$</span><span class="o">{</span>muser<span class="o">}</span> &lt;prot
+      <span class="k">fi</span>
+      <span class="nv">l</span><span class="o">=</span><span class="k">$((</span><span class="nv">$$$$</span><span class="o">{</span>l<span class="o">}+</span><span class="m">1</span><span class="k">))</span>
+  <span class="k">done</span>
+<span class="k">else</span>
+  <span class="nv">l</span><span class="o">=</span><span class="m">0</span>
+  <span class="k">for</span> muser in <span class="sb">`</span>grep -i MAILFAIL <span class="nv">$$$$</span><span class="o">{</span>CONTROL<span class="o">}</span><span class="sb">`</span><span class="p">;</span> <span class="k">do</span>
+      <span class="k">if</span> <span class="o">[</span> <span class="nv">$$$$</span><span class="o">{</span>l<span class="o">}</span> -gt <span class="m">0</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+         mail -s <span class="s2">&quot;ERROR! flex.</span><span class="nv">$$$$</span><span class="s2">{HOST}.</span><span class="nv">$$$$$$$$</span><span class="s2">&quot;</span> <span class="nv">$$$$</span><span class="o">{</span>muser<span class="o">}</span> &lt;prot
+      <span class="k">fi</span>
+      <span class="nv">l</span><span class="o">=</span><span class="k">$((</span><span class="nv">$$$$</span><span class="o">{</span>l<span class="o">}+</span><span class="m">1</span><span class="k">))</span>
+  <span class="k">done</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../output.html" class="btn btn-neutral float-right" title="Output Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ecmwf_env.html" class="btn btn-neutral float-left" title="ECMWF User Credential file ECMWF_ENV" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

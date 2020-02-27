@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Flow &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Control &amp; Input Data" href="../input.html" />
+    <link rel="prev" title="Application Modes" href="app_modes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../overview.html">Overview</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="app_modes.html">Application Modes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Program Flow</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general-program-flow">General program flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#workflows-of-different-application-modes">Workflows of different application modes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-application-setting-for-a-local-member-user">Example application setting for a local member user</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../input.html">Control &amp; Input Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="../overview.html">Overview</a> &raquo;</li>
+        
+      <li>Program Flow</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/Documentation/Overview/prog_flow.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-flow">
+<h1>Program Flow<a class="headerlink" href="#program-flow" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="general-program-flow">
+<h2>General program flow<a class="headerlink" href="#general-program-flow" title="Permalink to this headline">¶</a></h2>
+<p>The following flow diagram shows the general steps performed by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
+<div class="figure" id="id2">
+<span id="ref-fig-submit"></span><img alt="../../_images/submit.png" src="../../_images/submit.png" />
+<p class="caption"><span class="caption-text">Overview of the call of python’s <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script and raw sequence of working steps done in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</span></p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> Python program is called by the Shell script <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> or <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> and accomplish the following steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><dl class="first docutils">
+<dt>Setup the control data:</dt>
+<dd>It gets all command-line and <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters as well as optionally the ECMWF user credentials. Depending the <a class="reference internal" href="app_modes.html"><span class="doc">Application Modes</span></a>, it might also prepare a job script which is then send to the ECMWF queue.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Retrieves data from MARS:</dt>
+<dd>It creates and sends MARS-requests either on the local machine or on ECMWF server, that receives the data and stores them in a specific format in GRIB files. If the parameter <code class="docutils literal notranslate"><span class="pre">REQUEST</span></code> was set <code class="docutils literal notranslate"><span class="pre">1</span></code> the data are not received but a file <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> is created with a list of MARS requests and their settings. If it is set to <code class="docutils literal notranslate"><span class="pre">2</span></code> the file is created in addition to retrieving the data. The requests are created in an optimised way by splitting in time, jobs  and parameters.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Post-process data to create final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files:</dt>
+<dd>After all data is retrieved, the disaggregation of flux fields (<a class="reference external" href="../disagg.html">see here</a> ) is done as well as the calculation of vertical velocity (<a class="reference external" href="../vertco.html">see here</a>) by the Fortran program <code class="docutils literal notranslate"><span class="pre">COVERT2</span></code>. Eventually, the GRIB fields are merged together such that a single grib file per time step is available with all fields for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>. Since model level fields are typically in <em>GRIB2</em> format whereas surface level fields are still in <em>GRIB1</em> format, they can be converted into GRIB2 if parameter <code class="docutils literal notranslate"><span class="pre">FORMAT</span></code> is set to <em>GRIB2</em>. Please note, however, that older versions of FLEXPART may have difficulties reading pure <em>GRIB2</em> files since some parameter IDs change in <em>GRIB2</em>. If the retrieval is executed remotely at ECMWF, the resulting files can be communicated to the local gateway server via the <code class="docutils literal notranslate"><span class="pre">ECtrans</span></code> utility if the parameter <code class="docutils literal notranslate"><span class="pre">ECTRANS</span></code> is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> and the parameters <code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code>, <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> have been set properly during installation. The status of the transfer can be checked with the command <code class="docutils literal notranslate"><span class="pre">ecaccess-ectrans-list</span></code> (on the local gateway server). If the script is executed locally the progress of the script can be followed with the usual Linux tools.</dd>
+</dl>
+</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="workflows-of-different-application-modes">
+<h2>Workflows of different application modes<a class="headerlink" href="#workflows-of-different-application-modes" title="Permalink to this headline">¶</a></h2>
+<p>More details on how different the program flow is for the different <a class="reference internal" href="app_modes.html"><span class="doc">Application Modes</span></a> is sketched in the following diagrams:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><div class="first last figure">
+<img alt="../../_images/mode_remote.png" src="../../_images/mode_remote.png" />
+</div>
+</td>
+<td><div class="first last figure">
+<img alt="../../_images/mode_gateway.png" src="../../_images/mode_gateway.png" />
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="51%" />
+<col width="49%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><div class="first last figure">
+<img alt="../../_images/mode_local_member.png" src="../../_images/mode_local_member.png" />
+</div>
+</td>
+<td><div class="first last figure">
+<img alt="../../_images/mode_local_public.png" src="../../_images/mode_local_public.png" />
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="example-application-setting-for-a-local-member-user">
+<h2>Example application setting for a local member user<a class="headerlink" href="#example-application-setting-for-a-local-member-user" title="Permalink to this headline">¶</a></h2>
+<div class="figure">
+<img alt="../../_images/ex_runlocal_en.png" src="../../_images/ex_runlocal_en.png" />
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../input.html" class="btn btn-neutral float-right" title="Control &amp; Input Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="app_modes.html" class="btn btn-neutral float-left" title="Application Modes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

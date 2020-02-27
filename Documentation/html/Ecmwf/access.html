@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Access Modes &mdash; flex_extract 7.1 alpha documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Available Datasets for Member State users" href="msdata.html" />
+    <link rel="prev" title="ECMWF Data" href="../ecmwf_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flex_extract
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Table of Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Access Modes</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="msdata.html">Available Datasets for Member State users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pubdata.html">Available Datasets for Public users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hintsecmwf.html">Hints to specify dataset retrieval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ec-links.html">Link Collection for Quick finder</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support.html">Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Support/faq.html">FAQ - Frequently asked questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Developer Team</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flex_extract</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../ecmwf_data.html">ECMWF Data</a> &raquo;</li>
+        
+      <li>Access Modes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/Ecmwf/access.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="access-modes">
+<h1>Access Modes<a class="headerlink" href="#access-modes" title="Permalink to this headline">¶</a></h1>
+<p>Access to the ECMWF Mars archive is divided into two groups: <strong>member state</strong> users and <strong>public</strong> users.</p>
+<dl class="docutils">
+<dt><strong>Member state user</strong>:</dt>
+<dd>This access mode allows the user to work directly on the ECMWF Linux Member State Servers or via a Web Access Toolkit <code class="docutils literal notranslate"><span class="pre">ecaccess</span></code> through a local Member State Gateway Server. This enables the user to have direct and full access to the Mars archive. There might be some limitations in user rights such as the declined access to the latest forecasts. This has to be discussed with the <a class="reference external" href="https://www.ecmwf.int/en/about/contact-us/computing-representatives">Computing Representative</a>. This user group is also able to work from their local facilities without a gateway server in the same way a <strong>public</strong> user would. The only difference is the connection with the Web API. However, this is automatically selected by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</dd>
+<dt><strong>Public user</strong>:</dt>
+<dd>This access mode allows every user to access the ECMWF <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/Available+ECMWF+Public+Datasets">public datasets</a> from their local facilities. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is able (tested for the use with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>) to extract the re-analysis datasets such as ERA-Interim and CERA-20C. The main difference to the <strong>member state user</strong> is the method of access with the Web API and the availability of data. For example, in ERA-Interim there is only a 6-hourly temporal resolution instead of 3 hours. The access method is selected by providing the command line argument “public=1” and providing the MARS keyword “dataset” in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file. Also, the user has to explicitly accept the license of the dataset to be retrieved. This can be done as described in the installation process at section <a class="reference internal" href="../installation.html#ref-licence"><span class="std std-ref">Licence agreement for public datasets</span></a>.</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The availability of the public dataset <em>ERA5</em> with the ECMWF Web API was cancelled in March 2019. The oportunity of local retrieval of this dataset was moved to the <a class="reference external" href="https://cds.climate.copernicus.eu">Climate Data Store</a> which uses another Web API named <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a>. This Data Store stores the data on explicit webservers for faster and easier access. Unfortunately, for <em>ERA5</em> there are only surface level and pressure level data available for <em>public users</em>. In the case of a <em>member user</em> it is possible to bypass the request to the MARS archive from ECMWF to retrieve the data. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is already modified to use this API so <em>member user</em> can already retrieve <em>ERA5</em> data while <em>public users</em> have to wait until model level are available.</p>
+</div>
+<p>For information on how to register see <a class="reference internal" href="../installation.html#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a>.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="msdata.html" class="btn btn-neutral float-right" title="Available Datasets for Member State users" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../ecmwf_data.html" class="btn btn-neutral float-left" title="ECMWF Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
