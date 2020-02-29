@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: GPL-2.0 
 # 
 # Version for a machine with eccodes and emoslib installed on standard paths
-# full debugging
+# with optimisation
 #
 ###############################################################################
 
