@@ -6,20 +6,20 @@
 # Copyright: Leopold Haimberger, Petra Seibert
 # SPDX-License-Identifier: GPL-2.0 
 # 
-# Version for a machine with grib_api and emoslib installed on standard paths
-# full debugging
+# Version for a machine with eccodes and emoslib installed on standard paths
+# with optimisation
 #
 ###############################################################################
 
 
 EXE      =  calc_etadot_fast.out
 
-GRIB_API_LIB=  -Bstatic -lgrib_api_f90 -lgrib_api -Bdynamic -lm -ljasper
+GRIB_API_LIB=  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper
 EMOSLIB=-lemosR64
 LIB =  $(GRIB_API_LIB) $(EMOSLIB)
 
-GRIB_API_INCLUDE_DIR=/usr/include
-INC = -I. -I$(GRIB_API_INCLUDE_DIR)
+ECCODES_INCLUDE_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15
+INC = -I. -I$(ECCODES_INCLUDE_DIR)
 
 FC = gfortran 
 OPT = -O3 -march=native
@@ -47,7 +47,8 @@ rwgrib2.o: ./rwgrib2.f90
 	$(FC)  $(FFLAGS)  -c	./rwgrib2.f90
 
 clean: 
-	-rm -f $(OBJ) ${EXE} $(MOD)
+	-rm -f $(OBJ) ${EXE} $(MOD) calc_etadot
 
 ${EXE}: $(OBJ)
 	$(FC) $(OBJ) -o ${EXE}  $(LDFLAGS)
+	ln -sf ${EXE} calc_etadot
