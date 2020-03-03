@@ -20,7 +20,7 @@ INC = -I. -I$(ECCODES_INCLUDE_DIR)
 FC = ftn
 
 OPT = -O3
-FFLAGS =  -r8 $(OPT) $(LIB) $(INC) 
+FFLAGS =  -s real64  $(OPT) $(LIB) $(INC) 
 LDFLAGS =  $(OPT) -fopenmp
 EXE	=      calc_etadot
 
@@ -28,6 +28,8 @@ EXE	=      calc_etadot
 SRC = ./rwgrib2.f90 ./calc_etadot.f90 ./ftrafo.f90 ./grphreal.f90 ./posnam.f90 ./phgrreal.f90
 OBJ = rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o
 MOD = ftrafo.mod  grtoph.mod	phtogr.mod  rwgrib2.mod
+
+all:	${EXE}
 
 ftrafo.o: ./ftrafo.f90 phgrreal.o
 	$(FC)  $(FFLAGS)  -c	./ftrafo.f90
