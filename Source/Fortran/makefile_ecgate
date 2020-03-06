@@ -1,58 +1,48 @@
 ###############################################################################
 #
-# Top level Makefile for ECMWFDATA7.0 software
+# Makefile for flex_extract, Fortran code to calculate etadot
+# Makefile created using by mkmf 19.3.0
 #
-# Last modified:  December 1, 2015
+# Copyright: Leopold Haimberger, Petra Seibert
+# SPDX-License-Identifier: GPL-2.0 
+# 
+# Version for a machine with eccodes and emoslib installed on standard paths
+# with optimisation
 #
 ###############################################################################
 
 
-.SUFFIXES: .o .c .c~ .f .f~ .F90 .f90 .f90~ .f95 .f95~ .F .F~ .y .y~ .l .l~ \
-           .s .s~ .sh .sh~ .h .h~ .C .C~ .a
+EXE      =  calc_etadot_fast.out
 
-OPT	= -O3
-DEBUG	= -g
 LIB     =  $(ECCODES_LIB) $(EMOSLIB)   
+INC = -I. -I$(ECCODES_INCLUDE_DIR)
 
-FC=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  
-F90C=gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian 
+FC=gfortran  
 
-FFLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR) 
+OPT = -O3 -march=native
+FFLAGS =   $(OPT) $(LIB) $(INC) -fdefault-real-8 -fopenmp -fconvert=big-endian 
+LDFLAGS =  $(OPT) $(LIB) -fopenmp
+SRC = ./rwgrib2.f90 ./calc_etadot.f90 ./ftrafo.f90 ./grphreal.f90 ./posnam.f90 ./phgrreal.f90
+OBJ = rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o
+MOD = ftrafo.mod  grtoph.mod	phtogr.mod  rwgrib2.mod
 
-F90FLAGS =  $(OPT) -I. -I$(ECCODES_INCLUDE_DIR)
+all: ${EXE}
+ftrafo.o: ./ftrafo.f90 phgrreal.o
+	$(FC)  $(FFLAGS)  -c	./ftrafo.f90
+grphreal.o: ./grphreal.f90 phgrreal.o
+	$(FC)  $(FFLAGS)  -c	./grphreal.f90
+phgrreal.o: ./phgrreal.f90
+	$(FC)  $(FFLAGS)  -c	./phgrreal.f90
+posnam.o: ./posnam.f90
+	$(FC)  $(FFLAGS)  -c	./posnam.f90
+calc_etadot.o: ./calc_etadot.f90 phgrreal.o grphreal.o ftrafo.o rwgrib2.o
+	$(FC)  $(FFLAGS)  -c	./calc_etadot.f90
+rwgrib2.o: ./rwgrib2.f90
+	$(FC)  $(FFLAGS)  -c	./rwgrib2.f90
 
-LDFLAGS =  $(OPT)
+clean: 
+	-rm -f $(OBJ) ${EXE} $(MOD) calc_etadot
 
-BINDIR  =      .
-
-EXE	=      calc_etadot
-
-
-.f.o:
-	$(F90C) -c $(F90FLAGS) $(DEBUG) $*.f
-.f90.o:
-	$(F90C) -c $(F90FLAGS) $(DEBUG) $*.f90
-
-all:	${EXE}
-
-clean:
-	rm *.o *.mod ${EXE}
-
-phgrreal.o: phgrreal.f
-	$(F90C) -c -g -O3 -fopenmp phgrreal.f
-
-grphreal.o: grphreal.f
-	$(F90C) -c -g -O3 -fopenmp grphreal.f
-
-ftrafo.o: ftrafo.f
-	$(F90C) -c -g -O3 -fopenmp ftrafo.f
-
-$(BINDIR)/${EXE}:	phgrreal.o grphreal.o ftrafo.o rwgrib2.o  posnam.o calc_etadot.o
-	$(F90C) $(DEBUG) $(OPT) -o $(BINDIR)/${EXE} ftrafo.o phgrreal.o grphreal.o rwgrib2.o posnam.o calc_etadot.o ${LIB}
-
-
-###############################################################################
-#
-# End of the Makefile
-#
-###############################################################################
+${EXE}: $(OBJ)
+	$(FC) $(OBJ) -o ${EXE}  $(LDFLAGS)
+	ln -sf ${EXE} calc_etadot
