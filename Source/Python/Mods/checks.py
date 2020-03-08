@@ -478,12 +478,17 @@ def check_queue(queue, gateway, destination, ecuid, ecgid):
 
     '''
     if queue in _config.QUEUES_LIST and \
-            (not gateway or not destination or
-             not ecuid or not ecgid):
-        raise ValueError('\nEnvironment variables GATEWAY, DESTINATION, ECUID '
+            (not ecuid or not ecgid):
+        raise ValueError('\nEnvironment variables ECUID '
                          'and ECGID were not set properly! \n '
                          'Please check for existence of file "ECMWF_ENV" '
                          'in the run directory!')
+    elif queue in _config.QUEUES_LIST and \
+             (not gateway or not destination):
+        print('WARNING: Parameters GATEWAY and DESTINATION were '
+              'not properly set for working on ECMWF server. \n'
+              'There will be no transfer of output files to the '
+              'local gateway server possible!')
     return
 
 def check_pathes(idir, odir, fpdir, fedir):
