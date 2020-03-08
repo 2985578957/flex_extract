@@ -284,19 +284,19 @@ def check_install_conditions(c):
         sys.exit(1)
 
     if c.install_target and c.install_target != 'local':
-        if not c.ecgid or not c.ecuid or \
-           not c.gateway or not c.destination:
-            print('Please enter your ECMWF user id and group id as well ' +
-                  'as the \nname of the local gateway and the ectrans ' +
-                  'destination ')
-            print('with command line options --ecuid --ecgid \
-                   --gateway --destination')
+        if not c.ecgid or not c.ecuid:
+            print('Please enter your ECMWF user id and group id '
+                  ' with command line options --ecuid --ecgid')
             print('Try "' + sys.argv[0].split('/')[-1] + \
                   ' -h" to print usage information')
-            print('Please consult ecaccess documentation or ECMWF user \
-                   support for further details')
+            print('Please consult ecaccess documentation or ECMWF user '
+                  'support for further details.\n')
             sys.exit(1)
-
+        if not c.gateway or not c.destination:
+            print('WARNING: Parameters GATEWAY and DESTINATION were '
+                  'not properly set for working on ECMWF server. \n'
+                  'There will be no transfer of output files to the '
+                  'local gateway server possible!')
         if not c.installdir:
             c.installdir = '${HOME}'
     else: # local

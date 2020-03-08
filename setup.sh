@@ -30,7 +30,7 @@ MAKEFILE='makefile_ecgate'
 ECUID='<username>'
 ECGID='<groupID>'
 GATEWAY='<gatewayname>'
-DESTINATION='<name>@genericSftp'
+DESTINATION='<username>@genericSftp'
 INSTALLDIR=None
 JOB_TEMPLATE=''
 CONTROLFILE='CONTROL_EA5'
@@ -58,12 +58,15 @@ fi
 # CHECK FOR MORE PARAMETER 
 if [ "$TARGET" == "ecgate" ] || [ "$TARGET" == "cca" ]; then
   # check if necessary Parameters are set
-  if [ -z "$ECUID" ] || [ -z "$ECGID" ] || [ -z "$GATEWAY" ] || [ -z "$DESTINATION" ]; then
-    echo "ERROR: At least one of the following parameters are not set: ECUID, ECGID, GATEWAY, DESTINATION!"
+  if [ -z "$ECUID" ] || [ -z "$ECGID" ] || [ "$ECUID" == "<username>" ] || [ "$ECGID" == "<groupID>" ] ; then
+    echo "ERROR: At least one of the following parameters are not properly set: ECUID or ECGID!"
     echo "EXIT WITH ERROR"
     exit
   else
     parameterlist+=" --ecuid=$ECUID --ecgid=$ECGID --gateway=$GATEWAY --destination=$DESTINATION"
+  fi
+  if [ -z "$GATEWAY" ] || [ -z "$DESTINATION" ] || [ "$GATEWAY" == "<gatewayname>" ] || [ "$DESTINATION" == "<username>@genericSftp" ] ; then
+    echo "WARNING: Not setting parameters GATEWAY and DESTINATION means there will be no file transfer to local gateway server."
   fi
 fi
 if [ -n "$MAKEFILE" ]; then
