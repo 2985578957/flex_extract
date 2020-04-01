@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -189,26 +189,26 @@
 <div class="section" id="general-program-flow">
 <h2>General program flow<a class="headerlink" href="#general-program-flow" title="Permalink to this headline">¶</a></h2>
 <p>The following flow diagram shows the general steps performed by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
-<div class="figure" id="id2">
+<div class="figure align-default" id="id2">
 <span id="ref-fig-submit"></span><img alt="../../_images/submit.png" src="../../_images/submit.png" />
-<p class="caption"><span class="caption-text">Overview of the call of python’s <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script and raw sequence of working steps done in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</span></p>
+<p class="caption"><span class="caption-text">Overview of the call of python’s <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script and raw sequence of working steps done in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> Python program is called by the Shell script <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> or <code class="docutils literal notranslate"><span class="pre">run_local.sh</span></code> and accomplish the following steps:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><dl class="first docutils">
-<dt>Setup the control data:</dt>
-<dd>It gets all command-line and <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters as well as optionally the ECMWF user credentials. Depending the <a class="reference internal" href="app_modes.html"><span class="doc">Application Modes</span></a>, it might also prepare a job script which is then send to the ECMWF queue.</dd>
+<li><dl class="simple">
+<dt>Setup the control data:</dt><dd><p>It gets all command-line and <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters as well as optionally the ECMWF user credentials. Depending the <a class="reference internal" href="app_modes.html"><span class="doc">Application Modes</span></a>, it might also prepare a job script which is then send to the ECMWF queue.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Retrieves data from MARS:</dt>
-<dd>It creates and sends MARS-requests either on the local machine or on ECMWF server, that receives the data and stores them in a specific format in GRIB files. If the parameter <code class="docutils literal notranslate"><span class="pre">REQUEST</span></code> was set <code class="docutils literal notranslate"><span class="pre">1</span></code> the data are not received but a file <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> is created with a list of MARS requests and their settings. If it is set to <code class="docutils literal notranslate"><span class="pre">2</span></code> the file is created in addition to retrieving the data. The requests are created in an optimised way by splitting in time, jobs  and parameters.</dd>
+<li><dl class="simple">
+<dt>Retrieves data from MARS:</dt><dd><p>It creates and sends MARS-requests either on the local machine or on ECMWF server, that receives the data and stores them in a specific format in GRIB files. If the parameter <code class="docutils literal notranslate"><span class="pre">REQUEST</span></code> was set <code class="docutils literal notranslate"><span class="pre">1</span></code> the data are not received but a file <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> is created with a list of MARS requests and their settings. If it is set to <code class="docutils literal notranslate"><span class="pre">2</span></code> the file is created in addition to retrieving the data. The requests are created in an optimised way by splitting in time, jobs  and parameters.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Post-process data to create final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files:</dt>
-<dd>After all data is retrieved, the disaggregation of flux fields (<a class="reference external" href="../disagg.html">see here</a> ) is done as well as the calculation of vertical velocity (<a class="reference external" href="../vertco.html">see here</a>) by the Fortran program <code class="docutils literal notranslate"><span class="pre">COVERT2</span></code>. Eventually, the GRIB fields are merged together such that a single grib file per time step is available with all fields for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>. Since model level fields are typically in <em>GRIB2</em> format whereas surface level fields are still in <em>GRIB1</em> format, they can be converted into GRIB2 if parameter <code class="docutils literal notranslate"><span class="pre">FORMAT</span></code> is set to <em>GRIB2</em>. Please note, however, that older versions of FLEXPART may have difficulties reading pure <em>GRIB2</em> files since some parameter IDs change in <em>GRIB2</em>. If the retrieval is executed remotely at ECMWF, the resulting files can be communicated to the local gateway server via the <code class="docutils literal notranslate"><span class="pre">ECtrans</span></code> utility if the parameter <code class="docutils literal notranslate"><span class="pre">ECTRANS</span></code> is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> and the parameters <code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code>, <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> have been set properly during installation. The status of the transfer can be checked with the command <code class="docutils literal notranslate"><span class="pre">ecaccess-ectrans-list</span></code> (on the local gateway server). If the script is executed locally the progress of the script can be followed with the usual Linux tools.</dd>
+<li><dl class="simple">
+<dt>Post-process data to create final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files:</dt><dd><p>After all data is retrieved, the disaggregation of flux fields (<a class="reference external" href="../disagg.html">see here</a> ) is done as well as the calculation of vertical velocity (<a class="reference external" href="../vertco.html">see here</a>) by the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>. Eventually, the GRIB fields are merged together such that a single grib file per time step is available with all fields for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>. Since model level fields are typically in <em>GRIB2</em> format whereas surface level fields are still in <em>GRIB1</em> format, they can be converted into GRIB2 if parameter <code class="docutils literal notranslate"><span class="pre">FORMAT</span></code> is set to <em>GRIB2</em>. Please note, however, that older versions of FLEXPART may have difficulties reading pure <em>GRIB2</em> files since some parameter IDs change in <em>GRIB2</em>. If the retrieval is executed remotely at ECMWF, the resulting files can be communicated to the local gateway server via the <code class="docutils literal notranslate"><span class="pre">ECtrans</span></code> utility if the parameter <code class="docutils literal notranslate"><span class="pre">ECTRANS</span></code> is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> and the parameters <code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code>, <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> have been set properly during installation. The status of the transfer can be checked with the command <code class="docutils literal notranslate"><span class="pre">ecaccess-ectrans-list</span></code> (on the local gateway server). If the script is executed locally the progress of the script can be followed with the usual Linux tools.</p>
+</dd>
 </dl>
 </li>
 </ol>
@@ -217,34 +217,34 @@
 <div class="section" id="workflows-of-different-application-modes">
 <h2>Workflows of different application modes<a class="headerlink" href="#workflows-of-different-application-modes" title="Permalink to this headline">¶</a></h2>
 <p>More details on how different the program flow is for the different <a class="reference internal" href="app_modes.html"><span class="doc">Application Modes</span></a> is sketched in the following diagrams:</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="51%" />
-<col width="49%" />
+<col style="width: 51%" />
+<col style="width: 49%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><div class="first last figure">
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
 <img alt="../../_images/mode_remote.png" src="../../_images/mode_remote.png" />
 </div>
 </td>
-<td><div class="first last figure">
+<td><div class="figure align-default">
 <img alt="../../_images/mode_gateway.png" src="../../_images/mode_gateway.png" />
 </div>
 </td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="51%" />
-<col width="49%" />
+<col style="width: 51%" />
+<col style="width: 49%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><div class="first last figure">
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default">
 <img alt="../../_images/mode_local_member.png" src="../../_images/mode_local_member.png" />
 </div>
 </td>
-<td><div class="first last figure">
+<td><div class="figure align-default">
 <img alt="../../_images/mode_local_public.png" src="../../_images/mode_local_public.png" />
 </div>
 </td>
@@ -254,7 +254,7 @@
 </div>
 <div class="section" id="example-application-setting-for-a-local-member-user">
 <h2>Example application setting for a local member user<a class="headerlink" href="#example-application-setting-for-a-local-member-user" title="Permalink to this headline">¶</a></h2>
-<div class="figure">
+<div class="figure align-default">
 <img alt="../../_images/ex_runlocal_en.png" src="../../_images/ex_runlocal_en.png" />
 </div>
 <div class="toctree-wrapper compound">
@@ -282,7 +282,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

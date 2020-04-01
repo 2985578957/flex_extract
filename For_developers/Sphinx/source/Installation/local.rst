@@ -61,7 +61,7 @@ and libraries, since the preparation of the extraction and the post-processing i
 | * `genshi`_                                    | * `eccodes`_    |
 | * `eccodes for python`_                        | * `emoslib`_    |
 | * `ecmwf-api-client`_ (everything except ERA5) |                 |
-| * `cdsapi`_ (just for ERA5)                    |                 |
+| * `cdsapi`_ (just for ERA5 and member user)    |                 |
 +------------------------------------------------+-----------------+
 
 
@@ -115,7 +115,7 @@ ECMWF Web API:
    Go to `MARS access`_ website and log in with your credentials. Afterwards, on this site in section "Install ECMWF KEY" the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file `.ecmwfapirc` in your home directory). 
      
 CDS API:
-   Go to 'CDS API registration'_ and register there too. Log in at the `cdsapi`_ website and follow the instructions at section "Install the CDS API key" to save your credentials in a `.cdsapirc` file.
+   Go to `CDS API registration`_ and register there too. Log in at the `cdsapi`_ website and follow the instructions at section "Install the CDS API key" to save your credentials in a `.cdsapirc` file.
 
    
 .. _ref-test-local:
@@ -262,22 +262,15 @@ Please use this piece of Python code to retrieve a small *ERA5* data sample as a
 
 
 
-
-
 .. _ref-install-local:
 
 Local installation
 ==================
 
-First prepare the Fortran ``makefile`` for your environment and set it in the ``setup.sh`` script. (See section :ref:`ref-convert` for information on the Fortran program.)
-``flex_extract`` comes with two ``makefiles`` prepared for the ``gfortran`` and 
-the ``ifort`` compiler. The ``gfortran`` version assumes that ``eccodes`` and ``emoslib`` are installed as distribution packages.
-
- * makefile.local.gfortran
- * makefile.local.ifort
+First prepare the Fortran ``makefile`` for your environment and set it in the ``setup.sh`` script. (See section :ref:`Fortran Makefile <ref-convert>` for more information.)
+``flex_extract`` comes with two ``makefiles`` prepared for the ``gfortran`` compiler. One for the normal use ``makefile_fast`` and one for debugging ``makefile_debug`` which is usually only resonable for developers.
  
-They can be found at ``flex_extract_vX.X/Source/Fortran``, where
-``vX.X`` should be substituted with the current version number.
+They assume that ``eccodes`` and ``emoslib`` are installed as distribution packages and can be found at ``flex_extract_vX.X/Source/Fortran``, where ``vX.X`` should be substituted with the current version number.
 
 .. caution::   
    It is necessary to adapt **ECCODES_INCLUDE_DIR** and **ECCODES_LIB** in these
@@ -290,7 +283,7 @@ choice to modify with an editor of your choice. We use the ``nedit`` in this cas
 .. code-block:: bash 
 
    cd flex_extract_vX.X/Source/Fortran
-   nedit makefile.local.gfortran
+   nedit makefile_fast
  
 Edit the paths to the ``eccodes`` library on your local machine. 
 
@@ -318,7 +311,7 @@ and **ECCODES_LIB** and save it.
    ECCODES_LIB= -L/usr/lib -leccodes_f90 -leccodes -lm  
    
     
-The Fortran program called ``CONVERT2`` will be compiled during the 
+The Fortran program called ``calc_etadot`` will be compiled during the 
 installation process.Therefore the name of the ``makefile`` to be used needs to be given in  ``setup.sh``.
 
 In the root directory of ``flex_extract``, open the ``setup.sh`` script 
@@ -337,7 +330,7 @@ and adapt the installation parameters in the section labelled with
    # THE USER HAS TO SPECIFY THESE PARAMETER
    #
    TARGET='local'
-   MAKEFILE='makefile.local.gfortran'
+   MAKEFILE='makefile_fast'
    ECUID=None
    ECGID=None
    GATEWAY=None
@@ -359,23 +352,20 @@ to start the installation. You should see the following standard output.
     
 .. code-block:: bash
 
-   # Output of setup.sh   
-   WARNING: installdir has not been specified
-   flex_extract will be installed in here by compiling the Fortran source in /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/source/fortran
-   Install flex_extract_v7.1 software at local in directory /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1
+    # Output of setup.sh   
+	WARNING: installdir has not been specified
+	flex_extract will be installed in here by compiling the Fortran source in <path-to-flex_extract>/flex_extract_v7.1/Source/Fortran
+	Install flex_extract_v7.1 software at local in directory <path-to-flex_extract>/flex_extract_v7.1
 
-   Using makefile: Makefile.local.gfortran
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp phgrreal.f
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp grphreal.f
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp ftrafo.f
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 rwGRIB2.f90
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 posnam.f
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -fopenmp -I. -I/usr/local/gcc-4.9.3/grib_api-1.14.3/include -O3 preconvert.f90
-   gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -O3 -O3 -fopenmp -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/gcc-4.9.3/grib_api-1.14.3/lib -Bstatic  -lgrib_api_f77 -lgrib_api_f90 -lgrib_api -Bdynamic  -lm  -ljasper -lemosR64
+	Using makefile: makefile_fast
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./rwgrib2.f90
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./phgrreal.f90
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./grphreal.f90
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./ftrafo.f90
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./calc_etadot.f90
+	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./posnam.f90
+	gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -fopenmp
+	ln -sf calc_etadot_fast.out calc_etadot
 
-   -rwxrwxr-x. 1 philipa8 tmc 282992 May 23 22:27 ./CONVERT2
-
-
-
-
+	lrwxrwxrwx. 1 <username> tmc 20 15. Mär 13:31 ./calc_etadot -> calc_etadot_fast.out
 

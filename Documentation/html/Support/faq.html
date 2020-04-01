@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -172,7 +172,7 @@
 <h1>FAQ - Frequently asked questions<a class="headerlink" href="#faq-frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><a class="reference internal" href="#what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages" id="id1">What can I do if I can’t install the third party libraries from distribution packages?</a></li>
+<li><p><a class="reference internal" href="#what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages" id="id1">What can I do if I can’t install the third party libraries from distribution packages?</a></p></li>
 </ul>
 </div>
 <div class="section" id="what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages">
@@ -180,29 +180,28 @@
 <p>This can be the case if the user does not have admin rights.
 It is possible to install the necessary libraries locally from source.
 For this case you should follow the following steps:</p>
-<dl class="docutils">
-<dt>Installation hints:</dt>
-<dd><ol class="first last arabic simple">
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">Read Emoslib installation instructions</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/SUP/2015/05/11/Building+ECMWF+software+with+gfortran">Read ECMWF blog about gfortran</a></li>
-<li><a class="reference external" href="http://www.fftw.org">Install FFTW</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">Install EMOSLIB</a> (2 times make! one without any options and one with single precision option)</li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">Install ECCODES</a></li>
-<li>Register at Mars (<a class="reference internal" href="../installation.html#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a>)</li>
-<li>Install Web API’s <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a> and <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a></li>
-<li>Check LD_LIBRARY_PATH environment variable if it contains all paths to the libs</li>
-<li>Check available python packages (e.g. import eccodes / import grib_api / import ecmwfapi)</li>
-<li>Start test retrieval (<a class="reference internal" href="../Installation/local.html#ref-test-local"><span class="std std-ref">Test local environment</span></a>)</li>
-<li>Install <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> (<a class="reference internal" href="../installation.html"><span class="doc">Installation</span></a>)</li>
+<dl class="simple">
+<dt>Installation hints:</dt><dd><ol class="arabic simple">
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">Read Emoslib installation instructions</a></p></li>
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/SUP/2015/05/11/Building+ECMWF+software+with+gfortran">Read ECMWF blog about gfortran</a></p></li>
+<li><p><a class="reference external" href="http://www.fftw.org">Install FFTW</a></p></li>
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">Install EMOSLIB</a> (2 times make! one without any options and one with single precision option)</p></li>
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">Install ECCODES</a></p></li>
+<li><p>Register at Mars (<a class="reference internal" href="../installation.html#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a>)</p></li>
+<li><p>Install Web API’s <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a> and <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a></p></li>
+<li><p>Check LD_LIBRARY_PATH environment variable if it contains all paths to the libs</p></li>
+<li><p>Check available python packages (e.g. import eccodes / import grib_api / import ecmwfapi)</p></li>
+<li><p>Start test retrieval (<a class="reference internal" href="../Installation/local.html#ref-test-local"><span class="std std-ref">Test local environment</span></a>)</p></li>
+<li><p>Install <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> (<a class="reference internal" href="../installation.html"><span class="doc">Installation</span></a>)</p></li>
 </ol>
 </dd>
 </dl>
 <div class="admonition caution">
-<p class="first admonition-title">Caution</p>
-<ul class="last simple">
-<li>use the same compiler and compiler version all the time</li>
-<li>don’t forget to set all Library paths in the LD_LIBRARY_PATH environment variable</li>
-<li>adapt the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> makefile</li>
+<p class="admonition-title">Caution</p>
+<ul class="simple">
+<li><p>use the same compiler and compiler version all the time</p></li>
+<li><p>don’t forget to set all Library paths in the LD_LIBRARY_PATH environment variable</p></li>
+<li><p>adapt the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> makefile</p></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -230,7 +229,7 @@ For this case you should follow the following steps:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

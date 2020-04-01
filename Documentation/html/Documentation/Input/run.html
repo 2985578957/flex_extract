@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="The Jobscript job.ksh" href="jobscript.html" />
-    <link rel="prev" title="The Fortran Makefile - CONVERT2" href="fortran_makefile.html" /> 
+    <link rel="prev" title="The Fortran Makefile - calc_etadot" href="fortran_makefile.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submission-parameter">Submission Parameter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#content-of-run-sh">Content of <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
@@ -200,277 +200,162 @@ The Python script constitutes the entry point to ECMWF data retrievals with <cod
 <p><code class="docutils literal notranslate"><span class="pre">submit.py</span></code> has two (three) sources for input parameters with information about program flow and ECMWF data selection, the so-called <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file,
 the command line parameters and the so-called <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> file. Whereby, the command line parameters will override the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file parameters.</p>
 <p>Based on these input information <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> applies one of the application modes to either retrieve the ECMWF data via a Web API on a local maschine or submit a jobscript to ECMWF servers and retrieve the data there with sending the files to the local system eventually.</p>
-<p>PUT IN HERE A BLOCKDIAGRAM OF RAW PROGRAM FLOW</p>
 <div class="section" id="submission-parameter">
 <h2>Submission Parameter<a class="headerlink" href="#submission-parameter" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils" id="id1">
+<table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Parameter for Submission</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="12%" />
-<col width="9%" />
-<col width="9%" />
-<col width="9%" />
-<col width="27%" />
-<col width="33%" />
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 27%" />
+<col style="width: 33%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">PARAMETER</th>
-<th class="head">Datatype</th>
-<th class="head">Possible values</th>
-<th class="head">Default</th>
-<th class="head">Description</th>
-<th class="head">Specifics / Conditions</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>PARAMETER</p></th>
+<th class="head"><p>Datatype</p></th>
+<th class="head"><p>Possible values</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Specifics / Conditions</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><p class="first last">START_DATE</p>
-</td>
-<td><p class="first last">String YYYYMMDD</p>
-</td>
-<td><p class="first last">depends on dataset</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The first day of the retrieval period.</p>
-</td>
-<td><p class="first last">If END_DATE is set, START_DATE must be greater than END_DATE.</p>
-</td>
+<tbody>
+<tr class="row-even"><td><p>START_DATE</p></td>
+<td><p>String YYYYMMDD</p></td>
+<td><p>depends on dataset</p></td>
+<td><p>None</p></td>
+<td><p>The first day of the retrieval period.</p></td>
+<td><p>If END_DATE is set, START_DATE must be greater than END_DATE.</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">END_DATE</p>
-</td>
-<td><p class="first last">String YYYYMMDD</p>
-</td>
-<td><p class="first last">depends on dataset</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p>
-</td>
-<td><p class="first last">Doesn’t have to be set. If set, it has to be greater or equal than START_DATE.</p>
-</td>
+<tr class="row-odd"><td><p>END_DATE</p></td>
+<td><p>String YYYYMMDD</p></td>
+<td><p>depends on dataset</p></td>
+<td><p>None</p></td>
+<td><p>The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p></td>
+<td><p>Doesn’t have to be set. If set, it has to be greater or equal than START_DATE.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">DATE_CHUNK</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">depends on resolution</p>
-</td>
-<td><p class="first last">3</p>
-</td>
-<td><p class="first last">Maximum number of days retrieved within one MARS request. </p>
-</td>
-<td><p class="first last">This number is limited due to maximum allowed memory and time limit for one MARS request. Be careful in changing this number.  It can be  larger for reanalysis data but may be too large for very high resolution retrievals.</p>
-</td>
+<tr class="row-even"><td><p>DATE_CHUNK</p></td>
+<td><p>Integer</p></td>
+<td><p>depends on resolution</p></td>
+<td><p>3</p></td>
+<td><p>Maximum number of days retrieved within one MARS request. </p></td>
+<td><p>This number is limited due to maximum allowed memory and time limit for one MARS request. Be careful in changing this number.  It can be  larger for reanalysis data but may be too large for very high resolution retrievals.</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">JOB_CHUNK</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">depends on resolution</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last"># of days to be retrieved within a single job</p>
-</td>
-<td><p class="first last">Can be selected to start the submit script once and let it automatically divide the time period in smaller job chunks. Might be very useful for example if one would like to retrieve one month with 0.1° space resolution and 1h time resolution. Then only 1 day per job is possible.</p>
-</td>
+<tr class="row-odd"><td><p>JOB_CHUNK</p></td>
+<td><p>Integer</p></td>
+<td><p>depends on resolution</p></td>
+<td><p>None</p></td>
+<td><p># of days to be retrieved within a single job</p></td>
+<td><p>Can be selected to start the submit script once and let it automatically divide the time period in smaller job chunks. Might be very useful for example if one would like to retrieve one month with 0.1° space resolution and 1h time resolution. Then only 1 day per job is possible.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">CONTROLFILE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any CONTROL file</p>
-</td>
-<td><p class="first last">CONTROL_EA5</p>
-</td>
-<td><p class="first last">The file with all CONTROL parameters.</p>
-</td>
-<td><p class="first last"></p>
-</td>
+<tr class="row-even"><td><p>CONTROLFILE</p></td>
+<td><p>String</p></td>
+<td><p>any CONTROL file</p></td>
+<td><p>CONTROL_EA5</p></td>
+<td><p>The file with all CONTROL parameters.</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">BASETIME</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0; 12]</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p>
-</td>
-<td><p class="first last">Can be set to 00 or 12 only.</p>
-</td>
+<tr class="row-odd"><td><p>BASETIME</p></td>
+<td><p>Integer</p></td>
+<td><p>[0; 12]</p></td>
+<td><p>None</p></td>
+<td><p>This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p></td>
+<td><p>Can be set to 00 or 12 only.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">STEP</p>
-</td>
-<td><p class="first last">list of String [xx xx … xx] or as String [x/to/x]</p>
-</td>
-<td><p class="first last">[00 - max available STEP in data set]</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">This is the forecast time step in hours for each corresponding field type (TYPE). Counting of the steps starts from the forecast times.  E.g. In Era-Interim, for forecasts at 3, 6, 9 UTC the STEPS 3,6 and 9 are used and the forecast TIME 00 UTC. </p>
-</td>
-<td><p class="first last">Has to have the same amount of values as in TYPE and TIME! For analysis (AN) fields the STEP has to be 00 always! It is more easily set in the CONTROL file. For pure forecast modes it might be set here as e.g. 0/to/36</p>
-</td>
+<tr class="row-even"><td><p>STEP</p></td>
+<td><p>list of String [xx xx … xx] or as String [x/to/x]</p></td>
+<td><p>[00 - max available STEP in data set]</p></td>
+<td><p>None</p></td>
+<td><p>This is the forecast time step in hours for each corresponding field type (TYPE). Counting of the steps starts from the forecast times.  E.g. In Era-Interim, for forecasts at 3, 6, 9 UTC the STEPS 3,6 and 9 are used and the forecast TIME 00 UTC. </p></td>
+<td><p>Has to have the same amount of values as in TYPE and TIME! For analysis (AN) fields the STEP has to be 00 always! It is more easily set in the CONTROL file. For pure forecast modes it might be set here as e.g. 0/to/36</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">LEVELIST</p>
-</td>
-<td><p class="first last">String [start/to/end]</p>
-</td>
-<td><p class="first last">1/to/137; depends on dataset</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">List of vertical levels for MARS request. It can be a subset of levels but it has to include the maximum level (end).</p>
-</td>
-<td><p class="first last">If full list of levels is needed and parameter LEVEL is set, the LEVELIST parameter is not needed. “end” has to be the maximum number of possible levels and has to be the same as in LEVEL, if specified.</p>
-</td>
+<tr class="row-odd"><td><p>LEVELIST</p></td>
+<td><p>String [start/to/end]</p></td>
+<td><p>1/to/137; depends on dataset</p></td>
+<td><p>None</p></td>
+<td><p>List of vertical levels for MARS request. It can be a subset of levels but it has to include the maximum level (end).</p></td>
+<td><p>If full list of levels is needed and parameter LEVEL is set, the LEVELIST parameter is not needed. “end” has to be the maximum number of possible levels and has to be the same as in LEVEL, if specified.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">AREA</p>
-</td>
-<td><p class="first last">Double [f/f/f/f]</p>
-</td>
-<td><p class="first last">any float within lat and lon boundaries</p>
-</td>
-<td><p class="first last">‘’</p>
-</td>
-<td><p class="first last">Area defined as north/west/south/east</p>
-</td>
-<td><p class="first last"></p>
-</td>
+<tr class="row-even"><td><p>AREA</p></td>
+<td><p>Double [f/f/f/f]</p></td>
+<td><p>any float within lat and lon boundaries</p></td>
+<td><p>‘’</p></td>
+<td><p>Area defined as north/west/south/east</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">DEBUG</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">Debug mode - leave temporary files intact</p>
-</td>
-<td><p class="first last">Usually only the final FLEXPART inputfiles are saved.</p>
-</td>
+<tr class="row-odd"><td><p>DEBUG</p></td>
+<td><p>Integer</p></td>
+<td><p>[0,1]</p></td>
+<td><p>0</p></td>
+<td><p>Debug mode - leave temporary files intact</p></td>
+<td><p>Usually only the final FLEXPART inputfiles are saved.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">OPER</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">Operational mode - prepares dates with            environment variables</p>
-</td>
-<td><p class="first last"></p>
-</td>
+<tr class="row-even"><td><p>OPER</p></td>
+<td><p>Integer</p></td>
+<td><p>[0,1]</p></td>
+<td><p>0</p></td>
+<td><p>Operational mode - prepares dates with            environment variables</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">REQUEST</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1,2]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">List all mars requests with its specifc values in file mars_requests.dat</p>
-</td>
-<td><p class="first last">Very useful for documentation or debugging reasons.</p>
-</td>
+<tr class="row-odd"><td><p>REQUEST</p></td>
+<td><p>Integer</p></td>
+<td><p>[0,1,2]</p></td>
+<td><p>0</p></td>
+<td><p>List all mars requests with its specifc values in file mars_requests.dat</p></td>
+<td><p>Very useful for documentation or debugging reasons.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">PUBLIC</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">Public mode - retrieves the public datasets</p>
-</td>
-<td><p class="first last">IMPORTANT: This is necessary to select for each PUBLIC user!</p>
-</td>
+<tr class="row-even"><td><p>PUBLIC</p></td>
+<td><p>Integer</p></td>
+<td><p>[0,1]</p></td>
+<td><p>0</p></td>
+<td><p>Public mode - retrieves the public datasets</p></td>
+<td><p>IMPORTANT: This is necessary to select for each PUBLIC user!</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">RRINT</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last">[0,1]</p>
-</td>
-<td><p class="first last">0</p>
-</td>
-<td><p class="first last">Selection of old or new precipitation interpolation ; 
+<tr class="row-odd"><td><p>RRINT</p></td>
+<td><p>Integer</p></td>
+<td><p>[0,1]</p></td>
+<td><p>0</p></td>
+<td><p>Selection of old or new precipitation interpolation ; 
                         0 - old method;
-                        1 - new method                                                         (additional subgrid points)</p>
-</td>
-<td><p class="first last">IMPORTANT: If this new method is used, each single GRIB file will contain 3 fields for the large scale and 3 fields for the convective precipitation. They can be distinguished by the “stepRange” keyword in the GribMessages. StepRange = 0 : original time step; stepRange = 1 : first subgrid point; stepRange = 2 : second subgrid point </p>
-</td>
+                        1 - new method                                                         (additional subgrid points)</p></td>
+<td><p>IMPORTANT: If this new method is used, each single GRIB file will contain 3 fields for the large scale and 3 fields for the convective precipitation. They can be distinguished by the “stepRange” keyword in the GribMessages. StepRange = 0 : original time step; stepRange = 1 : first subgrid point; stepRange = 2 : second subgrid point </p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">INPUTDIR</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any path</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">Path to the temporary directory for the retrieval grib files and other processing files.</p>
-</td>
-<td><p class="first last">The temporary directory will be created if it does not already exist.</p>
-</td>
+<tr class="row-even"><td><p>INPUTDIR</p></td>
+<td><p>String</p></td>
+<td><p>any path</p></td>
+<td><p>None</p></td>
+<td><p>Path to the temporary directory for the retrieval grib files and other processing files.</p></td>
+<td><p>The temporary directory will be created if it does not already exist.</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">OUTPUTDIR</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any path</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">Path to the final directory where the final FLEXPART ready input files are stored.</p>
-</td>
-<td><p class="first last">The final output directory will be created if it does not already exist.</p>
-</td>
+<tr class="row-odd"><td><p>OUTPUTDIR</p></td>
+<td><p>String</p></td>
+<td><p>any path</p></td>
+<td><p>None</p></td>
+<td><p>Path to the final directory where the final FLEXPART ready input files are stored.</p></td>
+<td><p>The final output directory will be created if it does not already exist.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">PPID</p>
-</td>
-<td><p class="first last">Integer</p>
-</td>
-<td><p class="first last"></p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">This is the specify parent process id of a single flex_extract run to identify the files. It is the second number in the GRIB files.</p>
-</td>
-<td><p class="first last">This is usually only necessary if the GRIB data were retrieved and a rerun of prepare_flexpart has to be done. Then ppid is used to select the files. </p>
-</td>
+<tr class="row-even"><td><p>PPID</p></td>
+<td><p>Integer</p></td>
+<td><p></p></td>
+<td><p>None</p></td>
+<td><p>This is the specify parent process id of a single flex_extract run to identify the files. It is the second number in the GRIB files.</p></td>
+<td><p>This is usually only necessary if the GRIB data were retrieved and a rerun of prepare_flexpart has to be done. Then ppid is used to select the files. </p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">JOB_TEMPLATE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">job.temp</p>
-</td>
-<td><p class="first last">job.temp</p>
-</td>
-<td><p class="first last">The job template file which are adapted to be submitted to the batch system on ECMWF server.</p>
-</td>
-<td><p class="first last"></p>
-</td>
+<tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
+<td><p>String</p></td>
+<td><p>job.temp</p></td>
+<td><p>job.temp</p></td>
+<td><p>The job template file which are adapted to be submitted to the batch system on ECMWF server.</p></td>
+<td><p></p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">QUEUE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">ecgate, cca, ccb</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The ECMWF server name for submission of the job script to the batch system.</p>
-</td>
-<td><p class="first last"></p>
-</td>
+<tr class="row-even"><td><p>QUEUE</p></td>
+<td><p>String</p></td>
+<td><p>ecgate, cca, ccb</p></td>
+<td><p>None</p></td>
+<td><p>The ECMWF server name for submission of the job script to the batch system.</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -507,8 +392,8 @@ the command line parameters and the so-called <code class="docutils literal notr
 <span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETERS:</span>
 
 <span class="nv">QUEUE</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
-<span class="nv">START_DATE</span><span class="o">=</span><span class="m">20190101</span>
-<span class="nv">END_DATE</span><span class="o">=</span><span class="m">20190101</span>
+<span class="nv">START_DATE</span><span class="o">=</span>None
+<span class="nv">END_DATE</span><span class="o">=</span>None
 <span class="nv">DATE_CHUNK</span><span class="o">=</span>None
 <span class="nv">JOB_CHUNK</span><span class="o">=</span><span class="m">3</span>
 <span class="nv">BASETIME</span><span class="o">=</span>None
@@ -520,7 +405,7 @@ the command line parameters and the so-called <code class="docutils literal notr
 <span class="nv">PP_ID</span><span class="o">=</span>None
 <span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.temp&#39;</span> 
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span> 
-<span class="nv">DEBUG</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
 <span class="nv">REQUEST</span><span class="o">=</span><span class="m">2</span>
 <span class="nv">PUBLIC</span><span class="o">=</span><span class="m">0</span>
 
@@ -600,7 +485,7 @@ the command line parameters and the so-called <code class="docutils literal notr
 <div class="section" id="usage-of-submit-py-optional">
 <span id="ref-install-script"></span><h2>Usage of <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> (optional)<a class="headerlink" href="#usage-of-submit-py-optional" title="Permalink to this headline">¶</a></h2>
 <p>It is also possible to start <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly from command line by using the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script instead of the wrapping Shell script <code class="docutils literal notranslate"><span class="pre">run.sh</span></code>.  This top-level script is located in
-<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
 command line parameter.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>submit.py --help
 
@@ -678,7 +563,7 @@ usage: submit.py <span class="o">[</span>-h<span class="o">]</span> <span class=
         <a href="jobscript.html" class="btn btn-neutral float-right" title="The Jobscript job.ksh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fortran_makefile.html" class="btn btn-neutral float-left" title="The Fortran Makefile - CONVERT2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="fortran_makefile.html" class="btn btn-neutral float-left" title="The Fortran Makefile - calc_etadot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -687,7 +572,7 @@ usage: submit.py <span class="o">[</span>-h<span class="o">]</span> <span class=
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

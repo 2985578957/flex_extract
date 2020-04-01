@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -187,10 +187,10 @@
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="c1"># pylint: disable=unused-import</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">exceptions</span>
@@ -200,7 +200,7 @@
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="kn">import</span> <span class="n">my_error</span><span class="p">,</span> <span class="n">silent_remove</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># FUNCTIONS</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -640,12 +640,17 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">QUEUES_LIST</span> <span class="ow">and</span> \
-            <span class="p">(</span><span class="ow">not</span> <span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">destination</span> <span class="ow">or</span>
-             <span class="ow">not</span> <span class="n">ecuid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ecgid</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment variables GATEWAY, DESTINATION, ECUID &#39;</span>
+            <span class="p">(</span><span class="ow">not</span> <span class="n">ecuid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">ecgid</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Environment variables ECUID &#39;</span>
                          <span class="s1">&#39;and ECGID were not set properly! </span><span class="se">\n</span><span class="s1"> &#39;</span>
                          <span class="s1">&#39;Please check for existence of file &quot;ECMWF_ENV&quot; &#39;</span>
                          <span class="s1">&#39;in the run directory!&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">queue</span> <span class="ow">in</span> <span class="n">_config</span><span class="o">.</span><span class="n">QUEUES_LIST</span> <span class="ow">and</span> \
+             <span class="p">(</span><span class="ow">not</span> <span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Parameters GATEWAY and DESTINATION were &#39;</span>
+              <span class="s1">&#39;not properly set for working on ECMWF server. </span><span class="se">\n</span><span class="s1">&#39;</span>
+              <span class="s1">&#39;There will be no transfer of output files to the &#39;</span>
+              <span class="s1">&#39;local gateway server possible!&#39;</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="check_pathes"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_pathes">[docs]</a><span class="k">def</span> <span class="nf">check_pathes</span><span class="p">(</span><span class="n">idir</span><span class="p">,</span> <span class="n">odir</span><span class="p">,</span> <span class="n">fpdir</span><span class="p">,</span> <span class="n">fedir</span><span class="p">):</span>
@@ -1054,7 +1059,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

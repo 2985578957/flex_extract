@@ -12,9 +12,6 @@ Based on these input information ``flex_extract`` applies one of the application
 
 
 
-PUT IN HERE A BLOCKDIAGRAM OF RAW PROGRAM FLOW
-
-
 
 Submission Parameter
 --------------------
@@ -42,7 +39,7 @@ Usage of ``submit.py`` (optional)
 ---------------------------------
 
 It is also possible to start ``flex_extract`` directly from command line by using the ``submit.py`` script instead of the wrapping Shell script ``run.sh``.  This top-level script is located in 
-``flex_extract_vX.X/source/python`` and is executable. With the ``help`` parameter we see again all possible 
+``flex_extract_vX.X/Source/Python`` and is executable. With the ``help`` parameter we see again all possible 
 command line parameter. 
 
 .. code-block:: bash

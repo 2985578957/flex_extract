@@ -4,8 +4,8 @@ The Jobscript ``job.ksh``
 
 The jobscript is a Korn-shell script which will be created at runtime for each ``flex_extract`` execution in the application modes **remote** and **gateway**.
 
-It is based on the ``job.temp`` template file which is stored in the ``templates`` directory.
-This template is by itself generated in the installation process from a ``jobscript.template`` template file.
+It is based on the ``job.temp`` template file which is stored in the ``Templates`` directory.
+This template is by itself generated in the installation process from a ``job.template`` template file.
 
 ``Flex_extract`` uses the python package `genshi <https://genshi.edgewall.org/>`_ to generate
 the Korn-shell script from the template files by substituting the individual parameters. 
@@ -73,7 +73,7 @@ Example ``jobscript.ksh``
       module load python3
       module load eccodes/2.12.0
       module load emos/455-r64
-      export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
+      export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
       ;;
       *cca*)
       module unload python
@@ -82,7 +82,7 @@ Example ``jobscript.ksh``
       module load eccodes/2.12.0
       module load emos
       export SCRATCH=${TMPDIR}
-      export PATH=${PATH}:${HOME}/flex_extract_v7.1/source/python
+      export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
       ;;
     esac
 

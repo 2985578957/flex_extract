@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -194,29 +194,29 @@
   <div class="section" id="output-data">
 <h1>Output Data<a class="headerlink" href="#output-data" title="Permalink to this headline">¶</a></h1>
 <p>The output data of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are separated mainly into temporary files and the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files:</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="51%" />
-<col width="49%" />
+<col style="width: 51%" />
+<col style="width: 49%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files</td>
-<td>Temporary files (saved in debug mode)</td>
+<tbody>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files</p></td>
+<td><p>Temporary files (saved in debug mode)</p></td>
 </tr>
-<tr class="row-even"><td><ul class="first last simple">
-<li>Standard output filenames</li>
-<li>Output for pure forecast</li>
-<li>Output for ensemble members</li>
-<li>Output for new precip. disaggregation</li>
+<tr class="row-even"><td><ul class="simple">
+<li><p>Standard output filenames</p></li>
+<li><p>Output for pure forecast</p></li>
+<li><p>Output for ensemble members</p></li>
+<li><p>Output for new precip. disaggregation</p></li>
 </ul>
 </td>
-<td><ul class="first last simple">
-<li>MARS request file (opt)</li>
-<li>flux files</li>
-<li>VERTICAL.EC</li>
-<li>index file</li>
-<li>fort files</li>
-<li>MARS grib files</li>
+<td><ul class="simple">
+<li><p>MARS request file (opt)</p></li>
+<li><p>flux files</p></li>
+<li><p>VERTICAL.EC</p></li>
+<li><p>index file</p></li>
+<li><p>fort files</p></li>
+<li><p>MARS grib files</p></li>
 </ul>
 </td>
 </tr>
@@ -294,7 +294,7 @@ edition      centre       date         dataType     gridType     stepRange    ty
 </div>
 <div class="section" id="additional-fields-with-new-precipitation-disaggregation">
 <h3>Additional fields with new precipitation disaggregation<a class="headerlink" href="#additional-fields-with-new-precipitation-disaggregation" title="Permalink to this headline">¶</a></h3>
-<p>The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see <a class="reference internal" href="disagg.html"><span class="doc">Disaggregation of Flux Data</span></a> ??????????????????.
+<p>The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see <a class="reference internal" href="disagg.html"><span class="doc">Disaggregation of Flux Data</span></a>.
 The two additional fields are marked with the <code class="docutils literal notranslate"><span class="pre">step</span></code> parameter in the Grib messages and are set to “1” and “2” for sub-grid point 1 and 2 respectively.
 The output filenames do not change in this case.
 Below is an example list of precipitation fields in an output file generated with the new disaggregation method:</p>
@@ -313,7 +313,7 @@ edition      centre       date         dataType     gridType     stepRange    ty
 </div>
 <div class="section" id="temporary-files">
 <h2>Temporary files<a class="headerlink" href="#temporary-files" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> mode is switched on (see <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> mode is switched on (see <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a>).</p>
 <div class="section" id="mars-grib-files">
 <h3>MARS grib files<a class="headerlink" href="#mars-grib-files" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> retrieves all meteorological fields from MARS and stores them in files ending with <code class="docutils literal notranslate"><span class="pre">.grb</span></code>.
@@ -324,19 +324,19 @@ Since the request times and data transfer of MARS access are limited and ECMWF a
 </div>
 </div></blockquote>
 <p>Description:</p>
-<dl class="docutils">
-<dt>Field type:</dt>
-<dd><code class="docutils literal notranslate"><span class="pre">AN</span></code> - Analysis, <code class="docutils literal notranslate"><span class="pre">FC</span></code> - Forecast, <code class="docutils literal notranslate"><span class="pre">4V</span></code> - 4d variational analysis, <code class="docutils literal notranslate"><span class="pre">CV</span></code> - Validation forecast, <code class="docutils literal notranslate"><span class="pre">CF</span></code> - Control forecast, <code class="docutils literal notranslate"><span class="pre">PF</span></code> - Perturbed forecast</dd>
-<dt>Grid type:</dt>
-<dd><code class="docutils literal notranslate"><span class="pre">SH</span></code> - Spherical Harmonics, <code class="docutils literal notranslate"><span class="pre">GG</span></code> - Gaussian Grid, <code class="docutils literal notranslate"><span class="pre">OG</span></code> - Output Grid (typically lat/lon), <code class="docutils literal notranslate"><span class="pre">_OROLSM</span></code> - Orography parameter</dd>
-<dt>Temporal property:</dt>
-<dd><code class="docutils literal notranslate"><span class="pre">__</span></code> - instantaneous fields, <code class="docutils literal notranslate"><span class="pre">_acc</span></code> - accumulated fields</dd>
-<dt>Level type:</dt>
-<dd><code class="docutils literal notranslate"><span class="pre">ML</span></code> - Model Level, <code class="docutils literal notranslate"><span class="pre">SL</span></code> - Surface Level</dd>
-<dt>ppid:</dt>
-<dd>The process number of the parent process of submitted script.</dd>
-<dt>pid:</dt>
-<dd>The process number of the submitted script.</dd>
+<dl class="simple">
+<dt>Field type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">AN</span></code> - Analysis, <code class="docutils literal notranslate"><span class="pre">FC</span></code> - Forecast, <code class="docutils literal notranslate"><span class="pre">4V</span></code> - 4d variational analysis, <code class="docutils literal notranslate"><span class="pre">CV</span></code> - Validation forecast, <code class="docutils literal notranslate"><span class="pre">CF</span></code> - Control forecast, <code class="docutils literal notranslate"><span class="pre">PF</span></code> - Perturbed forecast</p>
+</dd>
+<dt>Grid type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">SH</span></code> - Spherical Harmonics, <code class="docutils literal notranslate"><span class="pre">GG</span></code> - Gaussian Grid, <code class="docutils literal notranslate"><span class="pre">OG</span></code> - Output Grid (typically lat/lon), <code class="docutils literal notranslate"><span class="pre">_OROLSM</span></code> - Orography parameter</p>
+</dd>
+<dt>Temporal property:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">__</span></code> - instantaneous fields, <code class="docutils literal notranslate"><span class="pre">_acc</span></code> - accumulated fields</p>
+</dd>
+<dt>Level type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ML</span></code> - Model Level, <code class="docutils literal notranslate"><span class="pre">SL</span></code> - Surface Level</p>
+</dd>
+<dt>ppid:</dt><dd><p>The process number of the parent process of submitted script.</p>
+</dd>
+<dt>pid:</dt><dd><p>The process number of the submitted script.</p>
+</dd>
 </dl>
 <p>The process ids should avoid mixing of fields if several <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> jobs are performed in parallel (which is, however, not recommended). The date format is YYYYMMDDHH.</p>
 <p>Example <code class="docutils literal notranslate"><span class="pre">.grb</span></code> files for a day of CERA-20C data:</p>
@@ -381,88 +381,88 @@ request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist,
 </div>
 <p>The date format is YYYYMMDDHH. The optional block <code class="docutils literal notranslate"><span class="pre">[.N&lt;xxx&gt;]</span></code> marks the ensemble forecast number, where <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> is the ensemble member number. The optional block <code class="docutils literal notranslate"><span class="pre">[.&lt;xxx&gt;]</span></code> marks a pure forecast with <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> being the forecast step.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is <code class="docutils literal notranslate"><span class="pre">0</span></code> for the original time interval and <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> for the two new intervals respectively.</p>
+<p class="admonition-title">Note</p>
+<p>In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is <code class="docutils literal notranslate"><span class="pre">0</span></code> for the original time interval and <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> for the two new intervals respectively.</p>
 </div>
 </div>
 <div class="section" id="fort-files">
 <h3>fort files<a class="headerlink" href="#fort-files" title="Permalink to this headline">¶</a></h3>
-<p>There are a number of input files for the <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> Fortran program named</p>
+<p>There are a number of input files for the <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> Fortran program named</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fort.xx
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">xx</span></code> is the number which defines the meteorological fields stored in these files.
 They are generated by the Python part of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> by just splitting the meteorological fields for a unique time stamp from the <code class="docutils literal notranslate"><span class="pre">*.grb</span></code> files into the <code class="docutils literal notranslate"><span class="pre">fort</span></code> files.
 The following table defines the numbers with their corresponding content.</p>
-<table border="1" class="colwidths-given docutils" id="id1">
+<table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Content of fort - files</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col style="width: 20%" />
+<col style="width: 80%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Number</th>
-<th class="head">Content</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Number</p></th>
+<th class="head"><p>Content</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>10</td>
-<td>U and V wind components</td>
+<tbody>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>U and V wind components</p></td>
 </tr>
-<tr class="row-odd"><td>11</td>
-<td>temperature</td>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>temperature</p></td>
 </tr>
-<tr class="row-even"><td>12</td>
-<td>logarithm of surface pressure</td>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>logarithm of surface pressure</p></td>
 </tr>
-<tr class="row-odd"><td>13</td>
-<td>divergence (optional)</td>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>divergence (optional)</p></td>
 </tr>
-<tr class="row-even"><td>16</td>
-<td>surface fields</td>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>surface fields</p></td>
 </tr>
-<tr class="row-odd"><td>17</td>
-<td>specific humidity</td>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>specific humidity</p></td>
 </tr>
-<tr class="row-even"><td>18</td>
-<td>surface specific humidity (reduced gaussian)</td>
+<tr class="row-even"><td><p>18</p></td>
+<td><p>surface specific humidity (reduced gaussian)</p></td>
 </tr>
-<tr class="row-odd"><td>19</td>
-<td>vertical velocity (pressure) (optional)</td>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>vertical velocity (pressure) (optional)</p></td>
 </tr>
-<tr class="row-even"><td>21</td>
-<td>eta-coordinate vertical velocity (optional)</td>
+<tr class="row-even"><td><p>21</p></td>
+<td><p>eta-coordinate vertical velocity (optional)</p></td>
 </tr>
-<tr class="row-odd"><td>22</td>
-<td>total cloud water content (optional)</td>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p>total cloud water content (optional)</p></td>
 </tr>
 </tbody>
 </table>
-<p>Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span> <span class="pre">v10</span></code> and newer. Please see section ????????? for more information.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> program saves its results in file <code class="docutils literal notranslate"><span class="pre">fort.15</span></code> which typically contains:</p>
-<table border="1" class="colwidths-given docutils" id="id2">
-<caption><span class="caption-text">Output file of the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<p>Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span> <span class="pre">v10</span></code> and newer.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> program saves its results in file <code class="docutils literal notranslate"><span class="pre">fort.15</span></code> which typically contains:</p>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">Output file of the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="80%" />
+<col style="width: 20%" />
+<col style="width: 80%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Number</th>
-<th class="head">Content</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Number</p></th>
+<th class="head"><p>Content</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>15</td>
-<td>U and V wind components, eta-coordinate vertical velocity, temperature, surface pressure, specific humidity</td>
+<tbody>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>U and V wind components, eta-coordinate vertical velocity, temperature, surface pressure, specific humidity</p></td>
 </tr>
 </tbody>
 </table>
-<p>More details about the content of <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> can be found in <a class="reference internal" href="vertco.html"><span class="doc">Vertical Coordinate</span></a>.</p>
+<p>More details about the content of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> can be found in <a class="reference internal" href="vertco.html"><span class="doc">Vertical Coordinate</span></a>.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> file is the namelist file to drive the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>. It is therefore also an input file and is described in ???????????????</p>
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> file is the namelist file to drive the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>. It is therefore also an input file.</p>
 <p>Example of a namelist:</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">&amp;</span>NAMGEN
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">&amp;</span>NAMGEN
   <span class="nv">maxl</span> <span class="o">=</span> <span class="m">11</span>,
   <span class="nv">maxb</span> <span class="o">=</span> <span class="m">11</span>,
   <span class="nv">mlevel</span> <span class="o">=</span> <span class="m">91</span>,
@@ -510,7 +510,7 @@ The following table defines the numbers with their corresponding content.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

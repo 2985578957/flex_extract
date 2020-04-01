@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -221,25 +221,25 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="c1">#pylint: disable=wrong-import-position</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Classes.GribUtil</span> <span class="k">import</span> <span class="n">GribUtil</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">init128</span><span class="p">,</span> <span class="n">to_param_id</span><span class="p">,</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">Classes.GribUtil</span> <span class="kn">import</span> <span class="n">GribUtil</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="kn">import</span> <span class="p">(</span><span class="n">init128</span><span class="p">,</span> <span class="n">to_param_id</span><span class="p">,</span> <span class="n">silent_remove</span><span class="p">,</span> <span class="n">product</span><span class="p">,</span>
                         <span class="n">my_error</span><span class="p">,</span> <span class="n">get_informations</span><span class="p">,</span> <span class="n">get_dimensions</span><span class="p">,</span>
                         <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">to_param_id_with_tablenumber</span><span class="p">,</span>
                         <span class="n">generate_retrieval_period_boundary</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">Classes.MarsRetrieval</span> <span class="k">import</span> <span class="n">MarsRetrieval</span>
-<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
+<span class="kn">from</span> <span class="nn">Classes.MarsRetrieval</span> <span class="kn">import</span> <span class="n">MarsRetrieval</span>
+<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="kn">import</span> <span class="n">UioFiles</span>
 <span class="kn">import</span> <span class="nn">Mods.disaggregation</span> <span class="k">as</span> <span class="nn">disaggregation</span>
 <span class="c1">#pylint: enable=wrong-import-position</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -356,7 +356,7 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># CLASS FUNCTIONS</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Creates an object/instance of EcFlexpart with the associated</span>
 <span class="sd">        settings of its attributes for the retrieval.</span>
 
@@ -747,7 +747,7 @@
 <span class="sd">            index_vals[1]: (&#39;0&#39;, &#39;1200&#39;, &#39;1800&#39;, &#39;600&#39;) ; time</span>
 <span class="sd">            index_vals[2]: (&#39;0&#39;, &#39;12&#39;, &#39;3&#39;, &#39;6&#39;, &#39;9&#39;) ; stepRange</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="n">codes_index_get</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="n">codes_index_get</span>
 
         <span class="n">iid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">index_keys</span> <span class="o">=</span> <span class="n">keys</span>
@@ -1011,9 +1011,9 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
-        <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
-        <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
-        <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span>  <span class="n">UndefinedError</span>
+        <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="kn">import</span> <span class="n">NewTextTemplate</span>
+        <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="kn">import</span>  <span class="n">TemplateLoader</span>
+        <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="kn">import</span>  <span class="n">UndefinedError</span>
         <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1099,7 +1099,7 @@
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_get_values</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span>
                              <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span>
                              <span class="n">codes_index_release</span><span class="p">)</span>
@@ -1677,7 +1677,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_index_select</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_get_values</span><span class="p">,</span> <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span>
                              <span class="n">codes_write</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_new_from_index</span><span class="p">,</span>
                              <span class="n">codes_index_release</span><span class="p">)</span>
@@ -1957,7 +1957,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_get_array</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_get_array</span><span class="p">,</span>
                              <span class="n">codes_set_array</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span>
                              <span class="n">codes_set</span><span class="p">,</span> <span class="n">codes_write</span><span class="p">)</span>
 
@@ -2087,7 +2087,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

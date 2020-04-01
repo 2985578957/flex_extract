@@ -12,7 +12,7 @@ It calls the top-level Python script ``install.py`` which does all necessary ope
 - create a tar-ball of all necessary files
 - copying tar-ball to target location (depending on application mode and installation path)
 - submit compilation script to batch queue at ECMWF servers (in **remote** and **gateway** mode) or just untar tar-ball at target location (**local mode**)
-- compilation of the FORTRAN90 program ``CONVERT2``
+- compilation of the FORTRAN90 program ``calc_etadot``
 
 
 The Python installation script ``install.py`` has a couple of command line arguments which are defined in ``setup.sh`` in the section labelled with "*AVAILABLE COMMANDLINE ARGUMENTS TO SET*". The user has to adapt these parameters for his personal use. The parameters are listed and described in :ref:`ref-instparams`. The script also does some checks to guarantee necessary parameters were set.
@@ -155,7 +155,7 @@ Usage of ``install.py`` (optional)
 ----------------------------------
 
 It is also possible to start the installation process of ``flex_extract`` directly from command line by using the ``install.py`` script instead of the wrapping Shell script ``setup.sh``.  This top-level script is located in 
-``flex_extract_vX.X/source/python`` and is executable. With the ``help`` parameter we see again all possible 
+``flex_extract_vX.X/Source/Python`` and is executable. With the ``help`` parameter we see again all possible 
 command line parameter. 
 
 .. code-block:: bash

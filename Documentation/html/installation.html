@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -188,63 +188,63 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> software package contains python and shell scripts as well as a Fortran program. These components rely on several libraries which need to be available before starting the installation process. Currently, the software is only tested for a GNU/Linux environment. Feel free to try it out on other platforms.</p>
 <p>At first, go to the <a class="reference external" href="Ecmwf/access.html">user group</a> section and decide which group you belong to and follow the instructions at <a class="reference internal" href="#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a> to obtain an account at ECMWF (if you don’t have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a>:</p>
 <ul class="simple">
-<li>Remote (member-state users only) <a class="reference internal" href="Installation/remote.html#ref-remote-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Gateway (member-state users only) <a class="reference internal" href="Installation/gateway.html#ref-gateway-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Local, member-state user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
-<li>Local, public user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></li>
+<li><p>Remote (member-state users only) <a class="reference internal" href="Installation/remote.html#ref-remote-mode"><span class="std std-ref">[installation]</span></a></p></li>
+<li><p>Gateway (member-state users only) <a class="reference internal" href="Installation/gateway.html#ref-gateway-mode"><span class="std std-ref">[installation]</span></a></p></li>
+<li><p>Local, member-state user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></p></li>
+<li><p>Local, public user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></p></li>
 </ul>
 <p>Please follow the link <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> to get a description of the modes.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If you encounter any problems in the installation process, you can ask for <a class="reference internal" href="support.html"><span class="doc">Support</span></a>.</p>
+<p class="admonition-title">Note</p>
+<p>If you encounter any problems in the installation process, you can ask for <a class="reference internal" href="support.html"><span class="doc">Support</span></a>.</p>
 </div>
 <div class="section" id="registration-at-ecmwf">
 <span id="ref-registration"></span><h2>Registration at ECMWF<a class="headerlink" href="#registration-at-ecmwf" title="Permalink to this headline">¶</a></h2>
 <p>The registration depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and in case of the local mode also on the data set you’d like to retrieve. The following table gives an overview where you need to register.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="15%" />
-<col width="16%" />
-<col width="24%" />
-<col width="23%" />
+<col style="width: 23%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 24%" />
+<col style="width: 23%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td rowspan="2">Data sets</td>
-<td colspan="3">Member-state user</td>
-<td>Public user</td>
+<tbody>
+<tr class="row-odd"><td rowspan="2"><p>Data sets</p></td>
+<td colspan="3"><p>Member-state user</p></td>
+<td><p>Public user</p></td>
 </tr>
-<tr class="row-even"><td>Remote</td>
-<td>Gateway</td>
-<td>Local</td>
-<td>Local</td>
+<tr class="row-even"><td><p>Remote</p></td>
+<td><p>Gateway</p></td>
+<td><p>Local</p></td>
+<td><p>Local</p></td>
 </tr>
-<tr class="row-odd"><td>Operational</td>
-<td>1</td>
-<td>1</td>
-<td>1,2</td>
-<td><ul class="first last simple">
+<tr class="row-odd"><td><p>Operational</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1,2</p></td>
+<td><ul class="simple">
 <li></li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td>ERA-Interim</td>
-<td>1</td>
-<td>1</td>
-<td>1,2</td>
-<td>2</td>
+<tr class="row-even"><td><p>ERA-Interim</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1,2</p></td>
+<td><p>2</p></td>
 </tr>
-<tr class="row-odd"><td>CERA-20C</td>
-<td>1</td>
-<td>1</td>
-<td>1,2</td>
-<td>2</td>
+<tr class="row-odd"><td><p>CERA-20C</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1,2</p></td>
+<td><p>2</p></td>
 </tr>
-<tr class="row-even"><td>ERA5</td>
-<td>1</td>
-<td>1</td>
-<td>3</td>
-<td><ul class="first last simple">
+<tr class="row-even"><td><p>ERA5</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>3</p></td>
+<td><ul class="simple">
 <li></li>
 </ul>
 </td>
@@ -267,16 +267,14 @@
 <div class="section" id="download-flex-extract">
 <span id="ref-download"></span><h2>Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code><a class="headerlink" href="#download-flex-extract" title="Permalink to this headline">¶</a></h2>
 <p>There are two options to download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>
-<dl class="docutils">
-<dt>tar ball</dt>
-<dd><p class="first">You can download a tar ball with the latest release from the <a class="reference external" href="https://www.flexpart.eu/wiki/FpInputMetEcmwf">flex_extract page</a> from our <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> community website and then untar the file.</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xvf &lt;flex_extract_vX.X.tar&gt;
+<dl>
+<dt>tar ball</dt><dd><p>You can download a tar ball with the latest release from the <a class="reference external" href="https://www.flexpart.eu/wiki/FpInputMetEcmwf">flex_extract page</a> from our <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> community website and then untar the file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tar -xvf &lt;flex_extract_vX.X.tar&gt;
 </pre></div>
 </div>
 </dd>
-<dt>git repo</dt>
-<dd><p class="first">Alternatively, if you have <code class="docutils literal notranslate"><span class="pre">git</span></code> installed on your machine, and if you are interested to keep the code in a version control system, you may clone the latest version from our git repository master branch.</p>
-<div class="last highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone --single-branch --branch master https://www.flexpart.eu/gitmob/flexpart
+<dt>git repo</dt><dd><p>Alternatively, if you have <code class="docutils literal notranslate"><span class="pre">git</span></code> installed on your machine, and if you are interested to keep the code in a version control system, you may clone the latest version from our git repository master branch.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone --single-branch --branch master https://www.flexpart.eu/gitmob/flex_extract
 </pre></div>
 </div>
 </dd>
@@ -318,25 +316,20 @@ installation has to be done. At the users local side not all software has to be 
 <span id="ref-testinstallfe"></span><h2>Test installation<a class="headerlink" href="#test-installation" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="fortran-program-test">
 <h3>Fortran program test<a class="headerlink" href="#fortran-program-test" title="Permalink to this headline">¶</a></h3>
-<p>To check whether the Fortran program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> has been compiled and runs properly, it can be applied to a prepared minimal dataset.</p>
+<p>To check whether the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> has been compiled and runs properly, it can be applied to a prepared minimal dataset.</p>
 <p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Convert/</span></code> directory and execute the Fortran program.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Remember that you might have to log in at the ECMWF server if you used the installation for the <strong>remote</strong> or <strong>gateway</strong> mode. There you find the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in your <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory.</p>
+<p class="admonition-title">Note</p>
+<p>Remember that you might have to log in at the ECMWF server if you used the installation for the <strong>remote</strong> or <strong>gateway</strong> mode. There you find the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in your <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory.</p>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Convert
 <span class="c1"># execute the Fortran progam without arguments</span>
-../../../Source/Fortran/CONVERT2
+../../../Source/Fortran/calc_etadot
 </pre></div>
 </div>
 <p>The installation was successfull if you obtain on standard output:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> readspectral:            <span class="m">1</span>  records <span class="nb">read</span>
- readlatlon:            <span class="m">8</span>  records <span class="nb">read</span>
-STATISTICS:  <span class="m">98842</span>.4598 <span class="m">98709</span>.7359  <span class="m">5120</span>.5385
- readlatlon:            <span class="m">4</span>  records <span class="nb">read</span>
- readlatlon:            <span class="m">4</span>  records <span class="nb">read</span>
- readlatlon:            <span class="m">4</span>  records <span class="nb">read</span>
-SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>STATISTICS:          <span class="m">98842</span>.4598  <span class="m">98709</span>.7359   <span class="m">5120</span>.5385
+STOP SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS
 </pre></div>
 </div>
 <p>Now go back to the root directory:</p>
@@ -347,7 +340,8 @@ SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
 <div class="section" id="full-test">
 <h3>Full test<a class="headerlink" href="#full-test" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>see <a class="reference internal" href="quick_start.html"><span class="doc">Quick Start</span></a></div></blockquote>
+<div><p>see <a class="reference internal" href="quick_start.html"><span class="doc">Quick Start</span></a></p>
+</div></blockquote>
 </div>
 </div>
 </div>
@@ -372,7 +366,7 @@ SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

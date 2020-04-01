@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -188,7 +188,7 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 
@@ -211,7 +211,7 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># CLASS FUNCTIONS</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filenames</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Initialise an object of GribUtil and assign a list of filenames.</span>
 
 <span class="sd">        Parameters</span>
@@ -249,7 +249,7 @@
 <span class="sd">        return_list : :obj:`list` of :obj:`string`</span>
 <span class="sd">            List of keyvalues for given keynames.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span>
                              <span class="n">codes_release</span><span class="p">)</span>
 
         <span class="n">return_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -315,7 +315,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span>
                              <span class="n">codes_get</span><span class="p">,</span> <span class="n">codes_set</span><span class="p">,</span> <span class="n">codes_write</span><span class="p">,</span>
                              <span class="n">codes_set_values</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">)</span>
 
@@ -384,7 +384,7 @@
 <span class="sd">        ------</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_is_defined</span><span class="p">,</span>
                              <span class="n">codes_get</span><span class="p">,</span> <span class="n">codes_release</span><span class="p">,</span> <span class="n">codes_write</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keynames</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">):</span>
@@ -445,7 +445,7 @@
 <span class="sd">        iid: :obj:`integer`</span>
 <span class="sd">            Grib index id.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
-        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="p">(</span><span class="n">codes_index_read</span><span class="p">,</span> <span class="n">codes_index_new_from_file</span><span class="p">,</span>
+        <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="p">(</span><span class="n">codes_index_read</span><span class="p">,</span> <span class="n">codes_index_new_from_file</span><span class="p">,</span>
                              <span class="n">codes_index_add_file</span><span class="p">,</span> <span class="n">codes_index_write</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;... index will be done&quot;</span><span class="p">)</span>
@@ -480,7 +480,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

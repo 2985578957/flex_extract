@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -182,11 +182,10 @@
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is an open-source software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to serve as input files for the <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> Atmospheric Transport Modelling system.
 <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> was created explicitly for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> users who wants to use meteorological data from ECMWF to drive the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> model.
 The software retrieves the minimal number of parameters <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> needs to work and provides the data in the explicity format <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> understands.</p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> consists of 2 main parts:</dt>
-<dd><ol class="first last arabic simple">
-<li>a Python part, where the reading of parameter settings, retrieving data from MARS and preparing the data for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> is done and</li>
-<li>a Fortran part, where the calculation of the vertical velocity is done and if necessary the conversion from spectral to regular latitude/longitude grids.</li>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> consists of 2 main parts:</dt><dd><ol class="arabic simple">
+<li><p>a Python part, where the reading of parameter settings, retrieving data from MARS and preparing the data for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> is done and</p></li>
+<li><p>a Fortran part, where the calculation of the vertical velocity is done and if necessary the conversion from spectral to regular latitude/longitude grids.</p></li>
 </ol>
 </dd>
 </dl>
@@ -218,7 +217,7 @@ The software retrieves the minimal number of parameters <code class="docutils li
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

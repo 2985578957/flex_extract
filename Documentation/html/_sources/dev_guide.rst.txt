@@ -3,6 +3,9 @@ Developer Guide
  
     UNDER CONSTRUCTION
     
+.. note::
+
+  This section still needs to be done.
     
 .. repository (how /who manages the code, where to get)
     

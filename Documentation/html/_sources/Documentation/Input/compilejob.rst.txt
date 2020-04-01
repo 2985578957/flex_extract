@@ -73,7 +73,7 @@ Example ``compilejob.ksh``
       module load eccodes/2.12.0
       module load emos/455-r64
       export FLEXPART_ROOT_SCRIPTS=${HOME}
-      export MAKEFILE=Makefile.gfortran
+      export MAKEFILE=makefile_ecgate
       ;;
       *cca*)
       module unload python
@@ -87,18 +87,18 @@ Example ``compilejob.ksh``
       export GROUP=`echo ${HOME} | awk -F / '{print $4}'`
       export SCRATCH=/scratch/ms/${GROUP}/${USER}
       export FLEXPART_ROOT_SCRIPTS=${HOME}
-      export MAKEFILE=Makefile.gfortran
+      export MAKEFILE=makefile_ecgate
       ;;
     esac
 
     mkdir -p ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}
     cd ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}   # if FLEXPART_ROOT is not set this means cd to the home directory
     tar -xvf ${HOME}/flex_extract_v${VERSION}.tar
-    cd source/fortran
-    \rm *.o *.mod CONVERT2 
+    cd Source/Fortran
+    \rm *.o *.mod calc_etadot 
     make -f ${MAKEFILE} >flexcompile 2>flexcompile
 
-    ls -l CONVERT2 >>flexcompile
+    ls -l calc_etadot >>flexcompile
     if [ $? -eq 0 ]; then
       echo 'SUCCESS!' >>flexcompile
       mail -s flexcompile.${HOST}.$$ ${USER} <flexcompile

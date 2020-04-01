@@ -2,7 +2,7 @@
 Templates
 *********
 
-In ``flex_extract`` we use the Python package ``genshi`` (`ref <https://genshi.edgewall.org/>`_) to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code. 
+In ``flex_extract`` we use the Python package `genshi <https://genshi.edgewall.org/>`_ to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code. 
 
 .. note::
    Usually it is not recommended to change anything in these files without being able to understand the effects.
@@ -14,8 +14,8 @@ The following templates are used and can be found in directory ``flex_extract_vX
 convert.nl
 ----------
 
-    This is the template for a Fortran namelist file called ``fort.4`` which will be read by ``CONVERT2``.
-    It contains all the parameters ``CONVERT2`` needs. 
+    This is the template for a Fortran namelist file called ``fort.4`` which will be read by ``calc_etadot``.
+    It contains all the parameters ``calc_etadot`` needs. 
     
     .. code-block:: fortran
  
@@ -124,7 +124,7 @@ compilejob.template
         mkdir -p $${FLEXPART_ROOT_SCRIPTS}/flex_extract_v$${VERSION}
         cd $${FLEXPART_ROOT_SCRIPTS}/flex_extract_v$${VERSION}   # if FLEXPART_ROOT is not set this means cd to the home directory
         tar -xvf $${HOME}/flex_extract_v$${VERSION}.tar
-        cd source/fortran
+        cd Source/Fortran
         \rm *.o *.mod $fortran_program 
         make -f $${MAKEFILE} >flexcompile 2>flexcompile
 
@@ -190,7 +190,7 @@ job.temp
           module load python3
           module load eccodes/2.12.0
           module load emos/455-r64
-          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/source/python
+          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/Source/Python
           ;;
           *cca*)
           module unload python
@@ -199,7 +199,7 @@ job.temp
           module load eccodes/2.12.0
           module load emos
           export SCRATCH=$${TMPDIR}
-          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/source/python
+          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/Source/Python
           ;;
         esac
 

@@ -22,10 +22,10 @@ Calculation from the horizontal wind field is still required for historical case
 Calculation of vertical velocity from horizontal wind using the continuity equation
 ===================================================================================
 
-The vertical velocity is computed by the FORTRAN90 program ``CONVERT2`` in the ECMWF
-vertical coordinate system by applying the equation of continuity and thereby ensuring mass consistent 3D wind fields. A detailed description of ``CONVERT2`` can be found in the
+The vertical velocity is computed by the FORTRAN90 program ``calc_etadot`` in the ECMWF
+vertical coordinate system by applying the equation of continuity and thereby ensuring mass consistent 3D wind fields. A detailed description of ``calc_etadot`` can be found in the
 documents v20_update_protocol.pdf, V30_update_protocol.pdf and
-V40_update_protocol.pdf. The computational demand and accuracy of ``CONVERT2`` is highly
+V40_update_protocol.pdf. The computational demand and accuracy of ``calc_etadot`` is highly
 dependent on the specification of parameters ``GAUSS``, ``RESOL`` and ``SMOOTH``. The
 following guidance can be given for choosing the right parameters:
 
@@ -44,7 +44,7 @@ following guidance can be given for choosing the right parameters:
 Calculation of vertical velocity from pre-calculated MARS parameter 77
 ======================================================================
 
-Since November 2008, the parameter 77 (deta/dt) is stored in ``MARS`` on full model levels. ``FLEXTRA``/``FLEXPART`` in its current version requires ``deta/dt`` on model half levels, multiplied by ``dp/deta``. In ``flex_extract``, the program ``CONVERT2`` assumes that this parameter is available if the ``CONTROL`` parameter ``ETA`` is set to 1. 
+Since November 2008, the parameter 77 (deta/dt) is stored in ``MARS`` on full model levels. ``FLEXTRA``/``FLEXPART`` in its current version requires ``deta/dt`` on model half levels, multiplied by ``dp/deta``. In ``flex_extract``, the program ``calc_etadot`` assumes that this parameter is available if the ``CONTROL`` parameter ``ETA`` is set to 1. 
 
 It is recommended to use the pre-calculated parameter 77 by setting ``ETA`` to 1 whenever possible.
 

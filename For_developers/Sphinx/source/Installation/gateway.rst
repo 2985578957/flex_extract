@@ -65,12 +65,12 @@ The next step is to create an *ecaccess certificate* to be able to send and rece
 .. code-block:: bash
    
    $ ecaccess-certificate-create
-   Please enter your user-id: example_username
+   Please enter your user-id: <username>
    Your passcode: ***
    
    
    
-The easiest way to install all required packages is to use the package management system of your Linux distribution which required admin rights.
+The easiest way to install all required packages is to use the package management system of your Linux distribution which requires admin rights.
 The installation was tested under *GNU/Linux Debian buster* and *Ubuntu 18.04 Bionic Beaver*.
 
 .. code-block:: sh
@@ -105,28 +105,35 @@ If there are no error messages, you succeeded in setting up the environment.
 Gateway installation
 ====================
 
-``Flex_extract`` will be run on an ECMWF server which makes the setup the same as for the **remote mode**. In the ``setup.sh`` script `[ref] <Documentation/Input/setup.html>`_, select the ``makefile.gfortran`` for the ``CONVERT2`` Fortran program and the ECMWF server (*target*) you would like to use. 
+``Flex_extract`` will be run on an ECMWF server which makes the setup the same as for the **remote mode**. In the ``setup.sh`` script :doc:`../Documentation/Input/setup`, select the ``makefile_ecgate`` or ``makefile_cray`` for the ``calc_etadot`` Fortran program and the ECMWF server (*target*) you would like to use. 
 The job script, send to the job queue via the ECaccess software, loads the required modules from the module system. For enabling the file transfer via the gateway, you have to set the *ECUID*, *ECGID*, *GATEWAY* and *DESTINATION* parameter values.
-   
 
-.. code-block:: bash
-    :caption: 'Example settings for a gateway installation.'
-    :name: setup.sh
-    
-    # -----------------------------------------------------------------
-    # AVAILABLE COMMANDLINE ARGUMENTS TO SET
-    #
-    # THE USER HAS TO SPECIFY THESE PARAMETER
-    #
-    TARGET='ecgate'
-    MAKEFILE='makefile.gfortran'
-    ECUID='uid'
-    ECGID='gid'
-    GATEWAY='localserver.tld'
-    DESTINATION='association_name@genericSftp'
-    INSTALLDIR=None
-    JOB_TEMPLATE='job.template'
-    CONTROLFILE='CONTROL_EA5'
+Open ``setup.sh`` with your preferred editor (e.g., nano) and adapt the values:  
+   
++----------------------------------------------+----------------------------------------------+   
+|   Use this for target = **ectrans**          |   Use this for target = **cca** or **ccb**   | 
++----------------------------------------------+----------------------------------------------+
+| .. code-block:: bash                         | .. code-block:: bash                         | 
+|                                              |                                              | 
+|   ...                                        |   ...                                        |   
+|   # -----------------------------------------|   # -----------------------------------------|
+|   # AVAILABLE COMMANDLINE ARGUMENTS TO SET   |   # AVAILABLE COMMANDLINE ARGUMENTS TO SET   |
+|   #                                          |   #                                          |  
+|   # THE USER HAS TO SPECIFY THESE PARAMETER  |   # THE USER HAS TO SPECIFY THESE PARAMETER  | 
+|   #                                          |   #                                          |
+|   TARGET='ecgate'                            |   TARGET='cca'                               |
+|   MAKEFILE='makefile_ecgate'                 |   MAKEFILE='makefile_cray'                   |  
+|   ECUID='<username>'                         |   ECUID='<username>'                         |  
+|   ECGID='<groupID>'                          |   ECGID='<groupID>'                          |
+|   GATEWAY='<gatewayname>'                    |   GATEWAY='<gatewayname>'                    |
+|   DESTINATION='<assoc_name>@genericSftp'     |   DESTINATION='<assoc_name>@genericSftp'     | 
+|   INSTALLDIR=None                            |   INSTALLDIR=None                            | 
+|   JOB_TEMPLATE='job.template'                |   JOB_TEMPLATE='job.template'                |
+|   CONTROLFILE='CONTROL_EA5'                  |   CONTROLFILE='CONTROL_EA5'                  | 
+|   ...                                        |   ...                                        |   
++----------------------------------------------+----------------------------------------------+
+
+
 
 
 Afterwards, type:
@@ -145,24 +152,18 @@ to start the installation. You should see the following on standard output.
    Job compilation script has been submitted to ecgate for installation in ${HOME}/flex_extract_vX.X
    You should get an email with subject "flexcompile" within the next few minutes!
 
-``Flex_extract`` uses the email address connectd to the user account on ECMWF servers. The email content should look like this with a "SUCCESS" statement in the last line:
+``Flex_extract`` automatically uses the email address connected to the user account on ECMWF servers. The email content should look like this with a "SUCCESS" statement in the last line:
 
 .. code-block:: bash
 
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp phgrreal.f
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp grphreal.f
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -g -O3 -fopenmp ftrafo.f
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g rwGRIB2.f90
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g posnam.f
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g preconvert.f90
-    gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert=big-endian  -g -O3 -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3   
-    -rwxr-x---. 1 USER at 353134 May 23 12:27 CONVERT2
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./rwgrib2.f90
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./phgrreal.f90
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./grphreal.f90
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./ftrafo.f90
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./calc_etadot.f90
+    gfortran    -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./posnam.f90
+    gfortran   rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -fopenmp
+    ln -sf calc_etadot_fast.out calc_etadot
+    lrwxrwxrwx. 1 <username> at 20 Mar  8 14:11 calc_etadot -> calc_etadot_fast.out
     SUCCESS!    
-    
-    
-    
-    
 
-    
-    
-         

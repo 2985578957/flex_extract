@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -197,18 +197,18 @@
             
   <div class="section" id="templates">
 <h1>Templates<a class="headerlink" href="#templates" title="Permalink to this headline">¶</a></h1>
-<p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> we use the Python package <code class="docutils literal notranslate"><span class="pre">genshi</span></code> (<a class="reference external" href="https://genshi.edgewall.org/">ref</a>) to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> we use the Python package <a class="reference external" href="https://genshi.edgewall.org/">genshi</a> to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Usually it is not recommended to change anything in these files without being able to understand the effects.</p>
+<p class="admonition-title">Note</p>
+<p>Usually it is not recommended to change anything in these files without being able to understand the effects.</p>
 </div>
 <p>Each template file has its content framework and keeps so-called placeholder variables in the positions where the values needs to be substituted at run time. These placeholders are marked by a leading <code class="docutils literal notranslate"><span class="pre">$</span></code> sign. In case of the Kornshell job scripts, where (environment) variables are used the <code class="docutils literal notranslate"><span class="pre">$</span></code> sign needs to be doubled to <cite>escape</cite> and keep a single <code class="docutils literal notranslate"><span class="pre">$</span></code> sign as it is.</p>
 <p>The following templates are used and can be found in directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Templates</span></code>:</p>
 <div class="section" id="convert-nl">
 <h2>convert.nl<a class="headerlink" href="#convert-nl" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This is the template for a Fortran namelist file called <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> which will be read by <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>.
-It contains all the parameters <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> needs.</p>
+<div><p>This is the template for a Fortran namelist file called <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> which will be read by <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>.
+It contains all the parameters <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> needs.</p>
 <div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span>&amp;NAMGEN
   maxl = $maxl,
   maxb = $maxb,
@@ -311,7 +311,7 @@ For the high performance computers <strong>cca</strong> and <strong>ccb</strong>
 mkdir -p <span class="nv">$$</span><span class="o">{</span>FLEXPART_ROOT_SCRIPTS<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>
 <span class="nb">cd</span> <span class="nv">$$</span><span class="o">{</span>FLEXPART_ROOT_SCRIPTS<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>   <span class="c1"># if FLEXPART_ROOT is not set this means cd to the home directory</span>
 tar -xvf <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v<span class="nv">$$</span><span class="o">{</span>VERSION<span class="o">}</span>.tar
-<span class="nb">cd</span> source/fortran
+<span class="nb">cd</span> Source/Fortran
 <span class="se">\r</span>m *.o *.mod <span class="nv">$fortran_program</span>
 make -f <span class="nv">$$</span><span class="o">{</span>MAKEFILE<span class="o">}</span> &gt;flexcompile <span class="m">2</span>&gt;flexcompile
 
@@ -373,7 +373,7 @@ For the high performance computers <strong>cca</strong> and <strong>ccb</strong>
   module load python3
   module load eccodes/2.12.0
   module load emos/455-r64
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/source/python
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
   module unload python
@@ -382,7 +382,7 @@ For the high performance computers <strong>cca</strong> and <strong>ccb</strong>
   module load eccodes/2.12.0
   module load emos
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/source/python
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
 <span class="k">esac</span>
 
@@ -531,7 +531,7 @@ submit.py --controlfile<span class="o">=</span><span class="nv">$$$$</span><span
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

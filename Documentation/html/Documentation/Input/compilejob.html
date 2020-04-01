@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Fortran Makefile - CONVERT2" href="fortran_makefile.html" />
+    <link rel="next" title="The Fortran Makefile - calc_etadot" href="fortran_makefile.html" />
     <link rel="prev" title="The Installation Script - setup.sh" href="setup.html" /> 
 </head>
 
@@ -101,7 +101,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#example-compilejob-ksh">Example <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -205,13 +205,13 @@ server system to load the necessary modules for the environment when submitted t
 <h2>What does the compilation script do?<a class="headerlink" href="#what-does-the-compilation-script-do" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ol class="arabic simple">
-<li>It sets necessary batch system parameters</li>
-<li>It prepares the job environment at the ECMWF servers by loading the necessary library modules</li>
-<li>It sets some environment variabels for the single session</li>
-<li>It creates the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> path of the user</li>
-<li>It untars the tar-ball into the root directory.</li>
-<li>It compiles the Fortran programs’s <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</li>
-<li>At the end it checks if the script returned an error or not and send the log file via email to the user.</li>
+<li><p>It sets necessary batch system parameters</p></li>
+<li><p>It prepares the job environment at the ECMWF servers by loading the necessary library modules</p></li>
+<li><p>It sets some environment variabels for the single session</p></li>
+<li><p>It creates the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> path of the user</p></li>
+<li><p>It untars the tar-ball into the root directory.</p></li>
+<li><p>It compiles the Fortran programs’s <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</p></li>
+<li><p>At the end it checks if the script returned an error or not and send the log file via email to the user.</p></li>
 </ol>
 </div></blockquote>
 </div>
@@ -254,7 +254,7 @@ server system to load the necessary modules for the environment when submitted t
   module load eccodes/2.12.0
   module load emos/455-r64
   <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>
-  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span>Makefile.gfortran
+  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span>makefile_ecgate
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
   module unload python
@@ -268,18 +268,18 @@ server system to load the necessary modules for the environment when submitted t
   <span class="nb">export</span> <span class="nv">GROUP</span><span class="o">=</span><span class="sb">`</span><span class="nb">echo</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="p">|</span> awk -F / <span class="s1">&#39;{print $4}&#39;</span><span class="sb">`</span>
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span>/scratch/ms/<span class="si">${</span><span class="nv">GROUP</span><span class="si">}</span>/<span class="si">${</span><span class="nv">USER</span><span class="si">}</span>
   <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>
-  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span>Makefile.gfortran
+  <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span>makefile_ecgate
   <span class="p">;;</span>
 <span class="k">esac</span>
 
 mkdir -p <span class="si">${</span><span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="si">}</span>/flex_extract_v<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>
 <span class="nb">cd</span> <span class="si">${</span><span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="si">}</span>/flex_extract_v<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>   <span class="c1"># if FLEXPART_ROOT is not set this means cd to the home directory</span>
 tar -xvf <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v<span class="si">${</span><span class="nv">VERSION</span><span class="si">}</span>.tar
-<span class="nb">cd</span> source/fortran
-<span class="se">\r</span>m *.o *.mod CONVERT2
+<span class="nb">cd</span> Source/Fortran
+<span class="se">\r</span>m *.o *.mod calc_etadot
 make -f <span class="si">${</span><span class="nv">MAKEFILE</span><span class="si">}</span> &gt;flexcompile <span class="m">2</span>&gt;flexcompile
 
-ls -l CONVERT2 &gt;&gt;flexcompile
+ls -l calc_etadot &gt;&gt;flexcompile
 <span class="k">if</span> <span class="o">[</span> <span class="nv">$?</span> -eq <span class="m">0</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
   <span class="nb">echo</span> <span class="s1">&#39;SUCCESS!&#39;</span> &gt;&gt;flexcompile
   mail -s flexcompile.<span class="si">${</span><span class="nv">HOST</span><span class="si">}</span>.<span class="nv">$$</span> <span class="si">${</span><span class="nv">USER</span><span class="si">}</span> &lt;flexcompile
@@ -303,7 +303,7 @@ ls -l CONVERT2 &gt;&gt;flexcompile
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fortran_makefile.html" class="btn btn-neutral float-right" title="The Fortran Makefile - CONVERT2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="fortran_makefile.html" class="btn btn-neutral float-right" title="The Fortran Makefile - calc_etadot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="setup.html" class="btn btn-neutral float-left" title="The Installation Script - setup.sh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -315,7 +315,7 @@ ls -l CONVERT2 &gt;&gt;flexcompile
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -222,7 +222,7 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">errno</span>
@@ -236,8 +236,8 @@
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">builtins</span> <span class="k">as</span> <span class="nn">exceptions</span>
 <span class="c1"># pylint: enable=unused-import</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># METHODS</span>
@@ -266,7 +266,7 @@
 <span class="sd">        Name of the job template file for submission to ECMWF server.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="kn">import</span> <span class="nn">_config</span>
-    <span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
+    <span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="kn">import</span> <span class="n">ControlFile</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">get_cmdline_args</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">ControlFile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">controlfile</span><span class="p">)</span>
@@ -924,7 +924,7 @@
 <span class="sd">        &#39;longitudeOfLastGridPointInDegrees&#39;, &#39;jDirectionIncrementInDegrees&#39;,</span>
 <span class="sd">        &#39;iDirectionIncrementInDegrees&#39;, &#39;missingValue&#39;</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">eccodes</span> <span class="k">import</span> <span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span> <span class="n">codes_release</span>
+    <span class="kn">from</span> <span class="nn">eccodes</span> <span class="kn">import</span> <span class="n">codes_grib_new_from_file</span><span class="p">,</span> <span class="n">codes_get</span><span class="p">,</span> <span class="n">codes_release</span>
 
     <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -1084,7 +1084,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

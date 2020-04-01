@@ -105,7 +105,7 @@ Ensembles can be retrieved and are addressed by the grib message parameter ``num
 Additional fields with new precipitation disaggregation
 -------------------------------------------------------
 
-The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see :doc:`disagg` ??????????????????.
+The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see :doc:`disagg`.
 The two additional fields are marked with the ``step`` parameter in the Grib messages and are set to "1" and "2" for sub-grid point 1 and 2 respectively.
 The output filenames do not change in this case.  
 Below is an example list of precipitation fields in an output file generated with the new disaggregation method:
@@ -128,7 +128,7 @@ Below is an example list of precipitation fields in an output file generated wit
 Temporary files
 ===============
 
-``Flex_extract`` works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the ``DEBUG`` mode is switched on (see :doc:`Input/control_params`. 
+``Flex_extract`` works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the ``DEBUG`` mode is switched on (see :doc:`Input/control_params`). 
 
 MARS grib files
 ---------------
@@ -219,7 +219,7 @@ The date format is YYYYMMDDHH. The optional block ``[.N<xxx>]`` marks the ensemb
 fort files
 ----------
 
-There are a number of input files for the ``CONVERT2`` Fortran program named
+There are a number of input files for the ``calc_etadot`` Fortran program named
 
 .. code-block:: bash
 
@@ -244,21 +244,21 @@ The following table defines the numbers with their corresponding content.
     "21", "eta-coordinate vertical velocity (optional)" 
     "22", "total cloud water content (optional)"
 
-Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for ``FLEXPART v10`` and newer. Please see section ????????? for more information. 
+Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for ``FLEXPART v10`` and newer. 
 
-The ``CONVERT2`` program saves its results in file ``fort.15`` which typically contains:
+The ``calc_etadot`` program saves its results in file ``fort.15`` which typically contains:
 
-.. csv-table:: Output file of the Fortran program ``CONVERT2``
+.. csv-table:: Output file of the Fortran program ``calc_etadot``
     :header: "Number", "Content"
     :widths: 5, 20
  
     "15", "U and V wind components, eta-coordinate vertical velocity, temperature, surface pressure, specific humidity " 
     
-More details about the content of ``CONVERT2`` can be found in :doc:`vertco`.    
+More details about the content of ``calc_etadot`` can be found in :doc:`vertco`.    
     
 .. note::
  
-    The ``fort.4`` file is the namelist file to drive the Fortran program ``CONVERT2``. It is therefore also an input file and is described in ???????????????
+    The ``fort.4`` file is the namelist file to drive the Fortran program ``calc_etadot``. It is therefore also an input file.
     
     Example of a namelist:
     

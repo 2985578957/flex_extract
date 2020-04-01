@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -225,19 +225,19 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">tarfile</span>
-<span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">ArgumentDefaultsHelpFormatter</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="k">import</span> <span class="n">ControlFile</span>
-<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="k">import</span> <span class="n">UioFiles</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">make_dir</span><span class="p">,</span> <span class="n">put_file_to_ecserver</span><span class="p">,</span> <span class="n">submit_job_to_ecserver</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">Classes.ControlFile</span> <span class="kn">import</span> <span class="n">ControlFile</span>
+<span class="kn">from</span> <span class="nn">Classes.UioFiles</span> <span class="kn">import</span> <span class="n">UioFiles</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="kn">import</span> <span class="p">(</span><span class="n">make_dir</span><span class="p">,</span> <span class="n">put_file_to_ecserver</span><span class="p">,</span> <span class="n">submit_job_to_ecserver</span><span class="p">,</span>
                         <span class="n">silent_remove</span><span class="p">,</span> <span class="n">execute_subprocess</span><span class="p">,</span> <span class="n">none_or_str</span><span class="p">)</span>
 
 <span class="c1"># ------------------------------------------------------------------------------</span>
@@ -446,19 +446,19 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">!=</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecuid</span> <span class="ow">or</span> \
-           <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please enter your ECMWF user id and group id as well &#39;</span> <span class="o">+</span>
-                  <span class="s1">&#39;as the </span><span class="se">\n</span><span class="s1">name of the local gateway and the ectrans &#39;</span> <span class="o">+</span>
-                  <span class="s1">&#39;destination &#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;with command line options --ecuid --ecgid </span><span class="se">\</span>
-<span class="s1">                   --gateway --destination&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecgid</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">ecuid</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please enter your ECMWF user id and group id &#39;</span>
+                  <span class="s1">&#39; with command line options --ecuid --ecgid&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Try &quot;&#39;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> \
                   <span class="s1">&#39; -h&quot; to print usage information&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please consult ecaccess documentation or ECMWF user </span><span class="se">\</span>
-<span class="s1">                   support for further details&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please consult ecaccess documentation or ECMWF user &#39;</span>
+                  <span class="s1">&#39;support for further details.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">gateway</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: Parameters GATEWAY and DESTINATION were &#39;</span>
+                  <span class="s1">&#39;not properly set for working on ECMWF server. </span><span class="se">\n</span><span class="s1">&#39;</span>
+                  <span class="s1">&#39;There will be no transfer of output files to the &#39;</span>
+                  <span class="s1">&#39;local gateway server possible!&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="s1">&#39;$</span><span class="si">{HOME}</span><span class="s1">&#39;</span>
     <span class="k">else</span><span class="p">:</span> <span class="c1"># local</span>
@@ -612,9 +612,9 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
-    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span> <span class="n">UndefinedError</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="kn">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="kn">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="kn">import</span> <span class="n">UndefinedError</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">loader</span> <span class="o">=</span> <span class="n">TemplateLoader</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_TEMPLATES</span><span class="p">,</span> <span class="n">auto_reload</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -675,9 +675,9 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
-    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span>  <span class="n">UndefinedError</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="kn">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="kn">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="kn">import</span>  <span class="n">UndefinedError</span>
 
     <span class="k">if</span> <span class="n">fp_root</span> <span class="o">==</span> <span class="s1">&#39;../&#39;</span><span class="p">:</span>
         <span class="n">fp_root</span> <span class="o">=</span> <span class="s1">&#39;$HOME&#39;</span>
@@ -743,9 +743,9 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
-    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span>  <span class="n">UndefinedError</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="kn">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="kn">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="kn">import</span>  <span class="n">UndefinedError</span>
 
     <span class="n">fp_root_path_to_python</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fp_root</span><span class="p">,</span>
                                           <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">,</span>
@@ -878,7 +878,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

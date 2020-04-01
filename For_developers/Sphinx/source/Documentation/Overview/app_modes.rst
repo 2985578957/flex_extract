@@ -7,6 +7,7 @@ Application Modes
         
 .. _member state: https://www.ecmwf.int/en/about/who-we-are/member-states 
 .. _instructions: https://apps.ecmwf.int/registration/
+.. _ECMWF's instructions on gateway server: https://confluence.ecmwf.int/display/ECAC/ECaccess+Home
 
     
 .. _ref-app-modes:
@@ -16,12 +17,12 @@ Arising from the two user groups described in :doc:`../../Ecmwf/access`, ``flex_
 .. _ref-remote-desc:
 
   1. Remote (member)
-      In the **Remote mode** the user works directly on ECMWF Linux member state server, such as ``ecgate`` or ``cca``. The software will be installed in the ``$HOME`` directory. The user does not need to install any of the additional third-party libraries mentioned in :ref:`ref-requirements` as ECMWF provides everything with environment modules. The module selection will be done automatically in ``flex_extract``. 
+      In the **Remote mode** the user works directly on ECMWF Linux member state server, such as ``ecgate`` or ``cca/ccb``. The software will be installed in the ``$HOME`` directory. The user does not need to install any of the additional third-party libraries mentioned in :ref:`ref-requirements` as ECMWF provides everything with environment modules. The module selection will be done automatically in ``flex_extract``. 
       
 .. _ref-gateway-desc:
       
   2. Gateway (member)
-      The **Gateway mode** can be used if a local member state gateway server is in place. Then the job scripts can be submitted to the ECMWF Linux member state server via the ECMWF web access tool ``ecaccess``. The installation script of ``flex_extract`` must be executed at the local gateway server such that the software will be installed in the ``$HOME`` directory at the ECMWF server and some extra setup is done in the local ``flex_extract`` directory at the local gateway server. For more information about establishing a gateway server please see section ???. For the **Gateway mode** the necessary environment has to be established which is described in :ref:`ref-prep-gateway`.
+      The **Gateway mode** can be used if a local member state gateway server is in place. Then the job scripts can be submitted to the ECMWF Linux member state server via the ECMWF web access tool ``ecaccess``. The installation script of ``flex_extract`` must be executed at the local gateway server such that the software will be installed in the ``$HOME`` directory at the ECMWF server and some extra setup is done in the local ``flex_extract`` directory at the local gateway server. For more information about establishing a gateway server please see `ECMWF's instructions on gateway server`_. For the **Gateway mode** the necessary environment has to be established which is described in :ref:`ref-prep-gateway`.
 
 .. _ref-local-desc:
       

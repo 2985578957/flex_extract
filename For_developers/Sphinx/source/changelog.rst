@@ -8,6 +8,19 @@ Changelog
 .. _CDS API: https://cds.climate.copernicus.eu/api-how-to
 .. _ECMWF Web API: https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home
 .. _new algorithm: https://www.geosci-model-dev.net/11/2503/2018/
+
+
+.. _ref-v711:
+
+Release v7.1.1
+--------------
+
+Bug fixes
+#########
+   * corrected naming of makefiles and Fortran program executable in online documentation
+   * adapted checking for ``GATEWAY`` and ``DESTINATION`` parameter 
+   * fixed makefiles to use f90 Fortran files for ECMWF server
+
     
 .. _ref-v71: 
    
@@ -32,6 +45,7 @@ Changes
    * upgrade from grib_api to ecCodes
    * completely revised/refactored python section
    * restructured program directories
+   * Fortran program name changed from ``CONVERT2`` to ``calc_etadot``
 
 .. _ref-v704:
    

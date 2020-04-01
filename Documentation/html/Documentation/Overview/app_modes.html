@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -186,40 +186,40 @@
 <p id="ref-app-modes">Arising from the two user groups described in <a class="reference internal" href="../../Ecmwf/access.html"><span class="doc">Access Modes</span></a>, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has 4 different <span class="underline">user application modes</span>:</p>
 <blockquote id="ref-remote-desc">
 <div><ol class="arabic simple">
-<li><dl class="first docutils">
-<dt>Remote (member)</dt>
-<dd>In the <strong>Remote mode</strong> the user works directly on ECMWF Linux member state server, such as <code class="docutils literal notranslate"><span class="pre">ecgate</span></code> or <code class="docutils literal notranslate"><span class="pre">cca</span></code>. The software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory. The user does not need to install any of the additional third-party libraries mentioned in <a class="reference internal" href="../../installation.html#ref-requirements"><span class="std std-ref">Dependencies</span></a> as ECMWF provides everything with environment modules. The module selection will be done automatically in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</dd>
+<li><dl class="simple">
+<dt>Remote (member)</dt><dd><p>In the <strong>Remote mode</strong> the user works directly on ECMWF Linux member state server, such as <code class="docutils literal notranslate"><span class="pre">ecgate</span></code> or <code class="docutils literal notranslate"><span class="pre">cca/ccb</span></code>. The software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory. The user does not need to install any of the additional third-party libraries mentioned in <a class="reference internal" href="../../installation.html#ref-requirements"><span class="std std-ref">Dependencies</span></a> as ECMWF provides everything with environment modules. The module selection will be done automatically in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
+</dd>
 </dl>
 </li>
 </ol>
 </div></blockquote>
 <blockquote id="ref-gateway-desc">
 <div><ol class="arabic simple" start="2">
-<li><dl class="first docutils">
-<dt>Gateway (member)</dt>
-<dd>The <strong>Gateway mode</strong> can be used if a local member state gateway server is in place. Then the job scripts can be submitted to the ECMWF Linux member state server via the ECMWF web access tool <code class="docutils literal notranslate"><span class="pre">ecaccess</span></code>. The installation script of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> must be executed at the local gateway server such that the software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory at the ECMWF server and some extra setup is done in the local <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory at the local gateway server. For more information about establishing a gateway server please see section ???. For the <strong>Gateway mode</strong> the necessary environment has to be established which is described in <a class="reference internal" href="../../Installation/gateway.html#ref-prep-gateway"><span class="std std-ref">Prepare gateway environment</span></a>.</dd>
+<li><dl class="simple">
+<dt>Gateway (member)</dt><dd><p>The <strong>Gateway mode</strong> can be used if a local member state gateway server is in place. Then the job scripts can be submitted to the ECMWF Linux member state server via the ECMWF web access tool <code class="docutils literal notranslate"><span class="pre">ecaccess</span></code>. The installation script of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> must be executed at the local gateway server such that the software will be installed in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory at the ECMWF server and some extra setup is done in the local <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory at the local gateway server. For more information about establishing a gateway server please see <a class="reference external" href="https://confluence.ecmwf.int/display/ECAC/ECaccess+Home">ECMWF’s instructions on gateway server</a>. For the <strong>Gateway mode</strong> the necessary environment has to be established which is described in <a class="reference internal" href="../../Installation/gateway.html#ref-prep-gateway"><span class="std std-ref">Prepare gateway environment</span></a>.</p>
+</dd>
 </dl>
 </li>
 </ol>
 </div></blockquote>
 <blockquote id="ref-local-desc">
 <div><ol class="arabic simple" start="3">
-<li><dl class="first docutils">
-<dt>Local member</dt>
-<dd>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../Installation/local.html#ref-local-mode"><span class="std std-ref">Local mode - dependencies</span></a>.</dd>
+<li><dl class="simple">
+<dt>Local member</dt><dd><p>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../Installation/local.html#ref-local-mode"><span class="std std-ref">Local mode - dependencies</span></a>.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt>Local public</dt>
-<dd>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../Installation/local.html#ref-local-mode"><span class="std std-ref">Local mode - dependencies</span></a>. In this case a direct registration at ECMWF is necessary and the user has to accept a specific license agreement for each dataset he/she intends to retrieve.</dd>
+<li><dl class="simple">
+<dt>Local public</dt><dd><p>Scripts are installed and executed on a local machine, either in the current <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directory or in a path given to the installation script. Under this scenario a software environment similar to that at ECMWF is required. Additionally, Web API’s have to be installed to access ECMWF server. The complete installation process is described in <a class="reference internal" href="../../Installation/local.html#ref-local-mode"><span class="std std-ref">Local mode - dependencies</span></a>. In this case a direct registration at ECMWF is necessary and the user has to accept a specific license agreement for each dataset he/she intends to retrieve.</p>
+</dd>
 </dl>
 </li>
 </ol>
 </div></blockquote>
 <p>An overview is sketched in figure <a class="reference internal" href="#ref-fig-marsaccess"><span class="std std-ref">Application modes</span></a>.</p>
-<div class="figure" id="id1">
+<div class="figure align-default" id="id1">
 <span id="ref-fig-marsaccess"></span><img alt="../../_images/Diagramm_MarsAccess2.png" src="../../_images/Diagramm_MarsAccess2.png" />
-<p class="caption"><span class="caption-text">Application modes</span></p>
+<p class="caption"><span class="caption-text">Application modes</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <div class="toctree-wrapper compound">
 </div>
@@ -245,7 +245,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

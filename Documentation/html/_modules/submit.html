@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -221,18 +221,18 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
 <span class="c1"># software specific classes and modules from flex_extract</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="kn">import</span> <span class="p">(</span><span class="n">setup_controldata</span><span class="p">,</span> <span class="n">normal_exit</span><span class="p">,</span>
                         <span class="n">submit_job_to_ecserver</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">Mods.get_mars_data</span> <span class="k">import</span> <span class="n">get_mars_data</span>
-<span class="kn">from</span> <span class="nn">Mods.prepare_flexpart</span> <span class="k">import</span> <span class="n">prepare_flexpart</span>
+<span class="kn">from</span> <span class="nn">Mods.get_mars_data</span> <span class="kn">import</span> <span class="n">get_mars_data</span>
+<span class="kn">from</span> <span class="nn">Mods.prepare_flexpart</span> <span class="kn">import</span> <span class="n">prepare_flexpart</span>
 <span class="c1">#from Classes.ControlFile import ControlFile</span>
 
 
@@ -391,9 +391,9 @@
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="k">import</span> <span class="n">NewTextTemplate</span>
-    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="k">import</span>  <span class="n">TemplateLoader</span>
-    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="k">import</span> <span class="n">UndefinedError</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.text</span> <span class="kn">import</span> <span class="n">NewTextTemplate</span>
+    <span class="kn">from</span> <span class="nn">genshi.template</span> <span class="kn">import</span>  <span class="n">TemplateLoader</span>
+    <span class="kn">from</span> <span class="nn">genshi.template.eval</span> <span class="kn">import</span> <span class="n">UndefinedError</span>
 
     <span class="c1"># load template and insert control content as list</span>
     <span class="k">try</span><span class="p">:</span>
@@ -439,7 +439,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

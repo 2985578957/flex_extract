@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The CONTROL file</a><ul>
@@ -199,7 +199,8 @@
 It contains the controlling parameters <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> needs to decide on dataset specifications,
 handling of the retrieved data and general bahaviour. The naming convention is usually (but not necessary):</p>
 <blockquote>
-<div><code class="docutils literal notranslate"><span class="pre">CONTROL_&lt;Dataset&gt;[.optionalIndications]</span></code></div></blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">CONTROL_&lt;Dataset&gt;[.optionalIndications]</span></code></p>
+</div></blockquote>
 <p>The tested datasets are the operational dataset and the re-analysis datasets CERA-20C, ERA5 and ERA-Interim.
 The optional extra indications for the re-analysis datasets mark the files for <em>public users</em>
 and <em>global</em> domain. For the operational datasets (<em>OD</em>) the file names contain also information of
@@ -215,7 +216,7 @@ must be listed in the <code class="docutils literal notranslate"><span class="pr
 </div>
 <div class="section" id="example-control-files">
 <h2>Example CONTROL files<a class="headerlink" href="#example-control-files" title="Permalink to this headline">¶</a></h2>
-<p>A number of example files can be found in the directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/run/control/</span></code>.
+<p>A number of example files can be found in the directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Run/Control/</span></code>.
 They can be used as a template for adaptations and understand what’s possible to
 retrieve from ECMWF’s archive.
 For each main dataset there is an example and additionally some variances in resolution, type of field or type of retrieving the vertical coordinate.</p>
@@ -371,7 +372,7 @@ ADDPAR None
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

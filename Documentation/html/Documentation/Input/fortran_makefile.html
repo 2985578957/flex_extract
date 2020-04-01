@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The Fortran Makefile - CONVERT2 &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>The Fortran Makefile - calc_etadot &mdash; flex_extract 7.1 alpha documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a><ul class="simple">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
@@ -171,7 +171,7 @@
         
           <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
         
-      <li>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></li>
+      <li>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -190,24 +190,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-fortran-makefile-convert2">
-<h1>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code><a class="headerlink" href="#the-fortran-makefile-convert2" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="the-fortran-makefile-calc-etadot">
+<h1>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code><a class="headerlink" href="#the-fortran-makefile-calc-etadot" title="Permalink to this headline">¶</a></h1>
 <p id="ref-convert"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code>’s Fortran program will be compiled during
-the installation process to get the executable named <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has a couple of <code class="docutils literal notranslate"><span class="pre">Makefiles</span></code> prepared which can be found in the directory
-<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/fortran</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.
-A list of these <code class="docutils literal notranslate"><span class="pre">Makefiles</span></code> are shown below:</p>
+the installation process to get the executable named <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a couple of <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> prepared which can be found in the directory
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.
+A list of these <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> are shown below:</p>
 <div class="line-block">
 <div class="line"><strong>Remote/Gateway mode</strong>:</div>
 <div class="line">Files to be used as they are!</div>
 </div>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>Makefile.gfortran</strong></div>
+<div class="line"><strong>makefile_ecgate</strong></div>
 <div class="line">For the use on ECMWF’s server <strong>ecgate</strong>.</div>
 </div>
 <div class="line-block">
-<div class="line"><strong>Makefile.CRAY</strong></div>
+<div class="line"><strong>makefile_cray</strong></div>
 <div class="line">For the use on ECMWF’s server <strong>cca/ccb</strong>.</div>
 </div>
 </div></blockquote>
@@ -217,15 +217,15 @@ A list of these <code class="docutils literal notranslate"><span class="pre">Mak
 </div>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>Makefile.local.gfortran</strong></div>
-<div class="line">For the use with gfortran compiler.</div>
+<div class="line"><strong>makefile_fast</strong></div>
+<div class="line">For the use with gfortran compiler and optimization mode.</div>
 </div>
 <div class="line-block">
-<div class="line"><strong>Makefile.local.ifort</strong></div>
-<div class="line">For the use with ifort compiler.</div>
+<div class="line"><strong>makefile_debug</strong></div>
+<div class="line">For the use with gfortran compiler in debugging mode.</div>
 </div>
 </div></blockquote>
-<p>For instructions on how to adapt the <code class="docutils literal notranslate"><span class="pre">Makefiles</span></code> for the local application mode
+<p>For instructions on how to adapt the <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> for the local application mode
 please see <a class="reference internal" href="../../Installation/local.html#ref-install-local"><span class="std std-ref">Local installation</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
@@ -251,7 +251,7 @@ please see <a class="reference internal" href="../../Installation/local.html#ref
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>
