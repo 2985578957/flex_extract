@@ -35,7 +35,7 @@ import platform
 # PARAMETERS
 # ------------------------------------------------------------------------------
 
-_VERSION_STR = '7.1'
+_VERSION_STR = '7.1.1'
 
 FLAG_ON_ECMWFSERVER = 'ecgb' in platform.node()
 
