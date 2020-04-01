@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -183,51 +183,51 @@
   <div class="section" id="disaggregation-of-flux-data">
 <h1>Disaggregation of Flux Data<a class="headerlink" href="#disaggregation-of-flux-data" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> interpolates meteorological input data linearly to the position of computational particles in time and space. This method requires point values in the discrete input fields. However, flux data (as listed in table <a class="reference internal" href="#ref-table-fluxpar"><span class="std std-ref">flux fields</span></a>) from the ECMWF represent cell averages or integrals and are accumulated over a specific time interval, depending on the dataset. Hence, to conserve the integral quantity with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>’s linear interpolation a pre-processing scheme has to be applied.</p>
-<span id="ref-table-fluxpar"></span><table border="1" class="colwidths-given docutils align-center" id="id1">
+<span id="ref-table-fluxpar"></span><table class="colwidths-given docutils align-center" id="id1">
 <caption><span class="caption-text">flux fields</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="14%" />
-<col width="43%" />
-<col width="14%" />
-<col width="29%" />
+<col style="width: 14%" />
+<col style="width: 43%" />
+<col style="width: 14%" />
+<col style="width: 29%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Short Name</th>
-<th class="head">Name</th>
-<th class="head">Units</th>
-<th class="head">Interpolation Type</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Short Name</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Interpolation Type</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>LSP</td>
-<td>large-scale precipitation</td>
-<td><span class="math notranslate nohighlight">\(m\)</span></td>
-<td>modified linear interpolation</td>
+<tbody>
+<tr class="row-even"><td><p>LSP</p></td>
+<td><p>large-scale precipitation</p></td>
+<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
+<td><p>modified linear interpolation</p></td>
 </tr>
-<tr class="row-odd"><td>CP</td>
-<td>convective precipitation</td>
-<td><span class="math notranslate nohighlight">\(m\)</span></td>
-<td>modified linear interpolation</td>
+<tr class="row-odd"><td><p>CP</p></td>
+<td><p>convective precipitation</p></td>
+<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
+<td><p>modified linear interpolation</p></td>
 </tr>
-<tr class="row-even"><td>SSHF</td>
-<td>surface sensible heat flux</td>
-<td><span class="math notranslate nohighlight">\(J m^{-2}\)</span></td>
-<td>bicubic interpolation</td>
+<tr class="row-even"><td><p>SSHF</p></td>
+<td><p>surface sensible heat flux</p></td>
+<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
+<td><p>bicubic interpolation</p></td>
 </tr>
-<tr class="row-odd"><td>EWSS</td>
-<td>eastward turbulent surface stress</td>
-<td><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></td>
-<td>bicubic interpolation</td>
+<tr class="row-odd"><td><p>EWSS</p></td>
+<td><p>eastward turbulent surface stress</p></td>
+<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
+<td><p>bicubic interpolation</p></td>
 </tr>
-<tr class="row-even"><td>NSSS</td>
-<td>northward turbulent surface stress</td>
-<td><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></td>
-<td>bicubic interpolation</td>
+<tr class="row-even"><td><p>NSSS</p></td>
+<td><p>northward turbulent surface stress</p></td>
+<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
+<td><p>bicubic interpolation</p></td>
 </tr>
-<tr class="row-odd"><td>SSR</td>
-<td>surface net solar radiation</td>
-<td><span class="math notranslate nohighlight">\(J m^{-2}\)</span></td>
-<td>bicubic interpolation</td>
+<tr class="row-odd"><td><p>SSR</p></td>
+<td><p>surface net solar radiation</p></td>
+<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
+<td><p>bicubic interpolation</p></td>
 </tr>
 </tbody>
 </table>
@@ -236,8 +236,8 @@ Afterwards, a <em>disaggregation</em> scheme is applied which means to break dow
 In order to be able to carry out the disaggregation procedure proposed by Paul James, additional flux data is retrieved automatically for one day at the beginning and one day at the end of the period specified. Thus, data for flux computation will be requested for the period START_DATE-1 to END_DATE+1. Note that these (additional) dates are used only for interpolation within <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and are not communicated to the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files.</p>
 <p>The flux disaggregation produces files named <code class="docutils literal notranslate"><span class="pre">fluxYYYYMMDDHH</span></code>, where <code class="docutils literal notranslate"><span class="pre">YYYYMMDDHH</span></code> is the date format. Note, that the first two and last two flux files do not contain any data.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Note also that for operational retrievals (<code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> set to 00 or 12) forecast fluxes are only available until <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code>, so that no polynomial interpolation is possible in the last two time intervals. This is the reason why setting <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> is not recommended for on demand scripts.</p>
+<p class="admonition-title">Note</p>
+<p>Note also that for operational retrievals (<code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> set to 00 or 12) forecast fluxes are only available until <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code>, so that no polynomial interpolation is possible in the last two time intervals. This is the reason why setting <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> is not recommended for on demand scripts.</p>
 </div>
 <div class="section" id="disaggregation-for-precipitation-in-older-versions">
 <h2>Disaggregation for precipitation in older versions<a class="headerlink" href="#disaggregation-for-precipitation-in-older-versions" title="Permalink to this headline">¶</a></h2>
@@ -251,9 +251,9 @@ This is obviously undesirable as it will affect wet scavenging, a very efficient
 Wet deposition may be produced in grid cells where none should occur, or too little may be produced in others. This could lead to an unrealistic, checkerboard-like deposition fields.
 Horizontally, the precipitation values are averages for a grid cell around the grid point to which they are ascribed, and <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> uses bilinear interpolation to obtain precipitation rates at particle positions.
 However, the supporting points in space are not shifted between precipitation and other variables as is the case for the temporal dimension.</p>
-<div class="align-center figure" id="id2">
+<div class="align-center figure align-default" id="id2">
 <span id="ref-fig-olddisagg"></span><img alt="../_images/old_disagg.png" src="../_images/old_disagg.png" />
-<p class="caption"><span class="caption-text">Fig. 1: Example of disaggregation scheme as implemented in older versions for an isolated precipitation event lasting one time interval (thick blue line). The amount of original precipitation after de-accumulation is given by the blue-shaded area. The green circles represent the discrete grid points after disaggregation and linearly interpolate in between them as indicated by the green line and the green-shaded area. Note that supporting points for the interpolation are shifted by a half-time interval compared to the times when other meteorological fields are available (Hittmeir et al. 2018).</span></p>
+<p class="caption"><span class="caption-text">Fig. 1: Example of disaggregation scheme as implemented in older versions for an isolated precipitation event lasting one time interval (thick blue line). The amount of original precipitation after de-accumulation is given by the blue-shaded area. The green circles represent the discrete grid points after disaggregation and linearly interpolate in between them as indicated by the green line and the green-shaded area. Note that supporting points for the interpolation are shifted by a half-time interval compared to the times when other meteorological fields are available (Hittmeir et al. 2018).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <p>Disaggregation is done for 4 adjacent timespans (<span class="math notranslate nohighlight">\(a_0, a_1, a_2, a_3\)</span>) which generates a new, disaggregated value which is output at the central point of the 4 adjacent timespans.</p>
 <div class="math notranslate nohighlight">
@@ -275,14 +275,14 @@ These requirements on the reconstruction algorithm imply that time intervals wit
 In the simplest scenario of an isolated precipitation event, where in the time interval before and after the data values are zero, the reconstruction algorithm therefore has to vanish at the boundaries of the interval, too.
 The additional conditions of continuity and conservation of the precipitation amount then require us to introduce sub-grid points if we want to keep a linear interpolation (Fig. 2).
 The height is thereby determined by the condition of conservation of the integral of the function over the time interval.</p>
-<div class="align-center figure" id="id3">
+<div class="align-center figure align-default" id="id3">
 <span id="ref-fig-newdisagg"></span><img alt="../_images/new_disagg.png" src="../_images/new_disagg.png" />
-<p class="caption"><span class="caption-text">Fig. 2: Precipitation rate linearly interpolated using a sub-grid with two additional points. Colours as in Fig. 1 (Hittmeir et al. 2018).</span></p>
+<p class="caption"><span class="caption-text">Fig. 2: Precipitation rate linearly interpolated using a sub-grid with two additional points. Colours as in Fig. 1 (Hittmeir et al. 2018).</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <p>Figure 3 shows an overview of the new algorithm and its components.</p>
-<div class="align-center figure" id="id4">
+<div class="align-center figure align-default" id="id4">
 <span id="ref-fig-ia3"></span><img alt="../_images/IA3.png" src="../_images/IA3.png" />
-<p class="caption"><span class="caption-text">Fig. 3: Schematic overview of the basic notation in a precipitation interval with the original precipitation rate g (green) as a step function and the interpolated data <span class="math notranslate nohighlight">\(f\)</span> (dark blue) as the piecewise linear function. The original time interval with fixed grid length <span class="math notranslate nohighlight">\(\delta t\)</span> is split equidistantly in three subintervals denoted by <span class="math notranslate nohighlight">\(I_i^{1,2,3}\)</span>, with the slopes in the subintervals as denoted by <span class="math notranslate nohighlight">\(k_i^{1,2,3}\)</span> . The sub-grid function values <span class="math notranslate nohighlight">\(f_i, f_i^{1,2}, f_{i+1}\)</span> are marked by red diamonds (Hittmeir et al. 2018).</span></p>
+<p class="caption"><span class="caption-text">Fig. 3: Schematic overview of the basic notation in a precipitation interval with the original precipitation rate g (green) as a step function and the interpolated data <span class="math notranslate nohighlight">\(f\)</span> (dark blue) as the piecewise linear function. The original time interval with fixed grid length <span class="math notranslate nohighlight">\(\delta t\)</span> is split equidistantly in three subintervals denoted by <span class="math notranslate nohighlight">\(I_i^{1,2,3}\)</span>, with the slopes in the subintervals as denoted by <span class="math notranslate nohighlight">\(k_i^{1,2,3}\)</span> . The sub-grid function values <span class="math notranslate nohighlight">\(f_i, f_i^{1,2}, f_{i+1}\)</span> are marked by red diamonds (Hittmeir et al. 2018).</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <p>The following lists the equations of the new algorithm.</p>
 <div class="math notranslate nohighlight">
@@ -297,9 +297,9 @@ The height is thereby determined by the condition of conservation of the integra
 \[ \begin{align}\begin{aligned}f_{i+1}^\diamond=&amp;\frac{18}{13}g_i-\frac{5}{13}f_i\\f_{i+1}^{\diamond\diamond}=&amp;\frac{18}{13}g_{i+1}-\frac{5}{13}f_{i+2}\\f_{i+1} =&amp; \min\left\{3 g_i,\, 3 g_{i+1},\, \sqrt{(f_{i+1}^\diamond\,f_{i+1}^{\diamond\diamond})_+}\right\}\\f_i^{(1)}=&amp; \frac32 g_i -\frac{1}{12}f_{i}-\frac{5}{12}f_{i+1}^{\textrm{mon}}\\f_i^{(2)}=&amp; \frac32 g_i -\frac{5}{12}f_{i}-\frac{1}{12}f_{i+1}^{\textrm{mon}}\\\textbf{endif}\end{aligned}\end{align} \]</div>
 <p>In the case of the new disaggregation method for precipitation, the two new sub grid points are added in the <code class="docutils literal notranslate"><span class="pre">flux</span></code> output files. They are identified by the forecast step parameter <code class="docutils literal notranslate"><span class="pre">step</span></code> which is 0 for the original time interval and 1 or 2 for the two new sub grid points respectively. The filenames do not change.</p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
+<p class="admonition-title">Note</p>
 <p>The new method for disaggregation was published in the Geoscientific Model Development Journal in 2018:</p>
-<p class="last">Hittmeir, S., Philipp, A., and Seibert, P.: A conservative reconstruction scheme for the interpolation of extensive quantities in the Lagrangian particle dispersion model FLEXPART, Geosci. Model Dev., 11, 2503-2523, <a class="reference external" href="https://doi.org/10.5194/gmd-11-2503-2018">https://doi.org/10.5194/gmd-11-2503-2018</a>, 2018.</p>
+<p>Hittmeir, S., Philipp, A., and Seibert, P.: A conservative reconstruction scheme for the interpolation of extensive quantities in the Lagrangian particle dispersion model FLEXPART, Geosci. Model Dev., 11, 2503-2523, <a class="reference external" href="https://doi.org/10.5194/gmd-11-2503-2018">https://doi.org/10.5194/gmd-11-2503-2018</a>, 2018.</p>
 </div>
 </div>
 <div class="section" id="disaggregation-for-the-rest-of-the-flux-fields">
@@ -340,7 +340,7 @@ p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

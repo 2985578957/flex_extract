@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -191,27 +191,27 @@
 <div class="section" id="remote-mode-dependencies">
 <span id="ref-req-remote"></span><span id="ref-remote-mode"></span><h2>Remote mode - dependencies<a class="headerlink" href="#remote-mode-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>The following software is required, and already available at the ECMWF servers:</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="61%" />
-<col width="39%" />
+<col style="width: 61%" />
+<col style="width: 39%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Python part</td>
-<td>Fortran part</td>
+<tbody>
+<tr class="row-odd"><td><p>Python part</p></td>
+<td><p>Fortran part</p></td>
 </tr>
-<tr class="row-even"><td><ul class="first last simple">
-<li><a class="reference external" href="https://www.python.org/downloads/">Python3</a></li>
-<li><a class="reference external" href="http://www.numpy.org/">numpy</a></li>
-<li><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></li>
-<li><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></li>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="https://www.python.org/downloads/">Python3</a></p></li>
+<li><p><a class="reference external" href="http://www.numpy.org/">numpy</a></p></li>
+<li><p><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></p></li>
+<li><p><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></p></li>
 </ul>
 </td>
-<td><ul class="first last simple">
-<li><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></li>
-<li><a class="reference external" href="http://www.fftw.org">fftw3</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></li>
-<li><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></li>
+<td><ul class="simple">
+<li><p><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></p></li>
+<li><p><a class="reference external" href="http://www.fftw.org">fftw3</a></p></li>
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></p></li>
+<li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></p></li>
 </ul>
 </td>
 </tr>
@@ -229,8 +229,7 @@ Substitute <em>&lt;ecuid&gt;</em> with your ECMWF user name:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh -X &lt;ecuid&gt;@ecaccess.ecmwf.int
 </pre></div>
 </div>
-<p>This will lead to the following output on the command line, asking for your
-password:</p>
+<p>This will lead to the following output on the command line, asking for your password:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Authorized access only.
 
 ***************************************************************
@@ -263,29 +262,29 @@ tar xvf flex_extract_vX.X.tar.gz
 </div>
 <p>Execute the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s root directory.
 Before executing it, it is necessary to adapt some parameters from <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
-described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p>
-<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your preferred editor (e.g., <a href="#id1"><span class="problematic" id="id2">``</span></a>nano’‘) and adapt the values:</p>
-<table border="1" class="docutils">
+described in <a class="reference internal" href="../Documentation/Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a>.</p>
+<p>Open <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> with your preferred editor (e.g., nano) and adapt the values:</p>
+<table class="docutils align-default">
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Use this for target = <strong>ectrans</strong></td>
-<td>Use this for target = <strong>cca</strong></td>
+<tbody>
+<tr class="row-odd"><td><p>Use this for target = <strong>ectrans</strong></p></td>
+<td><p>Use this for target = <strong>cca</strong> or <strong>ccb</strong></p></td>
 </tr>
-<tr class="row-even"><td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<tr class="row-even"><td><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
 <span class="c1"># -----------------------------------------</span>
 <span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
 <span class="c1">#</span>
 <span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
 <span class="c1">#</span>
 <span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.gfortran&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span>None
-<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile_ecgate&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;&#39;</span>
+<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;&lt;groupID&gt;&#39;</span>
+<span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;&lt;gatewayname&gt;&#39;</span>
+<span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;@genericSftp&#39;</span>
 <span class="nv">INSTALLDIR</span><span class="o">=</span>None
 <span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
@@ -293,18 +292,18 @@ described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p
 </pre></div>
 </div>
 </td>
-<td><div class="first last highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<td><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
 <span class="c1"># -----------------------------------------</span>
 <span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
 <span class="c1">#</span>
 <span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
 <span class="c1">#</span>
 <span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;cca&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;Makefile.CRAY&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;uid&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;gid&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span>None
-<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile_cray&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;&#39;</span>
+<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;&lt;groupID&gt;&#39;</span>
+<span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;&lt;gatewayname&gt;&#39;</span>
+<span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;@genericSftp&#39;</span>
 <span class="nv">INSTALLDIR</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
 <span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
@@ -318,8 +317,8 @@ described in <span class="xref std std-doc">Documentation/Input/setup</span>.</p
 <p><span class="underline">Please substitute the values of ECUID and ECGID
 with your own ones (look at any of your files with ``ls -l’’ to see uid and gid).</span></p>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If a local gateway server is available, files can be transferred with <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. In that case, a valid <em>GATEWAY</em> and <em>DESTINATION</em> have to be present in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file (even if not used, the lines must not be deleted).</p>
+<p class="admonition-title">Note</p>
+<p>If a local gateway server is available, files can be transferred with <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. In that case, a valid <em>GATEWAY</em> and <em>DESTINATION</em> have to be present in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file (even if not used, the lines must not be deleted).</p>
 </div>
 <p>Afterwards, type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python3
@@ -333,15 +332,16 @@ Job compilation script has been submitted to ecgate <span class="k">for</span> i
 You should get an email with subject <span class="s2">&quot;flexcompile&quot;</span> within the next few minutes!
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the email address connectd to the user account on ECMWF servers. The email content should look like this with a “SUCCESS” statement in the last line:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp phgrreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp grphreal.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -g -O3 -fopenmp ftrafo.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g rwGRIB2.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g posnam.f
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -c -O3 -I. -I/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/include -g preconvert.f90
-gfortran   -m64 -fdefault-real-8 -fcray-pointer -fno-second-underscore  -ffixed-line-length-132 -fopenmp  -fconvert<span class="o">=</span>big-endian  -g -O3 -o ./CONVERT2 ftrafo.o phgrreal.o grphreal.o rwGRIB2.o posnam.o preconvert.o -L/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.12.0/GNU/6.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3
--rwxr-x---. <span class="m">1</span> USER at <span class="m">353134</span> May <span class="m">23</span> <span class="m">12</span>:27 CONVERT2
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> automatically uses the email address connected to the user account on ECMWF servers. The email content should look like this with a “SUCCESS” statement in the last line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./rwgrib2.f90
+gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./phgrreal.f90
+gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./grphreal.f90
+gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./ftrafo.f90
+gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./calc_etadot.f90
+gfortran    -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -I. -I/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./posnam.f90
+gfortran   rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march<span class="o">=</span>native -L/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -Wl,-rpath,/usr/local/apps/eccodes/2.13.0/GNU/7.3.0/lib -leccodes_f90 -leccodes -ljasper -lpthread -L/usr/local/apps/jasper/1.900.1/LP64/lib -ljasper -lm -L/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -Wl,-rpath,/usr/local/apps/libemos/000455/GNU/6.3.0/lib  -lemos.R64.D64.I32 -L/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -Wl,-rpath,/usr/local/apps/fftw/3.3.4/GNU/6.3.0/lib -lfftw3    -fopenmp
+ln -sf calc_etadot_fast.out calc_etadot
+lrwxrwxrwx. <span class="m">1</span> &lt;username&gt; at <span class="m">20</span> Mar  <span class="m">8</span> <span class="m">14</span>:11 calc_etadot -&gt; calc_etadot_fast.out
 SUCCESS!
 </pre></div>
 </div>
@@ -368,7 +368,7 @@ SUCCESS!
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

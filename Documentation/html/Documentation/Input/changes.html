@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -192,15 +192,14 @@
             
   <div class="section" id="control-file-changes">
 <h1>CONTROL file changes<a class="headerlink" href="#control-file-changes" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>Changes from version 7.0.4 to version 7.1</dt>
-<dd><ul class="first last simple">
-<li>removed <code class="docutils literal notranslate"><span class="pre">M_</span></code> (but is still available for downward compatibility)</li>
-<li>grid resolution not in 1/1000 degress anymore (but is still available for downward compatibility)</li>
-<li>comments available with <code class="docutils literal notranslate"><span class="pre">#</span></code></li>
-<li>only parameters which are needed to override the default values are necessary</li>
-<li>number of type/step/time elements do not have to be 24 any more. Just select the interval you need.</li>
-<li>the <code class="docutils literal notranslate"><span class="pre">dtime</span></code> parameter needs to be consistent with <code class="docutils literal notranslate"><span class="pre">type/step/time</span></code>. For example <code class="docutils literal notranslate"><span class="pre">dtime</span></code> can be coarser as <code class="docutils literal notranslate"><span class="pre">time</span></code> intervals are available, but not finer.</li>
+<dl class="simple">
+<dt>Changes from version 7.0.4 to version 7.1</dt><dd><ul class="simple">
+<li><p>removed <code class="docutils literal notranslate"><span class="pre">M_</span></code> (but is still available for downward compatibility)</p></li>
+<li><p>grid resolution not in 1/1000 degress anymore (but is still available for downward compatibility)</p></li>
+<li><p>comments available with <code class="docutils literal notranslate"><span class="pre">#</span></code></p></li>
+<li><p>only parameters which are needed to override the default values are necessary</p></li>
+<li><p>number of type/step/time elements do not have to be 24 any more. Just select the interval you need.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">dtime</span></code> parameter needs to be consistent with <code class="docutils literal notranslate"><span class="pre">type/step/time</span></code>. For example <code class="docutils literal notranslate"><span class="pre">dtime</span></code> can be coarser as <code class="docutils literal notranslate"><span class="pre">time</span></code> intervals are available, but not finer.</p></li>
 </ul>
 </dd>
 </dl>
@@ -228,7 +227,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

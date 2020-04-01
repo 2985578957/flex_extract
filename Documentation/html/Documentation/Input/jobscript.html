@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#what-does-the-jobscript-do">What does the jobscript do?</a></li>
@@ -195,8 +195,8 @@
   <div class="section" id="the-jobscript-job-ksh">
 <h1>The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code><a class="headerlink" href="#the-jobscript-job-ksh" title="Permalink to this headline">¶</a></h1>
 <p>The jobscript is a Korn-shell script which will be created at runtime for each <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> execution in the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
-<p>It is based on the <code class="docutils literal notranslate"><span class="pre">job.temp</span></code> template file which is stored in the <code class="docutils literal notranslate"><span class="pre">templates</span></code> directory.
-This template is by itself generated in the installation process from a <code class="docutils literal notranslate"><span class="pre">jobscript.template</span></code> template file.</p>
+<p>It is based on the <code class="docutils literal notranslate"><span class="pre">job.temp</span></code> template file which is stored in the <code class="docutils literal notranslate"><span class="pre">Templates</span></code> directory.
+This template is by itself generated in the installation process from a <code class="docutils literal notranslate"><span class="pre">job.template</span></code> template file.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the python package <a class="reference external" href="https://genshi.edgewall.org/">genshi</a> to generate
 the Korn-shell script from the template files by substituting the individual parameters.
 These individual parameters are marked by a doubled <code class="docutils literal notranslate"><span class="pre">$</span></code> sign in <code class="docutils literal notranslate"><span class="pre">job.temp</span></code>.</p>
@@ -207,13 +207,13 @@ server system to load the necessary modules for the environment when submitted t
 <h2>What does the jobscript do?<a class="headerlink" href="#what-does-the-jobscript-do" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ol class="arabic simple">
-<li>It sets necessary batch system parameters</li>
-<li>It prepares the job environment at the ECMWF servers by loading the necessary library modules</li>
-<li>It sets some environment variabels for the single session</li>
-<li>It creates the directory structure in the users <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code> file system</li>
-<li>It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the <code class="docutils literal notranslate"><span class="pre">jobscript.ksh</span></code>. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a set of parameters which are given to the jobscript with its default or the user defined values. It also sets the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> as an environment variable.</li>
-<li><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is started from within the <code class="docutils literal notranslate"><span class="pre">work</span></code> directory of the new directory structure by calling the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script. It sets new pathes for input and output directory and the recently generated <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</li>
-<li>At the end it checks if the script returned an error or not and send the log file via email to the user.</li>
+<li><p>It sets necessary batch system parameters</p></li>
+<li><p>It prepares the job environment at the ECMWF servers by loading the necessary library modules</p></li>
+<li><p>It sets some environment variabels for the single session</p></li>
+<li><p>It creates the directory structure in the users <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code> file system</p></li>
+<li><p>It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the <code class="docutils literal notranslate"><span class="pre">jobscript.ksh</span></code>. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a set of parameters which are given to the jobscript with its default or the user defined values. It also sets the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> as an environment variable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is started from within the <code class="docutils literal notranslate"><span class="pre">work</span></code> directory of the new directory structure by calling the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script. It sets new pathes for input and output directory and the recently generated <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</p></li>
+<li><p>At the end it checks if the script returned an error or not and send the log file via email to the user.</p></li>
 </ol>
 </div></blockquote>
 </div>
@@ -255,7 +255,7 @@ server system to load the necessary modules for the environment when submitted t
   module load python3
   module load eccodes/2.12.0
   module load emos/455-r64
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/source/python
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
   module unload python
@@ -264,7 +264,7 @@ server system to load the necessary modules for the environment when submitted t
   module load eccodes/2.12.0
   module load emos
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span>
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/source/python
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
 <span class="k">esac</span>
 
@@ -394,7 +394,7 @@ submit.py --controlfile<span class="o">=</span><span class="si">${</span><span c
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

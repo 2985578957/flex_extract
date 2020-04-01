@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -192,13 +192,13 @@
             
   <div class="section" id="control-file-examples">
 <h1>CONTROL file examples<a class="headerlink" href="#control-file-examples" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a couple of example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files for a number of different data set constellations in the directory path <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/run/control</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a couple of example <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files for a number of different data set constellations in the directory path <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Run/Control</span></code>.</p>
 <p>Here is a list of the example files and a description of the data set:</p>
-<dl class="docutils">
-<dt>CONTROL.documentation</dt>
-<dd>This file is not intended to be used with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. It has a list of all possible parameters and their default values for a quick overview.</dd>
+<dl class="simple">
+<dt>CONTROL.documentation</dt><dd><p>This file is not intended to be used with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. It has a list of all possible parameters and their default values for a quick overview.</p>
+</dd>
 </dl>
-<p>CONTROL_CERA
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>CONTROL_CERA
 CONTROL_CERA.global
 CONTROL_CERA.public
 CONTROL_EA5
@@ -220,7 +220,9 @@ CONTROL_OD.OPER.FC.eta.highres
 CONTROL_OD.OPER.FC.gauss.highres
 CONTROL_OD.OPER.FC.operational
 CONTROL_OD.OPER.FC.twiceaday.1hourly
-CONTROL_OD.OPER.FC.twiceaday.3hourly</p>
+CONTROL_OD.OPER.FC.twiceaday.3hourly
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -245,7 +247,7 @@ CONTROL_OD.OPER.FC.twiceaday.3hourly</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

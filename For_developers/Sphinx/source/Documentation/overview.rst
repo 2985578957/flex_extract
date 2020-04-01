@@ -29,7 +29,7 @@ Some details on the tasks and program worksteps are described in :doc:`Overview/
            - Files and modules as table with information about unit tests
            - Api
              
-       - Fortran program - CONVERT2
+       - Fortran program - calc_etadot
            
            - Package diagram
            - Api

@@ -27,7 +27,7 @@ sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = u'flex_extract'
-copyright = u'2019, Anne Philipp and Leopold Haimberger'
+copyright = u'2020, Anne Philipp and Leopold Haimberger'
 author = u'Anne Philipp and Leopold Haimberger'
 
 # The short X.Y version

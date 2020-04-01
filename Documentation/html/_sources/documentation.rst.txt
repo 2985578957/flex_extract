@@ -12,7 +12,7 @@ Documentation
     
     Vertical Coordinate (Under construction)
       - Methods (GAUSS, ETA, OMEGA)
-      - CONVERT 
+      - calc_etadot 
     
     Auto Generated Documentation
       - Python

@@ -26,7 +26,7 @@ Welcome to ``flex_extract``'s user documentation!
         </td>          
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-            <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/ecmwf_icon.png">
           </div>
           <h2><a href="ecmwf_data.html">ECMWF data</a></h2>
           <ul>
@@ -61,7 +61,7 @@ Welcome to ``flex_extract``'s user documentation!
         </td>  
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-            <img style="position:absolute;height:90%;vertical-align:bottom;" src="">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/check_icon.png">
           </div>
           <h2><a href="evaluation.html">Evaluation</a></h2>
           <ul>
@@ -72,7 +72,7 @@ Welcome to ``flex_extract``'s user documentation!
         </td> 
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/dev_icon.png">
           </div>
           <h2><a href="dev_guide.html">Developer</a></h2>
           <ul>
@@ -93,10 +93,10 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="changelog.html">Changelog</a></h2>
           <ul>
+            <li><a href="changelog.html#ref-v711">v7.1.1</a></li>
             <li><a href="changelog.html#ref-v71">v7.1</a></li>
             <li><a href="changelog.html#ref-v704">v7.0.4</a></li>
             <li><a href="changelog.html#ref-v703">v7.0.3</a></li>
-            <li><a href="changelog.html#ref-v60">v6</a></li>
           </ul>
         </td>        
         <td style="width:30%;height:150px;">

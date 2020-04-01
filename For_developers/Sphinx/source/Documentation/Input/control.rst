@@ -33,7 +33,7 @@ must be listed in the :literal:`CONTROL` files.
 Example CONTROL files
 --------------------------------
 
-A number of example files can be found in the directory :literal:`flex_extract_vX.X/run/control/`.
+A number of example files can be found in the directory :literal:`flex_extract_vX.X/Run/Control/`.
 They can be used as a template for adaptations and understand what's possible to 
 retrieve from ECMWF's archive.
 For each main dataset there is an example and additionally some variances in resolution, type of field or type of retrieving the vertical coordinate. 

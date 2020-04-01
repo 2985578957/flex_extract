@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -96,6 +96,10 @@
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v7-1-1">Release v7.1.1</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-1">Release v7.1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
@@ -103,16 +107,16 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-4">Release v7.0.4</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id1">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Bug fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-3">Release v7.0.3</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">New Features</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-2">Release v7.0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-1-v6-0">Release v0.1 - v6.0</a></li>
@@ -189,18 +193,31 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<div class="section" id="release-v7-1-1">
+<span id="ref-v711"></span><h2>Release v7.1.1<a class="headerlink" href="#release-v7-1-1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bug-fixes">
+<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>corrected naming of makefiles and Fortran program executable in online documentation</p></li>
+<li><p>adapted checking for <code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code> and <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> parameter</p></li>
+<li><p>fixed makefiles to use f90 Fortran files for ECMWF server</p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
 <div class="section" id="release-v7-1">
 <span id="ref-v71"></span><h2>Release v7.1<a class="headerlink" href="#release-v7-1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="new-features">
 <h3>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>first set of UNIT tests</li>
-<li>first set of regression tests</li>
-<li>structured documentation with Sphinx</li>
-<li>local retrieval via <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a> for ERA 5 data</li>
-<li>simplified installation process</li>
-<li>disaggregation of precipitation with a <a class="reference external" href="https://www.geosci-model-dev.net/11/2503/2018/">new algorithm</a></li>
+<li><p>first set of UNIT tests</p></li>
+<li><p>first set of regression tests</p></li>
+<li><p>structured documentation with Sphinx</p></li>
+<li><p>local retrieval via <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a> for ERA 5 data</p></li>
+<li><p>simplified installation process</p></li>
+<li><p>disaggregation of precipitation with a <a class="reference external" href="https://www.geosci-model-dev.net/11/2503/2018/">new algorithm</a></p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -208,13 +225,14 @@
 <h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>upgraded to Python3</li>
-<li>applied PEP8 style guide</li>
-<li>use of genshi templates</li>
-<li>modularization of python source code</li>
-<li>upgrade from grib_api to ecCodes</li>
-<li>completely revised/refactored python section</li>
-<li>restructured program directories</li>
+<li><p>upgraded to Python3</p></li>
+<li><p>applied PEP8 style guide</p></li>
+<li><p>use of genshi templates</p></li>
+<li><p>modularization of python source code</p></li>
+<li><p>upgrade from grib_api to ecCodes</p></li>
+<li><p>completely revised/refactored python section</p></li>
+<li><p>restructured program directories</p></li>
+<li><p>Fortran program name changed from <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code> to <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -225,54 +243,54 @@
 <h3>New Features<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>Ensemble retrieval for ENFO and ELDA stream (ZAMG specific with extra synthesized ensembles for ELDA stream)</li>
+<li><p>Ensemble retrieval for ENFO and ELDA stream (ZAMG specific with extra synthesized ensembles for ELDA stream)</p></li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="bug-fixes">
-<h3>Bug fixes<a class="headerlink" href="#bug-fixes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Bug fixes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>diverse problems with ERA 5 retrieval</li>
-<li>diverse problems with CERA-20C retrieval</li>
-<li>BASETIME retrieval option</li>
-<li><cite>CONVERT2</cite> FORTRAN program: initialise fields to 0.
+<li><p>diverse problems with ERA 5 retrieval</p></li>
+<li><p>diverse problems with CERA-20C retrieval</p></li>
+<li><p>BASETIME retrieval option</p></li>
+<li><p><cite>CONVERT2</cite> FORTRAN program: initialise fields to 0.
 (introduced initialization of <code class="docutils literal notranslate"><span class="pre">field</span></code> variable in the Fortran program
-with <code class="docutils literal notranslate"><span class="pre">field=0.</span></code> in file <code class="docutils literal notranslate"><span class="pre">rwGRIB2.f90</span></code> to avoid getting unreasonable large numbers.)</li>
+with <code class="docutils literal notranslate"><span class="pre">field=0.</span></code> in file <code class="docutils literal notranslate"><span class="pre">rwGRIB2.f90</span></code> to avoid getting unreasonable large numbers.)</p></li>
 </ul>
 </div></blockquote>
 </div>
 </div>
 <div class="section" id="release-v7-0-3">
 <span id="ref-v703"></span><h2>Release v7.0.3<a class="headerlink" href="#release-v7-0-3" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>New Features<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>output of mars requests to an extra file (debugging and documentation)</li>
-<li>CERA-20C download</li>
-<li>ERA 5 download</li>
-<li>public user interface with <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a></li>
-<li>use of <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a> for local retrieval version</li>
+<li><p>output of mars requests to an extra file (debugging and documentation)</p></li>
+<li><p>CERA-20C download</p></li>
+<li><p>ERA 5 download</p></li>
+<li><p>public user interface with <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a></p></li>
+<li><p>use of <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ECMWF Web API</a> for local retrieval version</p></li>
 </ul>
 </div></blockquote>
 </div>
 </div>
 <div class="section" id="release-v7-0-2">
 <span id="ref-v702"></span><h2>Release v7.0.2<a class="headerlink" href="#release-v7-0-2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>New Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>Python based version</li>
+<li><p>Python based version</p></li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id4">
-<h3>Changes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Changes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>korn shell scripts were substituted by python scripts</li>
+<li><p>korn shell scripts were substituted by python scripts</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -281,7 +299,7 @@ with <code class="docutils literal notranslate"><span class="pre">field=0.</span
 <span id="ref-v60"></span><h2>Release v0.1 - v6.0<a class="headerlink" href="#release-v0-1-v6-0" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>old version which should no longer be used anymore</li>
+<li><p>old version which should no longer be used anymore</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -307,7 +325,7 @@ with <code class="docutils literal notranslate"><span class="pre">field=0.</span
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

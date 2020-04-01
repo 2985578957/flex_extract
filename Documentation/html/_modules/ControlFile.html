@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -196,7 +196,7 @@
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># MODULES</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -205,8 +205,8 @@
 <span class="c1">#pylint: disable=wrong-import-position</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">_config</span>
-<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="k">import</span> <span class="n">my_error</span>
-<span class="kn">from</span> <span class="nn">Mods.checks</span> <span class="k">import</span> <span class="p">(</span><span class="n">check_grid</span><span class="p">,</span> <span class="n">check_area</span><span class="p">,</span> <span class="n">check_levels</span><span class="p">,</span> <span class="n">check_purefc</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">Mods.tools</span> <span class="kn">import</span> <span class="n">my_error</span>
+<span class="kn">from</span> <span class="nn">Mods.checks</span> <span class="kn">import</span> <span class="p">(</span><span class="n">check_grid</span><span class="p">,</span> <span class="n">check_area</span><span class="p">,</span> <span class="n">check_levels</span><span class="p">,</span> <span class="n">check_purefc</span><span class="p">,</span>
                          <span class="n">check_step</span><span class="p">,</span> <span class="n">check_mail</span><span class="p">,</span> <span class="n">check_queue</span><span class="p">,</span> <span class="n">check_pathes</span><span class="p">,</span>
                          <span class="n">check_dates</span><span class="p">,</span> <span class="n">check_maxstep</span><span class="p">,</span> <span class="n">check_type</span><span class="p">,</span> <span class="n">check_request</span><span class="p">,</span>
                          <span class="n">check_basetime</span><span class="p">,</span> <span class="n">check_public</span><span class="p">,</span> <span class="n">check_acctype</span><span class="p">,</span>
@@ -494,7 +494,7 @@
 <span class="sd">        &#39;ectrans&#39;, &#39;debug&#39;, &#39;request&#39;, &#39;public&#39;, &#39;purefc&#39;, &#39;rrint&#39;, &#39;doubleelda&#39;]</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Initialises the instance of ControlFile class and defines</span>
 <span class="sd">        all class attributes with default values. Afterwards calls</span>
 <span class="sd">        function __read_controlfile__ to read parameter from Control file.</span>
@@ -655,7 +655,7 @@
 
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Prepares a string which have all the ControlFile class attributes</span>
 <span class="sd">        with its associated values. Each attribute is printed in one line and</span>
 <span class="sd">        in alphabetical order.</span>
@@ -864,7 +864,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

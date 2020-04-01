@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -102,7 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -198,138 +198,93 @@
 <p>The installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by the Shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> which is located in the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
 It calls the top-level Python script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> which does all necessary operations to prepare the selected application environment. This includes:</p>
 <ul class="simple">
-<li>preparing the file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> with the user credentials for member state access to ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode)</li>
-<li>preparation of a compilation Korn-shell script (in <strong>remote</strong> and <strong>gateway</strong> mode)</li>
-<li>preparation of a job template with user credentials (in <strong>remote</strong> and <strong>gateway</strong> mode)</li>
-<li>create a tar-ball of all necessary files</li>
-<li>copying tar-ball to target location (depending on application mode and installation path)</li>
-<li>submit compilation script to batch queue at ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode) or just untar tar-ball at target location (<strong>local mode</strong>)</li>
-<li>compilation of the FORTRAN90 program <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></li>
+<li><p>preparing the file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> with the user credentials for member state access to ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
+<li><p>preparation of a compilation Korn-shell script (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
+<li><p>preparation of a job template with user credentials (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
+<li><p>create a tar-ball of all necessary files</p></li>
+<li><p>copying tar-ball to target location (depending on application mode and installation path)</p></li>
+<li><p>submit compilation script to batch queue at ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode) or just untar tar-ball at target location (<strong>local mode</strong>)</p></li>
+<li><p>compilation of the FORTRAN90 program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></p></li>
 </ul>
 <p>The Python installation script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> has a couple of command line arguments which are defined in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> in the section labelled with “<em>AVAILABLE COMMANDLINE ARGUMENTS TO SET</em>”. The user has to adapt these parameters for his personal use. The parameters are listed and described in <a class="reference internal" href="#ref-instparams"><span class="std std-ref">Installation Parameter</span></a>. The script also does some checks to guarantee necessary parameters were set.</p>
 <p>After the installation process, some tests can be conducted. They are described in section <a class="reference internal" href="../../installation.html#ref-testinstallfe"><span class="std std-ref">Test installation</span></a>.</p>
 <p>The following diagram sketches the involved files and scripts in the installation process:</p>
-<div><img height="440" id="ref-install-blockdiag" src="../../_images/blockdiag-f0a58657deb31f0c134ffed39d9be96f0d278617.png" width="1600" /></div><div class="figure" id="id1">
+<div><img height="440" id="ref-install-blockdiag" src="../../_images/blockdiag-f0a58657deb31f0c134ffed39d9be96f0d278617.png" width="1600" /></div><div class="figure align-default" id="id1">
 <div><img height="120" src="../../_images/blockdiag-c5183a0da960384d172e76fcbb0cc6765f0b1945.png" width="832" /></div><p class="caption"><span class="caption-text">Diagram of data flow during the installation process. The trapezoids are input files with the light blue area being the template files. The edge-rounded, orange boxes are the executable files which start the installation process and reads the input files. The rectangular, green boxes are the output files. The light green files are files which are only needed in the remota and gateway mode.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 <div class="section" id="installation-parameter">
 <span id="ref-instparams"></span><h2>Installation Parameter<a class="headerlink" href="#installation-parameter" title="Permalink to this headline">¶</a></h2>
-<table border="1" class="docutils" id="id2">
+<table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Parameter for Installation</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="10%" />
-<col width="5%" />
-<col width="15%" />
-<col width="11%" />
-<col width="58%" />
+<col style="width: 10%" />
+<col style="width: 5%" />
+<col style="width: 15%" />
+<col style="width: 11%" />
+<col style="width: 58%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Parameter</th>
-<th class="head">Format</th>
-<th class="head">Possible value range</th>
-<th class="head">Default</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Format</p></th>
+<th class="head"><p>Possible value range</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td><p class="first last">TARGET</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">local, ecgate, cca</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">Defines which flex_extract application mode will be used.  Local = local mode; egate = Remote or Gateway mode, cca = Remote or Gateway mode. Wether the local mode is for public or member state users doesn’t matter during the installation process.</p>
-</td>
+<tbody>
+<tr class="row-even"><td><p>TARGET</p></td>
+<td><p>String</p></td>
+<td><p>local, ecgate, cca</p></td>
+<td><p>None</p></td>
+<td><p>Defines which flex_extract application mode will be used.  Local = local mode; egate = Remote or Gateway mode, cca = Remote or Gateway mode. Wether the local mode is for public or member state users doesn’t matter during the installation process.</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">MAKEFILE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any Makefile present, according to environment</p>
-</td>
-<td><p class="first last">Makefile.gfortran</p>
-</td>
-<td><p class="first last">Name of the makefile in source/fortran directory to be used for compiling the Fortran program. “Makefile.gfortran” has the configuration for the ecgate environment. For local server versions there are templates “Makefile.local.gfortran” and “Makefile.local.ifort” which have to be adapted (pathes to the eccodes library) by the user.</p>
-</td>
+<tr class="row-odd"><td><p>MAKEFILE</p></td>
+<td><p>String</p></td>
+<td><p>any Makefile present, according to environment</p></td>
+<td><p>Makefile.gfortran</p></td>
+<td><p>Name of the makefile in source/fortran directory to be used for compiling the Fortran program. “Makefile.gfortran” has the configuration for the ecgate environment. For local server versions there are templates “Makefile.local.gfortran” and “Makefile.local.ifort” which have to be adapted (pathes to the eccodes library) by the user.</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">ECUID</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">e.g. “ecname”</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The user id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)  </p>
-</td>
+<tr class="row-even"><td><p>ECUID</p></td>
+<td><p>String</p></td>
+<td><p>e.g. “ecname”</p></td>
+<td><p>None</p></td>
+<td><p>The user id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)  </p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">ECGID</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">e.g. “groupname”</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The group id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)</p>
-</td>
+<tr class="row-odd"><td><p>ECGID</p></td>
+<td><p>String</p></td>
+<td><p>e.g. “groupname”</p></td>
+<td><p>None</p></td>
+<td><p>The group id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">GATEWAY</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any server adress</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The name of the local gateway server. Necessary for transfering files from the ECMWF servers to the local member state gateway server.  (Gateway mode)</p>
-</td>
+<tr class="row-even"><td><p>GATEWAY</p></td>
+<td><p>String</p></td>
+<td><p>any server adress</p></td>
+<td><p>None</p></td>
+<td><p>The name of the local gateway server. Necessary for transfering files from the ECMWF servers to the local member state gateway server.  (Gateway mode)</p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">DESTINATION</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any destination which is stored at local gateway server</p>
-</td>
-<td><p class="first last">None</p>
-</td>
-<td><p class="first last">The ecaccess association, e.g. myUser&#64;genericSftp. Used for transfering files from the ECMWF servers to the local member state gateway server.  (Gateway mode)</p>
-</td>
+<tr class="row-odd"><td><p>DESTINATION</p></td>
+<td><p>String</p></td>
+<td><p>any destination which is stored at local gateway server</p></td>
+<td><p>None</p></td>
+<td><p>The ecaccess association, e.g. myUser&#64;genericSftp. Used for transfering files from the ECMWF servers to the local member state gateway server.  (Gateway mode)</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">INSTALLDIR</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">a full path </p>
-</td>
-<td><p class="first last">$HOME on ECMWF server and current flex_extract root path on local server</p>
-</td>
-<td><p class="first last">Root path where flex_extract should be installed. If it is not set it will be set to $HOME on ECMWF server and set to the current flex_extract root path on local servers. </p>
-</td>
+<tr class="row-even"><td><p>INSTALLDIR</p></td>
+<td><p>String</p></td>
+<td><p>a full path </p></td>
+<td><p>$HOME on ECMWF server and current flex_extract root path on local server</p></td>
+<td><p>Root path where flex_extract should be installed. If it is not set it will be set to $HOME on ECMWF server and set to the current flex_extract root path on local servers. </p></td>
 </tr>
-<tr class="row-odd"><td><p class="first last">JOB_TEMPLATE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">job.template</p>
-</td>
-<td><p class="first last">job.template</p>
-</td>
-<td><p class="first last">The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed since it is optimized for ECMWF server.  (Remote and Gateway mode)</p>
-</td>
+<tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
+<td><p>String</p></td>
+<td><p>job.template</p></td>
+<td><p>job.template</p></td>
+<td><p>The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed since it is optimized for ECMWF server.  (Remote and Gateway mode)</p></td>
 </tr>
-<tr class="row-even"><td><p class="first last">CONTROLFILE</p>
-</td>
-<td><p class="first last">String</p>
-</td>
-<td><p class="first last">any CONTROL file</p>
-</td>
-<td><p class="first last">CONTROL_EA5</p>
-</td>
-<td><p class="first last">The file with all CONTROL parameters. It does not matter which CONTROL file is used. Due to interval process it is just necessary that there is a CONTROL file in place which can be opend. </p>
-</td>
+<tr class="row-even"><td><p>CONTROLFILE</p></td>
+<td><p>String</p></td>
+<td><p>any CONTROL file</p></td>
+<td><p>CONTROL_EA5</p></td>
+<td><p>The file with all CONTROL parameters. It does not matter which CONTROL file is used. Due to interval process it is just necessary that there is a CONTROL file in place which can be opend. </p></td>
 </tr>
 </tbody>
 </table>
@@ -367,10 +322,10 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <span class="c1">#</span>
 <span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;ecgate&#39;</span>
 <span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile_ecgate&#39;</span>
-<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;km4a&#39;</span>
-<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;at&#39;</span>
-<span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;srvx8.img.univie.ac.at&#39;</span>
-<span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;annep@genericSftp&#39;</span>
+<span class="nv">ECUID</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;&#39;</span>
+<span class="nv">ECGID</span><span class="o">=</span><span class="s1">&#39;&lt;groupID&gt;&#39;</span>
+<span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;&lt;gatewayname&gt;&#39;</span>
+<span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;@genericSftp&#39;</span>
 <span class="nv">INSTALLDIR</span><span class="o">=</span>None
 <span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
@@ -398,12 +353,15 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <span class="c1"># CHECK FOR MORE PARAMETER </span>
 <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$TARGET</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;ecgate&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$TARGET</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;cca&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
   <span class="c1"># check if necessary Parameters are set</span>
-  <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$ECUID</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$ECGID</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$GATEWAY</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$DESTINATION</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-    <span class="nb">echo</span> <span class="s2">&quot;ERROR: At least one of the following parameters are not set: ECUID, ECGID, GATEWAY, DESTINATION!&quot;</span>
+  <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$ECUID</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$ECGID</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$ECUID</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&lt;username&gt;&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$ECGID</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&lt;groupID&gt;&quot;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;ERROR: At least one of the following parameters are not properly set: ECUID or ECGID!&quot;</span>
     <span class="nb">echo</span> <span class="s2">&quot;EXIT WITH ERROR&quot;</span>
     <span class="nb">exit</span>
   <span class="k">else</span>
     <span class="nv">parameterlist</span><span class="o">+=</span><span class="s2">&quot; --ecuid=</span><span class="nv">$ECUID</span><span class="s2"> --ecgid=</span><span class="nv">$ECGID</span><span class="s2"> --gateway=</span><span class="nv">$GATEWAY</span><span class="s2"> --destination=</span><span class="nv">$DESTINATION</span><span class="s2">&quot;</span>
+  <span class="k">fi</span>
+  <span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$GATEWAY</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="nv">$DESTINATION</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$GATEWAY</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&lt;gatewayname&gt;&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;</span><span class="nv">$DESTINATION</span><span class="s2">&quot;</span> <span class="o">==</span> <span class="s2">&quot;&lt;username&gt;@genericSftp&quot;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+    <span class="nb">echo</span> <span class="s2">&quot;WARNING: Not setting parameters GATEWAY and DESTINATION means there will be no file transfer to local gateway server.&quot;</span>
   <span class="k">fi</span>
 <span class="k">fi</span>
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$MAKEFILE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
@@ -430,7 +388,7 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <div class="section" id="usage-of-install-py-optional">
 <span id="ref-install-script"></span><h2>Usage of <code class="docutils literal notranslate"><span class="pre">install.py</span></code> (optional)<a class="headerlink" href="#usage-of-install-py-optional" title="Permalink to this headline">¶</a></h2>
 <p>It is also possible to start the installation process of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly from command line by using the <code class="docutils literal notranslate"><span class="pre">install.py</span></code> script instead of the wrapping Shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.  This top-level script is located in
-<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/source/python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
 command line parameter.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>install.py --help
 
@@ -491,7 +449,7 @@ optional arguments:
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

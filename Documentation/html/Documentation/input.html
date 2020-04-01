@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -97,7 +97,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Control &amp; Input Data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Input/setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="Input/compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="Input/fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">CONVERT2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Input/fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="Input/run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="Input/jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="Input/control.html">The CONTROL file</a></li>
@@ -188,58 +188,51 @@
             
   <div class="section" id="control-input-data">
 <h1>Control &amp; Input Data<a class="headerlink" href="#control-input-data" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>Input Data</dt>
-<dd><ul class="first last">
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="Input/control.html"><span class="doc">The CONTROL file</span></a></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> needs a number of controlling parameters to decide on the behaviour and the actual dataset to be retrieved. They are initialized by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with their default values and can be overwritten with definitions set in the so called <a class="reference internal" href="Input/control.html"><span class="doc">The CONTROL file</span></a>.</p>
+<dl>
+<dt>Input Data</dt><dd><ul>
+<li><dl>
+<dt><a class="reference internal" href="Input/control.html"><span class="doc">The CONTROL file</span></a></dt><dd><p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> needs a number of controlling parameters to decide on the behaviour and the actual dataset to be retrieved. They are initialized by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with their default values and can be overwritten with definitions set in the so called <a class="reference internal" href="Input/control.html"><span class="doc">The CONTROL file</span></a>.</p>
 <p>To be able to successfully retrieve data from the ECMWF Mars archive it is necessary to understand these parameters and set them to proper and consistent values. They are described in <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a> section.</p>
-<p class="last">We also have some <a class="reference internal" href="Input/examples.html"><span class="doc">CONTROL file examples</span></a> and description of <a class="reference internal" href="Input/changes.html"><span class="doc">CONTROL file changes</span></a> changes to previous versions and downward compatibilities.</p>
+<p>We also have some <a class="reference internal" href="Input/examples.html"><span class="doc">CONTROL file examples</span></a> and description of <a class="reference internal" href="Input/changes.html"><span class="doc">CONTROL file changes</span></a> changes to previous versions and downward compatibilities.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="Input/ecmwf_env.html"><span class="doc">ECMWF User Credential file ECMWF_ENV</span></a></dt>
-<dd><p class="first last">For <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> it is necessary to be able to reach ECMWF servers in the <strong>remote mode</strong> and the <strong>gateway mode</strong>. Therefore a <a class="reference internal" href="Input/ecmwf_env.html"><span class="doc">ECMWF User Credential file ECMWF_ENV</span></a> is created during the installation process.</p>
+<li><dl class="simple">
+<dt><a class="reference internal" href="Input/ecmwf_env.html"><span class="doc">ECMWF User Credential file ECMWF_ENV</span></a></dt><dd><p>For <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> it is necessary to be able to reach ECMWF servers in the <strong>remote mode</strong> and the <strong>gateway mode</strong>. Therefore a <a class="reference internal" href="Input/ecmwf_env.html"><span class="doc">ECMWF User Credential file ECMWF_ENV</span></a> is created during the installation process.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><a class="reference internal" href="Input/templates.html"><span class="doc">Templates</span></a></dt>
-<dd><p class="first last">A number of files which are created by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are taken from templates. This makes it easy to adapt for example the jobscripts regarding its settings for the batch jobs.</p>
+<li><dl class="simple">
+<dt><a class="reference internal" href="Input/templates.html"><span class="doc">Templates</span></a></dt><dd><p>A number of files which are created by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are taken from templates. This makes it easy to adapt for example the jobscripts regarding its settings for the batch jobs.</p>
 </dd>
 </dl>
 </li>
 </ul>
 </dd>
 </dl>
-<dl class="docutils" id="ref-controlling">
-<dt>Controlling</dt>
-<dd><p class="first">The main tasks and behaviour of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are controlled by its Python scripts. There are two top-level scripts, one for installation called <a class="reference external" href="Input/setup.html#ref-install-script">install</a> and one for execution called <a class="reference external" href="Input/submit.html#ref-submit-script">submit</a>.
+<dl id="ref-controlling">
+<dt>Controlling</dt><dd><p>The main tasks and behaviour of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are controlled by its Python scripts. There are two top-level scripts, one for installation called <a class="reference external" href="Input/setup.html#ref-install-script">install</a> and one for execution called <a class="reference external" href="Input/submit.html#ref-submit-script">submit</a>.
 They can interpret a number of command line arguments which can be seen by typing <code class="docutils literal notranslate"><span class="pre">--help</span></code> after the script call. Go to the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> to type:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X
-python3 source/python/install.py --help
-python3 source/python/submit.py --help
+python3 Source/Python/install.py --help
+python3 Source/Python/submit.py --help
 </pre></div>
 </div>
 <p>In this new version we provide also the wrapping Shell scripts <a class="reference external" href="Input/setup.html">setup</a> and <a class="reference external" href="Input/run.html">run</a>, which sets the command line parameters, do some checks and execute the corresponing Python scripts <code class="docutils literal notranslate"><span class="pre">install.py</span></code> and <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> respectivley.</p>
 <p>It might be faster and easier for beginners. See <a class="reference internal" href="../quick_start.html"><span class="doc">Quick Start</span></a> for information on how to use them.</p>
 <p>Additionally, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> creates the Korn Shell scripts <a class="reference internal" href="Input/compilejob.html"><span class="doc">The Compilation Jobscript compilejob.ksh</span></a> and <a class="reference internal" href="Input/jobscript.html"><span class="doc">The Jobscript job.ksh</span></a> which will be send to the ECMWF serves in the <strong>remote mode</strong> and the <strong>gateway mode</strong> for starting batch jobs.</p>
-<p>The Fortran program will be compiled during the installation process by the <a class="reference internal" href="Input/fortran_makefile.html"><span class="doc">The Fortran Makefile - CONVERT2</span></a>.</p>
+<p>The Fortran program will be compiled during the installation process by the <a class="reference internal" href="Input/fortran_makefile.html"><span class="doc">The Fortran Makefile - calc_etadot</span></a>.</p>
 <p>To sum up, the following scripts controls <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>
-<dl class="last docutils">
-<dt>Installation</dt>
-<dd><ul class="first last simple">
-<li><a class="reference internal" href="Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a></li>
-<li><a class="reference internal" href="Input/compilejob.html"><span class="doc">The Compilation Jobscript compilejob.ksh</span></a></li>
-<li><a class="reference internal" href="Input/fortran_makefile.html"><span class="doc">The Fortran Makefile - CONVERT2</span></a></li>
+<dl class="simple">
+<dt>Installation</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a></p></li>
+<li><p><a class="reference internal" href="Input/compilejob.html"><span class="doc">The Compilation Jobscript compilejob.ksh</span></a></p></li>
+<li><p><a class="reference internal" href="Input/fortran_makefile.html"><span class="doc">The Fortran Makefile - calc_etadot</span></a></p></li>
 </ul>
 </dd>
-<dt>Execution</dt>
-<dd><ul class="first last simple">
-<li><a class="reference internal" href="Input/run.html"><span class="doc">The executable Script - run.sh</span></a></li>
-<li><a class="reference internal" href="Input/jobscript.html"><span class="doc">The Jobscript job.ksh</span></a></li>
+<dt>Execution</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="Input/run.html"><span class="doc">The executable Script - run.sh</span></a></p></li>
+<li><p><a class="reference internal" href="Input/jobscript.html"><span class="doc">The Jobscript job.ksh</span></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -269,7 +262,7 @@ python3 source/python/submit.py --help
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

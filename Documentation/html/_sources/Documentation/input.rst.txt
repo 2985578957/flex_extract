@@ -34,8 +34,8 @@ Controlling
     .. code-block:: bash
 
        cd flex_extract_vX.X
-       python3 source/python/install.py --help
-       python3 source/python/submit.py --help
+       python3 Source/Python/install.py --help
+       python3 Source/Python/submit.py --help
    
     In this new version we provide also the wrapping Shell scripts setup_ and run_, which sets the command line parameters, do some checks and execute the corresponing Python scripts ``install.py`` and ``submit.py`` respectivley. 
      

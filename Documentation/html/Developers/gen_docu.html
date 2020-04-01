@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -182,25 +182,24 @@
 <div class="section" id="additional-software">
 <h2>Additional Software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h2>
 <p>Developers working on <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> should make extensive use of the prepared test cases, unit tests and update the documentation. For this, some additional software is necessary:</p>
-<ul class="simple">
-<li>pylint</li>
-<li>pytest</li>
-<li>mock</li>
-<li>graphviz</li>
-<li>sphinx</li>
-<li>pip install sphinxcontrib-exceltable</li>
-<li>pip install seqdiag</li>
-<li>pip install sphinxcontrib-seqdiag</li>
-<li>pip install sphinxcontrib-blockdiag</li>
-<li>pip install pycallgraph</li>
-</ul>
-<p>#- pip install sphinx-fortran</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install pylint
+pip install pytest
+pip install mock
+pip install graphviz
+pip install sphinx
+pip install sphinxcontrib-exceltable
+pip install seqdiag
+pip install sphinxcontrib-seqdiag
+pip install sphinxcontrib-blockdiag
+pip install pycallgraph
+</pre></div>
+</div>
 </div>
 <div class="section" id="online-documentation-with-sphinx">
 <h2>Online-documentation with Sphinx<a class="headerlink" href="#online-documentation-with-sphinx" title="Permalink to this headline">¶</a></h2>
 <p>Use the scriot <code class="docutils literal notranslate"><span class="pre">gen_docu.sh</span></code> to generate an update of the online documentation of the python component.</p>
 <p>It uses <code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> to generate a class and a package diagram with graphviz and overwrites the old files in the developers directory.
-<code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> creates <code class="docutils literal notranslate"><span class="pre">dot</span></code> files and with the <code class="docutils literal notranslate"><span class="pre">dot</span></code> program of the <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> software the <code class="docutils literal notranslate"><span class="pre">png</span></code> files are created. Everything happens in the Python source directory before moving them finally to the <code class="docutils literal notranslate"><span class="pre">for_developers</span></code> directory. The Sphinx source code has a <code class="docutils literal notranslate"><span class="pre">_files</span></code> directory which contains links to these <code class="docutils literal notranslate"><span class="pre">png</span></code> files and therefore they should not be renamed.</p>
+<code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> creates <code class="docutils literal notranslate"><span class="pre">dot</span></code> files and with the <code class="docutils literal notranslate"><span class="pre">dot</span></code> program of the <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> software the <code class="docutils literal notranslate"><span class="pre">png</span></code> files are created. Everything happens in the Python source directory before moving them finally to the <code class="docutils literal notranslate"><span class="pre">For_developers</span></code> directory. The Sphinx source code has a <code class="docutils literal notranslate"><span class="pre">_files</span></code> directory which contains links to these <code class="docutils literal notranslate"><span class="pre">png</span></code> files and therefore they should not be renamed.</p>
 <div class="section" id="sequence-diagramms">
 <h3>Sequence diagramms<a class="headerlink" href="#sequence-diagramms" title="Permalink to this headline">¶</a></h3>
 <p>You might need to adapt the fonts path for the diagrams to a true type font. Currently it is set to:</p>
@@ -242,7 +241,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
 
     </p>
   </div>

@@ -123,7 +123,7 @@ git repo
 
     .. code-block:: bash
 
-       $ git clone --single-branch --branch master https://www.flexpart.eu/gitmob/flexpart
+       $ git clone --single-branch --branch master https://www.flexpart.eu/gitmob/flex_extract
 
 
 
@@ -222,7 +222,7 @@ Test installation
 Fortran program test
 --------------------
 
-To check whether the Fortran program ``CONVERT2`` has been compiled and runs properly, it can be applied to a prepared minimal dataset.
+To check whether the Fortran program ``calc_etadot`` has been compiled and runs properly, it can be applied to a prepared minimal dataset.
 
 For this, go from the ``flex_extract`` root directory to the ``Testing/Installation/Convert/`` directory and execute the Fortran program.
 
@@ -233,19 +233,15 @@ For this, go from the ``flex_extract`` root directory to the ``Testing/Installat
    
    cd Testing/Installation/Convert
    # execute the Fortran progam without arguments
-   ../../../Source/Fortran/CONVERT2
+   ../../../Source/Fortran/calc_etadot
 
 The installation was successfull if you obtain on standard output:
 
 .. code-block:: bash
+    
+    STATISTICS:          98842.4598  98709.7359   5120.5385
+    STOP SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS
 
-    readspectral:            1  records read
-    readlatlon:            8  records read
-   STATISTICS:  98842.4598 98709.7359  5120.5385
-    readlatlon:            4  records read
-    readlatlon:            4  records read
-    readlatlon:            4  records read
-   SUCCESSFULLY FINISHED CONVERT_PRE: CONGRATULATIONS
 
 Now go back to the root directory:
 
