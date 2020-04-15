@@ -1,1 +1,3 @@
-start CONVERt2 in here and check if its successfull and procuces a fort,15 file with content ( check resulting parameter or full content)
+Execute calc_etadot in this directory. You should receive the message
+'SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS'
+on standard output, and the file fort.15 should exist and contain FLEXPART input in GRIB format (check with grib_ls). 
