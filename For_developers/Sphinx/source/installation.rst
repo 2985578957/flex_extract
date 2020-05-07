@@ -39,22 +39,22 @@ Installation
 
 The ``flex_extract`` software package contains python and shell scripts as well as a Fortran program. These components rely on several libraries which need to be available before starting the installation process. Currently, the software is only tested for a GNU/Linux environment. Feel free to try it out on other platforms.
 
-At first, go to the `user group <Ecmwf/access.html>`_ section and decide which group you belong to and follow the instructions at :ref:`ref-registration` to obtain an account at ECMWF (if you don't have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible :doc:`Documentation/Overview/app_modes`:  
+At first, find out to which `user group <Ecmwf/access.html>`_ you belong and follow the instructions at :ref:`ref-registration` to obtain an account at ECMWF (if you don't have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible :doc:`Documentation/Overview/app_modes`:  
 
 - Remote (member-state users only) :ref:`[installation]<ref-remote-mode>`
 - Gateway (member-state users only) :ref:`[installation]<ref-gateway-mode>`
 - Local, member-state user :ref:`[installation]<ref-local-mode>`
 - Local, public user :ref:`[installation]<ref-local-mode>`
 
-Please follow the link :doc:`Documentation/Overview/app_modes` to get a description of the modes.
+More information can be found in :doc:`Documentation/Overview/app_modes`.
 
 .. note::
 
    If you encounter any problems in the installation process, you can ask for :doc:`support`.
-   
-   
-   
-   
+
+
+
+
 
 .. _ref-registration:
 
@@ -91,10 +91,10 @@ Registration options:
     
 .. _ref-licence:
     
-Licence agreement for public datasets
+Accept licences for public datasets
 =====================================
 
-Each ECMWF public dataset has its own licence which has to be accepted, regardless of the user group. 
+Each ECMWF :underline:`public` dataset has its own licence whose acceptance requires user activity, regardless of the user group. 
 
 For the *ERA-Interim* and *CERA-20C* datasets this can be done at the ECMWF website `Available ECMWF Public Datasets <https://confluence.ecmwf.int/display/WEBAPI/Available+ECMWF+Public+Datasets>`_. Log in and follow the licence links on the right side for each dataset and accept it.
     
