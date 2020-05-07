@@ -9,9 +9,9 @@
 #
 #    November 2015 - Leopold Haimberger (University of Vienna):
 #        - moved the getEIdata program into a function "get_mars_data"
-#        - moved the AgurmentParser into a seperate function
-#        - adatpted the function for the use in flex_extract
-#        - renamed file to get_mars_data
+#        - moved the AgurmentParser into a separate function
+#        - adapted the function for use in flex_extract
+#        - renamed source file to get_mars_data
 #
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
@@ -21,7 +21,7 @@
 #          (necessary for better documentation with docstrings for later
 #          online documentation)
 #        - use of UIFiles class for file selection and deletion
-#        - seperated get_mars_data function into several smaller pieces:
+#        - separated get_mars_data function into several smaller pieces:
 #          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment
 #
 # @License:
@@ -35,7 +35,7 @@
 #    http://creativecommons.org/licenses/by/4.0/ or send a letter to
 #    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #*******************************************************************************
-'''This script extracts MARS data from ECMWF servers.
+'''This script extracts MARS data from ECMWF.
 
 At first, the necessary parameters from command line and CONTROL files are
 extracted. They define the data set to be extracted from MARS.
@@ -43,15 +43,15 @@ extracted. They define the data set to be extracted from MARS.
 This file can also be imported as a module and contains the following
 functions:
 
-    * main - the main function of the script
-    * get_mars_data - overall control of ECMWF data retrievment
+    * main            - the main function of the script
+    * get_mars_data   - overall control of ECMWF data retrievment
     * write_reqheader - writes the header into the mars_request file
-    * mk_server - creates the server connection to ECMWF servers
-    * mk_dates - defines the start and end date
-    * remove_old - deletes old retrieved grib files
-    * do_retrievement - creates individual retrievals
+    * mk_server       - creates the server connection to ECMWF servers
+    * mk_dates        - defines the start and end date
+    * remove_old      - deletes old retrieved grib files
+    * do_retrieval    - creates individual retrievals
 
-Type: get_mars_data.py --help
+Type get_mars_data.py --help
 to get information about command line parameters.
 Read the documentation for usage instructions.
 '''
@@ -65,8 +65,8 @@ import sys
 import inspect
 from datetime import datetime, timedelta
 
-# software specific classes and modules from flex_extract
-# add path to local main python path for flex_extract to get full access
+# software-specific classes and modules from flex_extract
+# add path to local main Python path for flex_extract to get full access
 sys.path.append(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../')
 # pylint: disable=wrong-import-position
@@ -93,10 +93,10 @@ except ImportError:
 # FUNCTION
 # ------------------------------------------------------------------------------
 def main():
-    '''Controls the program to get data out of mars.
+    '''Controls the program to retrieve data from MARS.
 
-    This is done if it is called directly from command line.
-    Then it also takes program call arguments and control file input.
+    This is done if called directly from command line.
+    Then, arguments and control file are taken as input.
 
     Parameters
     ----------
@@ -113,10 +113,10 @@ def main():
     return
 
 def get_mars_data(c):
-    '''Retrieves the EC data needed for a FLEXPART simulation.
+    '''Retrieves the ECMWF data required for a FLEXPART simulation.
 
-    Start and end dates for retrieval period is set. Retrievals
-    are divided into smaller periods if necessary and datechunk parameter
+    Start and end dates for retrieval period are set. Retrievals
+    are divided into shorter periods if necessary and if datechunk parameter
     is set.
 
     Parameters
@@ -136,12 +136,12 @@ def get_mars_data(c):
         make_dir(c.inputdir)
 
     if c.request == 0:
-        print("Retrieving EC data!")
+        print("Retrieving ECMWF data!")
     else:
         if c.request == 1:
-            print("Printing mars requests!")
+            print("Printing MARS requests!")
         elif c.request == 2:
-            print("Retrieving EC data and printing mars request!")
+            print("Retrieving ECMWF data and printing MARS request!")
         write_reqheader(os.path.join(c.inputdir, _config.FILE_MARS_REQUESTS))
 
     print("start date %s " % (c.start_date))
@@ -164,12 +164,12 @@ def get_mars_data(c):
     return
 
 def write_reqheader(marsfile):
-    '''Writes header with column names into mars request file.
+    '''Writes header with column names into MARS request file.
 
     Parameters
     ----------
     marsfile : str
-        Path to the mars request file.
+        Path to the MARS request file.
 
     Return
     ------
@@ -187,11 +187,12 @@ def write_reqheader(marsfile):
     return
 
 def mk_server(c):
-    '''Creates a server connection with available python API.
+    '''Creates a server connection with available Python API.
 
-    Which API is used depends on availability and the dataset to be retrieved.
-    The CDS API is used for ERA5 dataset no matter if the user is a member or
-    a public user. ECMWF WebAPI is used for all other available datasets.
+    The API selected depends on availability and the data set to be retrieved.
+    The CDS API is used for ERA5 data, no matter whether the user is a 
+    member-state or a public user. 
+    ECMWF WebAPI is used for all other available datasets.
 
     Parameters
     ----------
@@ -246,14 +247,14 @@ def check_dates_for_nonflux_fc_times(types, times):
 
 
 def mk_dates(c, fluxes):
-    '''Prepares start and end date depending on flux or non flux data.
+    '''Prepares start and end date depending on flux or non-flux type of data.
 
-    If forecast for maximum one day (upto 24h) are to be retrieved, then
+    If forecasts for a maximum of one day (24 h) are to be retrieved, then
     collect accumulation data (flux data) with additional days in the
-    beginning and at the end (used for complete disaggregation of
+    beginning and at the end (needed for complete disaggregation of
     original period)
 
-    If forecast data longer than 24h are to be retrieved, then
+    If forecast data for more than +24 h are to be retrieved, then
     collect accumulation data (flux data) with the exact start and end date
     (disaggregation will be done for the exact time period with
     boundary conditions)
@@ -313,16 +314,16 @@ def remove_old(pattern, inputdir):
     Parameters
     ----------
     pattern : str
-        The sub string pattern which identifies the files to be deleted.
+        The substring pattern which identifies the files to be deleted.
 
     inputdir : str, optional
-        Path to the directory where the retrieved data is stored.
+        Path to the directory where the retrieved data are stored.
 
     Return
     ------
 
     '''
-    print('... removing old content of ' + inputdir)
+    print('... removing old files in ' + inputdir)
 
     tobecleaned = UioFiles(inputdir, pattern)
     tobecleaned.delete_files()
@@ -331,7 +332,7 @@ def remove_old(pattern, inputdir):
 
 
 def do_retrievement(c, server, start, end, delta_t, fluxes=False):
-    '''Divides the complete retrieval period in smaller chunks and
+    '''Divides the total retrieval period into smaller chunks and
     retrieves the data from MARS.
 
     Parameters
@@ -350,8 +351,7 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
         The end date of the retrieval.
 
     delta_t : datetime
-        Delta_t + 1 is the maximal time period of a single
-        retrieval.
+        Delta_t + 1 is the maximum time period of a single retrieval.
 
     fluxes : boolean, optional
         Decides if the flux parameters are to be retrieved or
@@ -364,8 +364,7 @@ def do_retrievement(c, server, start, end, delta_t, fluxes=False):
     '''
 
     # since actual day also counts as one day,
-    # we only need to add datechunk - 1 days to retrieval
-    # for a period
+    # we only need to add datechunk - 1 days to retrieval for a period
     delta_t_m1 = delta_t - timedelta(days=1)
 
     day = start

@@ -45,14 +45,14 @@
 '''This script installs the flex_extract program.
 
 Depending on the selected installation environment (locally or on the
-ECMWF server ecgate or cca) the program extracts the commandline
+ECMWF server ecgate or cca) the program extracts the command line
 arguments and the CONTROL file parameter and prepares the corresponding
 environment.
-The necessary files are collected in a tar-ball and placed
-at the target location. There its untared, the environment variables will
-be set and the Fortran code will be compiled.
-If the ECMWF environment is selected a job script is prepared and submitted
-for the remaining configurations after putting the tar-ball to the
+The necessary files are collected in a tar ball and placed
+at the target location. There, is is untared, the environment variables are
+set, and the Fortran code is compiled.
+If the ECMWF environment is selected, a job script is prepared and submitted
+for the remaining configurations after putting the tar ball on the
 target ECMWF server.
 
 Type: install.py --help
@@ -106,7 +106,7 @@ def main():
 
 def get_install_cmdline_args():
     '''Decomposes the command line arguments and assigns them to variables.
-    Apply default values for non mentioned arguments.
+    Apply default values for arguments not present.
 
     Parameters
     ----------
@@ -126,36 +126,36 @@ def get_install_cmdline_args():
                         the latter two are at ECMWF")
     parser.add_argument("--makefile", dest="makefile",
                         type=none_or_str, default=None,
-                        help='Name of Makefile to use for compiling the '
+                        help='Name of makefile for compiling the '
                         'Fortran program')
     parser.add_argument("--ecuid", dest="ecuid",
                         type=none_or_str, default=None,
-                        help='The user id at ECMWF.')
+                        help='User id at ECMWF')
     parser.add_argument("--ecgid", dest="ecgid",
                         type=none_or_str, default=None,
-                        help='The group id at ECMWF.')
+                        help='Group id at ECMWF')
     parser.add_argument("--gateway", dest="gateway",
                         type=none_or_str, default=None,
-                        help='The name of the local gateway server.')
+                        help='Name of the local gateway server')
     parser.add_argument("--destination", dest="destination",
                         type=none_or_str, default=None,
-                        help='The ecaccess association, e.g. '
+                        help='ecaccess association, e.g. '
                         'myUser@genericSftp')
 
     parser.add_argument("--installdir", dest="installdir",
                         type=none_or_str, default=None,
-                        help='Root directory where '
-                        'flex_extract will be installed to.')
+                        help='Root directory of the '
+                        'flex_extract installation')
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
                         type=none_or_str, default="job.template",
-                        help='The rudimentary template file to create a batch '
-                        'job template for submission to ECMWF servers.')
+                        help='Rudimentary template file to create a batch '
+                        'job template for submission to ECMWF servers')
 
     parser.add_argument("--controlfile", dest="controlfile",
                         type=none_or_str, default='CONTROL_EA5',
-                        help="The file with all CONTROL parameters.")
+                        help="A file that contains all CONTROL parameters.")
 
     args = parser.parse_args()
 
@@ -163,8 +163,8 @@ def get_install_cmdline_args():
 
 
 def install_via_gateway(c):
-    '''Prepare data transfer to remote gate and submit a job script which will
-    install everything on the remote gate.
+    '''Prepare data transfer to remote gateway and submit a job script which will
+    install everything on the remote gateway.
 
     Parameters
     ----------
@@ -258,8 +258,8 @@ def install_local(c):
 
 
 def check_install_conditions(c):
-    '''Checks a couple of necessary attributes and conditions
-    for the installation such as if they exist and contain values.
+    '''Checks necessary attributes and conditions
+    for the installation, e.g. whether they exist and contain values.
     Otherwise set default values.
 
     Parameters
@@ -309,8 +309,8 @@ def check_install_conditions(c):
 def mk_tarball(tarball_path, target):
     '''Creates a tarball with all necessary files which need to be sent to the
     installation directory.
-    It does not matter if this is local or remote.
-    Collects all python files, the Fortran source and makefiles,
+    It does not matter whether this is local or remote.
+    Collects all Python files, the Fortran source and makefiles,
     the ECMWF_ENV file, the CONTROL files as well as the
     template files.
 
@@ -496,8 +496,8 @@ def mk_compilejob(makefile, ecuid, ecgid, fp_root):
     Parameters
     ----------
     makefile : str
-        Name of the makefile which should be used to compile FORTRAN
-        CONVERT2 program.
+        Name of the makefile which should be used to compile the Fortran
+        program.
 
     ecuid : str
         The user id on ECMWF server.
@@ -685,17 +685,17 @@ def mk_convert_build(src_path, makefile):
         if p.returncode != 0:
             print(perr.decode())
             print('Please edit ' + makefile +
-                  ' or try another Makefile in the src directory.')
+                  ' or try another makefile in the src directory.')
             print('Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '
                   'and EMOSLIB must be adapted.')
-            print('Available Makefiles:')
-            print(UioFiles(src_path, 'Makefile*'))
+            print('Available makefiles:')
+            print(UioFiles(src_path, 'makefile*'))
             sys.exit('Compilation failed!')
     except ValueError as e:
-        print('ERROR: Makefile call failed:')
+        print('ERROR: make of Fortran code failed:')
         print(e)
     else:
-        execute_subprocess(['ls', '-l',
+        execute_subprocess(['ls', '-l', 
                             os.path.join(src_path, _config.FORTRAN_EXECUTABLE)],
                            error_msg='FORTRAN EXECUTABLE COULD NOT BE FOUND!')
 

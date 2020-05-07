@@ -17,7 +17,7 @@
 #        - applied PEP8 style guide
 #        - added documentation
 #        - moved all non class methods from former file Flexparttools in here
-#        - seperated args and control interpretation
+#        - separated args and control interpretation
 #        - added functions get_list_as_string, read_ecenv, send_mail, make_dir,
 #          put_file_to_ecserver, submit_job_to_ecserver, get_informations,
 #          get_dimensions, execute_subprocess, none_or_int, none_or_str
@@ -117,8 +117,8 @@ def setup_controldata():
     return c, args.ppid, args.queue, args.job_template
 
 def none_or_str(value):
-    '''Converts the input string into pythons None-type if the string
-    contains string "None".
+    '''Converts the input string into Pythons None type if it
+    contains the string "None".
 
     Parameters
     ----------
@@ -129,15 +129,15 @@ def none_or_str(value):
     ------
     None or value:
         Return depends on the content of the input value. If it was "None",
-        then the python type None is returned. Otherwise the string itself.
+        then the Python type None is returned, otherwise the string itself.
     '''
     if value == 'None':
         return None
     return value
 
 def none_or_int(value):
-    '''Converts the input string into pythons None-type if the string
-    contains string "None". Otherwise it is converted to an integer value.
+    '''Converts the input string into Pythons None-type if it
+    contains string "None"; otherwise it is converted to an integer value.
 
     Parameters
     ----------
@@ -157,7 +157,7 @@ def none_or_int(value):
 
 def get_cmdline_args():
     '''Decomposes the command line arguments and assigns them to variables.
-    Apply default values for non mentioned arguments.
+    Apply default values for arguments not present.
 
     Parameters
     ----------
@@ -165,7 +165,7 @@ def get_cmdline_args():
     Return
     ------
     args : Namespace
-        Contains the commandline arguments from script/program call.
+        Contains the command line arguments from the script / program call.
     '''
 
     parser = ArgumentParser(description='Retrieve FLEXPART input from \
@@ -190,7 +190,7 @@ def get_cmdline_args():
                         help="The file with all CONTROL parameters.")
     parser.add_argument("--basetime", dest="basetime",
                         type=none_or_int, default=None,
-                        help="base such as 0 or 12 (for half day retrievals)")
+                        help="base time such as 0 or 12 (for half day retrievals)")
     parser.add_argument("--step", dest="step",
                         type=none_or_str, default=None,
                         help="Forecast steps such as 00/to/48")
@@ -199,55 +199,56 @@ def get_cmdline_args():
                         help="Vertical levels to be retrieved, e.g. 30/to/60")
     parser.add_argument("--area", dest="area",
                         type=none_or_str, default=None,
-                        help="area defined as north/west/south/east")
+                        help="area, defined by north/west/south/east")
 
     # some switches
     parser.add_argument("--debug", dest="debug",
                         type=none_or_int, default=None,
-                        help="debug mode - leave temporary files intact")
+                        help="debug mode - temporary files will be conserved")
     parser.add_argument("--oper", dest="oper",
                         type=none_or_int, default=None,
-                        help='operational mode - prepares dates with '
+                        help='operational mode - prepares dates from '
                         'environment variables')
     parser.add_argument("--request", dest="request",
                         type=none_or_int, default=None,
-                        help="list all mars requests in file mars_requests.dat")
+                        help="list all MARS requests in file mars_requests.dat")
     parser.add_argument("--public", dest="public",
                         type=none_or_int, default=None,
-                        help="public mode - retrieves the public datasets")
+                        help="public mode - retrieves public datasets")
     parser.add_argument("--rrint", dest="rrint",
                         type=none_or_int, default=None,
-                        help='Selection of old or new precipitation '
-                        'interpolation:\n'
+                        help='Selection of old or new  '
+                        'interpolation method for precipitation:\n'
                         '     0 - old method\n'
                         '     1 - new method (additional subgrid points)')
 
     # set directories
     parser.add_argument("--inputdir", dest="inputdir",
                         type=none_or_str, default=None,
-                        help='Path to the temporary directory for the '
-                        'retrieval grib files and other processing files.')
+                        help='Path to temporary directory for '
+                        'retrieved grib files and other processing files.')
     parser.add_argument("--outputdir", dest="outputdir",
                         type=none_or_str, default=None,
-                        help='Path to the final directory where the final '
-                        'FLEXPART ready input files are stored.')
+                        help='Path to final directory where '
+                        'FLEXPART input files will be stored.')
 
     # this is only used by prepare_flexpart.py to rerun a postprocessing step
     parser.add_argument("--ppid", dest="ppid",
                         type=none_or_str, default=None,
-                        help='This is the specify parent process id of a '
+                        help='This is the specify the parent process id of a '
                         'single flex_extract run to identify the files. '
                         'It is the second number in the GRIB files.')
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
                         type=none_or_str, default="job.temp",
-                        help='The job template file which are adapted to be '
-                        'submitted to the batch system on ECMWF server.')
+                        help='Job template file. Will be used for submission '
+                        'to the batch system on the ECMWF server after '
+                        'modification.')
     parser.add_argument("--queue", dest="queue",
                         type=none_or_str, default=None,
-                        help='The ECMWF server name for submission of the '
-                        'job script to the batch system '
+                        help='The name of the ECMWF server name where the'
+                        'job script is to be submitted ' 
                         '(e.g. ecgate | cca | ccb)')
 
     args = parser.parse_args()
@@ -288,7 +289,7 @@ def clean_up(c):
     '''Remove files from the intermediate directory (inputdir).
 
     It keeps the final FLEXPART input files if program runs without
-    ECMWF Api and keywords "ectrans" or "ecstorage" are set to "1".
+    ECMWF API and keywords "ectrans" or "ecstorage" are set to "1".
 
     Parameters
     ----------
@@ -409,7 +410,7 @@ def product(*args, **kwds):
     '''Creates combinations of all passed arguments.
 
     This method combines the single characters of the passed arguments
-    with each other. So that each character of each argument value
+    with each other in a way that each character of each argument value
     will be combined with each character of the other arguments as a tuple.
 
     Note
@@ -518,9 +519,8 @@ def to_param_id(pars, table):
     ----------
     pars : str
         Addpar argument from CONTROL file in the format of
-        parameter names instead of ids. The parameter short
-        names are sepearted with "/" and they are passed as
-        one single string.
+        parameter names instead of IDs. The parameter short
+        names are separated by "/" and passed as one single string.
 
     table : dict
         Contains the ECMWF grib table 128 information.
@@ -554,7 +554,7 @@ def to_param_id(pars, table):
     return ipar
 
 def to_param_id_with_tablenumber(pars, table):
-    '''Transform parameter names to parameter ids and add table id.
+    '''Transform parameter names to parameter IDs and add table ID.
 
     Conversion with ECMWF grib table 128.
 
@@ -562,9 +562,8 @@ def to_param_id_with_tablenumber(pars, table):
     ----------
     pars : str
         Addpar argument from CONTROL file in the format of
-        parameter names instead of ids. The parameter short
-        names are sepearted with "/" and they are passed as
-        one single string.
+        parameter names instead of ID. The parameter short
+        names are separated by "/" and passed as one single string.
 
     table : dict
         Contains the ECMWF grib table 128 information.
@@ -575,7 +574,7 @@ def to_param_id_with_tablenumber(pars, table):
     ------
     spar : str
         List of addpar parameters from CONTROL file transformed to
-        parameter ids in the format of integer.
+        parameter IDs in the format of integer.
     '''
     if not pars:
         return []
@@ -597,7 +596,8 @@ def to_param_id_with_tablenumber(pars, table):
     return '/'.join(spar)
 
 def get_list_as_string(list_obj, concatenate_sign=', '):
-    '''Converts a list of arbitrary content into a single string.
+    '''Converts a list of arbitrary content into a single string using a given
+    concatenation character.
 
     Parameters
     ----------
@@ -623,8 +623,8 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
 def make_dir(directory):
     '''Creates a directory.
 
-    It gives a warning if the directory already exists and skips process.
-    The program stops only if there is another problem.
+    If the directory already exists, an information is printed and the creation 
+    skipped. The program stops only if there is another problem.
 
     Parameters
     ----------
@@ -640,7 +640,7 @@ def make_dir(directory):
     except OSError as e:
         # errno.EEXIST = directory already exists
         if e.errno == errno.EEXIST:
-            print('WARNING: Directory {0} already exists!'.format(directory))
+            print('INFORMATION: Directory {0} already exists!'.format(directory))
         else:
             raise # re-raise exception if a different error occured
 
@@ -719,7 +719,7 @@ def submit_job_to_ecserver(target, jobname):
     Return
     ------
     job_id : int
-        The id number of the job as a reference at the ecmwf server.
+        The id number of the job as a reference at the ECMWF server.
     '''
 
     try:
@@ -731,22 +731,22 @@ def submit_job_to_ecserver(target, jobname):
         print('... ERROR MESSAGE:\n \t ' + str(e))
 
         print('\n... Do you have a valid ecaccess certification key?')
-        sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
+        sys.exit('... ecaccess-job-submit FAILED!')
     except OSError as e:
         print('... ERROR CODE: ' + str(e.errno))
         print('... ERROR MESSAGE:\n \t ' + str(e.strerror))
 
         print('\n... Most likely the ECACCESS library is not available!')
-        sys.exit('... ECACCESS-JOB-SUBMIT FAILED!')
+        sys.exit('... ecaccess-job-submit FAILED!')
 
     return job_id.decode()
 
 
 def get_informations(filename):
-    '''Gets basic information from an example grib file.
+    '''Extracts basic information from a sample grib file.
 
-    These information are important for later use and the
-    initialization of numpy arrays for data storing.
+    This information is needed for later use and the
+    initialization of numpy arrays where data are stored.
 
     Parameters
     ----------
@@ -767,7 +767,7 @@ def get_informations(filename):
     data = {}
 
     # --- open file ---
-    print("Opening file for getting information data --- %s" % filename)
+    print("Opening grib file for extraction of information --- %s" % filename)
     with open(filename, 'rb') as f:
         # load first message from file
         gid = codes_grib_new_from_file(f)
@@ -784,7 +784,7 @@ def get_informations(filename):
                 'missingValue',
                ]
 
-        print('\nInformations are: ')
+        print('\nInformation extracted: ')
         for key in keys:
             # Get the value of the key in a grib message.
             data[key] = codes_get(gid, key)
@@ -797,7 +797,7 @@ def get_informations(filename):
 
 
 def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
-    '''This function specifies the correct dimensions for x, y and t.
+    '''This function specifies the correct dimensions for x, y, and t.
 
     Parameters
     ----------
@@ -816,7 +816,7 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
 
     index_vals : list of list of str
         Contains the values from the keys used for a distinct selection
-        of grib messages in processing  the grib files.
+        of GRIB messages in processing the grib files.
         Content looks like e.g.:
         index_vals[0]: ('20171106', '20171107', '20171108') ; date
         index_vals[1]: ('0', '1200', '1800', '600') ; time
@@ -848,23 +848,22 @@ def get_dimensions(info, purefc, dtime, index_vals, start_date, end_date):
 
 
 def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
-    '''Executes a command line instruction via a subprocess.
+    '''Executes a command via a subprocess.
 
     Error handling is done if an error occures.
 
     Parameters
     ----------
     cmd_list : list of str
-        A list of the components for the command line execution. Each
-        list entry is a single part of the command which is seperated from
-        the rest by a blank space.
-        E.g. ['mv', file1, file2]
+        A list of the components for the command line execution. 
+        They will be concatenated with blank space for the command 
+        to be submitted, like ['mv', file1, file2] for mv file1 file2.
 
     Return
     ------
     error_msg : str, optional
-        The possible error message if the subprocess failed.
-        By default it will just tell "SUBPROCESS FAILED!".
+        Error message if the subprocess fails.
+        By default it will just say "SUBPROCESS FAILED!".
     '''
 
     try:
