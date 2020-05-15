@@ -7,7 +7,7 @@
 Welcome to ``flex_extract``'s user documentation!
 =================================================
 
-``Flex_extract`` is an open-source software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to serve as input files for the FLEXTRA/FLEXPART Atmospheric Transport Modelling system. 
+``Flex_extract`` is an open-source software to retrieve meteorological fields from the MARS archive of the European Centre for Medium-Range Weather Forecasts (ECMWF) to serve as input for the FLEXTRA/FLEXPART atmospheric transport modelling system. 
 
 .. raw:: html
 
@@ -31,8 +31,8 @@ Welcome to ``flex_extract``'s user documentation!
           <h2><a href="ecmwf_data.html">ECMWF data</a></h2>
           <ul>
             <li><a href="ecmwf_data.html">Overview</a></li>
-            <li><a href="Ecmwf/access.html">Access Modes</a></li>
-            <li><a href="Ecmwf/ec-links.html">Link Collection</a></li>
+            <li><a href="Ecmwf/access.html">Access modes</a></li>
+            <li><a href="Ecmwf/ec-links.html">Link collection</a></li>
           </ul>
         </td>
         <td style="width:30%;height:150px;">
@@ -42,8 +42,8 @@ Welcome to ``flex_extract``'s user documentation!
           <h2><a href="documentation.html">Documentation</a></h2>
           <ul>
             <li><a href="Documentation/overview.html">Overview</a></li>
-            <li><a href="Documentation/input.html">Control & Input Data</a></li>
-            <li><a href="Documentation/output.html">Output Data</a></li>
+            <li><a href="Documentation/input.html">Control & input data</a></li>
+            <li><a href="Documentation/output.html">Output data</a></li>
           </ul>
         </td>
       </tr>
@@ -76,9 +76,9 @@ Welcome to ``flex_extract``'s user documentation!
           </div>
           <h2><a href="dev_guide.html">Developer</a></h2>
           <ul>
-            <li><a href="Developers/gen_docu.html">Update Documentation</a></li>
-            <li><a href=""></a><Placeholder></li>
-            <li><a href=""></a><Placeholder></li>
+            <li><a href="Developers/gen_docu.html">Updateing the documentation</a></li>
+<!--           <li><a href=""></a><Placeholder></li>
+            <li><a href=""></a><Placeholder></li>-->
           </ul>
         </td>
       </tr>
