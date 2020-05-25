@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Update Documentation &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Updating the documentation &mdash; flex_extract 7.1 alpha documentation</title>
   
 
   
@@ -95,9 +95,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../dev_guide.html">Developer Guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Update Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#additional-software">Additional Software</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#online-documentation-with-sphinx">Online-documentation with Sphinx</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Updating the documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#additional-software">Additional software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on-line-documentation-with-sphinx">On-line documentation with Sphinx</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#sequence-diagramms">Sequence diagramms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#block-diagramms">Block diagramms</a></li>
 </ul>
@@ -157,7 +157,7 @@
         
           <li><a href="../dev_guide.html">Developer Guide</a> &raquo;</li>
         
-      <li>Update Documentation</li>
+      <li>Updating the documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -176,12 +176,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="update-documentation">
-<h1>Update Documentation<a class="headerlink" href="#update-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="updating-the-documentation">
+<h1>Updating the documentation<a class="headerlink" href="#updating-the-documentation" title="Permalink to this headline">¶</a></h1>
 <p>UNDER CONSTRUCTION</p>
 <div class="section" id="additional-software">
-<h2>Additional Software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h2>
-<p>Developers working on <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> should make extensive use of the prepared test cases, unit tests and update the documentation. For this, some additional software is necessary:</p>
+<h2>Additional software<a class="headerlink" href="#additional-software" title="Permalink to this headline">¶</a></h2>
+<p>Developers working on <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> should make extensive use of the prepared test cases and unit tests, and should also update the documentation. For this, some additional software is necessary:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip install pylint
 pip install pytest
 pip install mock
@@ -195,14 +195,14 @@ pip install pycallgraph
 </pre></div>
 </div>
 </div>
-<div class="section" id="online-documentation-with-sphinx">
-<h2>Online-documentation with Sphinx<a class="headerlink" href="#online-documentation-with-sphinx" title="Permalink to this headline">¶</a></h2>
-<p>Use the scriot <code class="docutils literal notranslate"><span class="pre">gen_docu.sh</span></code> to generate an update of the online documentation of the python component.</p>
-<p>It uses <code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> to generate a class and a package diagram with graphviz and overwrites the old files in the developers directory.
-<code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> creates <code class="docutils literal notranslate"><span class="pre">dot</span></code> files and with the <code class="docutils literal notranslate"><span class="pre">dot</span></code> program of the <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> software the <code class="docutils literal notranslate"><span class="pre">png</span></code> files are created. Everything happens in the Python source directory before moving them finally to the <code class="docutils literal notranslate"><span class="pre">For_developers</span></code> directory. The Sphinx source code has a <code class="docutils literal notranslate"><span class="pre">_files</span></code> directory which contains links to these <code class="docutils literal notranslate"><span class="pre">png</span></code> files and therefore they should not be renamed.</p>
+<div class="section" id="on-line-documentation-with-sphinx">
+<h2>On-line documentation with Sphinx<a class="headerlink" href="#on-line-documentation-with-sphinx" title="Permalink to this headline">¶</a></h2>
+<p>Use the script <code class="docutils literal notranslate"><span class="pre">gen_docu.sh</span></code> to generate an update of the on-line documentation of the Python component.</p>
+<p>It uses <code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> to generate class and package diagrams with <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> and overwrites the old files in the developers directory.
+<code class="docutils literal notranslate"><span class="pre">pyreverse</span></code> creates <code class="docutils literal notranslate"><span class="pre">dot</span></code> files, and with the <code class="docutils literal notranslate"><span class="pre">dot</span></code> program of the <code class="docutils literal notranslate"><span class="pre">graphviz</span></code> software, the <code class="docutils literal notranslate"><span class="pre">png</span></code> files are created. Everything happens in the Python source directory before moving them finally to the <code class="docutils literal notranslate"><span class="pre">For_developers</span></code> directory. The Sphinx source code has a <code class="docutils literal notranslate"><span class="pre">_files</span></code> directory which contains links to these <code class="docutils literal notranslate"><span class="pre">png</span></code> files and therefore they should not be renamed.</p>
 <div class="section" id="sequence-diagramms">
 <h3>Sequence diagramms<a class="headerlink" href="#sequence-diagramms" title="Permalink to this headline">¶</a></h3>
-<p>You might need to adapt the fonts path for the diagrams to a true type font. Currently it is set to:</p>
+<p>You might need to adapt the fonts path for the diagrams to a true-type font. Currently it is set to:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fontpath for seqdiag (truetype font)</span>
 <span class="nv">seqdiag_fontpath</span> <span class="o">=</span> <span class="s1">&#39;/usr/share/fonts/dejavu/DejaVuSerif.ttf&#39;</span>
 </pre></div>
@@ -210,7 +210,7 @@ pip install pycallgraph
 </div>
 <div class="section" id="block-diagramms">
 <h3>Block diagramms<a class="headerlink" href="#block-diagramms" title="Permalink to this headline">¶</a></h3>
-<p>You might need to adapt the fonts path for the diagrams to a true type font. Currently it is set to:</p>
+<p>You might need to adapt the fonts path for the diagrams to a true-type font. Currently it is set to:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fontpath for blockdiag (truetype font)</span>
 <span class="nv">blockdiag_fontpath</span> <span class="o">=</span> <span class="s1">&#39;/usr/share/fonts/dejavu/DejaVuSerif.ttf&#39;</span>
 </pre></div>
