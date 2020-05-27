@@ -1,16 +1,16 @@
-#########################################
-Available Datasets for Member State users
-#########################################
+##########################################
+Available data sets for member-state users
+##########################################
 
 
 
-Model level data
+Model-level data
 ================
 
 .. figure:: ../_files/ECMWF_FPparameter_ml.png
 
 
-Surface level data
+Surface data
 ==================
 
 .. figure:: ../_files/ECMWF_FPparameter_sfc-0.png

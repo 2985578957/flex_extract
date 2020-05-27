@@ -1,5 +1,5 @@
 *************************************
-Python's Auto Generated Documentation
+Auto-generated documentation for the Python scripts
 *************************************
 
 .. contents::

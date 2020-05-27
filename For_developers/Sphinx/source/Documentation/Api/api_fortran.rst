@@ -1,26 +1,14 @@
 **************************************
-Fortran's Auto Generated Documentation
+Auto-generated documentation for the Fortran programme
 **************************************
 
 .. contents::
     :local:
     
-    
-    
-Link to other documentation!
+   
+`Fortran API <Fortran/index.html>`_ 
 
-
-
-
-.... f:autoprogram:: preconvert    
-    
-    
-    
     
 .. toctree::
     :hidden:
     :maxdepth: 2
-    
-    
-
-    

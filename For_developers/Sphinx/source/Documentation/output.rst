@@ -1,13 +1,13 @@
 ***********
-Output Data
+Output data
 ***********
 
-The output data of ``flex_extract`` are separated mainly into temporary files and the final ``FLEXPART`` input files:
+The output data of ``flex_extract`` can be divided into the final ``FLEXPART`` input files and  temporary files:
 
 +-----------------------------------------------+----------------------------------------------+   
 |   ``FLEXPART`` input files                    |  Temporary files (saved in debug mode)       | 
 +-----------------------------------------------+----------------------------------------------+
-| - Standard output filenames                   | - MARS request file (opt)                    | 
+| - Standard output file names                  | - MARS request file (optional)               | 
 | - Output for pure forecast                    | - flux files                                 | 
 | - Output for ensemble members                 | - VERTICAL.EC                                |
 | - Output for new precip. disaggregation       | - index file                                 | 
@@ -20,22 +20,22 @@ The output data of ``flex_extract`` are separated mainly into temporary files an
 ``FLEXPART`` input files
 ========================
 
-The final output files of ``flex_extract`` are also the meteorological ``FLEXPART`` input files.
-The naming of these files depend on the kind of data extracted by ``flex_extract``. 
+The final output files of ``flex_extract`` are the meteorological input files for ``FLEXPART``.
+The naming convention for these files depends on the kind of data extracted by ``flex_extract``. 
 
 Standard output files
 ---------------------
  
-In general, there is a file for each time step with the filename format:
+In general, there is one file for each time named:
 
 .. code-block:: bash
 
     <prefix>YYMMDDHH
     
-The ``prefix`` is by default defined as ``EN`` and can be re-defined in the ``CONTROL`` file.
-Each file contains all meteorological fields needed by ``FLEXPART`` for all selected model levels for a specific time step. 
+where YY are the last two digits of the year, MM is the month, DD the day, and HH the hour (UTC). <prefix> is by default defined as EN, and can be re-defined in the ``CONTROL`` file.
+Each file contains all meteorological fields at all levels as needed by ``FLEXPART``, valid for the time indicated in the file name. 
 
-Here is an example output which lists the meteorological fields in a single file called ``CE00010800`` where we extracted only the lowest model level for demonstration reasons:
+Here is an example output which lists the meteorological fields in a single file called ``CE00010800`` (where we extracted only the lowest model level for demonstration purposes):
 
 .. code-block:: bash
 
@@ -83,19 +83,19 @@ Here is an example output which lists the meteorological fields in a single file
 Output files for pure forecast
 ------------------------------
 
-``Flex_extract`` can retrieve forecasts which can be longer than 23 hours. To avoid collisions of time steps for forecasts of more than one day a new scheme for filenames in pure forecast mode is introduced:
+``Flex_extract`` is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in pure forecast mode is introduced:
 
 .. code-block:: bash
 
     <prefix>YYMMDD.HH.<FORECAST_STEP>
 
-The ``<prefix>`` is, as in the standard output, by default ``EN`` and can be re-defined in the ``CONTROL`` file. ``YYMMDD`` is the date format and ``HH`` the forecast time which is the starting time for the forecasts. The ``FORECAST_STEP`` is a 3 digit number which represents the forecast step in hours. 
+The ``<prefix>`` is, as in the standard output, by default ``EN`` and can be re-defined in the ``CONTROL`` file. ``YYMMDD`` is the date format and ``HH`` the forecast time which is the starting time for the forecasts. The ``FORECAST_STEP`` is a 3-digit number which represents the forecast step in hours. 
     
 
 Output files for ensemble predictions
 -------------------------------------
 
-Ensembles can be retrieved and are addressed by the grib message parameter ``number``. The ensembles are saved per file and standard filenames are supplemented by the letter ``N`` and the ensemble member number in a 3 digit format.
+``Flex_extract`` is able to retrieve ensembles data; they are labelled by the grib message parameter ``number``. Each ensemble member is saved in a separate file, and standard filenames are supplemented by the letter ``N`` and the ensemble member number in a 3-digit format.
 
 .. code-block:: bash
 
@@ -105,10 +105,11 @@ Ensembles can be retrieved and are addressed by the grib message parameter ``num
 Additional fields with new precipitation disaggregation
 -------------------------------------------------------
 
-The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see :doc:`disagg`.
-The two additional fields are marked with the ``step`` parameter in the Grib messages and are set to "1" and "2" for sub-grid point 1 and 2 respectively.
-The output filenames do not change in this case.  
-Below is an example list of precipitation fields in an output file generated with the new disaggregation method:
+The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type (large-scale and convective). They serve as sub-grid points in the original time interval. For details of the method see :doc:`disagg`.
+The two additional fields are addressed using the ``step`` parameter in the GRIB messages, which
+is set to "1" or "2", for sub-grid points 1 and 2, respectively.
+The output file names are not altered.  
+An example of the list of precipitation fields in an output file generated with the new disaggregation method is found below:
 
 .. code-block:: bash 
 
@@ -128,13 +129,16 @@ Below is an example list of precipitation fields in an output file generated wit
 Temporary files
 ===============
 
-``Flex_extract`` works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the ``DEBUG`` mode is switched on (see :doc:`Input/control_params`). 
+``Flex_extract`` creates a number of temporary data files which are usually deleted at the end of a successful run. They are preserved only if the ``DEBUG`` mode is switched on (see :doc:`Input/control_params`). 
 
 MARS grib files
 ---------------
 
 ``Flex_extract`` retrieves all meteorological fields from MARS and stores them in files ending with ``.grb``.
-Since the request times and data transfer of MARS access are limited and ECMWF asks for efficiency in requesting data from MARS, ``flex_extract`` splits the overall data request in several smaller requests. Each request is stored in an extra ``.grb`` file and the file names are put together by several pieces of information:
+Since there are limits implemented by ECMWF for the time per request and data transfer from MARS, 
+and as ECMWF asks for efficient MARS retrievals, ``flex_extract`` splits the overall data request 
+into several smaller requests. Each request is stored in its own ``.grb`` file, and the file 
+names are composed of several pieces of information:
 
     .. code-block:: bash
     
@@ -143,21 +147,20 @@ Since the request times and data transfer of MARS access are limited and ECMWF a
 Description:
        
 Field type: 
-    ``AN`` - Analysis, ``FC`` - Forecast, ``4V`` - 4d variational analysis, ``CV`` - Validation forecast, ``CF`` - Control forecast, ``PF`` - Perturbed forecast
+    ``AN`` - Analysis, ``FC`` - Forecast, ``4V`` - 4D variational analysis, ``CV`` - Validation forecast, ``CF`` - Control forecast, ``PF`` - Perturbed forecast
 Grid type: 
-   ``SH`` - Spherical Harmonics, ``GG`` - Gaussian Grid, ``OG`` - Output Grid (typically lat/lon), ``_OROLSM`` - Orography parameter
+   ``SH`` - Spherical Harmonics, ``GG`` - Gaussian Grid, ``OG`` - Output Grid (typically lat / lon), ``_OROLSM`` - Orography parameter
 Temporal property:
     ``__`` - instantaneous fields, ``_acc`` - accumulated fields
 Level type: 
-    ``ML`` - Model Level, ``SL`` - Surface Level
+    ``ML`` - model level, ``SL`` - surface level
 ppid:
-    The process number of the parent process of submitted script.
+    The process number of the parent process of the script submitted.
 pid:
-    The process number of the submitted script.
+    The process number of the script submitted.
 
-The process ids should avoid mixing of fields if several ``flex_extract`` jobs are performed in parallel (which is, however, not recommended). The date format is YYYYMMDDHH.
 
-Example ``.grb`` files for a day of CERA-20C data:
+Example ``.grb`` files for one day of CERA-20C data:
 
     .. code-block:: bash
 
@@ -171,12 +174,14 @@ Example ``.grb`` files for a day of CERA-20C data:
 MARS request file 
 -----------------
 
-This file is a ``csv`` file called ``mars_requests.csv`` with a list of the actual settings of MARS request parameters (one request per line) in a flex_extract job. It is used for documenting the data which were retrieved and for testing reasons.
+This file is a ``csv`` file called ``mars_requests.csv`` listing the actual settings of the MARS 
+request (one request per line) in a flex_extract job. 
+It is used for documenting which data were retrieved, and for testing.
 
-Each request consist of the following parameters, whose meaning mainly can be taken from :doc:`Input/control_params` or :doc:`Input/run`: 
+Each request consists of the following parameters, whose meaning mostly can be taken from :doc:`Input/control_params` or :doc:`Input/run`: 
 request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist, levtype, marsclass, number, param, repres, resol, step, stream, target, time, type
   
-Example output of a one day retrieval of CERA-20c data: 
+Example output of a one-day retrieval of CERA-20C data: 
 
 .. code-block:: bash
 
@@ -191,29 +196,31 @@ Example output of a one day retrieval of CERA-20c data:
 VERTICAL.EC
 -----------
 
-The vertical discretization of model levels. This file contains the ``A`` and ``B`` parameters to calculate the model level height in meters.
+This file contains information describing the vertical discretisation (model levels) 
+in form of the ``A`` and ``B`` parameters which allow to calculate the actual pressure of a model level from the surface pressure.
 
 
 Index file
 ----------
 
-This file is usually called ``date_time_stepRange.idx``. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords. 
+This file is called ``date_time_stepRange.idx``. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords. 
+#PS NEEDS MORE DESCRIPTION
 
 
-flux files
+Flux files
 ----------
 
-The flux files contain the de-accumulated and dis-aggregated flux fields of large scale and convective precipitation, eastward turbulent surface stress, northward turbulent surface stress, surface sensible heat flux and the surface net solar radiation. 
+The flux files contain the de-accumulated and dis-aggregated flux fields of large-scale and convective precipitation, east- and northward turbulent surface stresses, the surface sensible heat flux, and the surface net solar radiation. 
 
 .. code-block:: bash
 
     flux<date>[.N<xxx>][.<xxx>]
 
-The date format is YYYYMMDDHH. The optional block ``[.N<xxx>]`` marks the ensemble forecast number, where ``<xxx>`` is the ensemble member number. The optional block ``[.<xxx>]`` marks a pure forecast with ``<xxx>`` being the forecast step.
+The date format is YYYYMMDDHH as explained before. The optional block ``[.N<xxx>]`` is used for the ensemble forecast date, where ``<xxx>`` is the ensemble member number. The optional block ``[.<xxx>]`` marks a pure forecast with ``<xxx>`` being the forecast step.
 
 .. note::
 
-    In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is ``0`` for the original time interval and ``1`` or ``2`` for the two new intervals respectively. 
+    In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is ``0`` for the original time interval, and ``1`` or ``2``,  respectively, for the two new intervals. 
 
     
 fort files
@@ -225,9 +232,9 @@ There are a number of input files for the ``calc_etadot`` Fortran program named
 
     fort.xx
     
-where ``xx`` is the number which defines the meteorological fields stored in these files. 
-They are generated by the Python part of ``flex_extract`` by just splitting the meteorological fields for a unique time stamp from the ``*.grb`` files into the ``fort`` files. 
-The following table defines the numbers with their corresponding content.   
+where ``xx`` is a number which defines the meteorological fields stored in these files. 
+They are generated by the Python code in ``flex_extract`` by splitting the meteorological fields for a unique time stamp from the ``*.grb`` files, storing them under the names ``fort.<XX>`` where <XX> represents some number. 
+The following table defines the numbers and the corresponding content:   
 
 .. csv-table:: Content of fort - files
     :header: "Number", "Content"
@@ -239,12 +246,12 @@ The following table defines the numbers with their corresponding content.
     "13", "divergence (optional)" 
     "16", "surface fields"
     "17", "specific humidity"
-    "18", "surface specific humidity (reduced gaussian)"
-    "19", "vertical velocity (pressure) (optional)" 
+    "18", "surface specific humidity (reduced Gaussian grid)"
+    "19", "omega (vertical velocity in pressure coordinates) (optional)" 
     "21", "eta-coordinate vertical velocity (optional)" 
-    "22", "total cloud water content (optional)"
+    "22", "total cloud-water content (optional)"
 
-Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for ``FLEXPART v10`` and newer. 
+Some of the fields are solely retrieved with specific settings, e. g., the eta-coordinate vertical velocity is not available in ERA-Interim datasets, and the total cloud-water content is an optional field which is useful for ``FLEXPART v10`` and newer. 
 
 The ``calc_etadot`` program saves its results in file ``fort.15`` which typically contains:
 
@@ -258,7 +265,7 @@ More details about the content of ``calc_etadot`` can be found in :doc:`vertco`.
     
 .. note::
  
-    The ``fort.4`` file is the namelist file to drive the Fortran program ``calc_etadot``. It is therefore also an input file.
+    The ``fort.4`` file is the namelist file to control the Fortran program ``calc_etadot``. It is therefore also an input file.
     
     Example of a namelist:
     

@@ -1,22 +1,20 @@
 ********************
-Control & Input Data
+Control & input data
 ********************
 
-Input Data
+Input data
     - :doc:`Input/control`
-          ``Flex_extract`` needs a number of controlling parameters to decide on the behaviour and the actual dataset to be retrieved. They are initialized by ``flex_extract`` with their default values and can be overwritten with definitions set in the so called :doc:`Input/control`. 
+          ``Flex_extract`` needs a number of controlling parameters to decide on the behaviour and the actual data set to be retrieved. They are initialised by ``flex_extract`` with certain default values which can be overwritten with definitions set in the so-called :doc:`Input/control`. 
 
-          To be able to successfully retrieve data from the ECMWF Mars archive it is necessary to understand these parameters and set them to proper and consistent values. They are described in :doc:`Input/control_params` section. 
+          For a successfull retrieval of data from the ECMWF MARS archive it is necessary to understand these parameters and to set them to proper and consistent values. They are described in :doc:`Input/control_params` section. 
 
-          We also have some :doc:`Input/examples` and description of :doc:`Input/changes` changes to previous versions and downward compatibilities.
+          Furthermore, some :doc:`Input/examples` are provided, and in :doc:`Input/changes` changes to previous versions and downward compatibilities are described.
         
     - :doc:`Input/ecmwf_env` 
-         For ``flex_extract`` it is necessary to be able to reach ECMWF servers in the **remote mode** and the **gateway mode**. Therefore a :doc:`Input/ecmwf_env` is created during the installation process.
+         ``flex_extract`` needs to be able to reach ECMWF servers in the **remote mode** and the **gateway mode**. Therefore a :doc:`Input/ecmwf_env` is created during the installation process.
 
     - :doc:`Input/templates` 
-         A number of files which are created by ``flex_extract`` are taken from templates. This makes it easy to adapt for example the jobscripts regarding its settings for the batch jobs.         
-
-
+         A number of files which are created by ``flex_extract`` are taken from templates. This makes it easy to adapt, for example, the job scripts with regard to the settings for the batch jobs.         
 
 
 
@@ -28,8 +26,8 @@ Input Data
 .. _ref-controlling:
 
 Controlling
-    The main tasks and behaviour of ``flex_extract`` are controlled by its Python scripts. There are two top-level scripts, one for installation called install_ and one for execution called submit_. 
-    They can interpret a number of command line arguments which can be seen by typing ``--help`` after the script call. Go to the root directory of ``flex_extract`` to type:
+    The main tasks and the behaviour of ``flex_extract`` are controlled by the Python scripts. There are two top-level scripts, one for installation called install_, and one for execution called submit_. 
+    They interpret a number of command-line arguments which can be seen by typing ``--help`` after the script call. Go to the root directory of ``flex_extract`` to type:
 
     .. code-block:: bash
 
@@ -37,15 +35,14 @@ Controlling
        python3 Source/Python/install.py --help
        python3 Source/Python/submit.py --help
    
-    In this new version we provide also the wrapping Shell scripts setup_ and run_, which sets the command line parameters, do some checks and execute the corresponing Python scripts ``install.py`` and ``submit.py`` respectivley. 
-     
-    It might be faster and easier for beginners. See :doc:`../quick_start` for information on how to use them.
+    With version 7.1, we provide also wrapper shell scripts setup_ and run_ which set the command-line parameters, do some checks, and execute the corresponing Python scripts ``install.py`` and ``submit.py``, respectively. 
+     It might be faster and easier for beginners if they are used. See :doc:`../quick_start` for information on how to use them.
 
-    Additionally, ``flex_extract`` creates the Korn Shell scripts :doc:`Input/compilejob` and :doc:`Input/jobscript` which will be send to the ECMWF serves in the **remote mode** and the **gateway mode** for starting batch jobs.
+    ``flex_extract`` also creates the Korn shell scripts :doc:`Input/compilejob` and :doc:`Input/jobscript` which will be sent to the ECMWF servers in the **remote mode** and the **gateway mode** for starting batch jobs.
 
-    The Fortran program will be compiled during the installation process by the :doc:`Input/fortran_makefile`. 
+    The Fortran program is compiled during the installation process using the :doc:`Input/fortran_makefile`. 
     
-    To sum up, the following scripts controls ``flex_extract``:
+    To sum up, the following scripts control ``flex_extract``:
 
     Installation 
        - :doc:`Input/setup` 

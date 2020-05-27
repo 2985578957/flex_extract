@@ -1,33 +1,33 @@
 *************************
-The Jobscript ``job.ksh``
+The job script ``job.ksh``
 *************************
 
-The jobscript is a Korn-shell script which will be created at runtime for each ``flex_extract`` execution in the application modes **remote** and **gateway**.
+The job script is a Korn-shell script which will be created at runtime for each ``flex_extract`` execution in the application modes **remote** and **gateway**.
 
-It is based on the ``job.temp`` template file which is stored in the ``Templates`` directory.
-This template is by itself generated in the installation process from a ``job.template`` template file.
+It is based on the ``job.temp`` template file stored in the ``Templates`` directory.
+This template is generated in the installation process from a ``job.template`` template file.
 
-``Flex_extract`` uses the python package `genshi <https://genshi.edgewall.org/>`_ to generate
+``Flex_extract`` uses the Python package `genshi <https://genshi.edgewall.org/>`_ to generate
 the Korn-shell script from the template files by substituting the individual parameters. 
-These individual parameters are marked by a doubled ``$`` sign in ``job.temp``. 
+These individual parameters are marked by ``$$`` in ``job.temp``. 
 
-The jobscript has a number of settings for the batch system which are fixed and differentiates between the *ecgate* and the *cca/ccb* 
+The job script has a number of settings for the batch system which are fixed, and differentiates between the *ecgate* and the *cca/ccb* 
 server system to load the necessary modules for the environment when submitted to the batch queue.
 
 The submission is done by the ``ECaccess`` tool from within ``flex_extract`` with the command ``ecaccess-job-submit``.
 
 
 
-What does the jobscript do?
+What does the job script do?
 ---------------------------
 
- #. It sets necessary batch system parameters
- #. It prepares the job environment at the ECMWF servers by loading the necessary library modules
- #. It sets some environment variabels for the single session
- #. It creates the directory structure in the users ``$SCRATCH`` file system
- #. It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the ``jobscript.ksh``. ``Flex_extract`` has a set of parameters which are given to the jobscript with its default or the user defined values. It also sets the ``CONTROL`` as an environment variable.
- #. ``Flex_extract`` is started from within the ``work`` directory of the new directory structure by calling the ``submit.py`` script. It sets new pathes for input and output directory and the recently generated ``CONTROL`` file.
- #. At the end it checks if the script returned an error or not and send the log file via email to the user.
+ #. It sets necessary batch system parameters.
+ #. It prepares the job environment at the ECMWF servers by loading the necessary library modules.
+ #. It sets some environment variables for the single session.
+ #. It creates the directory structure in the user's ``$SCRATCH`` file system.
+ #. It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the ``jobscript.ksh``. ``Flex_extract`` has a set of parameters which are passed to the job script with their default or the user-defined values. It also sets ``CONTROL`` as an environment variable.
+ #. ``Flex_extract`` is started from within the ``work`` directory of the new directory structure by calling the ``submit.py`` script. It sets new paths for input and output directories and the recently generated ``CONTROL`` file.
+ #. At the end, it checks whether the script has returned an error or not, and emails the log file to the user.
 
 
 

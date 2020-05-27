@@ -2,12 +2,12 @@
 CONTROL file examples
 **********************
 
-``Flex_extract`` has a couple of example ``CONTROL`` files for a number of different data set constellations in the directory path ``flex_extract_vX.X/Run/Control``. 
+``Flex_extract`` comes with a number of example ``CONTROL`` files for a number of different data set constellations in the directory path ``flex_extract_vX.X/Run/Control``. 
 
-Here is a list of the example files and a description of the data set:
+Here is a list of the example files:
 
 CONTROL.documentation
-   This file is not intended to be used with ``flex_extract``. It has a list of all possible parameters and their default values for a quick overview. 
+   This file is not intended to be used with ``flex_extract``. It just contains a list of all possible parameters and their default values for a quick overview. 
    
 .. code-block:: bash
 
@@ -32,10 +32,11 @@ CONTROL.documentation
 	CONTROL_OD.OPER.FC.eta.highres
 	CONTROL_OD.OPER.FC.gauss.highres
 	CONTROL_OD.OPER.FC.operational
-	CONTROL_OD.OPER.FC.twiceaday.1hourly
-	CONTROL_OD.OPER.FC.twiceaday.3hourly
+	CONTROL_OD.OPER.FC.twicedaily.1hourly
+	CONTROL_OD.OPER.FC.twicedaily.3hourly
 
-    
+   #PS some information to be added.
+ 
 .. toctree::
     :hidden:
     :maxdepth: 2

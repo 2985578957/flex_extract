@@ -262,8 +262,8 @@ The next level of differentiation would be the field type, level type and time p
     CONTROL_OD.OPER.FC.eta.highres  
     CONTROL_OD.OPER.FC.gauss.highres  
     CONTROL_OD.OPER.FC.operational            
-    CONTROL_OD.OPER.FC.twiceaday.1hourly
-    CONTROL_OD.OPER.FC.twiceaday.3hourly
+    CONTROL_OD.OPER.FC.twicedaily.1hourly
+    CONTROL_OD.OPER.FC.twicedaily.3hourly
     
     
 
@@ -276,21 +276,20 @@ The main differences and features in the datasets are listed in the table shown 
 
 
                     
-A common problem for beginners in retrieving ECMWF datasets is the mismatch in the definition of these parameters. For example, if you would like to retrieve operational data before ``June 25th 2013`` and set the maximum level to ``137`` you will get an error because this number of levels was first introduced at this effective day. So, be cautious in the combination of space and time resolution as well as the field types which are not available all the time. 
+A common problem for beginners in retrieving ECMWF datasets is a mismatch in the choice of values for these parameters. For example, if you try to retrieve operational data for 24 June 2013 or earlier and set the maximum level to 137, you will get an error because this number of levels was introduced only on 25 June 2013. Thus, be careful in the combination of space and time resolution as well as the field types. 
 
 
 .. note::
 
-    Sometimes it might not be clear how specific parameters in the control file must be set in terms of format. Please see the description of the parameters in section `CONTROL parameters <Documentation/Input/control_params.html>`_ or have a look at the ECMWF user documentation for `MARS keywords <https://confluence.ecmwf.int/display/UDOC/MARS+keywords>`_
+    Sometimes it might not be clear how specific parameters in the control file must be set in terms of format. Please consult the description of the parameters in section `CONTROL parameters <Documentation/Input/control_params.html>`_ or have a look at the ECMWF user documentation for `MARS keywords <https://confluence.ecmwf.int/display/UDOC/MARS+keywords>`_
 
-
-In the following we shortly discuss the main retrieval opportunities of the different datasets and  categoize the ``CONTROL`` files.    
+In the following, we shortly discuss the typical retrievals for the different datasets and  point to the respective ``CONTROL`` files.    
                     
      
 Public datasets
 ---------------         
 
-The main difference in the definition of a ``CONRTOL`` file for a public dataset is the setting of the parameter ``DATASET``. This specification enables the selection of a public dataset in MARS. Otherwise the request would not find the dataset.
+The main characteristic in the definition of a ``CONTROL`` file for a public dataset is the parameter ``DATASET``. Its specification enables the selection of a public dataset in MARS. Without this parameter, the request would not find the dataset.
 For the two public datasets *CERA-20C* and *ERA-Interim* an example file with the ending ``.public`` is provided and can be used straightaway. 
 
 .. code-block:: bash
@@ -298,50 +297,50 @@ For the two public datasets *CERA-20C* and *ERA-Interim* an example file with th
     CONTROL_CERA.public  
     CONTROL_EI.public      
 
-For *CERA-20C* it seems that there are no differences in the dataset against the full dataset, while the *public ERA-Interim* has only analysis fields every 6 hour without filling forecasts in between for model levels. Therefore it is only possible to retrieve 6-hourly data for *public ERA-Interim*.
+For *CERA-20C* it seems that there are no differences compared the full dataset, whereas the *public ERA-Interim* has only 6-hourly analysis fields, without forecasts to fill in between, for model levels. Therefore, it is only possible to retrieve 6-hourly data for *public ERA-Interim*.
 
 .. note:: 
 
-    In general, *ERA5* is a public dataset. However, since the model levels are not yet publicly available, it is not possible to retrieve *ERA5* data to drive the ``FLEXPART`` model. As soon as this is possible it will be announced at the community website and per newsletter. 
+    In principle, *ERA5* is a public dataset. However, since the model levels are not yet publicly available, it is not possible to retrieve *ERA5* data to drive the ``FLEXPART`` model. As soon as this is possible it will be announced at the community website and on the FLEXPART user email list. 
                      
 
 CERA
 ----
 
-For this dataset it is important to keep in mind that the dataset is available for the period 09/1901 until 12/2010 and the temporal resolution is limited to 3-hourly fields. 
-It is also a pure ensemble data assimilation dataset and is stored under the ``enda`` stream. It has ``10`` ensemble members. The example ``CONTROL`` files will only select the first member (``number=0``). You may change this to another number or a list of numbers (e.g. ``NUMBER 0/to/10``).
-Another important difference to all other datasets is the forecast starting time which is 18 UTC. Which means that the forecast in *CERA-20C* for flux fields is  12 hours long. Since the forecast extends over a single day we need to extract one day in advance and one day subsequently. This is automatically done in ``flex_extract``. 
+For this dataset, it is important to keep in mind that it is available for the period 09/1901 until 12/2010, and that the temporal resolution is limited to 3 h. 
+It is also a pure ensemble data assimilation dataset and is stored under the ``enda`` stream. There are 10 ensemble members. The example ``CONTROL`` files will only select the first member (``number=0``). You may change this to another number or a list of numbers (e.g. ``NUMBER 0/to/10``).
+Another important difference to all other datasets is that the forecast starting time is 18 UTC. This means that forecasts for flux fields cover 12 hours. Since the forecast extends over a single day we need to extract one day in advance and one day subsequently. This is automatically done in ``flex_extract``. 
+##PS check previous para
 
 
 ERA 5
 -----
 
-This is the newest re-analysis dataset and has a temporal resolution of 1-hourly analysis fields. Up to date it is available until April 2019 with regular release of new months. 
-The original horizontal resolution is ``0.28125°`` which needs some caution in the definition of the domain, since the length of the domain in longitude or latitude direction  must be an exact multiple of the resolution. It might be easier for users to use ``0.25`` for the resolution which MARS will automatically interpolate. 
-The forecast starting time is ``06/18 UTC`` which is important for the flux data. This should be set in the ``CONTROL`` file via the ``ACCTIME 06/18`` parameter in correspondence with ``ACCMAXSTEP 12`` and ``ACCTYPE FC``. 
+This is the latest re-analysis dataset, and has a temporal resolution of 1-h (analysis fields). At the time of writing, it is available until April 2019 with regular release of new months. 
+The original horizontal resolution is 0.28125° which needs some caution in the definition of the domain, since the length of the domain in longitude or latitude direction  must be an integer multiple of the resolution. It is also possible to use ``0.25`` for the resolution; MARS will then automatically interpolate to this resolution which is still close enough to be acceptable.
+The forecast starting time is ``06/18 UTC`` which is important for the flux data. Correspondingly, one should set in the ``CONTROL`` file ``ACCTIME 06/18``, ``ACCMAXSTEP 12``, and ``ACCTYPE FC``. 
 
 .. note::
 
-    We know that *ERA5* also has an ensemble data assimilation system but this is not yet retrievable with ``flex_extract`` since the deaccumulation of the flux fields works differently in this stream. Ensemble retrieval for *ERA5* is a future ToDo.
+    *ERA5* also includes an ensemble data assimilation system but related fields are not yet retrievable with ``flex_extract`` since the deaccumulation of the flux fields works differently in this stream. Ensemble field retrieval for *ERA5* is a *to-do* for the future.
 
 
 
 ERA-Interim
 -----------
 
-This re-analysis dataset will exceed its end of production at 31st August 2019!
-It is then available from 1st January 1979 to 31st August 2019. The ``etadot`` is not available in this dataset. Therefore ``flex_extract`` must select the ``GAUSS`` parameter to retrieve the divergence field in addition. The vertical velocity is the calculated with the continuity equation in the Fortran program ``calc_etadot``. Since the analysis fields are only available for every 6th hour, the dataset can be made 3 hourly by adding forecast fields in between. No ensemble members are available.
-
+The production of this re-analysis dataset has stopped on 31 August 2019!
+It is available for the period from 1 January 1979 to 31 August 2019. The ``etadot`` parameter is not available in this dataset. Therefore, one must use the ``GAUSS`` parameter, which retrieves the divergence field in addition and calculates the vertical velocity from the continuity equation in the Fortran program ``calc_etadot``. While the analysis fields are only available for every 6th hour, the dataset can be made 3-hourly by adding forecast fields in between. No ensemble members are available.
 
     
 Operational data
 ----------------
 
-This is the real time atmospheric model in high resolution with a 10-day forecast. This means it underwent regular adaptations and improvements over the years. Hence, retrieving data from this dataset needs extra attention in selecting correct settings of parameter. See :ref:`ref-tab-dataset-cmp` for the most important parameters. 
-Nowadays, it is available 1 hourly by filling the gaps of the 6 hourly analysis fields with 1 hourly forecast fields. Since 4th June 2008 the eta coordinate is directly available so that ``ETA`` should be set to ``1`` to save computation time. The horizontal resolution can be up to ``0.1°`` and in combination with ``137`` vertical levels can lead to troubles in retrieving this high resolution dataset in terms of job duration and quota exceedence. 
-It is recommended to submit such high resolution cases for single day retrievals (see ``JOB_CHUNK`` parameter in ``run.sh`` script) to avoid job failures due to exceeding limits.   
+This data set provides the output of the real-time atmospheric model runs in high resolution, including 10-day forecasts. The model undergoes frequent adaptations and improvements. Thus, retrieving data from this dataset requires extra attention in selecting correct settings of the parameters. See :ref:`ref-tab-dataset-cmp` for the most important parameters. 
+Currently, fields can be retrieved at 1 h temporal resolution by filling the gaps between analysis fields with 1-hourly forecast fields. Since 4 June 2008, the eta coordinate vertical velocity is directly available from MARS, therefore ``ETA`` should be set to ``1`` to save computation time. The horizontal resolution can be up to ``0.1°`` and in combination with ``137`` vertical levels can lead to problems in terms of job duration and disk space quota.
+It is recommended to submit such high resolution cases as single day retrievals (see ``JOB_CHUNK`` parameter in ``run.sh`` script) to avoid job failures due to exceeding limits.   
 
-``CONTROL`` files for normal daily retrievals with a mix of analysis and forecast fields are listed below:
+``CONTROL`` files for standard retrievals with a mix of analysis and forecast fields are listed below:
 
 .. code-block:: bash
 
@@ -350,20 +349,18 @@ It is recommended to submit such high resolution cases for single day retrievals
     CONTROL_OD.OPER.FC.eta.highres  
     CONTROL_OD.OPER.FC.gauss.highres  
     
-These files defines the minimum number of parameters necessary to retrieve a daily subset. The setup of field types is optimal and should only be changed if the user understands what he does. The grid, domain and temporal resolution can be changed according to availability.      
+These files defines the minimum number of parameters necessary to retrieve a daily subset. The given settings for the TYPE parameter are already optimised, and should only be changed if you know what you are doing. Grid, domain, and temporal resolution may be changed according to availability.
     
-
 
 .. note:: 
 
-     Please see `Information about MARS retrievement <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Retrievalefficiency>`_ to get to know hints about retrieval efficiency and troubleshooting. 
-  
+     Please see `Information about MARS retrievement <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Retrievalefficiency>`_ for hints about retrieval efficiency and troubleshooting. 
     
 
 Pure forecast
-    It is possible to retrieve pure forecasts exceeding a day. The forecast period available depends on the date and forecast field type. Please use MARS catalogue to check the availability. Below are some examples for 36 hour forecast of *Forecast (FC)*, *Control forecast (CF)* and *Calibration/Validation forecast (CV)*. 
-    The *CV* field type was only available 3-hourly from 2006 up to 2016. It is recommended to use the *CF* type since this is available from 1992 (3-hourly) on up to today in 1-hourly temporal resolution. *CV* and *CF* field types belong to the *Ensemble prediction system (ENFO)* which contain 50 ensemble members. 
-    Please be aware that in this case it is necessary to set the specific type for flux fields explicitly, otherwise it could select a default value which might be different from what you expect!
+    It is possible to retrieve pure forecasts exceeding one day. The forecast period available depends on the date and forecast field type. Please use MARS catalogue to check the availability. Below are some examples for 36 hour forecasts of *Forecast (FC)*, *Control forecast (CF)* and *Calibration/Validation forecast (CV)*. 
+    The *CV* field type was only available 3-hourly from 2006 up to 2016. It is recommended to use the *CF* type since this is available from 1992 (3-hourly) on up to today (1-hourly). *CV* and *CF* field types belong to the *Ensemble prediction system (ENFO)* which currently works with 50 ensemble members. 
+    Please be aware that in this case it is necessary to set the type for flux fields explicitly, otherwise a default value might be selected, different from what you expect!
     
     .. code-block:: bash
 
@@ -372,62 +369,57 @@ Pure forecast
         CONTROL_OD.OPER.FC.36hours  
 
 
-
 Half-day retrievals
-    If a forecast for just half a day is wanted it can be done by substituting the analysis fields also by forecast fields as shown in files with ``twiceaday`` in it. They produce a full day retrieval with pure 12 hour forecasts twice a day. It is also possible to use the operational version which would get the time information from ECMWF's environmental variables and therefore get the newest forecast per day. This version uses a ``BASETIME`` parameter which tells MARS to extract the exact 12 hours upfront to the selected date. If the ``CONTROL`` file with ``basetime`` in the filename is used this can be done for any other date too.
+    If a forecast is wanted for half a day only, this can be done by substituting the analysis fields by forecast fields as shown in files with ``twicedaily`` in their name. They produce a full-day retrieval with pure 12 hour forecasts, twice a day. It is also possible to use the operational version which would obtain the time information from ECMWF's environment variables and therefore use the newest forecast for each day. This version uses a ``BASETIME`` parameter which tells MARS to extract the exact 12 hours up to the selected date. If the ``CONTROL`` file with ``basetime`` in the filename is used, this can be done for any other date, too.
     
     .. code-block:: bash
 
         CONTROL_OD.OPER.FC.eta.basetime
         CONTROL_OD.OPER.FC.operational            
-        CONTROL_OD.OPER.FC.twiceaday.1hourly
-        CONTROL_OD.OPER.FC.twiceaday.3hourly
-
-
+        CONTROL_OD.OPER.FC.twicedaily.1hourly
+        CONTROL_OD.OPER.FC.twicedaily.3hourly
 
 
 Ensemble members
-    The retrieval of ensemble members were already mentioned in the pure forecast section and for *CERA-20C* data. 
-    In this ``flex_extract`` version there is an additional possibility to retrieve the *Ensemble Long window Data Assimilation (ELDA)* stream from the real-time dataset. This model version has (up to May 2019) 25 ensemble members and a control run (``number 0``). Starting from June 2019 it has 50 ensemble members. Therefore we created the possibility to double up the 25 ensemble members (before June 2019) to 50 members by taking the original 25 members from MARS and subtracting 2 times the difference between the member value and the control value. This is done by selecting the parameter ``DOUBLEELDA`` and set it to ``1``. 
-     
+    The retrieval of ensemble members was already mentioned in the pure forecast section and for *CERA-20C* data. 
+    This ``flex_extract`` version allows to retrieve the *Ensemble Long window Data Assimilation (ELDA)* stream from the operational dataset. Until May 2019, there were 25 ensemble members and a control run (``number 0``). Starting with June 2019, the number of ensemble members has been increased to 50. Therefore, we created the option to create 25 additional "pseudo-ensemble members" for periods before June 2019. The original 25 members from MARS are taken, and the difference between the member value and the control value is subtracted twice. This is done if the parameter ``DOUBLEELDA`` is included and set it to ``1``. 
     
     .. code-block:: bash
 
         CONTROL_OD.ELDA.FC.eta.ens.double   
         CONTROL_OD.ENFO.PF.ens
-
-
     
     
 Specific features
 -----------------
 
 rrint
-    Decides if the precipitation flux data uses the old (``0``) or new (``1``) disaggregation scheme. See :doc:`Documentation/disagg` for explanaition. 
+    Selects the disaggregation scheme for precipitation flux: old (``0``) or new (``1``). See :doc:`Documentation/disagg` for explanation. 
 cwc
-    Decides if the total cloud water content will be retrieved (set to ``1``) in addition. This is the sum of cloud liquid and cloud ice water content.
+    If present and set to ``1``, the total cloud water content will be retrieved in addition. This is the sum of cloud liquid and cloud ice water content.
 addpar
-    With this parameter an additional list of 2-dimensional, non-flux parameters can be retrieved. Use format ``param1/param2/.../paramx`` to list the parameters. Please be consistent in using either the parameter IDs or the short names.
+    With this parameter. an additional list of 2-dimensional, non-flux parameters can be retrieved. Use the format ``param1/param2/.../paramx`` to list the parameters. Please be consistent in using either the parameter IDs or the short names as defined by MARS.
 doubleelda
-    Use this to double the ensemble member number by adding further disturbance to each member. 
+    Use this to double the ensemble member number by adding further disturbance to each member (to be used with 25 members). 
 debug
-    If set to ``1`` all temporary files were kept at the end. Otherwise everything except the final output files will be deleted.
+    If set to ``1``, all temporary files are preserved. Otherwise, everything except the final output files will be deleted.
 request
     This produces an extra *csv* file ``mars_requests.csv`` where the content of each mars request of the job is stored. Useful for debugging and documentation.
 mailfail
-    At default the mail is send to the mail connected with the user account. Add additional email addresses if you want. But as soon as you enter a new mail, the default will be overwritten. If you would like to keep the mail from your user account, please add ``${USER}`` to the list ( comma seperated ) or mail addresses.
-      
+    As a default, e-mails are sent to the mail address connected with the user account. It is possible to overwrite this by specifying one or more e-mail addresses (comma-separated list). In order to include the e-mail associated with the user account, add ``${USER}`` to the list.
         
         
-Hints for definition of some parameter combinations
----------------------------------------------------
+Hints for proper definition of certain parameter combinations
+-------------------------------------------------------------
 
-Field types and times
-    This combination is very important. It defines the temporal resolution and which field type is extracted per time step. 
-    The time declaration for analysis (AN) fields uses the times of the specific analysis and (forecast time) steps have to be ``0``. The forecast field types (e.g. FC, CF, CV, PF) need to declare a combination of (forescast start) times and the (forecast) steps. Both of them together defines the actual time step. It is important to know the forecast starting times for the dataset to be retrieved, since they are different. In general it is enough to give information for the exact time steps, but it is also possible to have more time step combinations of ``TYPE``, ``TIME`` and ``STEP`` because the temporal (hourly) resolution with the ``DTIME`` parameter will select the correct combinations. 
+Field type and time
+    This combination is very important. It defines the temporal resolution and which field type is extracted on each time step. 
+    The time declaration for analysis (AN) fields uses the times of the specific analysis while the (forecast time) step has to be ``0``. 
+    The forecast field types (e.g. FC, CF, CV, PF) need to declare a combination of (forescast start) time and the (forecast) step. Together they define the actual time. It is important to know the forecast starting times for the dataset to be retrieved, since they are different. In general, it is sufficient to give information for the exact time steps, but it is also possible to have more time step combinations of ``TYPE``, ``TIME`` and ``STEP`` because the temporal (hourly) resolution with the ``DTIME`` parameter will select the correct combinations. 
+# needs to be rephrased
 
     .. code-block:: bash
-       :caption: Example of a setting for the field types and temporal resolution.
+       :caption: Example of a setting for the field types and temporal resolution. It will retrieve 3-hourly fields, with analyses at 00 and 12 UTC and the corresponding forecasts inbetween.
 
         DTIME 3
         TYPE AN FC FC FC AN FC FC FC
@@ -436,10 +428,12 @@ Field types and times
     
  
 Vertical velocity           
-    The vertical velocity for ``FLEXPART`` is not directly available from MARS. Therefore it has to be calculated. There are a couple of different options. The following parameters are responsible for the selection. See :doc:`Documentation/vertco` for a detailed explanation. The ``ETADIFF``, ``OMEGA`` and ``OMEGADIFF`` versions are only recommended for debugging and testing reasons. Usually it is a decision between ``GAUSS`` and ``ETA``, where for ``GAUSS`` spectral fields of the horizontal wind fields and the divergence are to be retrieved and used with the continuity equation to calculate the vertical velocity. For ``ETA`` the latitude/longitude fields of horizontal wind fields and eta-coordinate are to be retrieved. It is recommended to use ``ETA`` where possible due to a reduced computation time.  
+    The vertical velocity for ``FLEXPART`` is not directly available from MARS and has to be calculated. 
+    There are several options for this, and the following parameters are responsible for the selection. See :doc:`Documentation/vertco` for a detailed explanation. Using ``ETADIFF 1``, ``OMEGA 1`` and ``OMEGADIFF 1`` is recommended for debugging and testing only. 
+  Usually, one has to decide between ``GAUSS 1`` and ``ETA 1``. ``GAUSS 1`` means that spectral fields of the horizontal wind fields and the divergence are retrieved and that the vertical velocity is calculate using the continuity equation. ``ETA 1`` means that horizontal wind fields etadot are retrieved on a regular lat-lon grid. It is recommended to use ``ETA 1`` where possible, as there is a substantial computational overhead for solving the continuity equation.
 
     .. code-block:: bash
-        :caption: Example setting for the vertical coordinate retrieval.
+        :caption: Example setting for the vertical coordinate retrieval (recommended if etadot fields are available).
         
         GAUSS 0
         ETA 1
@@ -450,12 +444,13 @@ Vertical velocity
         
 
 Grid resolution and domain
-    The grid and domain selection depends on each other. The grid can be defined in the format of normal degrees (e.g. ``1.``) or as in older versions by 1/1000. degrees (e.g. ``1000`` for ``1°``).
-    After selecting the grid, the domain has to be defined in a way that the length of the domain in longitude or latitude direction  must be an exact multiple of the grid. 
-    The horizontal resolution for spectral fields will be set by the parameter ``RESOL``. For information about how to select an appropriate value you can read the explanation of the MARS keyword `here <https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol>`_ and in `this table  <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation>`_.
+    The grid and domain parameters depends on each other. ``grid`` refers to the grid resolution. It can be given as decimal values (e.g., ``1.`` meaning 1.0°), or as in previous versions of flex_extract, as integer values refering to 1/1000 degrees (e.g., ``1000`` means also 1°). The code applies common sense to determine what format is to be assumed.
+    After selecting grid, the ``domain`` has to be defined. The extension in longitude or latitude direction must be an integer multiple of ``grid``. 
+#PS shouldn't we explain how to define a domain??
+    The horizontal resolution for spectral fields is set by the parameter ``RESOL``. For information about how to select an appropriate value please read the explanation of the MARS keyword RESOL as found `in this entry of the ECMWF on-line documentation <https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol>`_ and  `this table (also ECMWF documentation) <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation>`_.
     
     .. code-block:: bash
-        :caption: Example setting for a northern hemisphere domain with a grid of ``0.25°``.
+        :caption: Example setting for a domain covering the northern hemisphere domain with a grid resolution of ``0.25°``.
     
         GRID 0.25
         RESOL 799
@@ -467,16 +462,16 @@ Grid resolution and domain
     
 
 Flux data
-    The flux fields are accumulated forecast fields all the time. Since some re-analysis dataset nowadays have complete set of analysis fields in their temporal resolution it was important to define a new parameter set to define the flux fields since the information could not be taken from ``TYPE``, ``TIME`` and ``STEP`` any longer. Select a forecast field type ``ACCTYPE``, the forecast starting time ``ACCTIME`` and the maximum forecast step ``ACCMAXSTEP``. The ``DTIME`` parameter defines the temporal resolution for the whole period. 
+    Flux fields are always forecast fields and contain values of the fluxes accumulated since the start of the respective forecast. As certain re-analysis dataset cover all time steps with analysis fields, it was necessary to define a new parameter set for the definition of the flux fields. The following parameters are used specifically for flux fields, if provided. ``ACCTYPE`` is the field type (must be a type of forecast), ``ACCTIME``  the forecast starting time, and  ``ACCMAXSTEP`` the maximum forecast step;``DTIME`` the temporal resolution. ACCTYPE is assumed to be the same during the whole period given by ACCTIME and ACCMAXSTEP. 
     
     .. code-block:: bash
        :caption: Example setting for the definition of flux fields.
+#PS for which application would this be typical?
     
         DTIME 3
         ACCTYPE FC
         ACCTIME 00/12
         ACCMAXSTEP 36
-
 
     
 .. toctree::

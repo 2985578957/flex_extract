@@ -1,5 +1,5 @@
 ********************
-Static Code Analysis
+Static code analysis
 ********************
 
    UNDER CONSTRUCTION

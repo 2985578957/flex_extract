@@ -10,7 +10,7 @@ The CONTROL parameters
 User Section
 ************
     
-.. exceltable:: User parameter in CONTROL file 
+.. exceltable:: User parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: UserSection 
    :header: 1
@@ -20,7 +20,7 @@ User Section
 General Section
 ***************
 
-.. exceltable:: General parameter in CONTROL file 
+.. exceltable:: General parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: GeneralSection 
    :header: 1
@@ -30,7 +30,7 @@ General Section
 Time Section
 ************
    
-.. exceltable:: Time parameter in CONTROL file 
+.. exceltable:: Time parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: TimeSection  
    :header: 1      
@@ -41,7 +41,7 @@ Time Section
 Data Section
 ************ 
    
-.. exceltable:: Data parameter in CONTROL file 
+.. exceltable:: Data parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: DataSection 
    :header: 1
@@ -52,7 +52,7 @@ Data Section
 Data field Section
 ******************
     
-.. exceltable:: Data field parameter in CONTROL file 
+.. exceltable:: Data field parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: DatafieldsSection 
    :header: 1
@@ -63,7 +63,7 @@ Data field Section
 Flux data Section
 *****************
 
-.. exceltable:: Flux data parameter in CONTROL file 
+.. exceltable:: Flux data parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls
    :sheet: FluxDataSection
    :header: 1
@@ -74,7 +74,7 @@ Flux data Section
 Domain Section
 **************
    
-.. exceltable:: Domain parameter in CONTROL file 
+.. exceltable:: Domain parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls
    :sheet: DomainSection
    :header: 1
@@ -98,7 +98,7 @@ Vertical wind Section
 Additional data Section
 ***********************
    
-.. exceltable:: Additional data parameter in CONTROL file 
+.. exceltable:: Additional data parameters in CONTROL file 
    :file: ../../_files/CONTROLparameter.xls 
    :sheet: AddDataSection 
    :header: 1

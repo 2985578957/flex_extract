@@ -1,7 +1,7 @@
-Available Datasets for Public users
-***********************************
+Available data sets for public users
+************************************
 
-  IN PREPARATION
+  UNDER PREPARATION
 
 
 .. toctree::

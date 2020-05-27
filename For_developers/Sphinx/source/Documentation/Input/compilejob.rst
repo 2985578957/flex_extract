@@ -1,14 +1,14 @@
 ********************************************
-The Compilation Jobscript ``compilejob.ksh``
+The compilation job script ``compilejob.ksh``
 ********************************************
 
-The compilejob is a Korn-shell script which will be created during the installation process for the application modes **remote** and **gateway** from a template called ``compilejob.template`` in the template directory.
+The compile job is a Korn-shell script which will be created during the installation process for the application modes **remote** and **gateway** from a template called ``compilejob.template`` in the template directory.
 
-``Flex_extract`` uses the python package `genshi <https://genshi.edgewall.org/>`_ to generate
+``Flex_extract`` uses the Python package `genshi <https://genshi.edgewall.org/>`_ to generate
 the Korn-shell script from the template files by substituting the individual parameters. 
 These individual parameters are marked by a doubled ``$`` sign in ``job.temp``. 
 
-The jobscript has a number of settings for the batch system which are fixed and differentiates between the *ecgate* and the *cca/ccb* 
+The job script has a number of settings for the batch system which are fixed, and it differentiates between the *ecgate* and the *cca/ccb* 
 server system to load the necessary modules for the environment when submitted to the batch queue.
 
 The submission is done by the ``ECaccess`` tool from within ``flex_extract`` with the command ``ecaccess-job-submit``.
@@ -18,13 +18,13 @@ The submission is done by the ``ECaccess`` tool from within ``flex_extract`` wit
 What does the compilation script do?
 ------------------------------------
 
- #. It sets necessary batch system parameters
+ #. It sets the necessary batch-system parameters
  #. It prepares the job environment at the ECMWF servers by loading the necessary library modules
- #. It sets some environment variabels for the single session
+ #. It sets some environment variables for the single session
  #. It creates the ``flex_extract`` root directory in the ``$HOME`` path of the user
- #. It untars the tar-ball into the root directory.
- #. It compiles the Fortran programs's ``Makefile``.
- #. At the end it checks if the script returned an error or not and send the log file via email to the user.
+ #. It untars the tarball into the root directory.
+ #. It compiles the Fortran program using ``Makefile``.
+ #. At the end, it checks whether the script has returned an error or not, and emails the log file to the user.
 
 
 

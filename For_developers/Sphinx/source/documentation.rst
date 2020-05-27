@@ -2,21 +2,21 @@
 Documentation
 *************
         
-    Overview (Under construction)
+    Overview (under construction)
       
-    Control & Input Data 
+    Control & input data 
     
-    Output Data (Under construction)
+    Output data (under construction)
     
-    Disaggregation of Flux Data (Under construction)
+    Disaggregation of flux data (under construction)
     
-    Vertical Coordinate (Under construction)
-      - Methods (GAUSS, ETA, OMEGA)
+    Vertical coordinate (under construction)
+      - methods (GAUSS, ETA, OMEGA)
       - calc_etadot 
     
-    Auto Generated Documentation
+    Auto-generated documentation
       - Python
-      - Fortran (Under construction)
+      - Fortran (under construction)
 
     
 .. toctree::

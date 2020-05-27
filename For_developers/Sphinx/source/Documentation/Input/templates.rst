@@ -2,19 +2,19 @@
 Templates
 *********
 
-In ``flex_extract`` we use the Python package `genshi <https://genshi.edgewall.org/>`_ to create specific files from templates. It is the most efficient way to be able to quickly adapt e.g. the job scripts send to the ECMWF batch queue system or the namelist file für the Fortran program without the need to change the program code. 
+In ``flex_extract``, the Python package `genshi <https://genshi.edgewall.org/>`_ is used to create specific files from templates. It is the most efficient way to be able to quickly adapt, e. g., the job scripts sent to the ECMWF batch queue system, or the namelist file für the Fortran program, without the need to change the program code. 
 
 .. note::
-   Usually it is not recommended to change anything in these files without being able to understand the effects.
+   Do not change anything in these files unless you understand the effects!
    
-Each template file has its content framework and keeps so-called placeholder variables in the positions where the values needs to be substituted at run time. These placeholders are marked by a leading ``$`` sign. In case of the Kornshell job scripts, where (environment) variables are used the ``$`` sign needs to be doubled to `escape` and keep a single ``$`` sign as it is.
+Each template file has its content framework and keeps so-called placeholder variables in the positions where the values need to be substituted at run time. These placeholders are marked by a leading ``$`` sign. In case of the Kornshell job scripts, where (environment) variables are used, the ``$`` sign needs to be doubled for `escaping`.
    
-The following templates are used and can be found in directory ``flex_extract_vX.X/Templates``:
+The following templates are used; they can be found in the directory ``flex_extract_vX.X/Templates``:
 
 convert.nl
 ----------
 
-    This is the template for a Fortran namelist file called ``fort.4`` which will be read by ``calc_etadot``.
+    This is the template for a Fortran namelist file called ``fort.4`` read by ``calc_etadot``.
     It contains all the parameters ``calc_etadot`` needs. 
     
     .. code-block:: fortran
@@ -56,13 +56,13 @@ compilejob.template
 
     This template is used to create the job script file called ``compilejob.ksh`` during the installation process for the application modes **remote** and **gateway**. 
 
-    At the beginning some directives for the batch system are set. 
-    On the **ecgate** server the ``SBATCH`` comments are the directives for the SLURM workload manager. A description of the single lines can be found at `SLURM directives <https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs>`_.
-    For the high performance computers **cca** and **ccb** the ``PBS`` comments are necessary and can be view at `PBS directives <https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS>`_.
+    At the beginning, some directives for the batch system are set. 
+    On the **ecgate** server, the ``SBATCH`` comments are the directives for the SLURM workload manager. A description of the single lines can be found at `SLURM directives <https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs>`_.
+    For the high-performance computers **cca** and **ccb**, the ``PBS`` comments are necessary;  for details see `PBS directives <https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS>`_.
 
-    The software environment requirements mentioned in :ref:`ref-requirements` are prepared by loading the corresponding modules depending in the ``HOST``. It should not be changed without testing.
+    The software environment requirements mentioned in :ref:`ref-requirements` are prepared by loading the corresponding modules depending on the ``HOST``. It should not be changed without testing.
     
-    Afterwards the installation steps as such are done. Including the generation of the root directory, putting files in place, compiling the Fortran program and sending a log file via email.
+    Afterwards, the installation steps as such are done. They included the generation of the root directory, putting files in place, compiling the Fortran program, and sending a log file by email.
 
     .. code-block:: ksh
     
@@ -144,13 +144,14 @@ job.temp
 
     This template is used to create the actual job script file called ``job.ksh`` for the execution of ``flex_extract`` in the application modes **remote** and **gateway**. 
 
-    At the beginning some directives for the batch system are set. 
-    On the **ecgate** server the ``SBATCH`` comments are the directives for the SLURM workload manager. A description of the single lines can be found at `SLURM directives <https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs>`_.
-    For the high performance computers **cca** and **ccb** the ``PBS`` comments are necessary and can be view at `PBS directives <https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS>`_.
+    At the beginning, some directives for the batch system are set. 
+    On the **ecgate** server, the ``SBATCH`` comments are the directives for the SLURM workload manager. A description of the single lines can be found at `SLURM directives <https://confluence.ecmwf.int/display/UDOC/Writing+SLURM+jobs>`_.
+    For the high performance computers **cca** and **ccb**, the ``PBS`` comments are necessary; 
+    for details see `PBS directives <https://confluence.ecmwf.int/display/UDOC/Batch+environment%3A++PBS>`_.
 
-    The software environment requirements mentioned in :ref:`ref-requirements` are prepared by loading the corresponding modules depending in the ``HOST``. It should not be changed without testing.
+    The software environment requirements mentioned in :ref:`ref-requirements` are prepared by loading the corresponding modules depending on the ``HOST``. It should not be changed without testing.
     
-    Afterwards the run directory and the ``CONTROL`` file are created and ``flex_extract`` is executed. In the end a log file is send via email.
+    Afterwards, the run directory and the ``CONTROL`` file are created and ``flex_extract`` is executed. In the end, a log file is send by email.
     
     .. code-block:: ksh
     
@@ -238,7 +239,7 @@ job.temp
 job.template
 ------------
 
-    This template is used to create the template for the execution job script ``job.temp`` for ``flex_extract`` in the installation process. A description of the file can be found under ``job.temp``. A couple of parameters are set in this process, such as the user credentials and the ``flex_extract`` version number.
+    This template is used to create the template for the execution job script ``job.temp`` for ``flex_extract`` in the installation process. A description of the file can be found under ``job.temp``. Several parameters are set in this process, such as the user credentials and the ``flex_extract`` version number.
         
     .. code-block:: ksh
     
@@ -324,21 +325,6 @@ job.template
 
 
 
-
-
-
-
-  
-
-
-
-
-
-   
-   
-
- 
-   
    
 
 .. toctree::

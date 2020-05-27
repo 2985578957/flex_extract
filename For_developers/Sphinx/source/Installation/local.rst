@@ -50,33 +50,34 @@ Local mode - dependencies
 
 The installation is the same for the access modes **member** and **public**.
 
-The environment on your local system has to provide these software packages
+The environment on your local system has to provide the following software packages
 and libraries, since the preparation of the extraction and the post-processing is done on the local machine:
 
-+------------------------------------------------+-----------------+
-|  Python part                                   | Fortran part    |
-+------------------------------------------------+-----------------+
-| * `Python3`_                                   | * `gfortran`_   |
-| * `numpy`_                                     | * `fftw3`_      |
-| * `genshi`_                                    | * `eccodes`_    |
-| * `eccodes for python`_                        | * `emoslib`_    |
-| * `ecmwf-api-client`_ (everything except ERA5) |                 |
-| * `cdsapi`_ (just for ERA5 and member user)    |                 |
-+------------------------------------------------+-----------------+
++-------------------------------------------------+-----------------+
+|  Python part                                    | Fortran part    |
++-------------------------------------------------+-----------------+
+| 1. `Python3`_                                   | 1. `gfortran`_  |
+| 2. `numpy`_                                     | 2. `fftw3`_     |
+| 3. `genshi`_                                    | 3. `eccodes`_   |
+| 4. `eccodes for python`_                        | 4. `emoslib`_   |
+| 5. `ecmwf-api-client`_ (everything except ERA5) |                 |
+| 6. `cdsapi`_ (just for ERA5 and member user)    |                 |
++-------------------------------------------------+-----------------+
 
 
 .. _ref-prep-local:
 
-Prepare local environment
-=========================
+Preparing the local environment
+===============================
 
-The easiest way to install all required packages is to use the package management system of your Linux distribution  which requires admin rights.
+The easiest way to install all required packages is to use the package management system of your Linux distribution which requires admin rights.
 The installation was tested on a *Debian GNU/Linux buster* and an *Ubuntu 18.04 Bionic Beaver* system.
 
 .. code-block:: sh
 
-  # On a Debian or Debian-derived sytem (e. g. Ubuntu) system you may use the following commands (or equivalent commands of your preferred package manager):
-  # (if not already available):
+  # On a Debian or Debian-derived (e. g. Ubuntu) system,
+  # you may use the following commands (or equivalent commands of your preferred package manager):
+  # (if respective packages are not already available):
    apt-get install python3 (usually already available on GNU/Linux systems)
    apt-get install python3-eccodes
    apt-get install python3-genshi
@@ -85,46 +86,47 @@ The installation was tested on a *Debian GNU/Linux buster* and an *Ubuntu 18.04 
    apt-get install fftw3-dev 
    apt-get install libeccodes-dev
    apt-get install libemos-dev 
-  # Some of these packages will pull in further packages as dependencies. This is fine, and some are even needed by ``flex_extract''.
-  
+  # Some of these packages will pull in further packages as dependencies. 
+  # This is fine, and some are even needed by ``flex_extract''.
 
-  # As currently the CDS and ECMWF API packages are not available as Debian packages, they need to be installed outside of the Debian (Ubuntu etc.) package management system. The recommended way is:
+  # As currently the CDS and ECMWF API packages are not available as Debian packages,
+  # they need to be installed outside of the Debian (Ubuntu etc.) package management system. 
+  # The recommended way is:
    apt-get install pip
    pip install cdsapi 
    pip install ecmwf-api-client 
    
 .. note::
 
-    In case you would like to use Anaconda Python we recommend you follow the installation instructions of 
-    `Anaconda Python Installation for Linux <https://docs.anaconda.com/anaconda/install/linux/>`_ and then install the
-    ``eccodes`` package from ``conda`` with:
+    If you are using Anaconda Python, we recommend to follow the installation instructions of 
+    `Anaconda Python Installation for Linux <https://docs.anaconda.com/anaconda/install/linux/>`_ 
+    and then install the ``eccodes`` package from ``conda`` with:
 
     .. code-block:: bash
 
        conda install conda-forge::python-eccodes   
    
-The CDS API (cdsapi) is required for ERA5 data and the ECMWF Web API (ecmwf-api-client) for all other public datasets.   
+The CDS API (``cdsapi``) is required for ERA5 data and the ECMWF Web API (ecmwf-api-client) for all other public datasets.   
     
 .. note:: 
 
-    Since **public users** currently don't have access to the full *ERA5* dataset they can skip the installation of the ``CDS API``. 
+    Since **public users** currently don't have access to the full *ERA5* dataset, they can skip the installation of the CDS API. 
 
-Both user groups have to provide keys with their credentials for the Web API's in their home directory. Therefore, follow these instructions:
+Both user groups have to provide keys with their credentials for the Web APIs in their home directory, following these instructions:
        
 ECMWF Web API:
-   Go to `MARS access`_ website and log in with your credentials. Afterwards, on this site in section "Install ECMWF KEY" the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file `.ecmwfapirc` in your home directory). 
+   Go to the `MARS access`_ website and log in with your credentials. Afterwards, go to the section "Install ECMWF KEY", where the key for the ECMWF Web API should be listed. Please follow the instructions in this section under 1 (save the key in a file ``.ecmwfapirc`` in your home directory). 
      
 CDS API:
-   Go to `CDS API registration`_ and register there too. Log in at the `cdsapi`_ website and follow the instructions at section "Install the CDS API key" to save your credentials in a `.cdsapirc` file.
+   Go to `CDS API registration`_ and register there, too. Log in on the `cdsapi`_ website and follow the instructions in the section "Install the CDS API key" to save your credentials in file ``.cdsapirc``.
 
    
 .. _ref-test-local:
    
-Test local environment
-======================
+Testing the local environment
+=============================
 
-Check the availability of the python packages by typing ``python3`` in a terminal window and run the ``import`` commands in the python shell. If there are no error messages, you succeeded in setting up the environment.
-
+Check the availability of the python packages by typing ``python3`` in a terminal window and run the ``import`` commands in the python shell:
 .. code-block:: python
     
    # check in python3 console
@@ -134,10 +136,11 @@ Check the availability of the python packages by typing ``python3`` in a termina
    import cdsapi
    import ecmwfapi
    
+If there are no error messages, you succeeded in setting up the environment.
 
 
-Test the Web API's
-------------------
+Testing the Web APIs
+--------------------
 
 You can start very simple test retrievals for both Web APIs to be sure that everything works. This is recommended to minimise the range of possible errors using ``flex_extract`` later on.
 
@@ -147,7 +150,7 @@ ECMWF Web API
 
 
 +----------------------------------------------------------+----------------------------------------------------------+
-|Please use this piece of Python code for **Member user**: |Please use this piece of Python code for **Public user**: |
+|Please use this Python code snippet as a **Member user**: |Please use this Python code snippet as a **Public user**: |
 +----------------------------------------------------------+----------------------------------------------------------+
 |.. code-block:: python                                    |.. code-block:: python                                    |
 |                                                          |                                                          |
@@ -177,7 +180,7 @@ CDS API
 
 Extraction of ERA5 data via CDS API might take time as currently there is a high demand for ERA5 data. Therefore, as a simple test for the API just retrieve pressure-level data (even if that is NOT what we need for FLEXPART), as they are stored on disk and don't need to be retrieved from MARS (which is the time-consuming action): 
 
-Please use this piece of Python code to retrieve a small sample of *ERA5* pressure levels:
+Please use the following Python code snippet to retrieve a small sample of *ERA5* pressure level data:
 
 .. code-block:: python
 
@@ -203,7 +206,7 @@ If you know that your CDS API works, you can try to extract some data from MARS.
 
 .. **Member-state user**
 
-Please use this piece of Python code to retrieve a small *ERA5* data sample as a **member-state user**! The **Public user** do not have access to the full *ERA5* dataset!
+Please use the following Python code snippet to retrieve a small *ERA5* data sample as a **member-state user**! The **Public user** do not have access to the full *ERA5* dataset!
 
 .. code-block:: python
 
@@ -267,26 +270,22 @@ Please use this piece of Python code to retrieve a small *ERA5* data sample as a
 Local installation
 ==================
 
-First prepare the Fortran ``makefile`` for your environment and set it in the ``setup.sh`` script. (See section :ref:`Fortran Makefile <ref-convert>` for more information.)
-``flex_extract`` comes with two ``makefiles`` prepared for the ``gfortran`` compiler. One for the normal use ``makefile_fast`` and one for debugging ``makefile_debug`` which is usually only resonable for developers.
- 
-They assume that ``eccodes`` and ``emoslib`` are installed as distribution packages and can be found at ``flex_extract_vX.X/Source/Fortran``, where ``vX.X`` should be substituted with the current version number.
+First, adapt the Fortran ``makefile`` for your environment (if necessary) and insert it into ``setup.sh`` script (see :ref:`Fortran Makefile <ref-convert>` for more information).
+They can be found at ``flex_extract_vX.X/Source/Fortran/``, where ``vX.X`` should be substituted by the current flex_extract version number.
 
 .. caution::   
    It is necessary to adapt **ECCODES_INCLUDE_DIR** and **ECCODES_LIB** in these
    ``makefiles`` if other than standard paths are used.
 
-So starting from the root directory of ``flex_extract``, 
-go to the ``Fortran`` source directory and open the ``makefile`` of your 
-choice to modify with an editor of your choice. We use the ``nedit`` in this case.
+Thus, go to the ``Fortran`` source directory and open the ``makefile`` of your 
+choice, and check / modify with an editor of your choice:
 
 .. code-block:: bash 
 
    cd flex_extract_vX.X/Source/Fortran
    nedit makefile_fast
  
-Edit the paths to the ``eccodes`` library on your local machine. 
-
+Set the paths to the ``eccodes`` library on your local machine, if necessary.
 
 .. caution::
    This can vary from system to system. 
@@ -301,22 +300,22 @@ Edit the paths to the ``eccodes`` library on your local machine.
       
    to find out the path to the ``eccodes`` library.
    
-Substitute these paths in the ``makefile`` for parameters **ECCODES_INCLUDE_DIR**
-and **ECCODES_LIB** and save it.
+Assign these paths to the parameters **ECCODES_INCLUDE_DIR**
+and **ECCODES_LIB** in the makefile, and save it.
 
 .. code-block:: bash
 
-   # these are the paths on a current Debian 10 Testing system (May 2019)
+   # these are the paths on Debian Buster:
    ECCODES_INCLUDE_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
    ECCODES_LIB= -L/usr/lib -leccodes_f90 -leccodes -lm  
    
     
 The Fortran program called ``calc_etadot`` will be compiled during the 
-installation process.Therefore the name of the ``makefile`` to be used needs to be given in  ``setup.sh``.
+installation process. Therefore, the name of the ``makefile`` to be used needs to be given in  ``setup.sh``.
 
 In the root directory of ``flex_extract``, open the ``setup.sh`` script 
-and adapt the installation parameters in the section labelled with 
-"AVAILABLE COMMANDLINE ARGUMENTS TO SET" like shown below.
+with an editor and adapt the installation parameters in the section labelled with 
+"AVAILABLE COMMANDLINE ARGUMENTS TO SET" as shown below:
 
 
 .. code-block:: bash
