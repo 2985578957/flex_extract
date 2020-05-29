@@ -308,9 +308,9 @@ CERA
 ----
 
 For this dataset, it is important to keep in mind that it is available for the period 09/1901 until 12/2010, and that the temporal resolution is limited to 3 h. 
-It is also a pure ensemble data assimilation dataset and is stored under the ``enda`` stream. There are 10 ensemble members. The example ``CONTROL`` files will only select the first member (``number=0``). You may change this to another number or a list of numbers (e.g. ``NUMBER 0/to/10``).
-Another important difference to all other datasets is that the forecast starting time is 18 UTC. This means that forecasts for flux fields cover 12 hours. Since the forecast extends over a single day we need to extract one day in advance and one day subsequently. This is automatically done in ``flex_extract``. 
-##PS check previous para
+It is also a pure ensemble data assimilation dataset and is stored under the ``enda`` stream.
+There are 10 ensemble members. The example ``CONTROL`` files retrieves the first member only (``number=0``). You may change this to another number or a list of numbers (e.g. ``NUMBER 0/to/10``).
+Another important difference to all other datasets is that there is one forecast per day, starting at 18 UTC. The forecast lead time is 24 hours and extends beyond the calendar day. Therefore, ``flex_extract`` needs to extract also the day before the first day for which data are desired, which is handled automatically.
 
 
 ERA 5
@@ -404,9 +404,10 @@ doubleelda
 debug
     If set to ``1``, all temporary files are preserved. Otherwise, everything except the final output files will be deleted.
 request
-    This produces an extra *csv* file ``mars_requests.csv`` where the content of each mars request of the job is stored. Useful for debugging and documentation.
+    This produces an extra *csv* file ``mars_requests.csv`` where the content of each MARS request submitted within the job is stored, which is useful for debugging and documentation.
+Possible values are 0 for normal data retrieval, 1 for not retrieving data and just writing out the MARS requests, and 2 to retrieve data and write out requests.
 mailfail
-    As a default, e-mails are sent to the mail address connected with the user account. It is possible to overwrite this by specifying one or more e-mail addresses (comma-separated list). In order to include the e-mail associated with the user account, add ``${USER}`` to the list.
+    As a default, e-mails are sent to the mail address defined for the ECMWF user account. It is possible to overwrite this by specifying one or more e-mail addresses (comma-separated list). In order to include the e-mail associated with the user account, add ``${USER}`` to the list.
         
         
 Hints for proper definition of certain parameter combinations

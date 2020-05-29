@@ -177,7 +177,7 @@ we see again all possible command line parameters.
                             program (default: None)
       --ecuid ECUID         The user id at ECMWF. (default: None)
       --ecgid ECGID         The group id at ECMWF. (default: None)
-      --gateway GATEWAY     The name of the local gateway server. (default: None)
+      --gateway GATEWAY     The IP name (or IP address) of the local gateway server. (default: None)
       --destination DESTINATION
                             The ecaccess association, e.g. myUser@genericSftp
                             (default: None)
