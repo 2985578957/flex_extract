@@ -207,14 +207,14 @@
 <span class="sd">&#39;&#39;&#39;This script installs the flex_extract program.</span>
 
 <span class="sd">Depending on the selected installation environment (locally or on the</span>
-<span class="sd">ECMWF server ecgate or cca) the program extracts the commandline</span>
+<span class="sd">ECMWF server ecgate or cca) the program extracts the command line</span>
 <span class="sd">arguments and the CONTROL file parameter and prepares the corresponding</span>
 <span class="sd">environment.</span>
-<span class="sd">The necessary files are collected in a tar-ball and placed</span>
-<span class="sd">at the target location. There its untared, the environment variables will</span>
-<span class="sd">be set and the Fortran code will be compiled.</span>
-<span class="sd">If the ECMWF environment is selected a job script is prepared and submitted</span>
-<span class="sd">for the remaining configurations after putting the tar-ball to the</span>
+<span class="sd">The necessary files are collected in a tar ball and placed</span>
+<span class="sd">at the target location. There, is is untared, the environment variables are</span>
+<span class="sd">set, and the Fortran code is compiled.</span>
+<span class="sd">If the ECMWF environment is selected, a job script is prepared and submitted</span>
+<span class="sd">for the remaining configurations after putting the tar ball on the</span>
 <span class="sd">target ECMWF server.</span>
 
 <span class="sd">Type: install.py --help</span>
@@ -268,7 +268,7 @@
 
 <div class="viewcode-block" id="get_install_cmdline_args"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.get_install_cmdline_args">[docs]</a><span class="k">def</span> <span class="nf">get_install_cmdline_args</span><span class="p">():</span>
     <span class="sd">&#39;&#39;&#39;Decomposes the command line arguments and assigns them to variables.</span>
-<span class="sd">    Apply default values for non mentioned arguments.</span>
+<span class="sd">    Apply default values for arguments not present.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -288,36 +288,36 @@
 <span class="s2">                        the latter two are at ECMWF&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--makefile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;makefile&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of Makefile to use for compiling the &#39;</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of makefile for compiling the &#39;</span>
                         <span class="s1">&#39;Fortran program&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ecuid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ecuid&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The user id at ECMWF.&#39;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;User id at ECMWF&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--ecgid&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;ecgid&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The group id at ECMWF.&#39;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group id at ECMWF&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--gateway&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;gateway&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The name of the local gateway server.&#39;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the local gateway server&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--destination&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;destination&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The ecaccess association, e.g. &#39;</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;ecaccess association, e.g. &#39;</span>
                         <span class="s1">&#39;myUser@genericSftp&#39;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--installdir&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;installdir&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Root directory where &#39;</span>
-                        <span class="s1">&#39;flex_extract will be installed to.&#39;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Root directory of the &#39;</span>
+                        <span class="s1">&#39;flex_extract installation&#39;</span><span class="p">)</span>
 
     <span class="c1"># arguments for job submission to ECMWF, only needed by submit.py</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--job_template&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;job_template&#39;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;job.template&quot;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The rudimentary template file to create a batch &#39;</span>
-                        <span class="s1">&#39;job template for submission to ECMWF servers.&#39;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Rudimentary template file to create a batch &#39;</span>
+                        <span class="s1">&#39;job template for submission to ECMWF servers&#39;</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--controlfile&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;controlfile&quot;</span><span class="p">,</span>
                         <span class="nb">type</span><span class="o">=</span><span class="n">none_or_str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span><span class="p">,</span>
-                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The file with all CONTROL parameters.&quot;</span><span class="p">)</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A file that contains all CONTROL parameters.&quot;</span><span class="p">)</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
@@ -325,8 +325,8 @@
 
 
 <div class="viewcode-block" id="install_via_gateway"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.install_via_gateway">[docs]</a><span class="k">def</span> <span class="nf">install_via_gateway</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Prepare data transfer to remote gate and submit a job script which will</span>
-<span class="sd">    install everything on the remote gate.</span>
+    <span class="sd">&#39;&#39;&#39;Prepare data transfer to remote gateway and submit a job script which will</span>
+<span class="sd">    install everything on the remote gateway.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -420,8 +420,8 @@
 
 
 <div class="viewcode-block" id="check_install_conditions"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.check_install_conditions">[docs]</a><span class="k">def</span> <span class="nf">check_install_conditions</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Checks a couple of necessary attributes and conditions</span>
-<span class="sd">    for the installation such as if they exist and contain values.</span>
+    <span class="sd">&#39;&#39;&#39;Checks necessary attributes and conditions</span>
+<span class="sd">    for the installation, e.g. whether they exist and contain values.</span>
 <span class="sd">    Otherwise set default values.</span>
 
 <span class="sd">    Parameters</span>
@@ -471,8 +471,8 @@
 <div class="viewcode-block" id="mk_tarball"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_tarball">[docs]</a><span class="k">def</span> <span class="nf">mk_tarball</span><span class="p">(</span><span class="n">tarball_path</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Creates a tarball with all necessary files which need to be sent to the</span>
 <span class="sd">    installation directory.</span>
-<span class="sd">    It does not matter if this is local or remote.</span>
-<span class="sd">    Collects all python files, the Fortran source and makefiles,</span>
+<span class="sd">    It does not matter whether this is local or remote.</span>
+<span class="sd">    Collects all Python files, the Fortran source and makefiles,</span>
 <span class="sd">    the ECMWF_ENV file, the CONTROL files as well as the</span>
 <span class="sd">    template files.</span>
 
@@ -658,8 +658,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    makefile : str</span>
-<span class="sd">        Name of the makefile which should be used to compile FORTRAN</span>
-<span class="sd">        CONVERT2 program.</span>
+<span class="sd">        Name of the makefile which should be used to compile the Fortran</span>
+<span class="sd">        program.</span>
 
 <span class="sd">    ecuid : str</span>
 <span class="sd">        The user id on ECMWF server.</span>
@@ -847,17 +847,17 @@
         <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">perr</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please edit &#39;</span> <span class="o">+</span> <span class="n">makefile</span> <span class="o">+</span>
-                  <span class="s1">&#39; or try another Makefile in the src directory.&#39;</span><span class="p">)</span>
+                  <span class="s1">&#39; or try another makefile in the src directory.&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB &#39;</span>
                   <span class="s1">&#39;and EMOSLIB must be adapted.&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available Makefiles:&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;Makefile*&#39;</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available makefiles:&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;makefile*&#39;</span><span class="p">))</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Compilation failed!&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Makefile call failed:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: make of Fortran code failed:&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span>
+        <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> 
                             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FORTRAN_EXECUTABLE</span><span class="p">)],</span>
                            <span class="n">error_msg</span><span class="o">=</span><span class="s1">&#39;FORTRAN EXECUTABLE COULD NOT BE FOUND!&#39;</span><span class="p">)</span>
 

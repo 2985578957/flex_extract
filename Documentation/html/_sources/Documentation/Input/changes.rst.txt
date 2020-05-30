@@ -7,8 +7,8 @@ Changes from version 7.0.4 to version 7.1
     - grid resolution not in 1/1000 degress anymore (but is still available for downward compatibility)
     - comments available with ``#``
     - only parameters which are needed to override the default values are necessary 
-    - number of type/step/time elements do not have to be 24 any more. Just select the interval you need. 
-    - the ``dtime`` parameter needs to be consistent with ``type/step/time``. For example ``dtime`` can be coarser as ``time`` intervals are available, but not finer.
+    - number of type/step/time elements does not have to be 24 anymore. Just provide what you need. 
+    - the ``dtime`` parameter needs to be consistent with ``type/step/time``, for example, ``dtime`` can be coarser than the ``time`` intervals available, but not finer.
 
  
 

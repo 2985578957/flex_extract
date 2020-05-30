@@ -14,7 +14,7 @@ Based on this input information, ``flex_extract`` applies one of the application
 
 
 Submission parameters
---------------------
+---------------------
 
 
 .. exceltable:: Parameters for submission
@@ -33,7 +33,7 @@ Content of ``run.sh``
    :caption: run.sh
 
 
-.. _ref-install-script:
+
        
 Usage of ``submit.py`` (optional)
 ---------------------------------

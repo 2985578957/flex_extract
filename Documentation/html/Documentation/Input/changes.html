@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="ECMWF User Credential file ECMWF_ENV" href="ecmwf_env.html" />
+    <link rel="next" title="ECMWF user credential file ECMWF_ENV" href="ecmwf_env.html" />
     <link rel="prev" title="CONTROL file examples" href="examples.html" /> 
 </head>
 
@@ -94,26 +94,26 @@
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; input data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The compilation job script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="control_params.html">The CONTROL parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">CONTROL file changes</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF user credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
@@ -169,7 +169,7 @@
         
           <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
         
-          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+          <li><a href="../input.html">Control &amp; input data</a> &raquo;</li>
         
       <li>CONTROL file changes</li>
     
@@ -198,8 +198,8 @@
 <li><p>grid resolution not in 1/1000 degress anymore (but is still available for downward compatibility)</p></li>
 <li><p>comments available with <code class="docutils literal notranslate"><span class="pre">#</span></code></p></li>
 <li><p>only parameters which are needed to override the default values are necessary</p></li>
-<li><p>number of type/step/time elements do not have to be 24 any more. Just select the interval you need.</p></li>
-<li><p>the <code class="docutils literal notranslate"><span class="pre">dtime</span></code> parameter needs to be consistent with <code class="docutils literal notranslate"><span class="pre">type/step/time</span></code>. For example <code class="docutils literal notranslate"><span class="pre">dtime</span></code> can be coarser as <code class="docutils literal notranslate"><span class="pre">time</span></code> intervals are available, but not finer.</p></li>
+<li><p>number of type/step/time elements does not have to be 24 anymore. Just provide what you need.</p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">dtime</span></code> parameter needs to be consistent with <code class="docutils literal notranslate"><span class="pre">type/step/time</span></code>, for example, <code class="docutils literal notranslate"><span class="pre">dtime</span></code> can be coarser than the <code class="docutils literal notranslate"><span class="pre">time</span></code> intervals available, but not finer.</p></li>
 </ul>
 </dd>
 </dl>
@@ -215,7 +215,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ecmwf_env.html" class="btn btn-neutral float-right" title="ECMWF User Credential file ECMWF_ENV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ecmwf_env.html" class="btn btn-neutral float-right" title="ECMWF user credential file ECMWF_ENV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="examples.html" class="btn btn-neutral float-left" title="CONTROL file examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -20,7 +20,7 @@ Calculation from the horizontal wind field is still required for historical case
     
     
 Calculation of the vertical velocity from the horizontal wind using the continuity equation
-===================================================================================
+===========================================================================================
 
 The vertical velocity in the ECMWF's eta vertical coordinate system is computed by the Fortran program ``calc_etadot``, using the continuity equation and thereby ensuring mass-consistent 3D wind fields. A detailed description of ``calc_etadot`` can be found in the
 documents v20_update_protocol.pdf, V30_update_protocol.pdf and
@@ -41,7 +41,7 @@ following guidance can be given for choosing the right parameters:
     
     
 Calculation of the vertical velocity from the pre-calculated MARS parameter 77
-======================================================================
+==============================================================================
 
 Since November 2008, the parameter 77 (deta/dt) is stored in ``MARS`` on full model levels. ``FLEXTRA``/``FLEXPART`` in its current version requires ``deta/dt`` on model half levels, multiplied by ``dp/deta``. In ``flex_extract``, the program ``calc_etadot`` assumes that parameter 77 is available if the ``CONTROL`` parameter ``ETA`` is set to 1. 
 

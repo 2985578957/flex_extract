@@ -1,6 +1,6 @@
-********************************************
+*********************************************
 The compilation job script ``compilejob.ksh``
-********************************************
+*********************************************
 
 The compile job is a Korn-shell script which will be created during the installation process for the application modes **remote** and **gateway** from a template called ``compilejob.template`` in the template directory.
 

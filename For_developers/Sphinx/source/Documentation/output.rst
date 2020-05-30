@@ -204,7 +204,10 @@ Index file
 ----------
 
 This file is called ``date_time_stepRange.idx``. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords. 
-#PS NEEDS MORE DESCRIPTION
+
+.. todo::
+
+	#PS NEEDS MORE DESCRIPTION
 
 
 Flux files

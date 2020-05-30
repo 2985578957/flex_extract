@@ -1,5 +1,5 @@
 ****************************
-Auto Generated Documentation
+Auto-generated documentation
 ****************************
     
     

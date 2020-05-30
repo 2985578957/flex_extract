@@ -1,5 +1,5 @@
 ##################################
-Hints to specify dataset retrieval
+Hints for data set selection
 ##################################
 
 .. contents::
@@ -7,13 +7,13 @@ Hints to specify dataset retrieval
 
 
 
-How can I find out what data is available?
-==========================================
+How can I find out what data are available?
+===========================================
 
-Go to the `Web Interface for accessing member state datasets <http://apps.ecmwf.int/archive-catalogue/>`_
+Go to the `Web Interface for accessing member-state data sets <http://apps.ecmwf.int/archive-catalogue/>`_
 and click yourself through the steps to define your set of data and see what is available to you.
 
-For public users there is  the `Web Interface for accessing public datasets <http://apps.ecmwf.int/datasets/>`_.
+For public users there is  the `Web Interface for accessing public data sets <http://apps.ecmwf.int/datasets/>`_.
 
 
 

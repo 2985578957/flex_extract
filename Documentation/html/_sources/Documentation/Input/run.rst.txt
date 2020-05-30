@@ -1,23 +1,23 @@
 **********************************
-The executable Script - ``run.sh``
+The executable script - ``run.sh``
 **********************************
 
-The execution of ``flex_extract`` is done by the ``run.sh`` Shell script, which is a wrapping script for the top-level Python script ``submit.py``. 
+The execution of ``flex_extract`` is done by the ``run.sh`` shell script, which is a wrapper script for the top-level Python script ``submit.py``. 
 The Python script constitutes the entry point to ECMWF data retrievals with ``flex_extract`` and controls the program flow. 
 
-``submit.py`` has two (three) sources for input parameters with information about program flow and ECMWF data selection, the so-called ``CONTROL`` file,  
-the command line parameters and the so-called ``ECMWF_ENV`` file. Whereby, the command line parameters will override the ``CONTROL`` file parameters. 
+``submit.py`` has two (or three) sources for input parameters with information about program flow and ECMWF data selection, the so-called ``CONTROL`` file,  
+the command line parameters, and the so-called ``ECMWF_ENV`` file. Command line parameters will override parameters specified in the ``CONTROL`` file. 
 
-Based on these input information ``flex_extract`` applies one of the application modes to either retrieve the ECMWF data via a Web API on a local maschine or submit a jobscript to ECMWF servers and retrieve the data there with sending the files to the local system eventually.
-
-
+Based on this input information, ``flex_extract`` applies one of the application modes to either retrieve the ECMWF data via a web API on a local maschine, or submit a job script to an ECMWF server and retrieve the data there, and at the end sends the files to the local system.
 
 
-Submission Parameter
---------------------
 
 
-.. exceltable:: Parameter for Submission
+Submission parameters
+---------------------
+
+
+.. exceltable:: Parameters for submission
     :file:  ../../_files/SubmitParameters.xls
     :header: 1  
     :sheet: 0
@@ -33,14 +33,14 @@ Content of ``run.sh``
    :caption: run.sh
 
 
-.. _ref-install-script:
+
        
 Usage of ``submit.py`` (optional)
 ---------------------------------
 
-It is also possible to start ``flex_extract`` directly from command line by using the ``submit.py`` script instead of the wrapping Shell script ``run.sh``.  This top-level script is located in 
-``flex_extract_vX.X/Source/Python`` and is executable. With the ``help`` parameter we see again all possible 
-command line parameter. 
+It is also possible to start ``flex_extract`` directly from command line by using the ``submit.py`` script instead of the wrapper shell script ``run.sh``.  This top-level script is located in 
+``flex_extract_vX.X/Source/Python`` and is executable. With the ``--help`` parameter 
+we see again all possible command line parameters. 
 
 .. code-block:: bash
 

@@ -1,6 +1,6 @@
-*************************
+**************************
 The job script ``job.ksh``
-*************************
+**************************
 
 The job script is a Korn-shell script which will be created at runtime for each ``flex_extract`` execution in the application modes **remote** and **gateway**.
 
@@ -19,7 +19,7 @@ The submission is done by the ``ECaccess`` tool from within ``flex_extract`` wit
 
 
 What does the job script do?
----------------------------
+----------------------------
 
  #. It sets necessary batch system parameters.
  #. It prepares the job environment at the ECMWF servers by loading the necessary library modules.

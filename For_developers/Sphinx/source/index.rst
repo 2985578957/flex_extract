@@ -77,8 +77,8 @@ Welcome to ``flex_extract``'s user documentation!
           <h2><a href="dev_guide.html">Developer</a></h2>
           <ul>
             <li><a href="Developers/gen_docu.html">Updateing the documentation</a></li>
-<!--           <li><a href=""></a><Placeholder></li>
-            <li><a href=""></a><Placeholder></li>-->
+            <li><a href=""></a><Placeholder></li>
+            <li><a href=""></a><Placeholder></li>
           </ul>
         </td>
       </tr>

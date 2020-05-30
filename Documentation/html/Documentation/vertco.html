@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vertical Coordinate &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Vertical wind &mdash; flex_extract 7.1 alpha documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Auto Generated Documentation" href="api.html" />
-    <link rel="prev" title="Disaggregation of Flux Data" href="disagg.html" /> 
+    <link rel="next" title="Auto-generated documentation" href="api.html" />
+    <link rel="prev" title="Disaggregation of flux data" href="disagg.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -94,18 +94,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; Input Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Vertical Coordinate</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#calculation-of-vertical-velocity-and-preparation-of-output-files">Calculation of vertical velocity and preparation of Output-files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#calculation-of-vertical-velocity-from-horizontal-wind-using-the-continuity-equation">Calculation of vertical velocity from horizontal wind using the continuity equation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#calculation-of-vertical-velocity-from-pre-calculated-mars-parameter-77">Calculation of vertical velocity from pre-calculated MARS parameter 77</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vertical wind</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-of-vertical-velocity-and-preparation-of-output-files">Calculation of vertical velocity and preparation of output files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-of-the-vertical-velocity-from-the-horizontal-wind-using-the-continuity-equation">Calculation of the vertical velocity from the horizontal wind using the continuity equation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-of-the-vertical-velocity-from-the-pre-calculated-mars-parameter-77">Calculation of the vertical velocity from the pre-calculated MARS parameter 77</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
@@ -161,7 +161,7 @@
         
           <li><a href="../documentation.html">Documentation</a> &raquo;</li>
         
-      <li>Vertical Coordinate</li>
+      <li>Vertical wind</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -180,14 +180,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="vertical-coordinate">
-<h1>Vertical Coordinate<a class="headerlink" href="#vertical-coordinate" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="vertical-wind">
+<h1>Vertical wind<a class="headerlink" href="#vertical-wind" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="calculation-of-vertical-velocity-and-preparation-of-output-files">
-<h2>Calculation of vertical velocity and preparation of Output-files<a class="headerlink" href="#calculation-of-vertical-velocity-and-preparation-of-output-files" title="Permalink to this headline">¶</a></h2>
+<h2>Calculation of vertical velocity and preparation of output files<a class="headerlink" href="#calculation-of-vertical-velocity-and-preparation-of-output-files" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> has two ways to calculate the vertical velocity for <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>:</dt><dd><ol class="lowerroman simple">
+<dt>Two methods are provided in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> for the calculation of the vertical velocity for <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>:</dt><dd><ol class="lowerroman simple">
 <li><p>from the horizontal wind field,</p></li>
-<li><p>from the MARS parameter 77, which is available for operational forecasts and analyses since September 2008 and for reanalysis datasets <strong>ERA5</strong> and <strong>CERA-20C</strong>.</p></li>
+<li><p>from the MARS parameter 77, which is available for operational forecasts and analyses since September 2008 and for reanalysis datasets <strong>ERA5</strong> and <strong>CERA-20C</strong>, which contains the vertical velocity directly in the eta coordinate system of the ECMWF model.</p></li>
 </ol>
 </dd>
 </dl>
@@ -199,42 +199,41 @@ give a vertical velocity in Pa/s as needed by <code class="docutils literal notr
 <p>Calculation from the horizontal wind field is still required for historical case studies using
 <strong>ERA-40</strong>, <strong>ERA-Interim</strong> or operational data prior to September 2008.</p>
 </div>
-<div class="section" id="calculation-of-vertical-velocity-from-horizontal-wind-using-the-continuity-equation">
-<h2>Calculation of vertical velocity from horizontal wind using the continuity equation<a class="headerlink" href="#calculation-of-vertical-velocity-from-horizontal-wind-using-the-continuity-equation" title="Permalink to this headline">¶</a></h2>
-<p>The vertical velocity is computed by the FORTRAN90 program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> in the ECMWF
-vertical coordinate system by applying the equation of continuity and thereby ensuring mass consistent 3D wind fields. A detailed description of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> can be found in the
+<div class="section" id="calculation-of-the-vertical-velocity-from-the-horizontal-wind-using-the-continuity-equation">
+<h2>Calculation of the vertical velocity from the horizontal wind using the continuity equation<a class="headerlink" href="#calculation-of-the-vertical-velocity-from-the-horizontal-wind-using-the-continuity-equation" title="Permalink to this headline">¶</a></h2>
+<p>The vertical velocity in the ECMWF’s eta vertical coordinate system is computed by the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>, using the continuity equation and thereby ensuring mass-consistent 3D wind fields. A detailed description of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> can be found in the
 documents v20_update_protocol.pdf, V30_update_protocol.pdf and
 V40_update_protocol.pdf. The computational demand and accuracy of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> is highly
 dependent on the specification of parameters <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> and <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code>. The
 following guidance can be given for choosing the right parameters:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>For very fine output grids (0.25 degree or finer) the full resolution T799 or even T1279 of the operational model is required (<code class="docutils literal notranslate"><span class="pre">RESOL=799</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code>). The highest available resolution (and the calculation of vertical velocity on the Gaussian grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>) is, however, rather demanding and feasible only for resolutions up to T799. Higher resolutions are achievable on the HPC. If data retrieval at T1279  needs to be performed on <em>ecgate</em>, the computation of the vertical velocity is feasible only on the lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>), which also yields very good results. Please read document v20_update_protocol.pdf-v60_update_protocol.pdf to see if the errors incurred are acceptable for the planned application.</p></li>
+<li><p>For very fine output grids (0.25 degree or finer), the full resolution T799 or even T1279 of the operational model is required (<code class="docutils literal notranslate"><span class="pre">RESOL=799</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code>). The highest available resolution (and the calculation of vertical velocity on the Gaussian grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>) is, however, rather demanding and feasible only for resolutions up to T799. Higher resolutions are achievable on the HPC. If data retrieval at T1279  needs to be performed on <em>ecgate</em>, the computation of the vertical velocity is feasible only on the lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>), which also yields very good results. Please read document v20_update_protocol.pdf-v60_update_protocol.pdf to see if the errors incurred are acceptable for the planned application.</p></li>
 <li><dl class="simple">
 <dt>For lower resolution (often global) output grids, calculation of vertical velocities with lower than operational spectral resolution is recommended. For global grids the following settings appear optimal:</dt><dd><ul>
 <li><p>For 1.0 degree grids: <code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL=255</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=179</span></code></p></li>
 <li><p>For 0.5 degree grids: <code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL=399</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=359</span></code></p></li>
 <li><p>Calculation on the lat/lon grid is not recommended for less than the operational (T1279) resolution.</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> is set to 1, only the following choices are possible for <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> on <em>ecgate</em>: 159,255,319,399,511,799, (on the HPC also 1279, 2047 in future models). This choice is restricted because a reduced Gaussian grid is defined in then ECMWF EMOSLIB only for these spectral resolutions. For <code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> can be any value below the operational resolution.</p></li>
-<li><p>For <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> any resolution lower than <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> is possible. If no smoothing is desired, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code> should be chosen. <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> has no effect if vertical velocity is calculated on lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>).</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> is set to 1, only the following choices are possible for <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> on <em>ecgate</em>: 159,255,319,399,511,799, (on the HPC also 1279; 2047 in future model versions). This choice is restricted because a reduced Gaussian grid is defined in the ECMWF EMOSLIB only for these spectral resolutions. For <code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> can be any value below the operational resolution.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code>, any resolution lower than <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> is possible. If no smoothing is desired, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code> should be chosen. <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> has no effect if the vertical velocity is calculated on a lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>).</p></li>
 </ul>
 </dd>
 </dl>
 </li>
-<li><p>The on demand scripts send an error message for settings where <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> (if set) and <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> are larger than 360./<code class="docutils literal notranslate"><span class="pre">GRID</span></code>/2, since in this case, the output grid cannot resolve the highest wave numbers. The scripts continue operations, however.</p></li>
+<li><p>The on-demand scripts send an error message for settings where <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> (if set) and <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> are larger than 360./<code class="docutils literal notranslate"><span class="pre">GRID</span></code>/2, since in this case, the output grid cannot resolve the highest wave numbers. The scripts continue operations, however.</p></li>
 <li><p>Regional grids are not cyclic in zonal directions, but global grids are. The software assumes a cyclic grid if <code class="docutils literal notranslate"><span class="pre">RIGHT</span></code>-<code class="docutils literal notranslate"><span class="pre">LEFT</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">GRID</span></code> or is equal to <code class="docutils literal notranslate"><span class="pre">GRID</span></code>-360.</p></li>
-<li><p>Finally, model and flux data as well as the vertical velocity computed are written to files <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;yymmddhh</span></code> for application in ATM modelling. If the parameters <code class="docutils literal notranslate"><span class="pre">OMEGA</span></code> or <code class="docutils literal notranslate"><span class="pre">OMEGADIFF</span></code> are set, also files <code class="docutils literal notranslate"><span class="pre">OMEGAyymmddhh</span></code> are created, containing the pressure vertical velocity (omega) and the difference between omega from <code class="docutils literal notranslate"><span class="pre">MARS</span></code> and the surface pressure tendency. <code class="docutils literal notranslate"><span class="pre">OMEGADIFF</span></code> should be zero except for debugging, since it triggers expensive calculations on the Gaussian grid.</p></li>
+<li><p>Finally, model and flux data as well as the vertical velocity computed are written to files <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;yymmddhh</span></code> (the standard <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> output files) If the parameters <code class="docutils literal notranslate"><span class="pre">OMEGA</span></code> or <code class="docutils literal notranslate"><span class="pre">OMEGADIFF</span></code> are set, also files <code class="docutils literal notranslate"><span class="pre">OMEGAyymmddhh</span></code> are created, containing the pressure vertical velocity (omega) and the difference between omega from <code class="docutils literal notranslate"><span class="pre">MARS</span></code> and from the surface pressure tendency. <code class="docutils literal notranslate"><span class="pre">OMEGADIFF</span></code> should be set to zero except for debugging, since it triggers expensive calculations on the Gaussian grid.</p></li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="calculation-of-vertical-velocity-from-pre-calculated-mars-parameter-77">
-<h2>Calculation of vertical velocity from pre-calculated MARS parameter 77<a class="headerlink" href="#calculation-of-vertical-velocity-from-pre-calculated-mars-parameter-77" title="Permalink to this headline">¶</a></h2>
-<p>Since November 2008, the parameter 77 (deta/dt) is stored in <code class="docutils literal notranslate"><span class="pre">MARS</span></code> on full model levels. <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> in its current version requires <code class="docutils literal notranslate"><span class="pre">deta/dt</span></code> on model half levels, multiplied by <code class="docutils literal notranslate"><span class="pre">dp/deta</span></code>. In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, the program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> assumes that this parameter is available if the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> parameter <code class="docutils literal notranslate"><span class="pre">ETA</span></code> is set to 1.</p>
+<div class="section" id="calculation-of-the-vertical-velocity-from-the-pre-calculated-mars-parameter-77">
+<h2>Calculation of the vertical velocity from the pre-calculated MARS parameter 77<a class="headerlink" href="#calculation-of-the-vertical-velocity-from-the-pre-calculated-mars-parameter-77" title="Permalink to this headline">¶</a></h2>
+<p>Since November 2008, the parameter 77 (deta/dt) is stored in <code class="docutils literal notranslate"><span class="pre">MARS</span></code> on full model levels. <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> in its current version requires <code class="docutils literal notranslate"><span class="pre">deta/dt</span></code> on model half levels, multiplied by <code class="docutils literal notranslate"><span class="pre">dp/deta</span></code>. In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, the program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> assumes that parameter 77 is available if the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> parameter <code class="docutils literal notranslate"><span class="pre">ETA</span></code> is set to 1.</p>
 <p>It is recommended to use the pre-calculated parameter 77 by setting <code class="docutils literal notranslate"><span class="pre">ETA</span></code> to 1 whenever possible.</p>
-<p>Setting parameter <code class="docutils literal notranslate"><span class="pre">ETA</span></code> to 1 normally disables calculation of vertical velocity from the horizontal wind field, which saves a lot of computational time.</p>
+<p>Setting the parameter <code class="docutils literal notranslate"><span class="pre">ETA</span></code> to 1 disables calculation of vertical velocity from the horizontal wind field, which saves a lot of computational time.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>However, the calculation on the Gaussian grid are avoided only if both <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> and <code class="docutils literal notranslate"><span class="pre">ETADIFF</span></code> are set to 0. Please set <code class="docutils literal notranslate"><span class="pre">ETADIFF</span></code> to 1 only if you are really need it for debugging since this is a very expensive option. In this case <code class="docutils literal notranslate"><span class="pre">ETAyymmddhh</span></code> files are produced that contain the vertical velocity from horizontal winds and the difference to the pre-calculated vertical velocity.</p>
+<p>However, the calculations on the Gaussian grid are avoided only if both <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> and <code class="docutils literal notranslate"><span class="pre">ETADIFF</span></code> are set to 0. Please set <code class="docutils literal notranslate"><span class="pre">ETADIFF</span></code> to 1 only if you are really need it for debugging since this is a very expensive option. In this case, <code class="docutils literal notranslate"><span class="pre">ETAyymmddhh</span></code> files are produced that contain the vertical velocity from horizontal winds and the difference to the pre-calculated vertical velocity.</p>
 </div>
 <p>The parameters <code class="docutils literal notranslate"><span class="pre">RESOL</span></code>, <code class="docutils literal notranslate"><span class="pre">GRID</span></code>, <code class="docutils literal notranslate"><span class="pre">UPPER</span></code>, <code class="docutils literal notranslate"><span class="pre">LOWER</span></code>, <code class="docutils literal notranslate"><span class="pre">LEFT</span></code>, <code class="docutils literal notranslate"><span class="pre">RIGHT</span></code> still apply. As for calculations on the Gaussian grid, the spectral resolution parameter <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> should be compatible with the grid resolution (see previous subsection).</p>
 <div class="toctree-wrapper compound">
@@ -250,10 +249,10 @@ following guidance can be given for choosing the right parameters:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api.html" class="btn btn-neutral float-right" title="Auto Generated Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Auto-generated documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="disagg.html" class="btn btn-neutral float-left" title="Disaggregation of Flux Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="disagg.html" class="btn btn-neutral float-left" title="Disaggregation of flux data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

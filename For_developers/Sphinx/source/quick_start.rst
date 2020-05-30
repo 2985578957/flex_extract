@@ -336,7 +336,7 @@ It is available for the period from 1 January 1979 to 31 August 2019. The ``etad
 Operational data
 ----------------
 
-This data set provides the output of the real-time atmospheric model runs in high resolution, including 10-day forecasts. The model undergoes frequent adaptations and improvements. Thus, retrieving data from this dataset requires extra attention in selecting correct settings of the parameters. See :ref:`ref-tab-dataset-cmp` for the most important parameters. 
+This data set provides the output of the real-time atmospheric model runs in high resolution, including 10-day forecasts. The model undergoes frequent adaptations and improvements. Thus, retrieving data from this dataset requires extra attention in selecting correct settings of the parameters. See :ref:`[Table of datasets]<ref-tab-dataset-cmp>` for the most important parameters. 
 Currently, fields can be retrieved at 1 h temporal resolution by filling the gaps between analysis fields with 1-hourly forecast fields. Since 4 June 2008, the eta coordinate vertical velocity is directly available from MARS, therefore ``ETA`` should be set to ``1`` to save computation time. The horizontal resolution can be up to ``0.1°`` and in combination with ``137`` vertical levels can lead to problems in terms of job duration and disk space quota.
 It is recommended to submit such high resolution cases as single day retrievals (see ``JOB_CHUNK`` parameter in ``run.sh`` script) to avoid job failures due to exceeding limits.   
 
@@ -404,8 +404,7 @@ doubleelda
 debug
     If set to ``1``, all temporary files are preserved. Otherwise, everything except the final output files will be deleted.
 request
-    This produces an extra *csv* file ``mars_requests.csv`` where the content of each MARS request submitted within the job is stored, which is useful for debugging and documentation.
-Possible values are 0 for normal data retrieval, 1 for not retrieving data and just writing out the MARS requests, and 2 to retrieve data and write out requests.
+    This produces an extra *csv* file ``mars_requests.csv`` where the content of each MARS request submitted within the job is stored, which is useful for debugging and documentation. Possible values are 0 for normal data retrieval, 1 for not retrieving data and just writing out the MARS requests, and 2 to retrieve data and write out requests.
 mailfail
     As a default, e-mails are sent to the mail address defined for the ECMWF user account. It is possible to overwrite this by specifying one or more e-mail addresses (comma-separated list). In order to include the e-mail associated with the user account, add ``${USER}`` to the list.
         
@@ -417,7 +416,10 @@ Field type and time
     This combination is very important. It defines the temporal resolution and which field type is extracted on each time step. 
     The time declaration for analysis (AN) fields uses the times of the specific analysis while the (forecast time) step has to be ``0``. 
     The forecast field types (e.g. FC, CF, CV, PF) need to declare a combination of (forescast start) time and the (forecast) step. Together they define the actual time. It is important to know the forecast starting times for the dataset to be retrieved, since they are different. In general, it is sufficient to give information for the exact time steps, but it is also possible to have more time step combinations of ``TYPE``, ``TIME`` and ``STEP`` because the temporal (hourly) resolution with the ``DTIME`` parameter will select the correct combinations. 
-# needs to be rephrased
+    
+    .. todo::
+
+	    #PS needs to be rephrased
 
     .. code-block:: bash
        :caption: Example of a setting for the field types and temporal resolution. It will retrieve 3-hourly fields, with analyses at 00 and 12 UTC and the corresponding forecasts inbetween.
@@ -430,8 +432,8 @@ Field type and time
  
 Vertical velocity           
     The vertical velocity for ``FLEXPART`` is not directly available from MARS and has to be calculated. 
-    There are several options for this, and the following parameters are responsible for the selection. See :doc:`Documentation/vertco` for a detailed explanation. Using ``ETADIFF 1``, ``OMEGA 1`` and ``OMEGADIFF 1`` is recommended for debugging and testing only. 
-  Usually, one has to decide between ``GAUSS 1`` and ``ETA 1``. ``GAUSS 1`` means that spectral fields of the horizontal wind fields and the divergence are retrieved and that the vertical velocity is calculate using the continuity equation. ``ETA 1`` means that horizontal wind fields etadot are retrieved on a regular lat-lon grid. It is recommended to use ``ETA 1`` where possible, as there is a substantial computational overhead for solving the continuity equation.
+    There are several options for this, and the following parameters are responsible for the selection. 		See :doc:`Documentation/vertco` for a detailed explanation. Using ``ETADIFF 1``, ``OMEGA 1`` and ``OMEGADIFF 1`` is recommended for debugging and testing only. 
+    Usually, one has to decide between ``GAUSS 1`` and ``ETA 1``. ``GAUSS 1`` means that spectral fields of the horizontal wind fields and the divergence are retrieved and that the vertical velocity is calculate using the continuity equation. ``ETA 1`` means that horizontal wind fields etadot are retrieved on a regular lat-lon grid. It is recommended to use ``ETA 1`` where possible, as there is a substantial computational overhead for solving the continuity equation.
 
     .. code-block:: bash
         :caption: Example setting for the vertical coordinate retrieval (recommended if etadot fields are available).
@@ -447,7 +449,11 @@ Vertical velocity
 Grid resolution and domain
     The grid and domain parameters depends on each other. ``grid`` refers to the grid resolution. It can be given as decimal values (e.g., ``1.`` meaning 1.0°), or as in previous versions of flex_extract, as integer values refering to 1/1000 degrees (e.g., ``1000`` means also 1°). The code applies common sense to determine what format is to be assumed.
     After selecting grid, the ``domain`` has to be defined. The extension in longitude or latitude direction must be an integer multiple of ``grid``. 
-#PS shouldn't we explain how to define a domain??
+    
+	.. todo:: 
+		
+		#PS shouldn't we explain how to define a domain??
+		
     The horizontal resolution for spectral fields is set by the parameter ``RESOL``. For information about how to select an appropriate value please read the explanation of the MARS keyword RESOL as found `in this entry of the ECMWF on-line documentation <https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol>`_ and  `this table (also ECMWF documentation) <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation>`_.
     
     .. code-block:: bash
@@ -465,9 +471,13 @@ Grid resolution and domain
 Flux data
     Flux fields are always forecast fields and contain values of the fluxes accumulated since the start of the respective forecast. As certain re-analysis dataset cover all time steps with analysis fields, it was necessary to define a new parameter set for the definition of the flux fields. The following parameters are used specifically for flux fields, if provided. ``ACCTYPE`` is the field type (must be a type of forecast), ``ACCTIME``  the forecast starting time, and  ``ACCMAXSTEP`` the maximum forecast step;``DTIME`` the temporal resolution. ACCTYPE is assumed to be the same during the whole period given by ACCTIME and ACCMAXSTEP. 
     
+	.. todo::
+
+		#PS for which application would this be typical?
+	    
     .. code-block:: bash
        :caption: Example setting for the definition of flux fields.
-#PS for which application would this be typical?
+
     
         DTIME 3
         ACCTYPE FC

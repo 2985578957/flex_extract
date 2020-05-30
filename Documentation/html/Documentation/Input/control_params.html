@@ -94,12 +94,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; input data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The compilation job script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The CONTROL parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#user-section">User Section</a></li>
@@ -115,14 +115,14 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF user credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
@@ -178,7 +178,7 @@
         
           <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
         
-          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+          <li><a href="../input.html">Control &amp; input data</a> &raquo;</li>
         
       <li>The CONTROL parameters</li>
     
@@ -204,7 +204,7 @@
 <div class="section" id="user-section">
 <span id="ref-control-user"></span><h2>User Section<a class="headerlink" href="#user-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">User parameter in CONTROL file</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">User parameters in CONTROL file</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 18%" />
 <col style="width: 10%" />
@@ -257,7 +257,7 @@
 <div class="section" id="general-section">
 <span id="ref-control-general"></span><h2>General Section<a class="headerlink" href="#general-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">General parameter in CONTROL file</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">General parameters in CONTROL file</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 7%" />
@@ -349,7 +349,7 @@ Possible selections are:
 <div class="section" id="time-section">
 <span id="ref-control-time"></span><h2>Time Section<a class="headerlink" href="#time-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Time parameter in CONTROL file</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Time parameters in CONTROL file</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 15%" />
 <col style="width: 8%" />
@@ -409,7 +409,7 @@ Possible selections are:
 <div class="section" id="data-section">
 <span id="ref-control-data"></span><h2>Data Section<a class="headerlink" href="#data-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Data parameter in CONTROL file</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Data parameters in CONTROL file</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 7%" />
@@ -479,7 +479,7 @@ only when using FLEXPART versions &gt;9.2 or FLEXPART hast to be adapted for rea
 <div class="section" id="data-field-section">
 <span id="ref-control-datafield"></span><h2>Data field Section<a class="headerlink" href="#data-field-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id5">
-<caption><span class="caption-text">Data field parameter in CONTROL file</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Data field parameters in CONTROL file</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 15%" />
 <col style="width: 8%" />
@@ -533,7 +533,7 @@ With MAXSTEP &gt; 24 the forecasts from different days overlap, the naming schem
 <div class="section" id="flux-data-section">
 <span id="ref-control-fluxdata"></span><h2>Flux data Section<a class="headerlink" href="#flux-data-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id6">
-<caption><span class="caption-text">Flux data parameter in CONTROL file</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Flux data parameters in CONTROL file</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 15%" />
 <col style="width: 8%" />
@@ -587,7 +587,7 @@ Hittmeir, S.; Philipp, A.; Seibert, P. (2017): A conservative interpolation sche
 <div class="section" id="domain-section">
 <span id="ref-control-domain"></span><h2>Domain Section<a class="headerlink" href="#domain-section" title="Permalink to this headline">¶</a></h2>
 <table class="colwidths-given docutils align-default" id="id7">
-<caption><span class="caption-text">Domain parameter in CONTROL file</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Domain parameters in CONTROL file</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 13%" />
@@ -765,7 +765,7 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 <div class="section" id="additional-data-section">
 <span id="ref-control-adddata"></span><h2>Additional data Section<a class="headerlink" href="#additional-data-section" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id9">
-<caption><span class="caption-text">Additional data parameter in CONTROL file</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Additional data parameters in CONTROL file</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 17%" />
 <col style="width: 9%" />

@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Access Modes" href="Ecmwf/access.html" />
+    <link rel="next" title="Access modes" href="Ecmwf/access.html" />
     <link rel="prev" title="Quick Start" href="quick_start.html" /> 
 </head>
 
@@ -92,11 +92,11 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ECMWF Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Ecmwf/access.html">Access Modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ecmwf/msdata.html">Available Datasets for Member State users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ecmwf/pubdata.html">Available Datasets for Public users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ecmwf/hintsecmwf.html">Hints to specify dataset retrieval</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Ecmwf/ec-links.html">Link Collection for Quick finder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ecmwf/access.html">Access modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ecmwf/msdata.html">Available data sets for member-state users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ecmwf/pubdata.html">Available data sets for public users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ecmwf/hintsecmwf.html">Hints for data set selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Ecmwf/ec-links.html">Link collection</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
@@ -172,21 +172,21 @@
             
   <div class="section" id="ecmwf-data">
 <h1>ECMWF Data<a class="headerlink" href="#ecmwf-data" title="Permalink to this headline">¶</a></h1>
-<p>The European Centre for Medium-Range Weather Forecasts (<a class="reference external" href="http://www.ecmwf.int">ECMWF</a>), based in Reading, UK, is an independent intergovernmental organisation supported by 34 states. It is both a research institute and a full time operational service. It produces global numerical weather predictions and some other data which is fully available to the national meteorological services in the <a class="reference external" href="https://www.ecmwf.int/en/about/who-we-are/member-states">Member States</a>, Co-operating States and the broader community. Especially, the published re-analysis datasets are made available to the public with some limits in specific datasets.</p>
-<p>The amount and structure of the available data from ECMWF is very complex. The operational data changes regularly in time and spatial resolution, physics and parameter. This has to be taken into account carefully and each user has to investigate his dataset of interest carefully before selecting and retrieving it with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
-The re-analysis datasets are consistent in all the above mentioned topics over their whole period but they have each their own specialities which makes treatment with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> special in some way. For example, they have different starting times for their forecasts or different parameter availability. They also have differences in time and spatial resolution and most importantly for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> they are different in the way of providing the vertical coordinate.</p>
-<p>There is much to learn from ECMWF and their datasets and data handling and this might be confusing at first. We therefore collected the most important information for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> users. In the following sections the user can use them to get to know enough to understand how <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is best used and to select the parameters of the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files.</p>
+<p>The European Centre for Medium-Range Weather Forecasts (<a class="reference external" href="http://www.ecmwf.int">ECMWF</a>), based in Reading, UK, is an independent intergovernmental organisation supported by 34 states. It is both a research institute and a 24 h / 7 d operational service. It produces global numerical weather predictions and some other data which are fully available to the national meteorological services in the <a class="reference external" href="https://www.ecmwf.int/en/about/who-we-are/member-states">Member States</a>, Co-operating States, and to some extend to the broader community. Specifically, re-analysis data sets are made available to the public, however, with some limitations for specific data sets.</p>
+<p>There is vast amount and of data with a complex structure available from ECMWF. The operational data undergo changes with respect to temporal and spatial resolution, model physics and parameters available. This has to be taken into account carefully and every user should have a clear idea of the data set intended to be used before retrieving it with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
+Each re-analysis data set is homogeneous with respect to resolution etc., but the different re-analyses alll have specific properties which requires a corresponding treatment with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. For example, the starting times of the forecasts may be different, or the availability of parameters (model output variables) may vary. They also differ in their temporal and spatial resolution, and - most importantly for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> - there are differences in the way how the vertical wind component may be accessed.</p>
+<p>As there is much to learn about ECMWF and its data sets and data handling, it might be confusing at first. Therefore, we have here collected the information which is most important for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> users. Study the following sections to learn how <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is best used, and to select the right parameters in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files.</p>
 <dl class="simple">
-<dt><a class="reference internal" href="Ecmwf/access.html"><span class="doc">Access Modes</span></a></dt><dd><p>Description of available access methods to the ECMWF data.</p>
+<dt><a class="reference internal" href="Ecmwf/access.html"><span class="doc">Access modes</span></a></dt><dd><p>Description of available  methods to access the ECMWF data.</p>
 </dd>
-<dt><a class="reference internal" href="Ecmwf/msdata.html"><span class="doc">Available Datasets for Member State users</span></a></dt><dd><p>Information about available data and parameters for member state users which can be retrieved with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></p>
+<dt><a class="reference internal" href="Ecmwf/msdata.html"><span class="doc">Available data sets for member-state users</span></a></dt><dd><p>Information about available data and parameters for member-state users which can be retrieved with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></p>
 </dd>
-<dt><a class="reference internal" href="Ecmwf/pubdata.html"><span class="doc">Available Datasets for Public users</span></a></dt><dd><p>Information about available data and parameters for the public datasets which can be retrieved with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></p>
+<dt><a class="reference internal" href="Ecmwf/pubdata.html"><span class="doc">Available data sets for public users</span></a></dt><dd><p>Information about available data and parameters for the public data sets which can be retrieved with <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></p>
 </dd>
-<dt><a class="reference internal" href="Ecmwf/hintsecmwf.html"><span class="doc">Hints to specify dataset retrieval</span></a></dt><dd><p>Collection of hints to best find information to define the dataset for retrievement and
-to define the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files.</p>
+<dt><a class="reference internal" href="Ecmwf/hintsecmwf.html"><span class="doc">Hints for data set selection</span></a></dt><dd><p>Collection of hints to best find information to define the data set for retrieval, and
+to define the content of the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> files.</p>
 </dd>
-<dt><a class="reference internal" href="Ecmwf/ec-links.html"><span class="doc">Link Collection for Quick finder</span></a></dt><dd><p>Link collection for additional and useful information as well as references to specific dataset publications.</p>
+<dt><a class="reference internal" href="Ecmwf/ec-links.html"><span class="doc">Link collection</span></a></dt><dd><p>Link collection for additional and useful information as well as references to publications on specific data sets.</p>
 </dd>
 </dl>
 <div class="toctree-wrapper compound">
@@ -201,7 +201,7 @@ to define the <code class="docutils literal notranslate"><span class="pre">CONTR
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Ecmwf/access.html" class="btn btn-neutral float-right" title="Access Modes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Ecmwf/access.html" class="btn btn-neutral float-right" title="Access modes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="quick_start.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

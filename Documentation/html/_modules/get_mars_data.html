@@ -171,9 +171,9 @@
 <span class="c1">#</span>
 <span class="c1">#    November 2015 - Leopold Haimberger (University of Vienna):</span>
 <span class="c1">#        - moved the getEIdata program into a function &quot;get_mars_data&quot;</span>
-<span class="c1">#        - moved the AgurmentParser into a seperate function</span>
-<span class="c1">#        - adatpted the function for the use in flex_extract</span>
-<span class="c1">#        - renamed file to get_mars_data</span>
+<span class="c1">#        - moved the AgurmentParser into a separate function</span>
+<span class="c1">#        - adapted the function for use in flex_extract</span>
+<span class="c1">#        - renamed source file to get_mars_data</span>
 <span class="c1">#</span>
 <span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
 <span class="c1">#        - applied PEP8 style guide</span>
@@ -183,7 +183,7 @@
 <span class="c1">#          (necessary for better documentation with docstrings for later</span>
 <span class="c1">#          online documentation)</span>
 <span class="c1">#        - use of UIFiles class for file selection and deletion</span>
-<span class="c1">#        - seperated get_mars_data function into several smaller pieces:</span>
+<span class="c1">#        - separated get_mars_data function into several smaller pieces:</span>
 <span class="c1">#          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
@@ -197,7 +197,7 @@
 <span class="c1">#    http://creativecommons.org/licenses/by/4.0/ or send a letter to</span>
 <span class="c1">#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</span>
 <span class="c1">#*******************************************************************************</span>
-<span class="sd">&#39;&#39;&#39;This script extracts MARS data from ECMWF servers.</span>
+<span class="sd">&#39;&#39;&#39;This script extracts MARS data from ECMWF.</span>
 
 <span class="sd">At first, the necessary parameters from command line and CONTROL files are</span>
 <span class="sd">extracted. They define the data set to be extracted from MARS.</span>
@@ -205,15 +205,15 @@
 <span class="sd">This file can also be imported as a module and contains the following</span>
 <span class="sd">functions:</span>
 
-<span class="sd">    * main - the main function of the script</span>
-<span class="sd">    * get_mars_data - overall control of ECMWF data retrievment</span>
+<span class="sd">    * main            - the main function of the script</span>
+<span class="sd">    * get_mars_data   - overall control of ECMWF data retrievment</span>
 <span class="sd">    * write_reqheader - writes the header into the mars_request file</span>
-<span class="sd">    * mk_server - creates the server connection to ECMWF servers</span>
-<span class="sd">    * mk_dates - defines the start and end date</span>
-<span class="sd">    * remove_old - deletes old retrieved grib files</span>
-<span class="sd">    * do_retrievement - creates individual retrievals</span>
+<span class="sd">    * mk_server       - creates the server connection to ECMWF servers</span>
+<span class="sd">    * mk_dates        - defines the start and end date</span>
+<span class="sd">    * remove_old      - deletes old retrieved grib files</span>
+<span class="sd">    * do_retrieval    - creates individual retrievals</span>
 
-<span class="sd">Type: get_mars_data.py --help</span>
+<span class="sd">Type get_mars_data.py --help</span>
 <span class="sd">to get information about command line parameters.</span>
 <span class="sd">Read the documentation for usage instructions.</span>
 <span class="sd">&#39;&#39;&#39;</span>
@@ -227,8 +227,8 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="c1"># software specific classes and modules from flex_extract</span>
-<span class="c1"># add path to local main python path for flex_extract to get full access</span>
+<span class="c1"># software-specific classes and modules from flex_extract</span>
+<span class="c1"># add path to local main Python path for flex_extract to get full access</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
     <span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span> <span class="o">+</span> <span class="s1">&#39;/../&#39;</span><span class="p">)</span>
 <span class="c1"># pylint: disable=wrong-import-position</span>
@@ -255,10 +255,10 @@
 <span class="c1"># FUNCTION</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;Controls the program to get data out of mars.</span>
+    <span class="sd">&#39;&#39;&#39;Controls the program to retrieve data from MARS.</span>
 
-<span class="sd">    This is done if it is called directly from command line.</span>
-<span class="sd">    Then it also takes program call arguments and control file input.</span>
+<span class="sd">    This is done if called directly from command line.</span>
+<span class="sd">    Then, arguments and control file are taken as input.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -275,10 +275,10 @@
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="get_mars_data"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.get_mars_data">[docs]</a><span class="k">def</span> <span class="nf">get_mars_data</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Retrieves the EC data needed for a FLEXPART simulation.</span>
+    <span class="sd">&#39;&#39;&#39;Retrieves the ECMWF data required for a FLEXPART simulation.</span>
 
-<span class="sd">    Start and end dates for retrieval period is set. Retrievals</span>
-<span class="sd">    are divided into smaller periods if necessary and datechunk parameter</span>
+<span class="sd">    Start and end dates for retrieval period are set. Retrievals</span>
+<span class="sd">    are divided into shorter periods if necessary and if datechunk parameter</span>
 <span class="sd">    is set.</span>
 
 <span class="sd">    Parameters</span>
@@ -298,12 +298,12 @@
         <span class="n">make_dir</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving ECMWF data!&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Printing mars requests!&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Printing MARS requests!&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">request</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving EC data and printing mars request!&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrieving ECMWF data and printing MARS request!&quot;</span><span class="p">)</span>
         <span class="n">write_reqheader</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">))</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;start date </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">start_date</span><span class="p">))</span>
@@ -326,12 +326,12 @@
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="write_reqheader"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.write_reqheader">[docs]</a><span class="k">def</span> <span class="nf">write_reqheader</span><span class="p">(</span><span class="n">marsfile</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Writes header with column names into mars request file.</span>
+    <span class="sd">&#39;&#39;&#39;Writes header with column names into MARS request file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    marsfile : str</span>
-<span class="sd">        Path to the mars request file.</span>
+<span class="sd">        Path to the MARS request file.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -349,11 +349,12 @@
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="mk_server"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.mk_server">[docs]</a><span class="k">def</span> <span class="nf">mk_server</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Creates a server connection with available python API.</span>
+    <span class="sd">&#39;&#39;&#39;Creates a server connection with available Python API.</span>
 
-<span class="sd">    Which API is used depends on availability and the dataset to be retrieved.</span>
-<span class="sd">    The CDS API is used for ERA5 dataset no matter if the user is a member or</span>
-<span class="sd">    a public user. ECMWF WebAPI is used for all other available datasets.</span>
+<span class="sd">    The API selected depends on availability and the data set to be retrieved.</span>
+<span class="sd">    The CDS API is used for ERA5 data, no matter whether the user is a </span>
+<span class="sd">    member-state or a public user. </span>
+<span class="sd">    ECMWF WebAPI is used for all other available datasets.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -408,14 +409,14 @@
 
 
 <div class="viewcode-block" id="mk_dates"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.mk_dates">[docs]</a><span class="k">def</span> <span class="nf">mk_dates</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Prepares start and end date depending on flux or non flux data.</span>
+    <span class="sd">&#39;&#39;&#39;Prepares start and end date depending on flux or non-flux type of data.</span>
 
-<span class="sd">    If forecast for maximum one day (upto 24h) are to be retrieved, then</span>
+<span class="sd">    If forecasts for a maximum of one day (24 h) are to be retrieved, then</span>
 <span class="sd">    collect accumulation data (flux data) with additional days in the</span>
-<span class="sd">    beginning and at the end (used for complete disaggregation of</span>
+<span class="sd">    beginning and at the end (needed for complete disaggregation of</span>
 <span class="sd">    original period)</span>
 
-<span class="sd">    If forecast data longer than 24h are to be retrieved, then</span>
+<span class="sd">    If forecast data for more than +24 h are to be retrieved, then</span>
 <span class="sd">    collect accumulation data (flux data) with the exact start and end date</span>
 <span class="sd">    (disaggregation will be done for the exact time period with</span>
 <span class="sd">    boundary conditions)</span>
@@ -475,16 +476,16 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    pattern : str</span>
-<span class="sd">        The sub string pattern which identifies the files to be deleted.</span>
+<span class="sd">        The substring pattern which identifies the files to be deleted.</span>
 
 <span class="sd">    inputdir : str, optional</span>
-<span class="sd">        Path to the directory where the retrieved data is stored.</span>
+<span class="sd">        Path to the directory where the retrieved data are stored.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old content of &#39;</span> <span class="o">+</span> <span class="n">inputdir</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... removing old files in &#39;</span> <span class="o">+</span> <span class="n">inputdir</span><span class="p">)</span>
 
     <span class="n">tobecleaned</span> <span class="o">=</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
     <span class="n">tobecleaned</span><span class="o">.</span><span class="n">delete_files</span><span class="p">()</span>
@@ -493,7 +494,7 @@
 
 
 <div class="viewcode-block" id="do_retrievement"><a class="viewcode-back" href="../Documentation/Api/api_python.html#get_mars_data.do_retrievement">[docs]</a><span class="k">def</span> <span class="nf">do_retrievement</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">,</span> <span class="n">fluxes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Divides the complete retrieval period in smaller chunks and</span>
+    <span class="sd">&#39;&#39;&#39;Divides the total retrieval period into smaller chunks and</span>
 <span class="sd">    retrieves the data from MARS.</span>
 
 <span class="sd">    Parameters</span>
@@ -512,8 +513,7 @@
 <span class="sd">        The end date of the retrieval.</span>
 
 <span class="sd">    delta_t : datetime</span>
-<span class="sd">        Delta_t + 1 is the maximal time period of a single</span>
-<span class="sd">        retrieval.</span>
+<span class="sd">        Delta_t + 1 is the maximum time period of a single retrieval.</span>
 
 <span class="sd">    fluxes : boolean, optional</span>
 <span class="sd">        Decides if the flux parameters are to be retrieved or</span>
@@ -526,8 +526,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="c1"># since actual day also counts as one day,</span>
-    <span class="c1"># we only need to add datechunk - 1 days to retrieval</span>
-    <span class="c1"># for a period</span>
+    <span class="c1"># we only need to add datechunk - 1 days to retrieval for a period</span>
     <span class="n">delta_t_m1</span> <span class="o">=</span> <span class="n">delta_t</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">day</span> <span class="o">=</span> <span class="n">start</span>

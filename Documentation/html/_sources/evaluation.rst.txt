@@ -5,8 +5,8 @@ Evaluation
     
 .. note::
 
-  This section in the online documentation still needs to be done.
-  Currently, evaluation methods and information can be found in the `flex_extract discussion paper <https://www.geosci-model-dev-discuss.net/gmd-2019-358/>`_ of the Geoscientific Model Development journal.
+  This section still needs to be written.
+  Currently, evaluation methods can be found in the `flex_extract discussion paper <https://www.geosci-model-dev-discuss.net/gmd-2019-358/>`_ of the journal Geoscientific Model Development.
   
   
     

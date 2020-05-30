@@ -5,9 +5,9 @@ Developer Guide
     
 .. note::
 
-  This section still needs to be done.
+  This section still needs to be written.
     
-.. repository (how /who manages the code, where to get)
+.. repository (how / who manages the code, where to get)
     
     
 .. toctree::

@@ -1,5 +1,5 @@
 ********************
-Testcases
+Test cases
 ********************
 
 
@@ -10,7 +10,7 @@ Comparison of MARS requests
 
 
 
-Comparison of grib files
+Comparison of GRIB files
 ========================
 
   UNDER CONSTRUCTION
