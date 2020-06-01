@@ -18,6 +18,8 @@
 #          conditional statements and set default values )
 #        - divided assignment of attributes and the check of conditions
 #        - outsourced the commandline argument assignments to control attributes
+#   June 202 - Petra Seibert (Univ of Vienna / BOKU)
+#        - update default makefile name
 #
 # @License:
 #    (C) Copyright 2014-2019.
@@ -266,7 +268,7 @@ class ControlFile(object):
 
     makefile : str
         Name of the makefile to be used for the Fortran program.
-        Default value is 'Makefile.gfortran'.
+        Default value is 'makefile_local_gfortran'.
 
     destination : str
         The remote destination which is used to transfer files
@@ -401,7 +403,7 @@ class ControlFile(object):
         self.flexextractdir = _config.PATH_FLEXEXTRACT_DIR
         self.exedir = _config.PATH_FORTRAN_SRC
         self.installdir = None
-        self.makefile = 'Makefile.gfortran'
+        self.makefile = 'makefile_local_gfortran'
         self.destination = None
         self.gateway = None
         self.ecuid = None
