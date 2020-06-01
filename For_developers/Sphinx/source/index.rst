@@ -3,9 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-=================================================
-Welcome to ``flex_extract``'s user documentation!
-=================================================
+===================================================
+Welcome to the ``flex_extract`` Documentation!
+===================================================
 
 ``Flex_extract`` is an open-source software to retrieve meteorological fields from the MARS archive of the European Centre for Medium-Range Weather Forecasts (ECMWF) to serve as input for the FLEXTRA/FLEXPART atmospheric transport modelling system. 
 
@@ -13,17 +13,6 @@ Welcome to ``flex_extract``'s user documentation!
 
     <table style="width:100%;">
       <tr>
-        <td style="width:30%;height:150px;">
-          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
-          </div>
-          <h2><a href="installation.html">Installation</a></h2>
-          <ul>
-            <li><a href="installation.html#ref-requirements">Environment requirements</a></li>
-            <li><a href="installation.html#ref-download">Download flex_extract</a></li>
-            <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
-          </ul>
-        </td>          
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
             <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/ecmwf_icon.png">
@@ -37,28 +26,38 @@ Welcome to ``flex_extract``'s user documentation!
         </td>
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
           </div>
-          <h2><a href="documentation.html">Documentation</a></h2>
+          <h2><a href="installation.html">Installation</a></h2>
           <ul>
-            <li><a href="Documentation/overview.html">Overview</a></li>
-            <li><a href="Documentation/input.html">Control & input data</a></li>
-            <li><a href="Documentation/output.html">Output data</a></li>
+            <li><a href="installation.html#ref-requirements">Dependencies</a></li>
+            <li><a href="installation.html#ref-download">Download flex_extract</a></li>
+            <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
           </ul>
-        </td>
-      </tr>
-      <tr>   
+        </td>          
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
             <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
           </div>
-          <h2><a href="quick_start.html">Quick Start</a></h2>
+          <h2><a href="quick_start.html">Usage</a></h2>
           <ul>
             <li><a href="quick_start.html#job-preparation">Job preparation</a></li>
-            <li><a href="quick_start.html#selection-and-adjustment-of-control-files">Handling CONTROL files</a></li>
+            <li><a href="quick_start.html#selection-and-adjustment-of-control-files">CONTROL files</a></li>
             <li><a href="quick_start.html#hints-for-definition-of-some-parameter-combinations">Hints on parameter combinations</a></li>
           </ul>
-        </td>  
+        </td>        </tr>
+      <tr>   
+        <td style="width:30%;height:150px;">
+          <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+            <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+          </div>
+          <h2><a href="documentation.html">Code-level documentation</a></h2>
+          <ul>
+            <li><a href="Documentation/overview.html">Overview</a></li>
+            <li><a href="Documentation/input.html">Scripts, control & input data</a></li>
+            <li><a href="Documentation/output.html">Output data</a></li>
+          </ul>
+        </td>
         <td style="width:30%;height:150px;">
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
             <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/check_icon.png">
@@ -74,9 +73,9 @@ Welcome to ``flex_extract``'s user documentation!
           <div style="width:100%;height:60px;margin-left:20%;position:relative;">
             <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/dev_icon.png">
           </div>
-          <h2><a href="dev_guide.html">Developer</a></h2>
+          <h2><a href="dev_guide.html">Developer guide</a></h2>
           <ul>
-            <li><a href="Developers/gen_docu.html">Updateing the documentation</a></li>
+            <li><a href="Developers/gen_docu.html">Updating the documentation</a></li>
             <li><a href=""></a><Placeholder></li>
             <li><a href=""></a><Placeholder></li>
           </ul>
@@ -131,9 +130,9 @@ Welcome to ``flex_extract``'s user documentation!
    :maxdepth: 4
    :caption: Table of Contents:
 
+   ecmwf_data
    installation
    quick_start
-   ecmwf_data
    documentation
    evaluation
    dev_guide

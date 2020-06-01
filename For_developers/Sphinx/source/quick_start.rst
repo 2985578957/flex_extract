@@ -1,6 +1,6 @@
-***********
-Quick Start
-***********
+*****
+Usage
+*****
 
 ``flex_extract`` is a command-line tool. In the first versions, it was started via a korn shell script and since version 6, the entry point was a python script. From version 7.1, a bash shell script was implemented to call ``flex_extract`` with the command-line parameters. 
 

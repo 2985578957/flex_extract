@@ -138,7 +138,6 @@ Example ``jobscript.ksh``
     lower 10.
     mailfail ${USER} 
     mailops ${USER} 
-    makefile Makefile.gfortran
     marsclass EP
     maxstep 0
     number 000

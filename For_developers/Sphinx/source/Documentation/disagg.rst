@@ -16,12 +16,12 @@ pre-processing has to be applied.
     :align: center
     :widths: 5,15,5,10
     
-    LSP,  "large-scale precipitation",          ":math:`m`",          "modified linear interpolation"
-    CP,   "convective precipitation",           ":math:`m`",          "modified linear interpolation"
-    SSHF, "surface sensible heat flux",         ":math:`J m^{-2}`",   "bicubic interpolation"
-    EWSS, "eastward turbulent surface stress",  ":math:`N m^{-2} s`", "bicubic interpolation"
-    NSSS, "northward turbulent surface stress", ":math:`N m^{-2} s`", "bicubic interpolation"
-    SSR,  "surface net solar radiation",        ":math:`J m^{-2}`",   "bicubic interpolation"
+    LSP,  "large-scale precipitation",          "m",          "modified linear interpolation"
+    CP,   "convective precipitation",           "m",          "modified linear interpolation"
+    SSHF, "surface sensible heat flux",         "J m:math:`^{-2}`",   "bicubic interpolation"
+    EWSS, "eastward turbulent surface stress",  "N m:math:`^{-2}` s", "bicubic interpolation"
+    NSSS, "northward turbulent surface stress", "N m:math:`^{-2}` s", "bicubic interpolation"
+    SSR,  "surface net solar radiation",        "J m:math:`^{-2}`",   "bicubic interpolation"
     
 
 The first step is to *de-accumulate* the fields in time so that each value represents non-overlapping integrals in x-, y-, and t-space.
@@ -61,19 +61,19 @@ However, the supporting points in space are not shifted between precipitation an
 
 
 
-Disaggregation is done for four adjacent timespans (:math:`a_0, a_1, a_2, a_3`) which generates a new, disaggregated value which is output at the central point of the four adjacent timespans. 
+Disaggregation is done for four adjacent time intervals (:math:`a_0, a_1, a_2, a_3`) which generates a new, disaggregated value which is output at the central point of the four adjacent time intervals. 
 
 .. math::
 
-       p_{ac} &= 0.5 * a_1\\
+       p_{ac} &= 0.5  a_1\\
             m &= a_0 + a_2 > 0.\\
-    p_{ac}(m) &= a_1(m) * a_2(m) / (a_0(m) + a_2(m))\\
+    p_{ac}(m) &= a_1(m) a_2(m) / (a_0(m) + a_2(m))\\
        p_{bd} &= 0.5 * a_2\\
             m &= a_1 + a_3 > 0.\\
-    p_{bd}(m) &= a_1(m) * a_2(m) / (a_1(m) + a_3(m))\\
+    p_{bd}(m) &= a_1(m)  a_2(m) / (a_1(m) + a_3(m))\\
 
 
-This new point :math:`p` is used for linear interpolation of the complete timeseries afterwards. If one of the four original timespans has a value below 0, it is set to 0 prior to the calculation.
+This new point :math:`p` is used for linear interpolation of the complete timeseries afterwards. If one of the four original time intervals has a value below 0, it is set to 0 prior to the calculation.
     
 .. math::
 
@@ -161,7 +161,7 @@ Disaggregation for the other flux fields
       
 The accumulated values for the other variables are first divided by the number of hours and
 then interpolated to the exact times using a bicubic interpolation which conserves the integrals of the fluxes within each timespan.
-Disaggregation is done for four adjacent timespans (:math:`p_a, p_b, p_c, p_d`) which produces a new, disaggregated value that is the output at the central point of the four adjacent timespans.
+Disaggregation is done for four adjacent time intervals (:math:`p_a, p_b, p_c, p_d`) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.
 
 .. math::
     
