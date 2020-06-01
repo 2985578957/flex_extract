@@ -173,8 +173,9 @@ we see again all possible command line parameters.
       --target INSTALL_TARGET
                             Valid targets: local | ecgate | cca , the latter two
                             are at ECMWF (default: None)
-      --makefile MAKEFILE   Name of Makefile to use for compiling the Fortran
-                            program (default: None)
+      --makefile MAKEFILE   Name of makefile to compile the Fortran
+                            code. (default depends on `target`: local - makefile_local_gfortran,
+                            ecgate - makefile_ecgate, cca - makefile_cray)
       --ecuid ECUID         The user id at ECMWF. (default: None)
       --ecgid ECGID         The group id at ECMWF. (default: None)
       --gateway GATEWAY     The IP name (or IP address) of the local gateway server. (default: None)

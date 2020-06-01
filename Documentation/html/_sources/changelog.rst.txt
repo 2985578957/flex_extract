@@ -19,7 +19,7 @@ Bug fixes
 #########
    * corrected naming of makefiles and Fortran program executable in online documentation
    * adapted checking for ``GATEWAY`` and ``DESTINATION`` parameter 
-   * fixed makefiles to use f90 Fortran files for ECMWF server
+   * fixed Fortran makefiles to use the .f90 files on ECMWF servers
 
     
 .. _ref-v71: 
@@ -41,9 +41,9 @@ Changes
    * upgraded to Python3
    * applied PEP8 style guide
    * use of genshi templates 
-   * modularization of python source code
+   * modularization of Python source code
    * upgrade from grib_api to ecCodes
-   * completely revised/refactored python section
+   * completely revised/refactored Python section
    * restructured program directories
    * Fortran program name changed from ``CONVERT2`` to ``calc_etadot``
 
@@ -59,8 +59,8 @@ New Features
 Bug fixes
 #########
  
-    * diverse problems with ERA 5 retrieval 
-    * diverse problems with CERA-20C retrieval
+    * various problems with ERA 5 retrieval 
+    * various problems with CERA-20C retrieval
     * BASETIME retrieval option
     * `CONVERT2` FORTRAN program: initialise fields to 0.
       (introduced initialization of :literal:`field` variable in the Fortran program
@@ -73,7 +73,7 @@ Release v7.0.3
 New Features
 ############
 
-    * output of mars requests to an extra file (debugging and documentation)
+    * output of MARS requests to an extra file (debugging and documentation)
     * CERA-20C download
     * ERA 5 download
     * public user interface with `ECMWF Web API`_
@@ -86,16 +86,16 @@ Release v7.0.2
 New Features
 ############
 
-    * Python based version
+    * Python-based version
     
 Changes
 #######
 
-    * korn shell scripts were substituted by python scripts
+    * korn shell scripts substituted by Python scripts
 
 .. _ref-v60:
     
 Release v0.1 - v6.0
 -------------------
 
-    * old version which should no longer be used anymore        
+    * old version which should no longer be used         

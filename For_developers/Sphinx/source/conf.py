@@ -27,13 +27,13 @@ sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = u'flex_extract'
-copyright = u'2020, Anne Philipp and Leopold Haimberger'
-author = u'Anne Philipp and Leopold Haimberger'
+copyright = u'2020, Anne Philipp, Leopold Haimberger and Petra Seibert'
+author = u'Anne Philipp, Leopold Haimberger and Petra Seibert'
 
 # The short X.Y version
-version = u'7.1'
+version = u'7.1.1'
 # The full version, including alpha/beta/rc tags
-release = u'7.1 alpha'
+release = u'7.1.1'
 
 
 # -- General configuration ---------------------------------------------------

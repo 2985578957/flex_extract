@@ -1,6 +1,6 @@
-********************
+**************************
 Updating the documentation
-********************
+**************************
 
 UNDER CONSTRUCTION
 
@@ -27,7 +27,7 @@ Developers working on ``flex_extract`` should make extensive use of the prepared
 
 
 On-line documentation with Sphinx
-================================
+=================================
 
 Use the script ``gen_docu.sh`` to generate an update of the on-line documentation of the Python component.
 

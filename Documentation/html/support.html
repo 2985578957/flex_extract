@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Support &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Support &mdash; flex_extract 7.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.1
               </div>
             
           
@@ -89,10 +89,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
@@ -185,27 +185,25 @@
 </div>
 <div class="section" id="ticket-system">
 <span id="ref-ticket-system"></span><h2><a class="toc-backref" href="#id2">Ticket system</a><a class="headerlink" href="#ticket-system" title="Permalink to this headline">¶</a></h2>
-<p>The community website <a class="reference external" href="http://flexpart.eu">http://flexpart.eu</a> contains a
-<a class="reference external" href="https://www.flexpart.eu/report/1">ticket system</a> which can be used to report any issue or a proposition for a new feature.</p>
-<p>The tickets can be viewed by anyone, to create a ticket a registration is necessary. Since the automatic registration is unavailable, please send an email to the <code class="docutils literal notranslate"><span class="pre">flexpart.eu[at]zamg.ac.at</span></code> and you will receive your credentials (with some delay).</p>
+<p>The community website <a class="reference external" href="https://flexpart.eu/">https://flexpart.eu/</a> contains a
+<a class="reference external" href="https://www.flexpart.eu/report/1">ticket system</a> which can be used to report any issue or to propose new features.</p>
+<p>The tickets can be viewed by anyone, to create a ticket a registration is necessary. Since the automatic registration is unavailable, please send an email to the <code class="docutils literal notranslate"><span class="pre">flexpart.eu[at]zamg.ac.at</span></code> and you will receive your credentials (possibly with some delay).  Event though a category “Support” is available, in most cases asking questions in the mailing list (see next paragraph below) will be more appropriate.</p>
 </div>
 <div class="section" id="mailing-list">
 <span id="ref-mailing-list"></span><h2><a class="toc-backref" href="#id3">Mailing list</a><a class="headerlink" href="#mailing-list" title="Permalink to this headline">¶</a></h2>
-<p>The mailing list is mainly for the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> users to ask questions or share experiences regarding the whole <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> process with the community. This can be a lot faster than asking only the developers for help. Since <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is a preprocessor to <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> this is the right place to ask for help.</p>
-<p>Additionally, from time to time, there will be announcements for all FLEXPART users, such as new release versions of <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> or <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
-<p>Just write a mail to: <code class="docutils literal notranslate"><span class="pre">flexpart[at]lists.univie.ac.at</span></code></p>
+<p>A mailing list exists for the <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> users to ask questions or share experiences with the community, regarding the whole <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> process. This may be faster than asking only the developers for help through tickets. Since <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is a preprocessor to <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> this is the right place to ask for help.</p>
+<p>New release versions of <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> or <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> or other important annoucements will also be made through this mailling list.
+The subscription process is explained at the bottom of <a class="reference external" href="https://www.flexpart.eu/wiki/RegisteredUser">https://www.flexpart.eu/wiki/RegisteredUser</a>. Once subscribed, write e-mail to <code class="docutils literal notranslate"><span class="pre">flexpart[at]lists.univie.ac.at</span></code> to post to the list.</p>
 </div>
 <div class="section" id="reporting-an-issue">
 <span id="ref-reporting"></span><h2><a class="toc-backref" href="#id4">Reporting an issue</a><a class="headerlink" href="#reporting-an-issue" title="Permalink to this headline">¶</a></h2>
 <p>To properly report a problem or bug, please provide as much information as possible.
-This includes:</p>
-<ul class="simple">
-<li><p>the flex_extract version</p></li>
-<li><p>a flex_extract log file (output of submit.py script)</p></li>
-<li><p>the CONTROL file</p></li>
-<li><p>the commandline arguments or run(_local).sh settings and</p></li>
-<li><p>a description of the environment you used (Unix/Linux version, library version, application mode, etc.).</p></li>
-</ul>
+This includes:
+* the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> version
+* a <code class="docutils literal notranslate"><span class="pre">flex_extract</span> <span class="pre">log</span></code> file (output of <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script)
+* the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file
+* the command-line arguments or <code class="docutils literal notranslate"><span class="pre">run(_local).sh</span></code> settings and
+* a description of your environment (Unix/Linux version, library version, application mode, etc.).</p>
 </div>
 <div class="section" id="known-bugs-and-issues">
 <span id="ref-known-issues"></span><h2><a class="toc-backref" href="#id5">Known bugs and issues</a><a class="headerlink" href="#known-bugs-and-issues" title="Permalink to this headline">¶</a></h2>
@@ -237,7 +235,7 @@ This includes:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

@@ -10,15 +10,13 @@ Local mode installation
     :maxdepth: 2
          
     
-.. _Python 3: https://docs.python.org/3/
-.. _Python3: https://www.python.org/downloads/
-.. _Anaconda Python3: https://www.anaconda.com/distribution/#download-section
-
+.. _Python3: https://www.python.org/
+.. _Anaconda Python3: https://www.anaconda.com/distribution/
 .. _numpy: http://www.numpy.org/
 .. _ecmwf-api-client: https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home
 .. _cdsapi: https://cds.climate.copernicus.eu/api-how-to
 .. _genshi: https://genshi.edgewall.org/
-.. _eccodes for python: https://packages.debian.org/sid/python3-eccodes 
+.. _eccodes for python: https://pypi.org/project/eccodes-python/
 .. _eccodes for conda: https://anaconda.org/conda-forge/eccodes
 .. _gfortran: https://gcc.gnu.org/wiki/GFortran
 .. _fftw3: http://www.fftw.org
@@ -29,19 +27,13 @@ Local mode installation
 .. _CDS API registration: https://cds.climate.copernicus.eu/user/register
 .. _ECMWF ectrans site: https://confluence.ecmwf.int/display/ECAC/Unattended+file+transfer+-+ectrans
 .. _ECaccess Presentation: https://confluence.ecmwf.int/download/attachments/45759146/ECaccess.pdf
-.. _ECMWF's instructions on gateway server: https://confluence.ecmwf.int/display/ECAC/ECaccess+Home
+.. _ECMWF instructions on gateway servers: https://confluence.ecmwf.int/display/ECAC/ECaccess+Home
 .. _Computing Representative: https://www.ecmwf.int/en/about/contact-us/computing-representatives
 .. _MARS access: https://confluence.ecmwf.int//display/WEBAPI/Access+MARS
-
 .. _download section: https://www.flexpart.eu/downloads
 
- 
-    
-    
-    
+     
 .. _ref-local-mode:
-
-
 
 .. _ref-req-local: 
  
@@ -53,16 +45,16 @@ The installation is the same for the access modes **member** and **public**.
 The environment on your local system has to provide the following software packages
 and libraries, since the preparation of the extraction and the post-processing is done on the local machine:
 
-+-------------------------------------------------+-----------------+
-|  Python part                                    | Fortran part    |
-+-------------------------------------------------+-----------------+
-| 1. `Python3`_                                   | 1. `gfortran`_  |
-| 2. `numpy`_                                     | 2. `fftw3`_     |
-| 3. `genshi`_                                    | 3. `eccodes`_   |
-| 4. `eccodes for python`_                        | 4. `emoslib`_   |
-| 5. `ecmwf-api-client`_ (everything except ERA5) |                 |
-| 6. `cdsapi`_ (just for ERA5 and member user)    |                 |
-+-------------------------------------------------+-----------------+
++------------------------------------------------+----------------+
+|  Python code                                   | Fortran code   |
++------------------------------------------------+----------------+
+| * `Python3`_                                   | * `gfortran`_  |
+| * `numpy`_                                     | * `fftw3`_     |
+| * `genshi`_                                    | * `eccodes`_   |
+| * `eccodes for python`_                        | * `emoslib`_   |
+| * `ecmwf-api-client`_ (everything except ERA5) |                |
+| * `cdsapi`_ (just for ERA5 and member user)    |                |
++------------------------------------------------+----------------+
 
 
 .. _ref-prep-local:
@@ -264,55 +256,20 @@ Please use the following Python code snippet to retrieve a small *ERA5* data sam
 
 
 
-
 .. _ref-install-local:
 
 Local installation
 ==================
 
-First, adapt the Fortran ``makefile`` for your environment (if necessary) and insert it into ``setup.sh`` script (see :ref:`Fortran Makefile <ref-convert>` for more information).
-They can be found at ``flex_extract_vX.X/Source/Fortran/``, where ``vX.X`` should be substituted by the current flex_extract version number.
-
-.. caution::   
-   It is necessary to adapt **ECCODES_INCLUDE_DIR** and **ECCODES_LIB** in these
-   ``makefiles`` if other than standard paths are used.
-
-Thus, go to the ``Fortran`` source directory and open the ``makefile`` of your 
-choice, and check / modify with an editor of your choice:
-
-.. code-block:: bash 
-
-   cd flex_extract_vX.X/Source/Fortran
-   nedit makefile_fast
- 
-Set the paths to the ``eccodes`` library on your local machine, if necessary.
-
-.. caution::
-   This can vary from system to system. 
-   It is suggested to use a command like 
-
-   .. code-block:: bash
-
-      # for the ECCODES_INCLUDE_DIR path do:
-      $ dpkg -L libeccodes-dev | grep eccodes.mod
-      # for the ECCODES_LIB path do:
-      $ dpkg -L libeccodes-dev | grep libeccodes.so
-      
-   to find out the path to the ``eccodes`` library.
    
-Assign these paths to the parameters **ECCODES_INCLUDE_DIR**
-and **ECCODES_LIB** in the makefile, and save it.
-
-.. code-block:: bash
-
-   # these are the paths on Debian Buster:
-   ECCODES_INCLUDE_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
-   ECCODES_LIB= -L/usr/lib -leccodes_f90 -leccodes -lm  
-   
-    
 The Fortran program called ``calc_etadot`` will be compiled during the 
-installation process. Therefore, the name of the ``makefile`` to be used needs to be given in  ``setup.sh``.
+installation process. A suitable makefile (``makefile_local_gfortran``) for the compilation is set by default.
+This may be overwritten by the ``MAKEFILE`` parameter in ``setup.sh``.
 
+However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into ``setup.sh``
+For details on the makefile and how to adapt them, see :ref:`Fortran Makefile <ref-convert>`.
+
+ 
 In the root directory of ``flex_extract``, open the ``setup.sh`` script 
 with an editor and adapt the installation parameters in the section labelled with 
 "AVAILABLE COMMANDLINE ARGUMENTS TO SET" as shown below:
@@ -329,7 +286,6 @@ with an editor and adapt the installation parameters in the section labelled wit
    # THE USER HAS TO SPECIFY THESE PARAMETER
    #
    TARGET='local'
-   MAKEFILE='makefile_fast'
    ECUID=None
    ECGID=None
    GATEWAY=None
@@ -356,7 +312,7 @@ to start the installation. You should see the following standard output.
 	flex_extract will be installed in here by compiling the Fortran source in <path-to-flex_extract>/flex_extract_v7.1/Source/Fortran
 	Install flex_extract_v7.1 software at local in directory <path-to-flex_extract>/flex_extract_v7.1
 
-	Using makefile: makefile_fast
+	Using makefile: makefile_local_gfortran
 	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./rwgrib2.f90
 	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./phgrreal.f90
 	gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./grphreal.f90

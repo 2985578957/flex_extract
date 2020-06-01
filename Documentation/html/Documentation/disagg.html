@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Disaggregation of flux data &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Disaggregation of flux data &mdash; flex_extract 7.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.1
               </div>
             
           
@@ -89,10 +89,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; input data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html">Output data</a></li>
@@ -159,7 +159,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
       <li>Disaggregation of flux data</li>
     
@@ -206,32 +206,32 @@ pre-processing has to be applied.</p>
 <tbody>
 <tr class="row-even"><td><p>LSP</p></td>
 <td><p>large-scale precipitation</p></td>
-<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
+<td><p>m</p></td>
 <td><p>modified linear interpolation</p></td>
 </tr>
 <tr class="row-odd"><td><p>CP</p></td>
 <td><p>convective precipitation</p></td>
-<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
+<td><p>m</p></td>
 <td><p>modified linear interpolation</p></td>
 </tr>
 <tr class="row-even"><td><p>SSHF</p></td>
 <td><p>surface sensible heat flux</p></td>
-<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
+<td><p>J m:math:<cite>^{-2}</cite></p></td>
 <td><p>bicubic interpolation</p></td>
 </tr>
 <tr class="row-odd"><td><p>EWSS</p></td>
 <td><p>eastward turbulent surface stress</p></td>
-<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
+<td><p>N m:math:<cite>^{-2}</cite> s</p></td>
 <td><p>bicubic interpolation</p></td>
 </tr>
 <tr class="row-even"><td><p>NSSS</p></td>
 <td><p>northward turbulent surface stress</p></td>
-<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
+<td><p>N m:math:<cite>^{-2}</cite> s</p></td>
 <td><p>bicubic interpolation</p></td>
 </tr>
 <tr class="row-odd"><td><p>SSR</p></td>
 <td><p>surface net solar radiation</p></td>
-<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
+<td><p>J m:math:<cite>^{-2}</cite></p></td>
 <td><p>bicubic interpolation</p></td>
 </tr>
 </tbody>
@@ -261,15 +261,15 @@ However, the supporting points in space are not shifted between precipitation an
 <span id="ref-fig-olddisagg"></span><img alt="../_images/old_disagg.png" src="../_images/old_disagg.png" />
 <p class="caption"><span class="caption-text">Fig. 1: Example of disaggregation scheme as implemented in older versions for an isolated precipitation event lasting one time interval (thick blue line). The amount of original precipitation after de-accumulation is given by the blue-shaded area. The green circles represent the discrete grid points after disaggregation and linearly interpolate in between them as indicated by the green line and the green-shaded area. Note that supporting points for the interpolation are shifted by half a time interval compared to the times when other meteorological fields are available (Hittmeir et al. 2018).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p>Disaggregation is done for four adjacent timespans (<span class="math notranslate nohighlight">\(a_0, a_1, a_2, a_3\)</span>) which generates a new, disaggregated value which is output at the central point of the four adjacent timespans.</p>
+<p>Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(a_0, a_1, a_2, a_3\)</span>) which generates a new, disaggregated value which is output at the central point of the four adjacent time intervals.</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}   p_{ac} &amp;= 0.5 * a_1\\
+\[\begin{split}   p_{ac} &amp;= 0.5  a_1\\
         m &amp;= a_0 + a_2 &gt; 0.\\
-p_{ac}(m) &amp;= a_1(m) * a_2(m) / (a_0(m) + a_2(m))\\
+p_{ac}(m) &amp;= a_1(m) a_2(m) / (a_0(m) + a_2(m))\\
    p_{bd} &amp;= 0.5 * a_2\\
         m &amp;= a_1 + a_3 &gt; 0.\\
-p_{bd}(m) &amp;= a_1(m) * a_2(m) / (a_1(m) + a_3(m))\\\end{split}\]</div>
-<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards. If one of the four original timespans has a value below 0, it is set to 0 prior to the calculation.</p>
+p_{bd}(m) &amp;= a_1(m)  a_2(m) / (a_1(m) + a_3(m))\\\end{split}\]</div>
+<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards. If one of the four original time intervals has a value below 0, it is set to 0 prior to the calculation.</p>
 <div class="math notranslate nohighlight">
 \[p = p_{ac} + p_{bd}\]</div>
 </div>
@@ -312,7 +312,7 @@ The height is thereby determined by the condition of conservation of the integra
 <h2>Disaggregation for the other flux fields<a class="headerlink" href="#disaggregation-for-the-other-flux-fields" title="Permalink to this headline">¶</a></h2>
 <p>The accumulated values for the other variables are first divided by the number of hours and
 then interpolated to the exact times using a bicubic interpolation which conserves the integrals of the fluxes within each timespan.
-Disaggregation is done for four adjacent timespans (<span class="math notranslate nohighlight">\(p_a, p_b, p_c, p_d\)</span>) which produces a new, disaggregated value that is the output at the central point of the four adjacent timespans.</p>
+Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(p_a, p_b, p_c, p_d\)</span>) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}p_a &amp;= (a_3 - a_0 + 3. * (a_1 - a_2)) / 6. \\
 p_b &amp;= (a_2 + a_0) / 2. - a_1 - 9. * p_a / 2. \\
@@ -346,7 +346,7 @@ p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

@@ -47,7 +47,7 @@ Remote mode - dependencies
 The following software is required, and already available at the ECMWF servers:
     
 +---------------------------+-----------------+
-|  Python part              | Fortran part    |
+|  Python code              | Fortran code    |
 +---------------------------+-----------------+
 | * `Python3`_              | * `gfortran`_   |
 | * `numpy`_                | * `fftw3`_      |

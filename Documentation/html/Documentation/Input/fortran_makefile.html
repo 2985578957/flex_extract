@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The Fortran makefile for calc_etadot &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>The Fortran makefile for calc_etadot &mdash; flex_extract 7.1.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.1
               </div>
             
           
@@ -89,10 +89,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; input data</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="setup.html">The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
@@ -167,7 +167,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
           <li><a href="../input.html">Control &amp; input data</a> &raquo;</li>
         
@@ -203,8 +203,8 @@ A list of these <code class="docutils literal notranslate"><span class="pre">mak
 </div>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>makefile_ecgate</strong>: For  use on ECMWF’s server <strong>ecgate</strong>.</div>
-<div class="line"><strong>makefile_cray</strong>:   For  use on ECMWF’s server <strong>cca/ccb</strong>.</div>
+<div class="line"><strong>makefile_ecgate</strong>: For  use on the ECMWF server <strong>ecgate</strong>.</div>
+<div class="line"><strong>makefile_cray</strong>:   For  use on the ECMWF servers <strong>cca/ccb</strong>.</div>
 </div>
 </div></blockquote>
 <div class="line-block">
@@ -215,12 +215,43 @@ A list of these <code class="docutils literal notranslate"><span class="pre">mak
 <div><div class="line-block">
 <div class="line"><strong>makefile_fast</strong>:  For use with the gfortran compiler and optimisation mode.</div>
 <div class="line"><strong>makefile_debug</strong>: For use with the gfortran compiler and debugging mode. Primarily for developers.</div>
+<div class="line"><strong>makefile_local_gfortran</strong>: Linked to makefile_fast. Default value.</div>
 </div>
 </div></blockquote>
+<p>They can be found at <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran/</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted by the current flex_extract version number.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
+<code class="docutils literal notranslate"><span class="pre">makefiles</span></code> if other than standard paths are used.</p>
+</div>
+<p>Thus, go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> of your
+choice, and check / modify with an editor of your choice:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/Source/Fortran
+nedit makefile_fast
+</pre></div>
+</div>
+<p>Set the paths to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine, if necessary.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>This can vary from system to system.
+It is suggested to use a command like</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the ECCODES_INCLUDE_DIR path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep eccodes.mod
+<span class="c1"># for the ECCODES_LIB path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
+</pre></div>
+</div>
+<p>to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
+</div>
+<p>Assign these paths to the parameters <strong>ECCODES_INCLUDE_DIR</strong>
+and <strong>ECCODES_LIB</strong> in the makefile, and save it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on Debian Buster:</span>
+<span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
+<span class="nv">ECCODES_LIB</span><span class="o">=</span> -L/usr/lib -leccodes_f90 -leccodes -lm
+</pre></div>
+</div>
 <p>If you want to use another compiler than gfortran locally, you can still take <code class="docutils literal notranslate"><span class="pre">makefile_fast</span></code>,
 and adapt everything that is compiler-specific in this file.</p>
-<p>For instructions on how to adapt the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> (local application mode only),
-please see <a class="reference internal" href="../../Installation/local.html#ref-install-local"><span class="std std-ref">Local installation</span></a>.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -245,7 +276,7 @@ please see <a class="reference internal" href="../../Installation/local.html#ref
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

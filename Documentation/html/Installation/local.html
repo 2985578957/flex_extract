@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Local mode installation &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Local mode installation &mdash; flex_extract 7.1.1 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Quick Start" href="../quick_start.html" />
+    <link rel="next" title="Usage" href="../quick_start.html" />
     <link rel="prev" title="Gateway mode installation" href="gateway.html" /> 
 </head>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.1
               </div>
             
           
@@ -89,6 +89,7 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../installation.html">Installation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#accept-licences-for-public-datasets">Accept licences for public datasets</a></li>
@@ -110,9 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#test-installation">Test installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -196,28 +196,28 @@
 and libraries, since the preparation of the extraction and the post-processing is done on the local machine:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 74%" />
-<col style="width: 26%" />
+<col style="width: 75%" />
+<col style="width: 25%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p>Python part</p></td>
-<td><p>Fortran part</p></td>
+<tr class="row-odd"><td><p>Python code</p></td>
+<td><p>Fortran code</p></td>
 </tr>
-<tr class="row-even"><td><ol class="arabic simple">
-<li><p><a class="reference external" href="https://www.python.org/downloads/">Python3</a></p></li>
+<tr class="row-even"><td><ul class="simple">
+<li><p><a class="reference external" href="https://www.python.org/">Python3</a></p></li>
 <li><p><a class="reference external" href="http://www.numpy.org/">numpy</a></p></li>
 <li><p><a class="reference external" href="https://genshi.edgewall.org/">genshi</a></p></li>
-<li><p><a class="reference external" href="https://packages.debian.org/sid/python3-eccodes">eccodes for python</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/eccodes-python/">eccodes for python</a></p></li>
 <li><p><a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home">ecmwf-api-client</a> (everything except ERA5)</p></li>
 <li><p><a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">cdsapi</a> (just for ERA5 and member user)</p></li>
-</ol>
+</ul>
 </td>
-<td><ol class="arabic simple">
+<td><ul class="simple">
 <li><p><a class="reference external" href="https://gcc.gnu.org/wiki/GFortran">gfortran</a></p></li>
 <li><p><a class="reference external" href="http://www.fftw.org">fftw3</a></p></li>
 <li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/ECC">eccodes</a></p></li>
 <li><p><a class="reference external" href="https://software.ecmwf.int/wiki/display/EMOS/Emoslib">emoslib</a></p></li>
-</ol>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -393,41 +393,11 @@ import ecmwfapi</p>
 </div>
 <div class="section" id="local-installation">
 <span id="ref-install-local"></span><h2>Local installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
-<p>First, adapt the Fortran <code class="docutils literal notranslate"><span class="pre">makefile</span></code> for your environment (if necessary) and insert it into <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script (see <a class="reference internal" href="../Documentation/Input/fortran_makefile.html#ref-convert"><span class="std std-ref">Fortran Makefile</span></a> for more information).
-They can be found at <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran/</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted by the current flex_extract version number.</p>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
-<code class="docutils literal notranslate"><span class="pre">makefiles</span></code> if other than standard paths are used.</p>
-</div>
-<p>Thus, go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> of your
-choice, and check / modify with an editor of your choice:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/Source/Fortran
-nedit makefile_fast
-</pre></div>
-</div>
-<p>Set the paths to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine, if necessary.</p>
-<div class="admonition caution">
-<p class="admonition-title">Caution</p>
-<p>This can vary from system to system.
-It is suggested to use a command like</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the ECCODES_INCLUDE_DIR path do:</span>
-$ dpkg -L libeccodes-dev <span class="p">|</span> grep eccodes.mod
-<span class="c1"># for the ECCODES_LIB path do:</span>
-$ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
-</pre></div>
-</div>
-<p>to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
-</div>
-<p>Assign these paths to the parameters <strong>ECCODES_INCLUDE_DIR</strong>
-and <strong>ECCODES_LIB</strong> in the makefile, and save it.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on Debian Buster:</span>
-<span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
-<span class="nv">ECCODES_LIB</span><span class="o">=</span> -L/usr/lib -leccodes_f90 -leccodes -lm
-</pre></div>
-</div>
 <p>The Fortran program called <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> will be compiled during the
-installation process. Therefore, the name of the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> to be used needs to be given in  <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.</p>
+installation process. A suitable makefile (<code class="docutils literal notranslate"><span class="pre">makefile_local_gfortran</span></code>) for the compilation is set by default.
+This may be overwritten by the <code class="docutils literal notranslate"><span class="pre">MAKEFILE</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.</p>
+<p>However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
+For details on the makefile and how to adapt them, see <a class="reference internal" href="../Documentation/Input/fortran_makefile.html#ref-convert"><span class="std std-ref">Fortran Makefile</span></a>.</p>
 <p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script
 with an editor and adapt the installation parameters in the section labelled with
 “AVAILABLE COMMANDLINE ARGUMENTS TO SET” as shown below:</p>
@@ -440,7 +410,6 @@ with an editor and adapt the installation parameters in the section labelled wit
 <span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
 <span class="c1">#</span>
 <span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;local&#39;</span>
-<span class="nv">MAKEFILE</span><span class="o">=</span><span class="s1">&#39;makefile_fast&#39;</span>
 <span class="nv">ECUID</span><span class="o">=</span>None
 <span class="nv">ECGID</span><span class="o">=</span>None
 <span class="nv">GATEWAY</span><span class="o">=</span>None
@@ -462,7 +431,7 @@ with an editor and adapt the installation parameters in the section labelled wit
     flex_extract will be installed in here by compiling the Fortran <span class="nb">source</span> in &lt;path-to-flex_extract&gt;/flex_extract_v7.1/Source/Fortran
     Install flex_extract_v7.1 software at <span class="nb">local</span> in directory &lt;path-to-flex_extract&gt;/flex_extract_v7.1
 
-    Using makefile: makefile_fast
+    Using makefile: makefile_local_gfortran
     gfortran   -O3 -march<span class="o">=</span>native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./rwgrib2.f90
     gfortran   -O3 -march<span class="o">=</span>native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./phgrreal.f90
     gfortran   -O3 -march<span class="o">=</span>native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./grphreal.f90
@@ -486,7 +455,7 @@ with an editor and adapt the installation parameters in the section labelled wit
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../quick_start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../quick_start.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="gateway.html" class="btn btn-neutral float-left" title="Gateway mode installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -498,7 +467,7 @@ with an editor and adapt the installation parameters in the section labelled wit
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

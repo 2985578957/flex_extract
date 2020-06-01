@@ -1,16 +1,16 @@
-*************
-Documentation
-*************
+************************
+Code-Level Documentation
+************************
         
     Overview (under construction)
       
-    Control & input data 
+    Scripts, control & input data 
     
     Output data (under construction)
     
     Disaggregation of flux data (under construction)
     
-    Vertical coordinate (under construction)
+    Vertical wind (under construction)
       - methods (GAUSS, ETA, OMEGA)
       - calc_etadot 
     

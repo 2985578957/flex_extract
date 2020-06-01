@@ -134,21 +134,18 @@ git repo
 Dependencies
 ============
 
-The software required for running ``flex_extract`` depends on the :doc:`Documentation/Overview/app_modes` and therefore is described in the respective specific installation sections. 
+The software required to run ``flex_extract`` depends on the :doc:`Documentation/Overview/app_modes` and therefore is described in the respective specific installation sections. 
     
 Generally speaking, ``flex_extract`` requires `Python 3`_ and Fortran together with certain modules / libraries.
-We tested ``flex_extract`` with the python3 package from the the GNU/Linux distribution and Anaconda Python. The required python3 modules should prefarably be installed as distribution packages, or alternatively using Python's own package manager ``pip`` (this may mess up some aspects of your python installation, especially if you use ``pip`` as root. Think about using virtual environments.).
+We tested ``flex_extract`` with the Python3 package from the the GNU/Linux distribution and Anaconda Python. The required Python3 modules should prefarably be installed as distribution packages, or alternatively using Python's own package manager ``pip`` (this may mess up some aspects of your python installation, especially if you use ``pip`` as root. Think about using virtual environments.).
 
-Before installing the system packages check the availability with ``dpkg -s <package-name> |  grep Status`` or ``rpm -q <package_name>``, depending on your system. For example: 
+Before installing the system packages check the availability with (Debian-based system) ``dpkg -s <package-name> |  grep Status`` or (Redhat-based system)``rpm -q <package_name>``. For example: 
 
 .. code-block:: sh
 
    $ dpkg -s libeccodes-dev |  grep Status
    # or
    $ rpm -q libeccodes-dev
-
-
-
 
 
 
@@ -182,36 +179,12 @@ Select one of the following modes to install:
     Installation/gateway
     Installation/local
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
     
 
 ``Flex_extract`` in combination with ``FLEXPART``
 =================================================
 
 Some users might wish to incorporate ``flex_extract`` directly into the ``FLEXPART`` distribution. Then the installation path has to be changed by setting the parameter `installdir` in the ``setup.sh`` file to the ``script`` directory in the ``FLEXPART`` root directoy. 
-
-
-
-
-
-
-
 
 
 .. _ref-testinstallfe:
