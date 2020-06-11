@@ -128,7 +128,7 @@ def submit(jtemplate, c, queue):
         submission to ECMWF. It contains all necessary
         module and variable settings for the ECMWF environment as well as
         the job call and mail report instructions.
-        Default is "job.temp".
+        Default is _config.TEMPFILE_JOB.
 
     c : ControlFile
         Contains all the parameters of CONTROL file and
@@ -217,7 +217,7 @@ def mk_jobscript(jtemplate, job_file, clist):
         submission to ECMWF. It contains all necessary
         module and variable settings for the ECMWF environment as well as
         the job call and mail report instructions.
-        Default is "job.temp".
+        Default is _config.TEMPFILE_JOB.
 
     job_file : str
         Path to the job script file.

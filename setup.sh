@@ -11,7 +11,7 @@
 #    guarantee necessary parameters were set.
 #
 # @Licence:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #
 #    SPDX-License-Identifier: CC-BY-4.0
 #

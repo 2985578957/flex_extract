@@ -18,7 +18,8 @@ ECCODES_LIB =  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper
 EMOSLIB=-lemosR64
 LIB =  $(ECCODES_LIB) $(EMOSLIB)
 
-ECCODES_INCLUDE_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15
+ECCODES_INCLUDE_DIR=/usr/local/include/
+#/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15
 INC = -I. -I$(ECCODES_INCLUDE_DIR)
 
 FC = gfortran 
