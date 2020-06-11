@@ -48,8 +48,8 @@ case $$$${HOST} in
 esac
 
 cd $$$${SCRATCH}
-mkdir -p python$$$$$$$$
-cd python$$$$$$$$
+mkdir -p extract$$$$$$$$
+cd extract$$$$$$$$
 
 export CONTROL=CONTROL
 

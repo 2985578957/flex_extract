@@ -20,6 +20,9 @@
 #          additionally, as option without submitting the mars jobs
 #        - splitted submit function to use genshi templates for the
 #          job script and avoid code duplication
+#    June 2020 - Anne Philipp
+#        - changed finale job_file to filename from config file
+#          instead of generating from the template filename
 #
 # @License:
 #    (C) Copyright 2014-2020.
@@ -71,8 +74,6 @@ from Mods.tools import (setup_controldata, normal_exit,
                         submit_job_to_ecserver)
 from Mods.get_mars_data import get_mars_data
 from Mods.prepare_flexpart import prepare_flexpart
-#from Classes.ControlFile import ControlFile
-
 
 # ------------------------------------------------------------------------------
 # METHODS
@@ -150,7 +151,7 @@ def submit(jtemplate, c, queue):
             print('---- On-demand mode! ----')
 
         job_file = os.path.join(_config.PATH_JOBSCRIPTS,
-                                jtemplate[:-5] + '.ksh')
+                                _config.FILE_JOB_OD)
 
         # divide time periode into specified number of job chunks
         # to have multiple job scripts
@@ -188,7 +189,7 @@ def submit(jtemplate, c, queue):
         print('---- Operational mode! ----')
 
         job_file = os.path.join(_config.PATH_JOBSCRIPTS,
-                                jtemplate[:-5] + 'oper.ksh')
+                                _config.FILE_JOB_OP)
 
         c.start_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
         c.end_date = '${MSJ_YEAR}${MSJ_MONTH}${MSJ_DAY}'
@@ -213,7 +214,7 @@ def mk_jobscript(jtemplate, job_file, clist):
     Parameters
     ----------
     jtemplate : str
-        Job template file from sub-directory "_templates" for
+        Job template file from sub-directory "Templates" for
         submission to ECMWF. It contains all necessary
         module and variable settings for the ECMWF environment as well as
         the job call and mail report instructions.

@@ -6,6 +6,8 @@
 # @Date: August 2018
 #
 # @Change History:
+#      June 2020 - Anne Philipp
+#         - changed template filenames to .template
 #
 # @License:
 #    (C) Copyright 2014-2020.

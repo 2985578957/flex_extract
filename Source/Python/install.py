@@ -16,6 +16,11 @@
 #        - changed static path names to variables from config file
 #        - splitted install function into several smaller pieces
 #        - use of tarfile package in python
+#    June 2020 - Anne Philipp
+#        - renamed "convert" functions to "fortran" functions
+#        - reconfigured mk_tarball to select *.template files instead 
+#          of *.nl and *.temp
+#        - added check for makefile settings
 #
 # @License:
 #    (C) Copyright 2014-2020.
@@ -372,9 +377,7 @@ def mk_tarball(tarball_path, target):
     testfiles = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEST, '*').files]
     tempfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.temp').files]
-    nlfiles = [os.path.relpath(x, ecd)
-               for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.nl').files]
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.template').files]
     gribtable = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEMPLATES, '*grib*').files]
     ffiles = [os.path.relpath(x, ecd)
@@ -386,7 +389,7 @@ def mk_tarball(tarball_path, target):
     jobdir = [_config.PATH_REL_JOBSCRIPTS]
 
     # concatenate single lists to one for a better looping
-    filelist = pyfiles + pytestfiles + controlfiles + tempfiles + nlfiles + \
+    filelist = pyfiles + pytestfiles + controlfiles + tempfiles + \
                ffiles + gribtable + hfiles + makefiles + ecmwf_env_file + \
                runfile + jobdir + testfiles +\
                ['CODE_OF_CONDUCT.md', 'LICENSE.md', 'README.md']
