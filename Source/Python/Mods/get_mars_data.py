@@ -25,7 +25,7 @@
 #          write_reqheader, mk_server, mk_dates, remove_old, do_retrievment
 #
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
