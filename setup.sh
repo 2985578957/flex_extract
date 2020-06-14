@@ -46,6 +46,12 @@ script="Source/Python/install.py"
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""
 
+# CHECK IF ON ECMWF SERVER; 
+if [[ $HOST == *"ecgb"* ]] || [[ $HOST == *"cca"* ]] || [[ $HOST == *"ccb"* ]]; then
+# LOAD PYTHON3 MODULE
+  module load python3
+fi 
+
 # DEFAULT PARAMETERLIST
 if [ -n "$TARGET" ]; then
   parameterlist=" --target=$TARGET"
@@ -56,7 +62,7 @@ else
 fi
 
 # CHECK FOR MORE PARAMETER 
-if [ "$TARGET" == "ecgate" ] || [ "$TARGET" == "cca" ]; then
+if [ "$TARGET" == "ecgate" ] || [ "$TARGET" == "cca" ] || [ "$TARGET" == "ccb" ]; then
   # check if necessary Parameters are set
   if [ -z "$ECUID" ] || [ -z "$ECGID" ] || [ "$ECUID" == "<username>" ] || [ "$ECGID" == "<groupID>" ] ; then
     echo "ERROR: At least one of the following parameters are not properly set: ECUID or ECGID!"
