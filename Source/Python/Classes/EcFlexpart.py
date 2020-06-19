@@ -1721,10 +1721,17 @@ class EcFlexpart(object):
             os.chdir(pwd)
 # ============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
+            # for CERA-20C we need all 4 digits for the year sinc 1900 - 2010
             if c.purefc:
-                suffix = cdate[2:8] + '.' + ctime + '.' + cstep
+                if c.marsclass == 'EP':
+                    suffix = cdate[0:8] + '.' + ctime + '.' + cstep
+                else:
+                    suffix = cdate[2:8] + '.' + ctime + '.' + cstep
             else:
-                suffix = cdate_hour[2:10]
+                if c.marsclass == 'EP':
+                    suffix = cdate_hour[0:10]
+                else:
+                    suffix = cdate_hour[2:10]
 
             # if necessary, add ensemble member number to filename suffix
             if 'number' in index_keys:
