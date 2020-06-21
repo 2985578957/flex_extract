@@ -1415,7 +1415,7 @@ class EcFlexpart(object):
                               keynames=['perturbationNumber', 'date', 'time',
                                         'stepRange', 'values'],
                               keyvalues=[inumb, int(date.strftime('%Y%m%d')),
-                                         date.hour*100, 0, lsp_new_np[inumb, :, it]],
+                                         date.hour*100, 0, lsp_new_np[inumb, :, it]]
                              )
             fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[143],
@@ -1478,12 +1478,9 @@ class EcFlexpart(object):
         '''
 
         gribfile = GribUtil(os.path.join(inputdir, 'rr_grib_dummy.grb'))
-
-        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                                keyvalues=[142], filemode='wb')
-
-        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                                keyvalues=[143], filemode='ab')
+        
+        gribfile.copy_dummy_msg(ifile, keynames=['paramId','paramId'],
+                                keyvalues=[142,143], filemode='wb')        
 
         return
 
@@ -1754,7 +1751,10 @@ class EcFlexpart(object):
                                                 '/OG_OROLSM__SL.*.' +
                                                 c.ppid +
                                                 '*')[0])
-            fluxfile = 'flux' + cdate[0:2] + suffix
+            if c.marsclass == 'EP':
+                fluxfile = 'flux' + suffix
+            else:
+                fluxfile = 'flux' + cdate[0:2] + suffix
             if not c.cwc:
                 flist = ['fort.15', fluxfile, 'fort.16', orolsm]
             else:
