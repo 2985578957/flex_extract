@@ -31,7 +31,7 @@ else
 fi
 for ref in $inputs; do
 
-  echo 'Working on test case =' $ref
+  echo 'Working on test case =' $ref | tee -a ../log.run_regr
 
   # loop over debug and fast runs
   for exe in 'debug' 'fast'; do
@@ -61,8 +61,7 @@ for ref in $inputs; do
         # compare reference and current version
         # omega case also produces fort.25 - need to add this
         outref='../Outputs/Output_ref_'${ref}'_'${exe}'/'$outfile
-        test=$(cmp  $outfile $outref)
-        if $test; then
+        if cmp -s $outfile $outref >/dev/null; then
           echo '    '$outfile '    test passed' | tee -a ../log.run_regr
         else
           echo 'WARNING:' $outfile '     test failed' | tee -a ../log.run_regr

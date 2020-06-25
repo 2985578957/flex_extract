@@ -14,7 +14,7 @@
 
 EXE      =  calc_etadot_fast.out
 
-ECCODES_LIB =  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper
+ECCODES_LIB =  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm 
 EMOSLIB=-lemosR64
 LIB =  $(ECCODES_LIB) $(EMOSLIB)
 

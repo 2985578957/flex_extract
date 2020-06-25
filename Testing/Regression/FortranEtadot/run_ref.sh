@@ -18,6 +18,7 @@ rm -f log.run_ref failed
 
 # loop over all reference runs
 rm -f log.run_ref
+rm -f Work/*
 
 if [ "$1" = omithigh ]; then # for fast testing, not for production
                              # requires > 16 GB 
