@@ -16,6 +16,7 @@ path=../${path1}
 exedebug=calc_etadot_debug.out
 exefast=calc_etadot_fast.out
 hash=$(git log --abbrev-commit --pretty=oneline -n 1  --pretty=format:'%h')
+csvfile='runtimes_'${HOST}'.csv'
 exitonfail=true
 numtest=0
 numpassed=0
@@ -83,11 +84,11 @@ for ref in $inputs; do
     real=$(echo $times | grep real | awk '{print $2}')
     user=$(echo $times | grep user | awk '{print $4}')
     sys=$( echo $times | grep sys  | awk '{print $6}')
-    echo $hash, "'"reference"'", "'"${ref}'_'${exe}"'", ${real}, ${user}, ${sys} >> ../runtimes.csv
-    tail -1 ../runtimes.csv >> log.run_regr
+    echo $hash, "'"reference"'", "'"${ref}'_'${exe}"'", ${real}, ${user}, ${sys} >> ../${csvfile}
+    tail -1 ../${csvfile} >> log.run_regr
 
     cd ..
-    rm Work/* # this is for being more safe
+    rm -f Work/* # this is for being more safe
 
   done # end of exe loop
   
@@ -98,7 +99,7 @@ echo
 echo ' Regression test: ' $numpassed 'out of' $numtest 'tests passed'. \
   | tee -a ../log.run_regr
 echo ' More information may be found in log.run_regr' 
-echo ' Runtimes were added to runtimes.csv under '$hash | tee -a ../log.run_regr
+echo ' Runtimes were added to '${csvfile}' under '$hash | tee -a ../log.run_regr
 
 # the following code is executed only if exitonfail is not set to 'true'.
 if [ -e failed ]; then 

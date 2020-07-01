@@ -13,6 +13,7 @@ path=../${path1}
 exedebug=calc_etadot_debug.out
 exefast=calc_etadot_fast.out
 hash=$(git log --abbrev-commit --pretty=oneline -n 1  --pretty=format:'%h')
+csvfile='runtimes_'${HOST}'.csv'
 exitonfail=true
 rm -f log.run_ref failed
 
@@ -51,7 +52,7 @@ for ref in $inputs; do
       echo $ref $exe 'FAILED' >> ${testhome}/failed
       if [ "${exitonfail}" = true ]; then exit; fi
     fi
-    for outfile in 'fort.15' 'VERTICAL.EC'; do
+    for outfile in 'fort.15' ; do
       if [ -e $outfile ]; then
         mv ${outfile} ../${outdir}
       else
@@ -68,11 +69,11 @@ for ref in $inputs; do
   
   # compare debug and fast
   # omega case also produces fort.25 - need to add this
-  for outfile in 'fort.15' 'VERTICAL.EC'; do
+  for outfile in 'fort.15' ; do
     outdebug='Outputs/Output_ref_'${ref}'_debug/'$outfile
     outfast='Outputs/Output_ref_'${ref}'_fast/'$outfile
-    test=$(cmp  $outdebug $outfast)
-    if $test; then
+    test=$()
+    if cmp -s $outdebug $outfast >/dev/null; then
       echo $outfile '    equal for debug and fast' >> log.run_ref
     else
       echo 'WARNING:' $outfile '    not equal for debug and fast, test failed'
@@ -88,7 +89,7 @@ for ref in $inputs; do
     real=$(echo $times | grep real | awk '{print $2}')
     user=$(echo $times | grep user | awk '{print $4}')
     sys=$( echo $times | grep sys  | awk '{print $6}')
-    echo $hash, "'"reference"'", "'"${ref}'_'${exe}"'", ${real}, ${user}, ${sys} >> runtimes.csv
+    echo $hash, "'"reference"'", "'"${ref}'_'${exe}"'", ${real}, ${user}, ${sys} >> ${csvfile}
     tail -1 runtimes.csv >> log.run_ref
   done
   
