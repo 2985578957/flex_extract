@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
    
-   <meta name="description" content="Calculation of vertical velocity for FLEXPART">
+   <meta name="description" content="flex_extract calculates the vertical velocity for FLEXPART">
     
     <meta name="author" content="Leopold Haimberger<sup>1</sup>" >
     <link rel="icon" href="../favicon.png">
@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1</small></a>
+          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1.2</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -232,7 +232,8 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    
+    <p>Module for transformation of a field variable from the phase space
+ into the physical space onto the reduced Gaussian grid</p>
       <br>
     
   
@@ -542,16 +543,6 @@ public subroutine <a href='../proc/phgr213.html'>PHGR213</a>(CXMN, FELD, WSAVE, 
   <div class="panel-body">
        
     
-
-
-
-
-
-
-
-<p>DIE ROUTINE F]HRT EINE TRANSFORMATION EINER
- FELDVARIABLEN VOM PHASENRAUM IN  DEN PHYSIKALISCHEN
- RAUM AUF DAS REDUZIERTE GAUSS'SCHE GITTER DURCH</p>
     
     <h4>Arguments</h4>
     
@@ -961,10 +952,9 @@ public subroutine <a href='../proc/phgcut.html'>PHGCUT</a>(CXMN, FELD, WSAVE, IF
 
 
 
-<p>DIE ROUTINE FUEHRT EINE TRANSFORMATION EINER
- FELDVARIABLEN VOM PHASENRAUM IN  DEN PHYSIKALISCHEN
- RAUM AUF KUGELKOORDINATEN DURCH. Es kann ein Teilausschnitt
- Der Erde angegeben werden. Diese Routine ist langsamer als phgrph</p><a href="../proc/phgcut.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>Carries out the transformation of a field variable from the phase space
+ into the physical space on spherical coordinates. It is possible to 
+ specify a section of the Earth. This subroutine is slower thatn PHGRPH.</p>
     
     <h4>Arguments</h4>
     
@@ -1620,7 +1610,7 @@ public subroutine <a href='../proc/legtr.html'>LEGTR</a>(CXMN, CXM, Z, MNAUF, MA
 
 
 
-<p>DIESE ROUTINE BERECHNET DIE FOURIERKOEFFIZIENTEN CXM</p>
+<p>Calculate the Fourier coefficients CXM</p>
     
     <h4>Arguments</h4>
     
@@ -1739,7 +1729,7 @@ public subroutine <a href='../proc/rfourtr.html'>RFOURTR</a>(CXM, TRIGS, IFAX, M
 
 
 
-<a href="../proc/rfourtr.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+<p>Calculates the Fourier sum with an FFT algorithm</p>
     
     <h4>Arguments</h4>
     
@@ -1873,7 +1863,7 @@ public subroutine <a href='../proc/gauleg.html'>GAULEG</a>(X1, X2, X, W, N)
 
 
 
-<p>BERECHNET DIE GAUSS+SCHEN BREITEN</p>
+<p>Calculates the Gaussian latitudes</p>
     
     <h4>Arguments</h4>
     
@@ -1992,9 +1982,11 @@ public subroutine <a href='../proc/plgnfa.html'>PLGNFA</a>(LL, X, Z)
 
 
 
-<p>PLGNDN BERECHNET ALLE NORMIERTEN ASSOZIIERTEN
- LEGENDREFUNKTIONEN VON P00(X) BIS PLL(X)
- UND SCHREIBT SIE IN DAS FELD Z</p>
+<p>Calculates all normalised associated Legendre functions from 
+ P00(X) to PLL(X) and writes them into the field Z.
+ The polynomials have indices as with ECMWF, i.e.
+ P00,P10,P11,P20,P21,P22,...
+ Otherwise, this subroutine is analogous to PLGNDN</p>
     
     <h4>Arguments</h4>
     
@@ -2083,9 +2075,9 @@ public subroutine <a href='../proc/dplgnd.html'>DPLGND</a>(MNAUF, Z, DZ)
 
 
 
-<p>DPLGND BERECHNET DIE ABLEITUNG DER NORMIERTEN ASSOZIIERTEN
- LEGENDREFUNKTIONEN VON P00(X) BIS PLL(X)
- UND SCHREIBT SIE IN DAS FELD DZ</p>
+<p>Calculates the derivatives of the normalised associated Legendre function 
+ from P00(X) to PLL(X) and writes them into the field DZ.
+ Order is P00(X),P01(X),P11(X),P02(X),P12(X),P22(X),..PLL(X)</p>
     
     <h4>Arguments</h4>
     
@@ -2174,7 +2166,7 @@ public subroutine <a href='../proc/spfilter.html'>SPFILTER</a>(FELDMN, MM, MMAX)
 
 
 
-<p>Spectral Filter of Sardeshmukh and Hoskins (1984, MWR)</p>
+<p>Implements spectral filter of Sardeshmukh and Hoskins (MWR 1984)</p>
     
     <h4>Arguments</h4>
     
@@ -2259,8 +2251,8 @@ public subroutine <a href='../proc/spfilter.html'>SPFILTER</a>(FELDMN, MM, MMAX)
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-4"><p>&copy; 2019 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
-                                          <br /><small>dfa7dbd</small></p></div>
+        <div class="col-xs-6 col-md-4"><p>&copy; 2020 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+                                          </p></div>
         <div class="col-xs-6 col-md-4 col-md-push-4">
           <p class="text-right">
             Documentation generated by 

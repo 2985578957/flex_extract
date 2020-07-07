@@ -1,14 +1,17 @@
 MODULE PHTOGR
 
+!! Module for transformation of a field variable from the phase space
+!! into the physical space onto the reduced Gaussian grid
+
   INTEGER, PARAMETER :: MAXAUF=36000
 
 CONTAINS
 
   SUBROUTINE PHGR213(CXMN,FELD,WSAVE,IFAX,Z,MLAT,MNAUF,MAXL,MAXB,MLEVEL)
 
-!! DIE ROUTINE F]HRT EINE TRANSFORMATION EINER
-!! FELDVARIABLEN VOM PHASENRAUM IN  DEN PHYSIKALISCHEN
-!! RAUM AUF DAS REDUZIERTE GAUSS'SCHE GITTER DURCH
+! DIE ROUTINE F]HRT EINE TRANSFORMATION EINER
+! FELDVARIABLEN VOM PHASENRAUM IN  DEN PHYSIKALISCHEN
+! RAUM AUF DAS REDUZIERTE GAUSS'SCHE GITTER DURCH
 !
 ! CXMN   = SPEKTRALKOEFFIZIENTEN IN DER REIHENFOLGE
 !          CX00,CX01,CX11,CX02,....CXMNAUFMNAUF
@@ -120,10 +123,9 @@ CONTAINS
   SUBROUTINE PHGCUT(CXMN,FELD,WSAVE,IFAX,Z, &
     MNAUF,MMAX,MAUF,MANF,MAXL,MAXB,MLEVEL)
 
-!! DIE ROUTINE FUEHRT EINE TRANSFORMATION EINER
-!! FELDVARIABLEN VOM PHASENRAUM IN  DEN PHYSIKALISCHEN
-!! RAUM AUF KUGELKOORDINATEN DURCH. Es kann ein Teilausschnitt
-!! Der Erde angegeben werden. Diese Routine ist langsamer als phgrph
+!! Carries out the transformation of a field variable from the phase space
+!! into the physical space on spherical coordinates. It is possible to 
+!! specify a section of the Earth. This subroutine is slower thatn PHGRPH.
 
 ! CXMN   = SPEKTRALKOEFFIZIENTEN IN DER REIHENFOLGE
 !          CX00,CX01,CX11,CX02,....CXMNAUFMNAUF
@@ -169,7 +171,7 @@ CONTAINS
         IF (ABS(ABS(Z(100,J))-ABS(Z(100,MAXB+1-J))) .GT. 1E-11) SYM=.FALSE.
 !       WRITE(*,*) ABS(Z(100,J)),ABS(Z(100,MAXB+1-J))
 11    CONTINUE
-!!      WRITE(*,*) 'Symmetrisch: ',SYM
+! !      WRITE(*,*) 'Symmetrisch: ',SYM
     ELSE
       SYM=.FALSE.
     END IF
@@ -298,8 +300,7 @@ CONTAINS
 
   SUBROUTINE LEGTR(CXMN,CXM,Z,MNAUF,MAUF)
 
-!!   DIESE ROUTINE BERECHNET DIE FOURIERKOEFFIZIENTEN CXM
-
+!! Calculate the Fourier coefficients CXM
 
     IMPLICIT NONE
 
@@ -330,7 +331,7 @@ CONTAINS
 
   SUBROUTINE RFOURTR(CXM,TRIGS,IFAX,MNAUF,MAXL,ISIGN)
 
-!!     BERECHNET DIE FOURIERSUMME MIT EINEM FFT-ALGORITHMUS
+!!  Calculates the Fourier sum with an FFT algorithm
 
     IMPLICIT REAL (A-H,O-Z)
 
@@ -355,7 +356,7 @@ CONTAINS
 
   SUBROUTINE GAULEG(X1,X2,X,W,N)
 
-!! BERECHNET DIE GAUSS+SCHEN BREITEN
+!! Calculates the Gaussian latitudes
 
     IMPLICIT REAL (A-H,O-Z)
 
@@ -392,12 +393,12 @@ CONTAINS
 
   SUBROUTINE PLGNFA(LL,X,Z)
 
-!! PLGNDN BERECHNET ALLE NORMIERTEN ASSOZIIERTEN
-!! LEGENDREFUNKTIONEN VON P00(X) BIS PLL(X)
-!! UND SCHREIBT SIE IN DAS FELD Z
-! Die Polynome sind wie im ECMWF indiziert, d.h.
-! P00,P10,P11,P20,P21,P22,...
-! Ansonsten ist die Routine analog zu PLGNDN
+!! Calculates all normalised associated Legendre functions from 
+!! P00(X) to PLL(X) and writes them into the field Z.
+!! The polynomials have indices as with ECMWF, i.e.
+!! P00,P10,P11,P20,P21,P22,...
+!! Otherwise, this subroutine is analogous to PLGNDN
+
 ! X IST DER COSINUS DES ZENITWINKELS ODER
 !       DER SINUS DER GEOGRAFISCHEN BREITE
 
@@ -439,11 +440,9 @@ CONTAINS
 
   SUBROUTINE DPLGND(MNAUF,Z,DZ)
 
-!! DPLGND BERECHNET DIE ABLEITUNG DER NORMIERTEN ASSOZIIERTEN
-!! LEGENDREFUNKTIONEN VON P00(X) BIS PLL(X)
-!! UND SCHREIBT SIE IN DAS FELD DZ
-! DIE REIHENFOLGE IST
-! P00(X),P01(X),P11(X),P02(X),P12(X),P22(X),..PLL(X)
+!! Calculates the derivatives of the normalised associated Legendre function 
+!! from P00(X) to PLL(X) and writes them into the field DZ.
+!! Order is P00(X),P01(X),P11(X),P02(X),P12(X),P22(X),..PLL(X)
 
     IMPLICIT REAL (A-H,O-Z)
 
@@ -480,7 +479,8 @@ CONTAINS
 
   SUBROUTINE SPFILTER(FELDMN,MM,MMAX)
 
-!! Spectral Filter of Sardeshmukh and Hoskins (1984, MWR)
+!! Implements spectral filter of Sardeshmukh and Hoskins (MWR 1984)
+
 ! MM=Spectral truncation of field
 ! MMAX= Spectral truncation of filter
 

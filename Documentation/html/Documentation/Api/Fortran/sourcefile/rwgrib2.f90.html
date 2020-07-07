@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
    
-   <meta name="description" content="Calculation of vertical velocity for FLEXPART">
+   <meta name="description" content="flex_extract calculates the vertical velocity for FLEXPART">
     
     <meta name="author" content="Leopold Haimberger<sup>1</sup>" >
     <link rel="icon" href="../favicon.png">
@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1</small></a>
+          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1.2</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -126,7 +126,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title="11.5% of total for source files.">162 statements</a>
+    title="11.6% of total for source files.">162 statements</a>
      </li> 
      
      
@@ -334,269 +334,272 @@
       <h2><span class="anchor" id="src"></span>Source Code</h2>
     <div class="hl"><pre><span></span><a name="ln-1"></a> <span class="k">MODULE </span><span class="n">RWGRIB2</span>
 <a name="ln-2"></a>
-<a name="ln-3"></a> <span class="k">CONTAINS</span>
-<a name="ln-4"></a>
-<a name="ln-5"></a><span class="k"> SUBROUTINE </span><span class="n">READLATLON</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span><span class="n">FELD</span><span class="p">,</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MPAR</span><span class="p">)</span>
-<a name="ln-6"></a>
-<a name="ln-7"></a><span class="c">!! Read a field from GRIB file on lat-lon grid</span>
-<a name="ln-8"></a>
-<a name="ln-9"></a> <span class="k">USE </span><span class="n">GRIB_API</span>
-<a name="ln-10"></a>
-<a name="ln-11"></a> <span class="k">IMPLICIT NONE</span>
-<a name="ln-12"></a>
-<a name="ln-13"></a><span class="k">   </span><span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">ifile</span>
-<a name="ln-14"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">iret</span>
-<a name="ln-15"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">n</span><span class="p">,</span><span class="n">mk</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">nm</span>
-<a name="ln-16"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">i</span><span class="p">,</span><span class="n">k</span>
-<a name="ln-17"></a>   <span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span>   <span class="kd">::</span>  <span class="n">igrib</span>
-<a name="ln-18"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfPointsAlongAParallel</span>
-<a name="ln-19"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfPointsAlongAMeridian</span>
-<a name="ln-20"></a>   <span class="kt">real</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span>    <span class="kd">::</span>  <span class="n">values</span>
-<a name="ln-21"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfValues</span>
-<a name="ln-22"></a>   <span class="kt">real</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">)</span>   <span class="kd">::</span>  <span class="n">feld</span>  
-<a name="ln-23"></a>   <span class="kt">integer</span><span class="kd">::</span> <span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">,</span><span class="n">mstride</span><span class="p">,</span><span class="n">mpar</span><span class="p">(:),</span><span class="n">irest</span><span class="p">,</span><span class="n">div</span><span class="p">,</span><span class="n">level</span>
-<a name="ln-24"></a>   <span class="kt">integer</span> <span class="kd">::</span> <span class="n">l</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">))</span>
-<a name="ln-25"></a>   <span class="kt">character</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="kd">::</span> <span class="n">filename</span>   
-<a name="ln-26"></a>   
-<a name="ln-27"></a>   <span class="n">feld</span><span class="o">=</span><span class="mf">0.</span>                          
-<a name="ln-28"></a>
-<a name="ln-29"></a>   <span class="k">call </span><span class="n">grib_open_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="nb">TRIM</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<a name="ln-30"></a> 
-<a name="ln-31"></a>   <span class="c">! count the messages in the file</span>
-<a name="ln-32"></a>   <span class="k">call </span><span class="n">grib_count_in_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
-<a name="ln-33"></a>   <span class="k">allocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<a name="ln-34"></a>   <span class="n">igrib</span><span class="o">=-</span><span class="mi">1</span>
-<a name="ln-35"></a> 
-<a name="ln-36"></a>   <span class="c">! Load the messages from the file.</span>
-<a name="ln-37"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-38"></a>      <span class="k">call </span><span class="n">grib_new_from_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">iret</span><span class="p">)</span>
-<a name="ln-39"></a>   <span class="k">END DO</span>
-<a name="ln-40"></a> 
-<a name="ln-41"></a>   <span class="c">! we can close the file</span>
-<a name="ln-42"></a>   <span class="k">call </span><span class="n">grib_close_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">)</span>
+<a name="ln-3"></a><span class="c">!! Read or write a field variable on a lat/lon grid from/to GRIB file, or </span>
+<a name="ln-4"></a><span class="c">!! read a field in spectral representation from GRIB file</span>
+<a name="ln-5"></a>
+<a name="ln-6"></a> <span class="k">CONTAINS</span>
+<a name="ln-7"></a>
+<a name="ln-8"></a><span class="k"> SUBROUTINE </span><span class="n">READLATLON</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span><span class="n">FELD</span><span class="p">,</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MPAR</span><span class="p">)</span>
+<a name="ln-9"></a>
+<a name="ln-10"></a><span class="c">!! Read a field from GRIB file on lat-lon grid</span>
+<a name="ln-11"></a>
+<a name="ln-12"></a> <span class="k">USE </span><span class="n">GRIB_API</span>
+<a name="ln-13"></a>
+<a name="ln-14"></a> <span class="k">IMPLICIT NONE</span>
+<a name="ln-15"></a>
+<a name="ln-16"></a><span class="k">   </span><span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">ifile</span>
+<a name="ln-17"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">iret</span>
+<a name="ln-18"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">n</span><span class="p">,</span><span class="n">mk</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">nm</span>
+<a name="ln-19"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">i</span><span class="p">,</span><span class="n">k</span>
+<a name="ln-20"></a>   <span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span>   <span class="kd">::</span>  <span class="n">igrib</span>
+<a name="ln-21"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfPointsAlongAParallel</span>
+<a name="ln-22"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfPointsAlongAMeridian</span>
+<a name="ln-23"></a>   <span class="kt">real</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span>    <span class="kd">::</span>  <span class="n">values</span>
+<a name="ln-24"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfValues</span>
+<a name="ln-25"></a>   <span class="kt">real</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">)</span>   <span class="kd">::</span>  <span class="n">feld</span>  
+<a name="ln-26"></a>   <span class="kt">integer</span><span class="kd">::</span> <span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">,</span><span class="n">mstride</span><span class="p">,</span><span class="n">mpar</span><span class="p">(:),</span><span class="n">irest</span><span class="p">,</span><span class="n">div</span><span class="p">,</span><span class="n">level</span>
+<a name="ln-27"></a>   <span class="kt">integer</span> <span class="kd">::</span> <span class="n">l</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">))</span>
+<a name="ln-28"></a>   <span class="kt">character</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="kd">::</span> <span class="n">filename</span>   
+<a name="ln-29"></a>   
+<a name="ln-30"></a>   <span class="n">feld</span><span class="o">=</span><span class="mf">0.</span>                          
+<a name="ln-31"></a>
+<a name="ln-32"></a>   <span class="k">call </span><span class="n">grib_open_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="nb">TRIM</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<a name="ln-33"></a> 
+<a name="ln-34"></a>   <span class="c">! count the messages in the file</span>
+<a name="ln-35"></a>   <span class="k">call </span><span class="n">grib_count_in_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<a name="ln-36"></a>   <span class="k">allocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<a name="ln-37"></a>   <span class="n">igrib</span><span class="o">=-</span><span class="mi">1</span>
+<a name="ln-38"></a> 
+<a name="ln-39"></a>   <span class="c">! Load the messages from the file.</span>
+<a name="ln-40"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-41"></a>      <span class="k">call </span><span class="n">grib_new_from_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">iret</span><span class="p">)</span>
+<a name="ln-42"></a>   <span class="k">END DO</span>
 <a name="ln-43"></a> 
-<a name="ln-44"></a>      <span class="n">nm</span><span class="o">=</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">)</span>
-<a name="ln-45"></a>      <span class="n">div</span><span class="o">=</span><span class="n">mlevel</span><span class="o">/</span><span class="n">nm</span>
-<a name="ln-46"></a>      <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
-<a name="ln-47"></a>      
-<a name="ln-48"></a>   <span class="c">! Loop on all the messages in memory</span>
-<a name="ln-49"></a>  <span class="n">iloop</span><span class="p">:</span>  <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-50"></a><span class="c">!      write(*,*) &#39;processing message number &#39;,i</span>
-<a name="ln-51"></a>      <span class="c">!     get as a integer</span>
-<a name="ln-52"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfPointsAlongAParallel&#39;</span><span class="p">,</span> <span class="p">&amp;</span>
-<a name="ln-53"></a>           <span class="n">numberOfPointsAlongAParallel</span><span class="p">)</span>
-<a name="ln-54"></a> 
-<a name="ln-55"></a>      <span class="c">!     get as a integer</span>
-<a name="ln-56"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfPointsAlongAMeridian&#39;</span><span class="p">,</span> <span class="p">&amp;</span>
-<a name="ln-57"></a>           <span class="n">numberOfPointsAlongAMeridian</span><span class="p">)</span>
-<a name="ln-58"></a>
-<a name="ln-59"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfVerticalCoordinateValues&#39;</span><span class="p">,</span><span class="n">mk</span><span class="p">)</span>
-<a name="ln-60"></a>
-<a name="ln-61"></a>      <span class="k">call </span><span class="n">grib_get_size</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">numberOfValues</span><span class="p">)</span>
-<a name="ln-62"></a><span class="c">!      write(*,*) &#39;numberOfValues=&#39;,numberOfValues</span>
-<a name="ln-63"></a> 
-<a name="ln-64"></a>      <span class="k">allocate</span><span class="p">(</span><span class="n">values</span><span class="p">(</span><span class="n">numberOfValues</span><span class="p">),</span> <span class="nb">stat</span><span class="o">=</span><span class="n">iret</span><span class="p">)</span>
-<a name="ln-65"></a>      <span class="c">!     get data values</span>
-<a name="ln-66"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">values</span><span class="p">)</span>
-<a name="ln-67"></a>
-<a name="ln-68"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;paramId&#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">)</span>
-<a name="ln-69"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;level&#39;</span><span class="p">,</span><span class="n">level</span><span class="p">)</span>
+<a name="ln-44"></a>   <span class="c">! we can close the file</span>
+<a name="ln-45"></a>   <span class="k">call </span><span class="n">grib_close_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">)</span>
+<a name="ln-46"></a> 
+<a name="ln-47"></a>      <span class="n">nm</span><span class="o">=</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">)</span>
+<a name="ln-48"></a>      <span class="n">div</span><span class="o">=</span><span class="n">mlevel</span><span class="o">/</span><span class="n">nm</span>
+<a name="ln-49"></a>      <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
+<a name="ln-50"></a>      
+<a name="ln-51"></a>   <span class="c">! Loop on all the messages in memory</span>
+<a name="ln-52"></a>  <span class="n">iloop</span><span class="p">:</span>  <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-53"></a><span class="c">!      write(*,*) &#39;processing message number &#39;,i</span>
+<a name="ln-54"></a>      <span class="c">!     get as a integer</span>
+<a name="ln-55"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfPointsAlongAParallel&#39;</span><span class="p">,</span> <span class="p">&amp;</span>
+<a name="ln-56"></a>           <span class="n">numberOfPointsAlongAParallel</span><span class="p">)</span>
+<a name="ln-57"></a> 
+<a name="ln-58"></a>      <span class="c">!     get as a integer</span>
+<a name="ln-59"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfPointsAlongAMeridian&#39;</span><span class="p">,</span> <span class="p">&amp;</span>
+<a name="ln-60"></a>           <span class="n">numberOfPointsAlongAMeridian</span><span class="p">)</span>
+<a name="ln-61"></a>
+<a name="ln-62"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfVerticalCoordinateValues&#39;</span><span class="p">,</span><span class="n">mk</span><span class="p">)</span>
+<a name="ln-63"></a>
+<a name="ln-64"></a>      <span class="k">call </span><span class="n">grib_get_size</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">numberOfValues</span><span class="p">)</span>
+<a name="ln-65"></a><span class="c">!      write(*,*) &#39;numberOfValues=&#39;,numberOfValues</span>
+<a name="ln-66"></a> 
+<a name="ln-67"></a>      <span class="k">allocate</span><span class="p">(</span><span class="n">values</span><span class="p">(</span><span class="n">numberOfValues</span><span class="p">),</span> <span class="nb">stat</span><span class="o">=</span><span class="n">iret</span><span class="p">)</span>
+<a name="ln-68"></a>      <span class="c">!     get data values</span>
+<a name="ln-69"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">values</span><span class="p">)</span>
 <a name="ln-70"></a>
-<a name="ln-71"></a> <span class="n">kloop</span><span class="p">:</span>  <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nm</span>
-<a name="ln-72"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">parid</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">then</span>
-<a name="ln-73"></a><span class="c">!         l(k)=l(k)+1</span>
-<a name="ln-74"></a>         <span class="n">feld</span><span class="p">(:,:,(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">div</span><span class="o">+</span><span class="n">level</span><span class="p">)</span><span class="o">=</span><span class="nb">reshape</span><span class="p">(</span><span class="n">values</span><span class="p">,(</span><span class="o">/</span><span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
-<a name="ln-75"></a><span class="c">!         print*,(k-1)*div+l(k),parid</span>
-<a name="ln-76"></a>         <span class="k">exit </span><span class="n">kloop</span>
-<a name="ln-77"></a>        <span class="k">end if</span>
-<a name="ln-78"></a><span class="k">      end do </span><span class="n">kloop</span>
-<a name="ln-79"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="n">nm</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">parid</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">))</span> <span class="k">then</span>
-<a name="ln-80"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="n">k</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
-<a name="ln-81"></a>        <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s1">&#39;ERROR readlatlon: parameter &#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="s1">&#39;is not&#39;</span><span class="p">,</span><span class="n">mpar</span>
-<a name="ln-82"></a>        <span class="k">stop</span>
-<a name="ln-83"></a><span class="k">      end if</span>
-<a name="ln-84"></a>
-<a name="ln-85"></a><span class="c">!      print*,i</span>
-<a name="ln-86"></a>   <span class="k">END DO </span><span class="n">iloop</span>
-<a name="ln-87"></a><span class="c">!!   write(*,*) &#39;readlatlon: &#39;,i-1,&#39; records read&#39;</span>
-<a name="ln-88"></a> 
-<a name="ln-89"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-90"></a>     <span class="k">call </span><span class="n">grib_release</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<a name="ln-91"></a>   <span class="k">END DO</span>
-<a name="ln-92"></a><span class="k"> </span>
-<a name="ln-93"></a><span class="k">   if</span> <span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="k">deallocate</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-<a name="ln-94"></a>   <span class="k">deallocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">)</span>
-<a name="ln-95"></a>
-<a name="ln-96"></a>   <span class="k">END SUBROUTINE </span><span class="n">READLATLON</span>
-<a name="ln-97"></a>
-<a name="ln-98"></a>   <span class="k">SUBROUTINE </span><span class="n">WRITELATLON</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">igrib</span><span class="p">,</span><span class="n">ogrib</span><span class="p">,</span><span class="n">FELD</span><span class="p">,</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,&amp;</span>
-<a name="ln-99"></a>   <span class="n">MLEVELIST</span><span class="p">,</span><span class="n">MSTRIDE</span><span class="p">,</span><span class="n">MPAR</span><span class="p">)</span>
+<a name="ln-71"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;paramId&#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">)</span>
+<a name="ln-72"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;level&#39;</span><span class="p">,</span><span class="n">level</span><span class="p">)</span>
+<a name="ln-73"></a>
+<a name="ln-74"></a> <span class="n">kloop</span><span class="p">:</span>  <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nm</span>
+<a name="ln-75"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">parid</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">then</span>
+<a name="ln-76"></a><span class="c">!         l(k)=l(k)+1</span>
+<a name="ln-77"></a>         <span class="n">feld</span><span class="p">(:,:,(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">div</span><span class="o">+</span><span class="n">level</span><span class="p">)</span><span class="o">=</span><span class="nb">reshape</span><span class="p">(</span><span class="n">values</span><span class="p">,(</span><span class="o">/</span><span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
+<a name="ln-78"></a><span class="c">!         print*,(k-1)*div+l(k),parid</span>
+<a name="ln-79"></a>         <span class="k">exit </span><span class="n">kloop</span>
+<a name="ln-80"></a>        <span class="k">end if</span>
+<a name="ln-81"></a><span class="k">      end do </span><span class="n">kloop</span>
+<a name="ln-82"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="n">nm</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">parid</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">))</span> <span class="k">then</span>
+<a name="ln-83"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="n">k</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
+<a name="ln-84"></a>        <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s1">&#39;ERROR readlatlon: parameter &#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="s1">&#39;is not&#39;</span><span class="p">,</span><span class="n">mpar</span>
+<a name="ln-85"></a>        <span class="k">stop</span>
+<a name="ln-86"></a><span class="k">      end if</span>
+<a name="ln-87"></a>
+<a name="ln-88"></a><span class="c">!      print*,i</span>
+<a name="ln-89"></a>   <span class="k">END DO </span><span class="n">iloop</span>
+<a name="ln-90"></a><span class="c">! !   write(*,*) &#39;readlatlon: &#39;,i-1,&#39; records read&#39;</span>
+<a name="ln-91"></a> 
+<a name="ln-92"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-93"></a>     <span class="k">call </span><span class="n">grib_release</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<a name="ln-94"></a>   <span class="k">END DO</span>
+<a name="ln-95"></a><span class="k"> </span>
+<a name="ln-96"></a><span class="k">   if</span> <span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="k">deallocate</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a name="ln-97"></a>   <span class="k">deallocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">)</span>
+<a name="ln-98"></a>
+<a name="ln-99"></a>   <span class="k">END SUBROUTINE </span><span class="n">READLATLON</span>
 <a name="ln-100"></a>
-<a name="ln-101"></a><span class="c">!! write a field on lat-lon grid to GRIB file</span>
-<a name="ln-102"></a>
-<a name="ln-103"></a>   <span class="k">USE </span><span class="n">GRIB_API</span>
-<a name="ln-104"></a>
-<a name="ln-105"></a>   <span class="k">IMPLICIT NONE</span>
-<a name="ln-106"></a>
-<a name="ln-107"></a><span class="k">   </span><span class="kt">INTEGER </span><span class="n">IFIELD</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MNAUF</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">MSTRIDE</span><span class="p">,</span><span class="n">IERR</span><span class="p">,</span><span class="n">JOUT</span>
-<a name="ln-108"></a>   <span class="kt">INTEGER </span><span class="n">MPAR</span><span class="p">(</span><span class="n">MSTRIDE</span><span class="p">),</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">LEVMIN</span><span class="p">,</span><span class="n">LEVMAX</span>
-<a name="ln-109"></a>   <span class="kt">INTEGER </span><span class="n">IUNIT</span><span class="p">,</span><span class="n">igrib</span><span class="p">,</span><span class="n">ogrib</span>
-<a name="ln-110"></a>   <span class="kt">REAL </span><span class="n">ZSEC4</span><span class="p">(</span><span class="n">MAXL</span><span class="o">*</span><span class="n">MAXB</span><span class="p">)</span>
-<a name="ln-111"></a>   <span class="kt">REAL    </span><span class="n">FELD</span><span class="p">(</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">)</span>
-<a name="ln-112"></a>   <span class="kt">CHARACTER</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">MLEVELIST</span>
-<a name="ln-113"></a>   <span class="kt">INTEGER </span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">MLEVEL</span><span class="p">),</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">MLEVEL</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">LLEN</span>
-<a name="ln-114"></a>
-<a name="ln-115"></a> <span class="c">! parse MLEVELIST</span>
-<a name="ln-116"></a>
-<a name="ln-117"></a>   <span class="n">LLEN</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">))</span>
-<a name="ln-118"></a>   <span class="k">if</span> <span class="p">(</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;to&#39;</span><span class="p">)</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span> <span class="p">.</span><span class="nb">or</span><span class="p">.</span> <span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;TO&#39;</span><span class="p">)</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span><span class="p">)</span> <span class="k">THEN</span>
-<a name="ln-119"></a><span class="k">     </span><span class="n">i</span><span class="o">=</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-<a name="ln-120"></a>     <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">LEVMIN</span>
-<a name="ln-121"></a>     <span class="n">i</span><span class="o">=</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">,.</span><span class="n">true</span><span class="p">.)</span>
-<a name="ln-122"></a>     <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">LLEN</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">LEVMAX</span>
-<a name="ln-123"></a>     <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
-<a name="ln-124"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">LEVMIN</span><span class="p">,</span><span class="n">LEVMAX</span>
-<a name="ln-125"></a>       <span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span>
-<a name="ln-126"></a>       <span class="n">ILEVEL</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">=</span><span class="n">i</span>
-<a name="ln-127"></a>     <span class="k">end do</span>
-<a name="ln-128"></a><span class="k">   else</span>
-<a name="ln-129"></a><span class="k">     </span><span class="n">l</span><span class="o">=</span><span class="mi">1</span>
-<a name="ln-130"></a>     <span class="n">MLINDEX</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span>
-<a name="ln-131"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">LLEN</span>
-<a name="ln-132"></a>       <span class="k">if</span> <span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="p">)</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">THEN</span>
-<a name="ln-133"></a><span class="k">         </span><span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span>
-<a name="ln-134"></a>         <span class="n">MLINDEX</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">=</span><span class="n">i</span>
-<a name="ln-135"></a>       <span class="k">end if</span>
-<a name="ln-136"></a><span class="k">     end do</span>
-<a name="ln-137"></a><span class="k">     </span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">LLEN</span><span class="o">+</span><span class="mi">1</span>
-<a name="ln-138"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span>
-<a name="ln-139"></a>       <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">ILEVEL</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<a name="ln-140"></a>     <span class="k">end do</span>
-<a name="ln-141"></a><span class="k">   end if </span>
-<a name="ln-142"></a>
-<a name="ln-143"></a><span class="k">   DO </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span>
-<a name="ln-144"></a>     <span class="k">call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;level&quot;</span><span class="p">,</span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
-<a name="ln-145"></a>     <span class="k">DO </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">MSTRIDE</span>
-<a name="ln-146"></a>       <span class="k">call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;paramId&quot;</span><span class="p">,</span><span class="n">MPAR</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
-<a name="ln-147"></a><span class="c">!         if (MPAR(j) .eq. 87) then</span>
-<a name="ln-148"></a><span class="c">!           call grib_set(igrib,&quot;shortName&quot;,&quot;etadot&quot;)</span>
-<a name="ln-149"></a><span class="c">!           call grib_set(igrib,&quot;units&quot;,&quot;Pa,s**-1&quot;)</span>
-<a name="ln-150"></a><span class="c">!         end if</span>
-<a name="ln-151"></a><span class="c">!         if (MPAR(j) .eq. 77) then</span>
-<a name="ln-152"></a><span class="c">!           call grib_set(igrib,&quot;shortName&quot;,&quot;etadot&quot;)</span>
-<a name="ln-153"></a><span class="c">!           call grib_set(igrib,&quot;units&quot;,&quot;s**-1&quot;)</span>
-<a name="ln-154"></a><span class="c">!         end if</span>
-<a name="ln-155"></a>       <span class="k">if</span> <span class="p">(</span><span class="n">l</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mlevel</span><span class="p">)</span> <span class="k">then</span>
-<a name="ln-156"></a><span class="k">         </span><span class="n">zsec4</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="p">)</span><span class="o">=</span><span class="nb">RESHAPE</span><span class="p">(</span><span class="n">FELD</span><span class="p">(:,:,</span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">k</span><span class="p">)),(</span><span class="o">/</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
-<a name="ln-157"></a>       <span class="k">else</span>
-<a name="ln-158"></a><span class="k">         </span><span class="n">zsec4</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="p">)</span><span class="o">=</span><span class="nb">RESHAPE</span><span class="p">(</span><span class="n">FELD</span><span class="p">(:,:,</span><span class="n">k</span><span class="p">),(</span><span class="o">/</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
-<a name="ln-159"></a>       <span class="k">end if</span>
-<a name="ln-160"></a><span class="k">       call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;values&quot;</span><span class="p">,</span><span class="n">zsec4</span><span class="p">)</span>
-<a name="ln-161"></a>
-<a name="ln-162"></a>       <span class="k">call </span><span class="n">grib_write</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="n">iunit</span><span class="p">)</span>
-<a name="ln-163"></a>
-<a name="ln-164"></a>     <span class="k">END DO</span>
-<a name="ln-165"></a><span class="k">   END DO</span>
+<a name="ln-101"></a>   <span class="k">SUBROUTINE </span><span class="n">WRITELATLON</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">igrib</span><span class="p">,</span><span class="n">ogrib</span><span class="p">,</span><span class="n">FELD</span><span class="p">,</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,&amp;</span>
+<a name="ln-102"></a>   <span class="n">MLEVELIST</span><span class="p">,</span><span class="n">MSTRIDE</span><span class="p">,</span><span class="n">MPAR</span><span class="p">)</span>
+<a name="ln-103"></a>
+<a name="ln-104"></a><span class="c">!! write a field on lat-lon grid to GRIB file</span>
+<a name="ln-105"></a>
+<a name="ln-106"></a>   <span class="k">USE </span><span class="n">GRIB_API</span>
+<a name="ln-107"></a>
+<a name="ln-108"></a>   <span class="k">IMPLICIT NONE</span>
+<a name="ln-109"></a>
+<a name="ln-110"></a><span class="k">   </span><span class="kt">INTEGER </span><span class="n">IFIELD</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MNAUF</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">MSTRIDE</span><span class="p">,</span><span class="n">IERR</span><span class="p">,</span><span class="n">JOUT</span>
+<a name="ln-111"></a>   <span class="kt">INTEGER </span><span class="n">MPAR</span><span class="p">(</span><span class="n">MSTRIDE</span><span class="p">),</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">LEVMIN</span><span class="p">,</span><span class="n">LEVMAX</span>
+<a name="ln-112"></a>   <span class="kt">INTEGER </span><span class="n">IUNIT</span><span class="p">,</span><span class="n">igrib</span><span class="p">,</span><span class="n">ogrib</span>
+<a name="ln-113"></a>   <span class="kt">REAL </span><span class="n">ZSEC4</span><span class="p">(</span><span class="n">MAXL</span><span class="o">*</span><span class="n">MAXB</span><span class="p">)</span>
+<a name="ln-114"></a>   <span class="kt">REAL    </span><span class="n">FELD</span><span class="p">(</span><span class="n">MAXL</span><span class="p">,</span><span class="n">MAXB</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">)</span>
+<a name="ln-115"></a>   <span class="kt">CHARACTER</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="n">MLEVELIST</span>
+<a name="ln-116"></a>   <span class="kt">INTEGER </span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">MLEVEL</span><span class="p">),</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">MLEVEL</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">LLEN</span>
+<a name="ln-117"></a>
+<a name="ln-118"></a> <span class="c">! parse MLEVELIST</span>
+<a name="ln-119"></a>
+<a name="ln-120"></a>   <span class="n">LLEN</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">))</span>
+<a name="ln-121"></a>   <span class="k">if</span> <span class="p">(</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;to&#39;</span><span class="p">)</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span> <span class="p">.</span><span class="nb">or</span><span class="p">.</span> <span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;TO&#39;</span><span class="p">)</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="mi">0</span><span class="p">)</span> <span class="k">THEN</span>
+<a name="ln-122"></a><span class="k">     </span><span class="n">i</span><span class="o">=</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<a name="ln-123"></a>     <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">LEVMIN</span>
+<a name="ln-124"></a>     <span class="n">i</span><span class="o">=</span><span class="nb">index</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">,</span><span class="s1">&#39;/&#39;</span><span class="p">,.</span><span class="n">true</span><span class="p">.)</span>
+<a name="ln-125"></a>     <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">LLEN</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">LEVMAX</span>
+<a name="ln-126"></a>     <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
+<a name="ln-127"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">LEVMIN</span><span class="p">,</span><span class="n">LEVMAX</span>
+<a name="ln-128"></a>       <span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span>
+<a name="ln-129"></a>       <span class="n">ILEVEL</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">=</span><span class="n">i</span>
+<a name="ln-130"></a>     <span class="k">end do</span>
+<a name="ln-131"></a><span class="k">   else</span>
+<a name="ln-132"></a><span class="k">     </span><span class="n">l</span><span class="o">=</span><span class="mi">1</span>
+<a name="ln-133"></a>     <span class="n">MLINDEX</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mi">0</span>
+<a name="ln-134"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">LLEN</span>
+<a name="ln-135"></a>       <span class="k">if</span> <span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="p">)</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="k">THEN</span>
+<a name="ln-136"></a><span class="k">         </span><span class="n">l</span><span class="o">=</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span>
+<a name="ln-137"></a>         <span class="n">MLINDEX</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">=</span><span class="n">i</span>
+<a name="ln-138"></a>       <span class="k">end if</span>
+<a name="ln-139"></a><span class="k">     end do</span>
+<a name="ln-140"></a><span class="k">     </span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="n">LLEN</span><span class="o">+</span><span class="mi">1</span>
+<a name="ln-141"></a>     <span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span>
+<a name="ln-142"></a>       <span class="k">read</span><span class="p">(</span><span class="n">MLEVELIST</span><span class="p">(</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">MLINDEX</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="o">*</span><span class="p">)</span> <span class="n">ILEVEL</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<a name="ln-143"></a>     <span class="k">end do</span>
+<a name="ln-144"></a><span class="k">   end if </span>
+<a name="ln-145"></a>
+<a name="ln-146"></a><span class="k">   DO </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">l</span>
+<a name="ln-147"></a>     <span class="k">call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;level&quot;</span><span class="p">,</span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+<a name="ln-148"></a>     <span class="k">DO </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">MSTRIDE</span>
+<a name="ln-149"></a>       <span class="k">call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;paramId&quot;</span><span class="p">,</span><span class="n">MPAR</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+<a name="ln-150"></a><span class="c">!         if (MPAR(j) .eq. 87) then</span>
+<a name="ln-151"></a><span class="c">!           call grib_set(igrib,&quot;shortName&quot;,&quot;etadot&quot;)</span>
+<a name="ln-152"></a><span class="c">!           call grib_set(igrib,&quot;units&quot;,&quot;Pa,s**-1&quot;)</span>
+<a name="ln-153"></a><span class="c">!         end if</span>
+<a name="ln-154"></a><span class="c">!         if (MPAR(j) .eq. 77) then</span>
+<a name="ln-155"></a><span class="c">!           call grib_set(igrib,&quot;shortName&quot;,&quot;etadot&quot;)</span>
+<a name="ln-156"></a><span class="c">!           call grib_set(igrib,&quot;units&quot;,&quot;s**-1&quot;)</span>
+<a name="ln-157"></a><span class="c">!         end if</span>
+<a name="ln-158"></a>       <span class="k">if</span> <span class="p">(</span><span class="n">l</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mlevel</span><span class="p">)</span> <span class="k">then</span>
+<a name="ln-159"></a><span class="k">         </span><span class="n">zsec4</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="p">)</span><span class="o">=</span><span class="nb">RESHAPE</span><span class="p">(</span><span class="n">FELD</span><span class="p">(:,:,</span><span class="n">ILEVEL</span><span class="p">(</span><span class="n">k</span><span class="p">)),(</span><span class="o">/</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
+<a name="ln-160"></a>       <span class="k">else</span>
+<a name="ln-161"></a><span class="k">         </span><span class="n">zsec4</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="p">)</span><span class="o">=</span><span class="nb">RESHAPE</span><span class="p">(</span><span class="n">FELD</span><span class="p">(:,:,</span><span class="n">k</span><span class="p">),(</span><span class="o">/</span><span class="n">maxl</span><span class="o">*</span><span class="n">maxb</span><span class="o">/</span><span class="p">))</span>
+<a name="ln-162"></a>       <span class="k">end if</span>
+<a name="ln-163"></a><span class="k">       call </span><span class="n">grib_set</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="s2">&quot;values&quot;</span><span class="p">,</span><span class="n">zsec4</span><span class="p">)</span>
+<a name="ln-164"></a>
+<a name="ln-165"></a>       <span class="k">call </span><span class="n">grib_write</span><span class="p">(</span><span class="n">igrib</span><span class="p">,</span><span class="n">iunit</span><span class="p">)</span>
 <a name="ln-166"></a>
-<a name="ln-167"></a><span class="k">   END SUBROUTINE </span><span class="n">WRITELATLON</span>
-<a name="ln-168"></a>
-<a name="ln-169"></a>   <span class="k">SUBROUTINE </span><span class="n">READSPECTRAL</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span><span class="n">CXMN</span><span class="p">,</span><span class="n">MNAUF</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MAXLEV</span><span class="p">,</span><span class="n">MPAR</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
-<a name="ln-170"></a>
-<a name="ln-171"></a><span class="c">!!  read a GRIB file in spherical harmonics</span>
-<a name="ln-172"></a>
-<a name="ln-173"></a>   <span class="k">USE </span><span class="n">GRIB_API</span>
-<a name="ln-174"></a>
-<a name="ln-175"></a>   <span class="k">IMPLICIT NONE</span>
-<a name="ln-176"></a>
-<a name="ln-177"></a><span class="k">   </span><span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">ifile</span>
-<a name="ln-178"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">iret</span>
-<a name="ln-179"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">n</span><span class="p">,</span><span class="n">mk</span><span class="p">,</span><span class="n">div</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">k</span>
-<a name="ln-180"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">parid</span>
-<a name="ln-181"></a>   <span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span>   <span class="kd">::</span>  <span class="n">igrib</span>
-<a name="ln-182"></a>   <span class="kt">real</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span>    <span class="kd">::</span>  <span class="n">values</span>
-<a name="ln-183"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfValues</span><span class="p">,</span><span class="n">maxlev</span>
-<a name="ln-184"></a>   <span class="kt">REAL</span> <span class="kd">::</span> <span class="n">A</span><span class="p">(</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">B</span><span class="p">(</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">pv</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
-<a name="ln-185"></a>   <span class="kt">REAL</span><span class="kd">::</span> <span class="n">CXMN</span><span class="p">(</span><span class="mi">0</span><span class="p">:(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">)</span>
-<a name="ln-186"></a>  <span class="kt">integer</span><span class="kd">::</span> <span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">,</span><span class="n">mstride</span><span class="p">,</span><span class="n">mpar</span><span class="p">(:),</span><span class="n">mnauf</span><span class="p">,</span><span class="n">ioffset</span><span class="p">,</span><span class="n">ipar</span><span class="p">,</span><span class="n">ilev</span><span class="p">,</span><span class="n">l</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">))</span>
-<a name="ln-187"></a>   <span class="kt">character</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="kd">::</span> <span class="n">filename</span>                             
-<a name="ln-188"></a> 
-<a name="ln-189"></a>   <span class="k">call </span><span class="n">grib_open_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="nb">TRIM</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<a name="ln-190"></a> 
-<a name="ln-191"></a>   <span class="c">! count the messages in the file</span>
-<a name="ln-192"></a>   <span class="k">call </span><span class="n">grib_count_in_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
-<a name="ln-193"></a>   <span class="k">allocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-<a name="ln-194"></a>   <span class="n">igrib</span><span class="o">=-</span><span class="mi">1</span>
-<a name="ln-195"></a> 
-<a name="ln-196"></a>   <span class="c">! Load the messages from the file.</span>
-<a name="ln-197"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-198"></a>      <span class="k">call </span><span class="n">grib_new_from_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">iret</span><span class="p">)</span>
-<a name="ln-199"></a>   <span class="k">END DO</span>
-<a name="ln-200"></a> 
-<a name="ln-201"></a>   <span class="c">! we can close the file</span>
-<a name="ln-202"></a>   <span class="k">call </span><span class="n">grib_close_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">)</span>
+<a name="ln-167"></a>     <span class="k">END DO</span>
+<a name="ln-168"></a><span class="k">   END DO</span>
+<a name="ln-169"></a>
+<a name="ln-170"></a><span class="k">   END SUBROUTINE </span><span class="n">WRITELATLON</span>
+<a name="ln-171"></a>
+<a name="ln-172"></a>   <span class="k">SUBROUTINE </span><span class="n">READSPECTRAL</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">,</span><span class="n">CXMN</span><span class="p">,</span><span class="n">MNAUF</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">,</span><span class="n">MAXLEV</span><span class="p">,</span><span class="n">MPAR</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+<a name="ln-173"></a>
+<a name="ln-174"></a><span class="c">!!  Read a GRIB file in spherical harmonics</span>
+<a name="ln-175"></a>
+<a name="ln-176"></a>   <span class="k">USE </span><span class="n">GRIB_API</span>
+<a name="ln-177"></a>
+<a name="ln-178"></a>   <span class="k">IMPLICIT NONE</span>
+<a name="ln-179"></a>
+<a name="ln-180"></a><span class="k">   </span><span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">ifile</span>
+<a name="ln-181"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">iret</span>
+<a name="ln-182"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">n</span><span class="p">,</span><span class="n">mk</span><span class="p">,</span><span class="n">div</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">k</span>
+<a name="ln-183"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">parid</span>
+<a name="ln-184"></a>   <span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span>   <span class="kd">::</span>  <span class="n">igrib</span>
+<a name="ln-185"></a>   <span class="kt">real</span><span class="p">,</span> <span class="k">dimension</span><span class="p">(:),</span> <span class="k">allocatable</span>    <span class="kd">::</span>  <span class="n">values</span>
+<a name="ln-186"></a>   <span class="kt">integer</span>                            <span class="kd">::</span>  <span class="n">numberOfValues</span><span class="p">,</span><span class="n">maxlev</span>
+<a name="ln-187"></a>   <span class="kt">REAL</span> <span class="kd">::</span> <span class="n">A</span><span class="p">(</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">B</span><span class="p">(</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="n">pv</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+<a name="ln-188"></a>   <span class="kt">REAL</span><span class="kd">::</span> <span class="n">CXMN</span><span class="p">(</span><span class="mi">0</span><span class="p">:(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">MLEVEL</span><span class="p">)</span>
+<a name="ln-189"></a>  <span class="kt">integer</span><span class="kd">::</span> <span class="n">maxl</span><span class="p">,</span><span class="n">maxb</span><span class="p">,</span><span class="n">mlevel</span><span class="p">,</span><span class="n">mstride</span><span class="p">,</span><span class="n">mpar</span><span class="p">(:),</span><span class="n">mnauf</span><span class="p">,</span><span class="n">ioffset</span><span class="p">,</span><span class="n">ipar</span><span class="p">,</span><span class="n">ilev</span><span class="p">,</span><span class="n">l</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">))</span>
+<a name="ln-190"></a>   <span class="kt">character</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="kd">::</span> <span class="n">filename</span>                             
+<a name="ln-191"></a> 
+<a name="ln-192"></a>   <span class="k">call </span><span class="n">grib_open_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="nb">TRIM</span><span class="p">(</span><span class="n">FILENAME</span><span class="p">),</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<a name="ln-193"></a> 
+<a name="ln-194"></a>   <span class="c">! count the messages in the file</span>
+<a name="ln-195"></a>   <span class="k">call </span><span class="n">grib_count_in_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+<a name="ln-196"></a>   <span class="k">allocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<a name="ln-197"></a>   <span class="n">igrib</span><span class="o">=-</span><span class="mi">1</span>
+<a name="ln-198"></a> 
+<a name="ln-199"></a>   <span class="c">! Load the messages from the file.</span>
+<a name="ln-200"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-201"></a>      <span class="k">call </span><span class="n">grib_new_from_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">iret</span><span class="p">)</span>
+<a name="ln-202"></a>   <span class="k">END DO</span>
 <a name="ln-203"></a> 
-<a name="ln-204"></a>    <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
-<a name="ln-205"></a>   <span class="c">! Loop on all the messages in memory</span>
-<a name="ln-206"></a>   <span class="n">iloop</span><span class="p">:</span> <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-207"></a>   <span class="c">! write(*,*) &#39;processing message number &#39;,i</span>
-<a name="ln-208"></a>      <span class="c">!     get as a integer</span>
-<a name="ln-209"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;pentagonalResolutionParameterJ&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-<a name="ln-210"></a>
-<a name="ln-211"></a>      <span class="k">call </span><span class="n">grib_get_size</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">numberOfValues</span><span class="p">)</span>
-<a name="ln-212"></a>   <span class="c">!   write(*,*) &#39;numberOfValues=&#39;,numberOfValues</span>
-<a name="ln-213"></a> 
-<a name="ln-214"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfVerticalCoordinateValues&#39;</span><span class="p">,</span><span class="n">mk</span><span class="p">)</span>
-<a name="ln-215"></a>
-<a name="ln-216"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;level&#39;</span><span class="p">,</span><span class="n">ilev</span><span class="p">)</span>
-<a name="ln-217"></a>
-<a name="ln-218"></a>      
-<a name="ln-219"></a>
-<a name="ln-220"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;pv&#39;</span><span class="p">,</span><span class="n">pv</span><span class="p">)</span>
-<a name="ln-221"></a>
-<a name="ln-222"></a>      <span class="k">allocate</span><span class="p">(</span><span class="n">values</span><span class="p">(</span><span class="n">numberOfValues</span><span class="p">),</span> <span class="nb">stat</span><span class="o">=</span><span class="n">iret</span><span class="p">)</span>
-<a name="ln-223"></a>      <span class="c">!     get data values</span>
-<a name="ln-224"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">values</span><span class="p">)</span>
-<a name="ln-225"></a>
-<a name="ln-226"></a><span class="c">!      IOFFSET=mod(i-1,MSTRIDE)*(mk/2-1)</span>
-<a name="ln-227"></a><span class="c">!           CXMN(:,IOFFSET+ilev)=values(1:(MNAUF+1)*(MNAUF+2))</span>
+<a name="ln-204"></a>   <span class="c">! we can close the file</span>
+<a name="ln-205"></a>   <span class="k">call </span><span class="n">grib_close_file</span><span class="p">(</span><span class="n">ifile</span><span class="p">)</span>
+<a name="ln-206"></a> 
+<a name="ln-207"></a>    <span class="n">l</span><span class="o">=</span><span class="mi">0</span>
+<a name="ln-208"></a>   <span class="c">! Loop on all the messages in memory</span>
+<a name="ln-209"></a>   <span class="n">iloop</span><span class="p">:</span> <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-210"></a>   <span class="c">! write(*,*) &#39;processing message number &#39;,i</span>
+<a name="ln-211"></a>      <span class="c">!     get as a integer</span>
+<a name="ln-212"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;pentagonalResolutionParameterJ&#39;</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+<a name="ln-213"></a>
+<a name="ln-214"></a>      <span class="k">call </span><span class="n">grib_get_size</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">numberOfValues</span><span class="p">)</span>
+<a name="ln-215"></a>   <span class="c">!   write(*,*) &#39;numberOfValues=&#39;,numberOfValues</span>
+<a name="ln-216"></a> 
+<a name="ln-217"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;numberOfVerticalCoordinateValues&#39;</span><span class="p">,</span><span class="n">mk</span><span class="p">)</span>
+<a name="ln-218"></a>
+<a name="ln-219"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;level&#39;</span><span class="p">,</span><span class="n">ilev</span><span class="p">)</span>
+<a name="ln-220"></a>
+<a name="ln-221"></a>      
+<a name="ln-222"></a>
+<a name="ln-223"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;pv&#39;</span><span class="p">,</span><span class="n">pv</span><span class="p">)</span>
+<a name="ln-224"></a>
+<a name="ln-225"></a>      <span class="k">allocate</span><span class="p">(</span><span class="n">values</span><span class="p">(</span><span class="n">numberOfValues</span><span class="p">),</span> <span class="nb">stat</span><span class="o">=</span><span class="n">iret</span><span class="p">)</span>
+<a name="ln-226"></a>      <span class="c">!     get data values</span>
+<a name="ln-227"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;values&#39;</span><span class="p">,</span><span class="n">values</span><span class="p">)</span>
 <a name="ln-228"></a>
-<a name="ln-229"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;paramId&#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">)</span>
-<a name="ln-230"></a>      <span class="n">nm</span><span class="o">=</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">)</span>
-<a name="ln-231"></a>      <span class="n">div</span><span class="o">=</span><span class="n">mlevel</span><span class="o">/</span><span class="n">nm</span>
-<a name="ln-232"></a>      <span class="n">kloop</span><span class="p">:</span>  <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nm</span>
-<a name="ln-233"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">parid</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">then</span>
-<a name="ln-234"></a><span class="k">         </span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">=</span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
-<a name="ln-235"></a>         <span class="n">cxmn</span><span class="p">(:,(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">div</span><span class="o">+</span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="o">=</span><span class="n">values</span><span class="p">(</span><span class="mi">1</span><span class="p">:(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
-<a name="ln-236"></a><span class="c">!         print*,(k-1)*div+l(k),parid</span>
-<a name="ln-237"></a>         <span class="k">exit </span><span class="n">kloop</span>
-<a name="ln-238"></a>        <span class="k">end if</span>
-<a name="ln-239"></a><span class="k">        </span>
-<a name="ln-240"></a><span class="k">      end do </span><span class="n">kloop</span>
-<a name="ln-241"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="n">nm</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">parid</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">))</span> <span class="k">then</span>
-<a name="ln-242"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="n">k</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
-<a name="ln-243"></a>        <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s1">&#39;ERROR readspectral: parameter &#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="s1">&#39;is not&#39;</span><span class="p">,</span><span class="n">mpar</span>
-<a name="ln-244"></a>        <span class="k">stop</span>
-<a name="ln-245"></a><span class="k">      end if</span>
-<a name="ln-246"></a>
-<a name="ln-247"></a><span class="c">!      print*,i</span>
-<a name="ln-248"></a>
-<a name="ln-249"></a>   <span class="k">END DO </span><span class="n">iloop</span>
-<a name="ln-250"></a>
-<a name="ln-251"></a><span class="c">!!   write(*,*) &#39;readspectral: &#39;,i-1,&#39; records read&#39;</span>
-<a name="ln-252"></a> 
-<a name="ln-253"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
-<a name="ln-254"></a>     <span class="k">call </span><span class="n">grib_release</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-<a name="ln-255"></a>   <span class="k">END DO</span>
-<a name="ln-256"></a><span class="k"> </span>
-<a name="ln-257"></a><span class="k">   deallocate</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-<a name="ln-258"></a>   <span class="k">deallocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">)</span>
-<a name="ln-259"></a>
-<a name="ln-260"></a>   <span class="n">A</span><span class="o">=</span><span class="n">pv</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">MAXLEV</span><span class="p">)</span>
-<a name="ln-261"></a>   <span class="n">B</span><span class="o">=</span><span class="n">pv</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">MAXLEV</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+<a name="ln-229"></a><span class="c">!      IOFFSET=mod(i-1,MSTRIDE)*(mk/2-1)</span>
+<a name="ln-230"></a><span class="c">!           CXMN(:,IOFFSET+ilev)=values(1:(MNAUF+1)*(MNAUF+2))</span>
+<a name="ln-231"></a>
+<a name="ln-232"></a>      <span class="k">call </span><span class="n">grib_get</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;paramId&#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">)</span>
+<a name="ln-233"></a>      <span class="n">nm</span><span class="o">=</span><span class="n">size</span><span class="p">(</span><span class="n">mpar</span><span class="p">)</span>
+<a name="ln-234"></a>      <span class="n">div</span><span class="o">=</span><span class="n">mlevel</span><span class="o">/</span><span class="n">nm</span>
+<a name="ln-235"></a>      <span class="n">kloop</span><span class="p">:</span>  <span class="k">do </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">nm</span>
+<a name="ln-236"></a>        <span class="k">if</span> <span class="p">(</span><span class="n">parid</span> <span class="p">.</span><span class="n">eq</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">then</span>
+<a name="ln-237"></a><span class="k">         </span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">=</span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<a name="ln-238"></a>         <span class="n">cxmn</span><span class="p">(:,(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">div</span><span class="o">+</span><span class="n">l</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="o">=</span><span class="n">values</span><span class="p">(</span><span class="mi">1</span><span class="p">:(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">MNAUF</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
+<a name="ln-239"></a><span class="c">!         print*,(k-1)*div+l(k),parid</span>
+<a name="ln-240"></a>         <span class="k">exit </span><span class="n">kloop</span>
+<a name="ln-241"></a>        <span class="k">end if</span>
+<a name="ln-242"></a><span class="k">        </span>
+<a name="ln-243"></a><span class="k">      end do </span><span class="n">kloop</span>
+<a name="ln-244"></a>      <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="p">.</span><span class="n">gt</span><span class="p">.</span> <span class="n">nm</span> <span class="p">.</span><span class="nb">and</span><span class="p">.</span> <span class="n">parid</span> <span class="p">.</span><span class="n">ne</span><span class="p">.</span> <span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">))</span> <span class="k">then</span>
+<a name="ln-245"></a><span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="n">k</span><span class="p">,</span><span class="n">nm</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="n">mpar</span><span class="p">(</span><span class="n">nm</span><span class="p">)</span>
+<a name="ln-246"></a>        <span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span> <span class="s1">&#39;ERROR readspectral: parameter &#39;</span><span class="p">,</span><span class="n">parid</span><span class="p">,</span><span class="s1">&#39;is not&#39;</span><span class="p">,</span><span class="n">mpar</span>
+<a name="ln-247"></a>        <span class="k">stop</span>
+<a name="ln-248"></a><span class="k">      end if</span>
+<a name="ln-249"></a>
+<a name="ln-250"></a><span class="c">!      print*,i</span>
+<a name="ln-251"></a>
+<a name="ln-252"></a>   <span class="k">END DO </span><span class="n">iloop</span>
+<a name="ln-253"></a>
+<a name="ln-254"></a><span class="c">! !   write(*,*) &#39;readspectral: &#39;,i-1,&#39; records read&#39;</span>
+<a name="ln-255"></a> 
+<a name="ln-256"></a>   <span class="k">DO </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span>
+<a name="ln-257"></a>     <span class="k">call </span><span class="n">grib_release</span><span class="p">(</span><span class="n">igrib</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<a name="ln-258"></a>   <span class="k">END DO</span>
+<a name="ln-259"></a><span class="k"> </span>
+<a name="ln-260"></a><span class="k">   deallocate</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<a name="ln-261"></a>   <span class="k">deallocate</span><span class="p">(</span><span class="n">igrib</span><span class="p">)</span>
 <a name="ln-262"></a>
-<a name="ln-263"></a>   <span class="k">END SUBROUTINE </span><span class="n">READSPECTRAL</span>
-<a name="ln-264"></a>
-<a name="ln-265"></a><span class="k">END MODULE </span><span class="n">RWGRIB2</span>
+<a name="ln-263"></a>   <span class="n">A</span><span class="o">=</span><span class="n">pv</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="o">+</span><span class="n">MAXLEV</span><span class="p">)</span>
+<a name="ln-264"></a>   <span class="n">B</span><span class="o">=</span><span class="n">pv</span><span class="p">(</span><span class="mi">2</span><span class="o">+</span><span class="n">MAXLEV</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">MAXLEV</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+<a name="ln-265"></a>
+<a name="ln-266"></a>   <span class="k">END SUBROUTINE </span><span class="n">READSPECTRAL</span>
+<a name="ln-267"></a>
+<a name="ln-268"></a><span class="k">END MODULE </span><span class="n">RWGRIB2</span>
 </pre></div>
 
     </section>
@@ -609,8 +612,8 @@
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-4"><p>&copy; 2019 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
-                                          <br /><small>dfa7dbd</small></p></div>
+        <div class="col-xs-6 col-md-4"><p>&copy; 2020 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+                                          </p></div>
         <div class="col-xs-6 col-md-4 col-md-push-4">
           <p class="text-right">
             Documentation generated by 

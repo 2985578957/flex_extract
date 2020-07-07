@@ -101,9 +101,9 @@ body {
     }
 
     .hl pre a {
- display: inline-block;
- height: 4.5em;
- margin: -4.5em 0 0;
+	display: inline-block;
+	height: 4.5em;
+	margin: -4.5em 0 0;
     }
     .codesum h3 {
       margin-top: 2px;

@@ -1,11 +1,11 @@
 HOW TO DO REGRESSION TESTS OF THE FORTRAN CODE
 
-1. Go to flex_extract/Testing/Regression/FortranEtadot
+1. Go to flex_extract/Testing/Regression/FortranEtadot (if not yet there)
 2. Download the tarball containing the input files and reference outputs
 2. Untar the tarball
-3. Create a wirking directory: mkdir Work
+3. Create a working directory: mkdir Work
 4. Compile the unmodified Fortran code with makefile_fast and makefile_debug
-   (is in flex_extract/Source/Fortran)
+   (is in flex_extract/Source/Fortran); you may use "build" for that.
 5. Run a regression test to see whether the current Fortran code gives
    output consistent with the reference output.
    If not, carefully check why (machine-dependent small deviation?)

@@ -35,21 +35,23 @@ PROGRAM calc_etadot
 !           handle GRIB edition 2 fields and T1279 resolution data     
 ! - 04-06/2019: Petra Seibert, 
 !            beautify code and add FORD documentation
+! - 06/2020: Petra Seibert, translate some comments into English
+!            comment out writing of VERTICAL.EC
 !                                                                
 !-----------------------------------------------------------------
-!  #                                                              
+!                                                                
 !## Input required:
 !                                                                
 !     UNIT  FILE      PARAMETER(S)    DATA REPRESENTATION            
 !                                                                    
-!     11    fort.11   T,U,V           regular lambda phi grid
-!     12    fort.12   D               regular lambda phi grid   
+!     11    fort.11   T,U,V           regular lat-lon grid
+!     12    fort.12   D               regular lat-lon grid   
 !     13    fort.13   LNSP            spherical harmonics
 !     14    fort.14   SD,MSL,TCC,10U,                                
-!                     10V,2T,2D       regular lambda phi grid     
+!                     10V,2T,2D       regular lat-lon grid     
 !     16    fort.16   LSP,CP,SSHF,         
-!                     SSR,EWSS,NSSS   regular lambda phi grid
-!     17    fort.17   Q               regular lambda phi grid
+!                     SSR,EWSS,NSSS   regular lat-lon grid
+!     17    fort.17   Q               regular lat-lon grid
 !                                                                
 !------------------------------------------------------------------
 !                                                                
@@ -59,11 +61,14 @@ PROGRAM calc_etadot
 !                                                                   
 !    15    fort.15   `U,V,ETA,T,PS,                                  
 !                    `Q,SD,MSL,TCC,`                                  
-!                    `10U,10V,2T,2D,`  regular lambda phi grid         
+!                    `10U,10V,2T,2D,`  regular lat-lon grid         
 !                    `LSP,CP,SSHF,`                                   
 !                    `SSR,EWSS,NSSS`                                  
 !                                                                
 !------------------------------------------------------------------
+
+! Original version: 
+! Prepares input data for POP model meteorological preprocessor
 
   USE PHTOGR
   USE GRTOPH
@@ -209,7 +214,7 @@ PROGRAM calc_etadot
     ALLOCATE (XMN(0:(MNAUF+1)*(MNAUF+2)-1, 2*MLEVEL))
     ALLOCATE (DG(NGI,MLEVEL),ETAG(NGI,MLEVEL))
 
-!! Initialisieren  Legendretransformation auf das LaT/LON Gitter  
+!! Initialise  Legendre transformation on the lat-lon grid
 
     PI=ACOS(-1.D0)
 
@@ -271,7 +276,7 @@ PROGRAM calc_etadot
 !!  read u,v in SH
     CALL READSPECTRAL(FILENAME,XMN,MNAUF,2*MLEVEL,MLEVEL,(/131,132/),AK,BK)
 
-!!  Transformieren des Windes auf das Gaussgitter  
+!!  Transforming the wind to the Gaussian grid
     CALL PHGR213(XMN,UGVG,GWSAVE,GIFAX,P,MLAT,MNAUF,NGI,NGJ,2*MLEVEL)
     DO K=1,MLEVEL
 ! North Pole
@@ -291,15 +296,16 @@ PROGRAM calc_etadot
 112 FILENAME='fort.13'
 !!  read DIV in SH
     CALL READSPECTRAL(FILENAME,XMN,MNAUF,MLEVEL,MLEVEL,(/155/),AK,BK)
-!! Transformieren der horizontalen Divergenz auf das Gaussgitter  
+    
+!! Transform horizontal divergence to the Gaussian grid
     CALL PHGR213(XMN,DG,GWSAVE,GIFAX,P,MLAT,MNAUF,NGI,NGJ,MLEVEL)
     CALL STATIS(MAXL,MAXB,1,DG,RMS,MW,SIG)
     WRITE(*,'(A,T20,3p,3F12.4)') 'STATISTICS DG-PS: ',RMS,MW,SIG
 
-!! Berechnung des Gradienten des Logarithmus des Bodendrucks auf dem Gaussgitter  
+!! Calculation of the gradient of LNSP (log of surface pressure) on Gaussian grid  
     CALL PHGRAD(LNPMN,DPSDL,DPSDM,GWSAVE,GIFAX,P,H,MLAT,MNAUF,NGI,NGJ,1)
 
-!! Berechnung der Vertikalgeschwindigkeit auf dem Gaussgitter  
+!! Calculation of the vertical velocity on the Gaussian grid  
     CALL CONTGL(HILF,DPSDL,DPSDM,DG,UGVG(:,1),UGVG(:,MLEVEL+1), &
       GBREITE,ETAG,MLAT,AK,BK,NGI,NGJ,MLEVEL)
 ! note that HILF is ps on input and  dpsdt*ps on output
@@ -328,7 +334,7 @@ PROGRAM calc_etadot
     WRITE(*,'(A,T20,3F12.4)') 'STATISTICS DPSDT: ',RMS,MW,SIG
 
     IF (MOMEGADIFF .ne. 0) THEN
-!! Berechnung von Omega auf dem Gaussgitter  
+!! Calculation of omega on the Gaussian grid  
 
       CALL OMEGA(PSG,DPSDL,DPSDM,DG,UGVG(:,1),UGVG(:,MLEVEL+1), &
         GBREITE,ETAG,MLAT,AK,BK,NGI ,NGJ,MLEVEL)
@@ -451,10 +457,12 @@ PROGRAM calc_etadot
 !  \[\frac{\mathrm{d}\eta}{\mathrm{d}t}\frac{\partial p}{\partial \eta}\]
 !------------------------------------------------------------------
 
-!* Initialisieren  Legendretransformation auf das LaT/LON Gitter
-!! Without Gaussian grid calculation Legendre Polynomials are calculated
-!! only for one latitude to save space
 
+!------------------------------------------------------------------
+
+!* Initialise Legendre transformation on the lat-lon grid.
+!! Without Gaussian grid calculation, 
+!! Legendre polynomials are calculated only for one latitude, to save space
 
 
     DO J=1,MAXB
@@ -485,24 +493,25 @@ PROGRAM calc_etadot
 
   END IF ! MGAUSS
 
-!! CREATE FILE VERTICAL.EC NEEDED BY POP MODEL  
+! CREATE FILE VERTICAL.EC NEEDED BY POP MODEL  
+! 2020-06-25 Commented out by PS - not needed anymore
 
-  OPEN(21,FILE='VERTICAL.EC')
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') 'VERTICAL DISCRETIZATION OF POP MODEL'
-  WRITE(21,'(A)')
-  write(21,'(i3,a)') MLEVEL,'   number of layers'
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') '* A(NLEV+1)'
-  WRITE(21,'(A)')
-  DO 205 I=1,MLEVEL+1
-205 WRITE(21,'(F18.12)') AK(I)
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') '* B(NLEV+1)'
-  WRITE(21,'(A)')
-  DO 210 I=1,MLEVEL+1
-210 WRITE(21,'(F18.12)') BK(I)
-  CLOSE(21)
+!  OPEN(21,FILE='VERTICAL.EC')
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') 'VERTICAL DISCRETIZATION OF POP MODEL'
+!  WRITE(21,'(A)')
+!  write(21,'(i3,a)') MLEVEL,'   number of layers'
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') '* A(NLEV+1)'
+!  WRITE(21,'(A)')
+!  DO 205 I=1,MLEVEL+1
+!205 WRITE(21,'(F18.12)') AK(I)
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') '* B(NLEV+1)'
+!  WRITE(21,'(A)')
+!  DO 210 I=1,MLEVEL+1
+!210 WRITE(21,'(F18.12)') BK(I)
+!  CLOSE(21)
 
 !------------------------------------------------------------------
 ! READING OF OMEGA                           
@@ -602,8 +611,8 @@ PROGRAM calc_etadot
 !! WRITE MODEL LEVEL DATA TO fort.15           
 !------------------------------------------------------------------
 
-!!     Calculation of etadot in CONTGL needed scaled winds (ucosphi,vcosphi)
-!!     Now we are transforming back to the usual winds.
+!     Calculation of etadot in CONTGL needed scaled winds (ucosphi,vcosphi)
+!     Now we are transforming back to the usual winds.
 
   DO K=1,MLEVEL
     DO J=2,MAXB-1
