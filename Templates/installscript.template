@@ -28,20 +28,17 @@ export VERSION=$version_number
 case $${HOST} in
   *ecg*)
   module unload grib_api
-  module unload eccodes
-  module unload python
   module unload emos
-  module load python3/3.6.8-01
-  module load eccodes/2.13.0
+  module load python3
+  module load eccodes
   module load emos/455-r64
   export FLEXPART_ROOT_SCRIPTS=$fp_root_scripts
   export MAKEFILE=$makefile
   ;;
   *cca*)
-  module unload python
   module switch PrgEnv-cray PrgEnv-intel
   module load python3
-  module load eccodes/2.13.0
+  module load eccodes
   module load emos/455-r64
   echo $${GROUP}
   echo $${HOME}

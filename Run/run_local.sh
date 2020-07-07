@@ -11,7 +11,7 @@
 #    guarantee necessary parameters were set and consistent.
 #
 # @Licence:
-#    (C) Copyright 2014-2020.
+#    (C) Copyright 2014-2019.
 #
 #    SPDX-License-Identifier: CC-BY-4.0
 #
@@ -25,7 +25,7 @@
 # 
 # THE USER HAS TO SPECIFY THESE PARAMETERS:
 
-QUEUE='ecgate'
+QUEUE=None
 START_DATE=None
 END_DATE=None
 DATE_CHUNK=None
@@ -34,11 +34,11 @@ BASETIME=None
 STEP=None
 LEVELIST=None
 AREA=None
-INPUTDIR=None
-OUTPUTDIR=None
+INPUTDIR='Workspace/CERA'
+OUTPUTDIR='Workspace/CERA'
 PP_ID=None
-JOB_TEMPLATE='submitscript.template' 
-CONTROLFILE='CONTROL_EA5' 
+JOB_TEMPLATE=None
+CONTROLFILE='CONTROL_CERA'
 DEBUG=0
 REQUEST=2
 PUBLIC=0
