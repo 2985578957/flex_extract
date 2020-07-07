@@ -485,24 +485,25 @@ PROGRAM calc_etadot
 
   END IF ! MGAUSS
 
-!! CREATE FILE VERTICAL.EC NEEDED BY POP MODEL  
+! CREATE FILE VERTICAL.EC NEEDED BY POP MODEL  
+! 2020-06-25 Commented out by PS - not needed anymore
 
-  OPEN(21,FILE='VERTICAL.EC')
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') 'VERTICAL DISCRETIZATION OF POP MODEL'
-  WRITE(21,'(A)')
-  write(21,'(i3,a)') MLEVEL,'   number of layers'
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') '* A(NLEV+1)'
-  WRITE(21,'(A)')
-  DO 205 I=1,MLEVEL+1
-205 WRITE(21,'(F18.12)') AK(I)
-  WRITE(21,'(A)')
-  WRITE(21,'(A)') '* B(NLEV+1)'
-  WRITE(21,'(A)')
-  DO 210 I=1,MLEVEL+1
-210 WRITE(21,'(F18.12)') BK(I)
-  CLOSE(21)
+!  OPEN(21,FILE='VERTICAL.EC')
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') 'VERTICAL DISCRETIZATION OF POP MODEL'
+!  WRITE(21,'(A)')
+!  write(21,'(i3,a)') MLEVEL,'   number of layers'
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') '* A(NLEV+1)'
+!  WRITE(21,'(A)')
+!  DO 205 I=1,MLEVEL+1
+!205 WRITE(21,'(F18.12)') AK(I)
+!  WRITE(21,'(A)')
+!  WRITE(21,'(A)') '* B(NLEV+1)'
+!  WRITE(21,'(A)')
+!  DO 210 I=1,MLEVEL+1
+!210 WRITE(21,'(F18.12)') BK(I)
+!  CLOSE(21)
 
 !------------------------------------------------------------------
 ! READING OF OMEGA                           

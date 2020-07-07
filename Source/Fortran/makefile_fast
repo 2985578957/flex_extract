@@ -14,16 +14,17 @@
 
 EXE      =  calc_etadot_fast.out
 
-ECCODES_LIB =  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper
+ECCODES_LIB =  -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm 
 EMOSLIB=-lemosR64
 LIB =  $(ECCODES_LIB) $(EMOSLIB)
 
-ECCODES_INCLUDE_DIR=/usr/local/include/
-#/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15
+ECCODES_INCLUDE_DIR=/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15
+#/usr/local/include/ #oldstable
+
 INC = -I. -I$(ECCODES_INCLUDE_DIR)
 
 FC = gfortran 
-OPT = -O3 -march=native
+OPT = -O3 # -O3 -march=native
 FFLAGS =   $(OPT) $(LIB) $(INC) -fdefault-real-8 -fopenmp -fconvert=big-endian 
 LDFLAGS =  $(OPT) $(LIB) -fopenmp
 SRC = ./rwgrib2.f90 ./calc_etadot.f90 ./ftrafo.f90 ./grphreal.f90 ./posnam.f90 ./phgrreal.f90
