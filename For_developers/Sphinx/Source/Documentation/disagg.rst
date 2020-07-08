@@ -12,16 +12,16 @@ pre-processing has to be applied.
 .. _ref-table-fluxpar:
 
 .. csv-table:: Flux fields
-    :header: "Short Name", "Name", "Units", "Interpolation Type"
+    :header: "Short Name", "Name", "Units", "Disaggregation"
     :align: center
     :widths: 5,15,5,10
     
-    LSP,  "large-scale precipitation",          "m",          "modified linear interpolation"
-    CP,   "convective precipitation",           "m",          "modified linear interpolation"
-    SSHF, "surface sensible heat flux",         "J m:math:`^{-2}`",   "bicubic interpolation"
-    EWSS, "eastward turbulent surface stress",  "N m:math:`^{-2}` s", "bicubic interpolation"
-    NSSS, "northward turbulent surface stress", "N m:math:`^{-2}` s", "bicubic interpolation"
-    SSR,  "surface net solar radiation",        "J m:math:`^{-2}`",   "bicubic interpolation"
+    LSP,  "large-scale precipitation",          "m",          "precipitation "
+    CP,   "convective precipitation",           "m",          "precipitation"
+    SSHF, "surface sensible heat flux",         "J m :math:`^{-2}`",   "flux"
+    EWSS, "eastward turbulent surface stress",  "N m :math:`^{-2}` s", "flux "
+    NSSS, "northward turbulent surface stress", "N m :math:`^{-2}` s", "flux "
+    SSR,  "surface net solar radiation",        "J m :math:`^{-2}`",   "flux "
     
 
 The first step is to *de-accumulate* the fields in time so that each value represents non-overlapping integrals in x-, y-, and t-space.
@@ -42,7 +42,7 @@ Disaggregation for precipitation in older versions
 In ``flex_extract`` up to version 5, the disaggregation was done with a Fortran program (FLXACC2). In version 6, this part was recoded in Python.
 
 In the old versions (below 7.1), a relatively simple method processes the precipitation fields in a way that is consistent with the linear interpolation between times where input fields are available that is applied in ``FLEXPART`` for all variables. 
-This scheme (from Paul James) at first divides the accumulated values by the number of hours (i.e., 3 or 6). ???
+This scheme (from Paul James) at first divides the accumulated values by the number of hours (i.e., 3 or 6).
 The best option for disaggregation, which was realised, is conservation within the interval under consideration plus the two adjacent ones. 
 Unfortunately, this leads to undesired temporal smoothing of the precipitation time series – maxima are damped and minima are raised. 
 It is even possible to produce non-zero precipitation in dry intervals bordering a precipitation period as shown in Fig. 1.
@@ -160,21 +160,14 @@ Disaggregation for the other flux fields
 ----------------------------------------------
       
 The accumulated values for the other variables are first divided by the number of hours and
-then interpolated to the exact times using a bicubic interpolation which conserves the integrals of the fluxes within each timespan.
-Disaggregation is done for four adjacent time intervals (:math:`p_a, p_b, p_c, p_d`) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.
+then disaggregates to the exact times and conserves the integrals of the fluxes within each timespan.
+Disaggregation is done for four adjacent time intervals (:math:`F_0, F_1, F_2, F_3`) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.
+This new point :math:`F` is used for linear interpolation of the complete timeseries afterwards.
 
 .. math::
-    
-    p_a &= (a_3 - a_0 + 3. * (a_1 - a_2)) / 6. \\    
-    p_b &= (a_2 + a_0) / 2. - a_1 - 9. * p_a / 2. \\
-    p_c &= a_1 - a_0 - 7. * p_a / 2. - 2. * p_b \\    
-    p_d &= a_0 - p_a / 4. - p_b / 3. - p_c / 2. 
 
-This new point :math:`p` is used for linear interpolation of the complete timeseries afterwards.
-
-.. math::
     
-    p = 8. * p_a + 4. * p_b + 2. * p_c + p_d
+    F = -\frac{1}{12}F_0 + \frac{7}{12}F_1 + \frac{7}{12}F_2 -\frac{1}{12}F_3
 
 
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Installation &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -285,7 +285,7 @@
 <p>The software required to run <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application modes</span></a> and therefore is described in the respective specific installation sections.</p>
 <p>Generally speaking, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> requires <a class="reference external" href="https://docs.python.org/3/">Python 3</a> and Fortran together with certain modules / libraries.
 We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the Python3 package from the the GNU/Linux distribution and Anaconda Python. The required Python3 modules should prefarably be installed as distribution packages, or alternatively using Python’s own package manager <code class="docutils literal notranslate"><span class="pre">pip</span></code> (this may mess up some aspects of your python installation, especially if you use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as root. Think about using virtual environments.).</p>
-<p>Before installing the system packages check the availability with (Debian-based system) <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or (Redhat-based system)``rpm -q &lt;package_name&gt;``. For example:</p>
+<p>Before installing the system packages check the availability with (Debian-based system) <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or (Redhat-based system) <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>. For example:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ dpkg -s libeccodes-dev <span class="p">|</span>  grep Status
 <span class="c1"># or</span>
 $ rpm -q libeccodes-dev
@@ -317,12 +317,12 @@ installation has to be done. At the users local side not all software has to be 
 <div class="section" id="fortran-program-test">
 <h3>Fortran program test<a class="headerlink" href="#fortran-program-test" title="Permalink to this headline">¶</a></h3>
 <p>To check whether the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> has been compiled and runs properly, it can be applied to a prepared minimal dataset.</p>
-<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Convert/</span></code> directory and execute the Fortran program.</p>
+<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Calc_etadot/</span></code> directory and execute the Fortran program.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember that you might have to log in at the ECMWF server if you used the installation for the <strong>remote</strong> or <strong>gateway</strong> mode. There you find the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in your <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory.</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Convert
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Calc_etadot
 <span class="c1"># execute the Fortran progam without arguments</span>
 ../../../Source/Fortran/calc_etadot
 </pre></div>

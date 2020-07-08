@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The CONTROL parameters &mdash; flex_extract 7.1.1 documentation</title>
+  <title>The CONTROL parameters &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -278,14 +278,14 @@
 <tbody>
 <tr class="row-even"><td><p>DEBUG</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>If set to “1” all temporary output files from the mars requests are kept and some extra information is written out to the log file.</p></td>
 <td><p>Usually all temporary files except the FLEXPART ready output files are deleted at the end of flex_extract.</p></td>
 </tr>
 <tr class="row-odd"><td><p>REQUEST</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1,2]</p></td>
+<td><p>0;1;2</p></td>
 <td><p>2</p></td>
 <td><p>This parameter allows to write out the mars requests in a seperate file.</p></td>
 <td><p>The requests are stored in the file “mars_requests.csv”. 
@@ -296,34 +296,34 @@ Possible selections are:
 </tr>
 <tr class="row-even"><td><p>PUBLIC</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>This specifies the selection of the kind of ECMWF Web Api access and therefore the kind of available datasets. Public data sets (1) and Memberstate data sets (0).</p></td>
 <td><p>Selecting the public access method, the DATASET parameter has explicitly to be set to select the dataset. (CLASS is not enough.) ATTENTION: For public datasets, the user has to accept the license of the dataset to be retrieved. See here for available datasets and their licenses:  https://software.ecmwf.int/wiki/display/WEBAPI/ Available+ECMWF+ Public+Datasets</p></td>
 </tr>
 <tr class="row-odd"><td><p>OPER</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to prepare the operational job script. Start date, end date and basetime will be prepared with environment variables at ecgate.</p></td>
 <td><p>This is only necessary if extraction of half-day retrievals should be done automatically. Specific extra feature which is usually not used by normal flex_extract users.</p></td>
 </tr>
 <tr class="row-even"><td><p>ECSTORAGE</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to store FLEXPART ready output files in the ECFS file system.</p></td>
 <td><p>Mind the data limit.</p></td>
 </tr>
 <tr class="row-odd"><td><p>ECTRANS</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to transfer FLEXPART ready input files to the gateway server.</p></td>
 <td><p>The gateway server has to be up and running. A destination has to be installed. See installation instructions for more information.</p></td>
 </tr>
 <tr class="row-even"><td><p>PREFIX</p></td>
-<td><p>String [xx]</p></td>
+<td><p>String</p></td>
 <td><p>anything</p></td>
 <td><p>EN</p></td>
 <td><p>Prefix of FLEXPART ready input files</p></td>
@@ -339,7 +339,7 @@ Possible selections are:
 <tr class="row-even"><td><p>MAILOPS</p></td>
 <td><p>list of String [m1, m2, …]</p></td>
 <td><p>any number of mail addresses, seperated by comma</p></td>
-<td><p>[‘”${USER}”]</p></td>
+<td><p>${USER}</p></td>
 <td><p>Email list for operational log files on ECMWF servers. The email addresses should be seperated by a comma.</p></td>
 <td><p>For the ECMWF server it is enough to give ${USER} as input. On local system an actual email is prefered to operate correctly. </p></td>
 </tr>
@@ -369,14 +369,14 @@ Possible selections are:
 </thead>
 <tbody>
 <tr class="row-even"><td><p>START_DATE</p></td>
-<td><p>String [YYYYMMDD]</p></td>
+<td><p>String (YYYYMMDD)</p></td>
 <td><p>depends on dataset</p></td>
 <td><p>None</p></td>
 <td><p>The first day of the retrieval period.</p></td>
 <td><p>If END_DATE is set, START_DATE must be greater than END_DATE.</p></td>
 </tr>
 <tr class="row-odd"><td><p>END_DATE</p></td>
-<td><p>String [YYYYMMDD]</p></td>
+<td><p>String (YYYYMMDD)</p></td>
 <td><p>depends on dataset</p></td>
 <td><p>None</p></td>
 <td><p>The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p></td>
@@ -398,7 +398,7 @@ Possible selections are:
 </tr>
 <tr class="row-even"><td><p>BASETIME</p></td>
 <td><p>Integer</p></td>
-<td><p>[0; 12]</p></td>
+<td><p>0; 12</p></td>
 <td><p>None</p></td>
 <td><p>This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p></td>
 <td><p>Can be set to 00 or 12 only.</p></td>
@@ -453,14 +453,14 @@ https://software.ecmwf.int/wiki/display/WEBAPI/Available+ECMWF+Public+Datasets</
 <tr class="row-odd"><td><p>EXPVER</p></td>
 <td><p>String</p></td>
 <td><p>1</p></td>
-<td><p>“1”</p></td>
+<td><p>1</p></td>
 <td><p>Experiment number, necessary for R&amp;D experiments, E-suites</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p>NUMBER</p></td>
-<td><p>String [i/to/i]</p></td>
+<td><p>Integer or String [i/to/i]</p></td>
 <td><p>depends on availability</p></td>
-<td><p>“OFF”</p></td>
+<td><p>OFF</p></td>
 <td><p>In most cases this can be set to “OFF” but for access to individual ensemble members of ensemble forecasts it is necessary to select numbers. Note, however, that model level data are not stored in MARS for individual ensemble  members except the control run. They exist only for a few days before they are discarded. </p></td>
 <td><p>For retrieving CERA data, a number has to be selected explicitly. Usually “0” is enough. 
 For operational data just one number or a list of number can be selected. You can use the syntax “1/to/9” for example.</p></td>
@@ -468,7 +468,7 @@ For operational data just one number or a list of number can be selected. You ca
 <tr class="row-odd"><td><p>FORMAT</p></td>
 <td><p>String</p></td>
 <td><p>[GRIB1, GRIB2]</p></td>
-<td><p>“GRIB1”</p></td>
+<td><p>GRIB1</p></td>
 <td><p>Output format (either GRIB1 or GRIB2). Use GRIB2
 only when using FLEXPART versions &gt;9.2 or FLEXPART hast to be adapted for reading GRIB2</p></td>
 <td><p>GRIB2 is only available for 3D model level fields, not for surface fields.</p></td>
@@ -500,7 +500,7 @@ only when using FLEXPART versions &gt;9.2 or FLEXPART hast to be adapted for rea
 <tbody>
 <tr class="row-even"><td><p>TYPE</p></td>
 <td><p>list of String [xx xx … xx]</p></td>
-<td><p>[AN, FC, CV, CF, 4V, PF]</p></td>
+<td><p>AN, FC, CV, CF, 4V, PF</p></td>
 <td><p>None</p></td>
 <td><p>A list of field types for each retrieving hour per day. E.g. AN FC FC FC AN FC FC FC  for a day with 3-hourly retrieval DTIME . At 0 and 12 UTC we retrieve analysis fields and at 3, 6, 9, 15, 18 and 21 UTC forecast fields. </p></td>
 <td><p>So far flex_extract is using ANalysis (AN), ForeCast (FC),  Control Forecast (CF), Perturbed Forecast (PF), Calibration/Validation forecast (CV) and 4D Variational analysis (4V). Other types might be also possible but were not tested. The analysis fields are usually (depending on data set) available at 00/06/12/18 UTC. For better  temporal resolution, the time inbetween the AN fields can be filled with forecasts (FC). Additionally, it is recommended to use analysis fields only at 00 and 12 UTC and fill the rest of the times with other field types, such as forecasts. </p></td>
@@ -554,7 +554,7 @@ With MAXSTEP &gt; 24 the forecasts from different days overlap, the naming schem
 <tbody>
 <tr class="row-even"><td><p>ACCTYPE</p></td>
 <td><p>String</p></td>
-<td><p>[FC, CV, CF, 4V, PF] - just one of them</p></td>
+<td><p>FC, CV, CF, 4V, PF - just one of them</p></td>
 <td><p>None</p></td>
 <td><p>The type of field for accumulated data retrieval. The accumulated data fields are only available from forecast fields. Therefore it is seperated from the normal TYPE parameter to allow, for example, retrievment solely of hourly analysis fields in the Era5 data set. </p></td>
 <td><p>For downward compatibility  to older versions: if ACCTYPE is not specified,  the default value is taken form the second position of the original TYPE parameter (TYPE[2]).  NOTE: This is important at the moment the original TYPE parameter is changed from FC to AN for example.</p></td>
@@ -575,7 +575,7 @@ With MAXSTEP &gt; 24 the forecasts from different days overlap, the naming schem
 </tr>
 <tr class="row-odd"><td><p>RRINT</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>1</p></td>
 <td><p>Switch to select method of disaggregation for precipitation fields. Old method (0) with a simple linear disaggregation or new method (1) with 2 additional subsequent intervals per time interval.</p></td>
 <td><p>For more information see article:
@@ -702,7 +702,7 @@ depends on data set</p></td>
 <tbody>
 <tr class="row-even"><td><p>GAUSS</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>A switch to calculate ETADOT from Lat/Lon grid (0) or from Gaussian grid (1)</p></td>
 <td><p></p></td>
@@ -716,7 +716,7 @@ depends on data set</p></td>
 </tr>
 <tr class="row-even"><td><p>OMEGA</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Retrieve Omega from MARS and put it to file
 OMEGAyymmddhh</p></td>
@@ -724,7 +724,7 @@ OMEGAyymmddhh</p></td>
 </tr>
 <tr class="row-odd"><td><p>OMEGADIFF</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Calculate Omega and Dps/Dt from continuity
 equation for diagnostic purposes and include it in file OMEGAyymmddhh</p></td>
@@ -732,7 +732,7 @@ equation for diagnostic purposes and include it in file OMEGAyymmddhh</p></td>
 </tr>
 <tr class="row-even"><td><p>ETA</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to read ETADOT precalculated by ECMWF and multiply it with DPDETA to be compatible with ETADOT calculated from continuity equation.
 ETADOT calculation from continuity equation on either Gaussian or lat/lon grid is disabled unless ETADIFF is set to 1 as well.</p></td>
@@ -740,14 +740,14 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 </tr>
 <tr class="row-odd"><td><p>ETADIFF</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to calculate etadot and Dps/Dt from continuity equation for diagnostic purposes and include it in file ETAyymmddhh. Expensive option, only for debugging purposes.</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p>DPDETA</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>1</p></td>
 <td><p>Switch to multiply etadot with dpdeta – this is the default. In some future version this may change.</p></td>
 <td><p></p></td>
@@ -767,12 +767,12 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 <table class="docutils align-default" id="id9">
 <caption><span class="caption-text">Additional data parameters in CONTROL file</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 17%" />
+<col style="width: 16%" />
 <col style="width: 9%" />
-<col style="width: 13%" />
+<col style="width: 12%" />
 <col style="width: 11%" />
-<col style="width: 15%" />
-<col style="width: 35%" />
+<col style="width: 14%" />
+<col style="width: 36%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PARAMETER</p></th>
@@ -786,14 +786,14 @@ ETADOT calculation from continuity equation on either Gaussian or lat/lon grid i
 <tbody>
 <tr class="row-even"><td><p>CWC</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to retrieve cloud water content (sum of cloud liquid water and cloud ice) (1) or not (0).</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p>DOUBLEELDA</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Switch to select the calculation of extra ensemble members for the ELDA stream. It doubles the amount of retrieved ensemble members.</p></td>
 <td><p>Each ensemble member is used to create a new synthesized ensemble member by subtracting 2 * ( current time step value - last time step value ) from the current time step value</p></td>

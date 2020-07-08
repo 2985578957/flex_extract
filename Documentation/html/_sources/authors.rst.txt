@@ -8,18 +8,24 @@ Developer Team
 | University of Vienna 
 | Althanstraße 14 / UZA II
 | 1090 Vienna, Austria
-| mail: anne.philipp [at] univie.ac.at
+| e-mail: anne.philipp [at] univie.ac.at
  
-
 
 | Leopold Haimberger 
 | Department of Meteorology and Geophysics 
 | University of Vienna 
 | Althanstraße 14 / UZA II
 | 1090 Vienna, Austria
-| mail: leopold.haimberger [at] univie.ac.at
+| e-mail: leopold.haimberger [at] univie.ac.at
 
-    
+
+| Petra Seibert
+| Institute of Meteorology (BOKU-Met)
+| University of Natural Resources & Life Sciences (BOKU)
+| Gregor-Mendel-Str. 33
+| 1180 Wien, Austria
+| e-mail: petra.seibert ./at/. boku.ac.at
+  
 .. toctree::
     :hidden:
     :maxdepth: 2

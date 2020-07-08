@@ -128,7 +128,7 @@ Open ``setup.sh`` with your preferred editor (e.g., nano) and adapt the values:
 |   GATEWAY='<gatewayname>'                    |   GATEWAY='<gatewayname>'                    |
 |   DESTINATION='<assoc_name>@genericSftp'     |   DESTINATION='<assoc_name>@genericSftp'     | 
 |   INSTALLDIR=None                            |   INSTALLDIR=None                            | 
-|   JOB_TEMPLATE='job.template'                |   JOB_TEMPLATE='job.template'                |
+|   JOB_TEMPLATE='installscript.template'      |   JOB_TEMPLATE='installscript.template'      |
 |   CONTROLFILE='CONTROL_EA5'                  |   CONTROLFILE='CONTROL_EA5'                  | 
 |   ...                                        |   ...                                        |   
 +----------------------------------------------+----------------------------------------------+

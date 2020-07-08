@@ -6,8 +6,9 @@ Calculation of vertical velocity and preparation of output files
 ================================================================
 
 Two methods are provided in ``flex_extract`` for the calculation of the vertical velocity for ``FLEXTRA``/``FLEXPART``: 
-    (i) from the horizontal wind field, 
-    (ii) from the MARS parameter 77, which is available for operational forecasts and analyses since September 2008 and for reanalysis datasets **ERA5** and **CERA-20C**, which contains the vertical velocity directly in the eta coordinate system of the ECMWF model.
+
+(i) from the horizontal wind field, 
+(ii) from the MARS parameter 77, which is available for operational forecasts and analyses since September 2008 and for reanalysis datasets **ERA5** and **CERA-20C**, which contains the vertical velocity directly in the eta coordinate system of the ECMWF model.
 
 Especially for high resolution data, use of the ``MARS`` parameter 77 is recommended,
 since the computational cost (measured in ECMWF HPC units) is reduced by 90-95% at
@@ -30,6 +31,7 @@ following guidance can be given for choosing the right parameters:
 
     * For very fine output grids (0.25 degree or finer), the full resolution T799 or even T1279 of the operational model is required (``RESOL=799``, ``SMOOTH=0``). The highest available resolution (and the calculation of vertical velocity on the Gaussian grid (``GAUSS=1``) is, however, rather demanding and feasible only for resolutions up to T799. Higher resolutions are achievable on the HPC. If data retrieval at T1279  needs to be performed on *ecgate*, the computation of the vertical velocity is feasible only on the lat/lon grid (``GAUSS=0``), which also yields very good results. Please read document v20_update_protocol.pdf-v60_update_protocol.pdf to see if the errors incurred are acceptable for the planned application.
     * For lower resolution (often global) output grids, calculation of vertical velocities with lower than operational spectral resolution is recommended. For global grids the following settings appear optimal:
+    
         - For 1.0 degree grids: ``GAUSS=1``, ``RESOL=255``, ``SMOOTH=179``
         - For 0.5 degree grids: ``GAUSS=1``, ``RESOL=399``, ``SMOOTH=359``
         - Calculation on the lat/lon grid is not recommended for less than the operational (T1279) resolution.    

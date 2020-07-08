@@ -1,14 +1,14 @@
-*********************************************
+*************************************************
 The compilation job script ``compilejob.ksh``
-*********************************************
+*************************************************
 
-The compile job is a Korn-shell script which will be created during the installation process for the application modes **remote** and **gateway** from a template called ``compilejob.template`` in the template directory.
+The compile job is a Korn-shell script which will be created during the installation process for the application modes **remote** and **gateway** from a template called ``installscript.template`` in the template directory.
 
 ``Flex_extract`` uses the Python package `genshi <https://genshi.edgewall.org/>`_ to generate
 the Korn-shell script from the template files by substituting the individual parameters. 
-These individual parameters are marked by a doubled ``$`` sign in ``job.temp``. 
+These individual parameters are marked by a doubled ``$`` sign in ``installscript.template``. 
 
-The job script has a number of settings for the batch system which are fixed, and it differentiates between the *ecgate* and the *cca/ccb* 
+The compilation script has a number of settings for the batch system which are fixed, and it differentiates between the *ecgate* and the *cca/ccb* 
 server system to load the necessary modules for the environment when submitted to the batch queue.
 
 The submission is done by the ``ECaccess`` tool from within ``flex_extract`` with the command ``ecaccess-job-submit``.
@@ -23,7 +23,7 @@ What does the compilation script do?
  #. It sets some environment variables for the single session
  #. It creates the ``flex_extract`` root directory in the ``$HOME`` path of the user
  #. It untars the tarball into the root directory.
- #. It compiles the Fortran program using ``Makefile``.
+ #. It compiles the Fortran program using ``makefile``.
  #. At the end, it checks whether the script has returned an error or not, and emails the log file to the user.
 
 
@@ -66,21 +66,18 @@ Example ``compilejob.ksh``
     case ${HOST} in
       *ecg*)
       module unload grib_api
-      module unload eccodes
-      module unload python
       module unload emos
       module load python3
-      module load eccodes/2.12.0
+      module load eccodes
       module load emos/455-r64
       export FLEXPART_ROOT_SCRIPTS=${HOME}
       export MAKEFILE=makefile_ecgate
       ;;
       *cca*)
-      module unload python
       module switch PrgEnv-cray PrgEnv-intel
       module load python3
-      module load eccodes/2.12.0
-      module load emos
+      module load eccodes
+      module load emos/455-r64
       echo ${GROUP}
       echo ${HOME}
       echo ${HOME} | awk -F / '{print $1, $2, $3, $4}'

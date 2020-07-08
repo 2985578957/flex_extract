@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The installation script - setup.sh &mdash; flex_extract 7.1.1 documentation</title>
+  <title>The installation script - setup.sh &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -234,15 +234,15 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <tbody>
 <tr class="row-even"><td><p>TARGET</p></td>
 <td><p>String</p></td>
-<td><p>local, ecgate, cca</p></td>
+<td><p>local, ecgate, cca, ccb</p></td>
 <td><p>None</p></td>
-<td><p>Defines the flex_extract application mode to be used.  Local = local mode; egate = Remote or Gateway mode, cca = Remote or Gateway mode (HPC). Whether the local mode is for public or member state users doesn’t matter here.</p></td>
+<td><p>Defines the flex_extract application mode to be used.  Local = local mode; ecgate = Remote or Gateway mode, cca or ccb = Remote or Gateway mode (HPC). Whether the local mode is for public or member state users doesn’t matter here.</p></td>
 </tr>
 <tr class="row-odd"><td><p>MAKEFILE</p></td>
 <td><p>String</p></td>
 <td><p>any makefile present in the Fortran source directory</p></td>
 <td><p>None</p></td>
-<td><p>Name of the makefile in source/fortran directory to be used for compiling the Fortran program. </p></td>
+<td><p>Name of the makefile in Source/Fortran directory to be used for compiling the Fortran program. </p></td>
 </tr>
 <tr class="row-even"><td><p>ECUID</p></td>
 <td><p>String</p></td>
@@ -272,12 +272,12 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <td><p>String</p></td>
 <td><p>a full path </p></td>
 <td><p>$HOME on ECMWF server and current flex_extract root path on local machine</p></td>
-<td><p>Root path where flex_extract should be installed. If it is not set, it will be $HOME on ECMWF servers and to the current flex_extract root path on local servers. </p></td>
+<td><p>Root path where flex_extract should be installed. It will always be $HOME on ECMWF servers and if not set for the local mode, it will be the current flex_extract root path on local servers. </p></td>
 </tr>
 <tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
 <td><p>String</p></td>
-<td><p>job.template</p></td>
-<td><p>job.template</p></td>
+<td><p>installscript.template</p></td>
+<td><p>installscript.template</p></td>
 <td><p>The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed because it is already optimised for ECMWF servers.  (Remote and Gateway mode)</p></td>
 </tr>
 <tr class="row-even"><td><p>CONTROLFILE</p></td>

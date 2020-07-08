@@ -137,7 +137,7 @@ Open ``setup.sh`` with your preferred editor (e.g., nano) and adapt the values:
 |   GATEWAY='<gatewayname>'                    |   GATEWAY='<gatewayname>'                    |
 |   DESTINATION='<username>@genericSftp'       |   DESTINATION='<username>@genericSftp'       | 
 |   INSTALLDIR=None                            |   INSTALLDIR=''                              | 
-|   JOB_TEMPLATE='job.template'                |   JOB_TEMPLATE='job.template'                |
+|   JOB_TEMPLATE='installscript.template'      |   JOB_TEMPLATE='installscript.template'      |
 |   CONTROLFILE='CONTROL_EA5'                  |   CONTROLFILE='CONTROL_EA5'                  | 
 |   ...                                        |   ...                                        |   
 +----------------------------------------------+----------------------------------------------+
@@ -152,8 +152,7 @@ with your own ones (look at any of your files with ``ls -l'' to see uid and gid)
 Afterwards, type:
 
 .. code-block:: bash
-
-   module load python3   
+  
    ./setup.sh
    
 to start the installation. You should see the following on standard output. 

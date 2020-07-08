@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Output data &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Output data &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -98,7 +98,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Output data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#flexpart-input-files"><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#standard-output-files">Standard output files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#output-files-for-pure-forecast">Output files for pure forecast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-files-for-long-forecast">Output files for long forecast</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output-files-for-ensemble-predictions">Output files for ensemble predictions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#additional-fields-with-new-precipitation-disaggregation">Additional fields with new precipitation disaggregation</a></li>
 </ul>
@@ -106,7 +106,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#temporary-files">Temporary files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#mars-grib-files">MARS grib files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mars-request-file">MARS request file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#vertical-ec">VERTICAL.EC</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#index-file">Index file</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#flux-files">Flux files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fort-files">fort files</a></li>
@@ -277,9 +276,9 @@ edition      centre       date         dataType     gridType     stepRange    ty
 </pre></div>
 </div>
 </div>
-<div class="section" id="output-files-for-pure-forecast">
-<h3>Output files for pure forecast<a class="headerlink" href="#output-files-for-pure-forecast" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in pure forecast mode is introduced:</p>
+<div class="section" id="output-files-for-long-forecast">
+<h3>Output files for long forecast<a class="headerlink" href="#output-files-for-long-forecast" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in long forecast mode is introduced:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;prefix&gt;YYMMDD.HH.&lt;FORECAST_STEP&gt;
 </pre></div>
 </div>
@@ -370,18 +369,9 @@ request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist,
 </pre></div>
 </div>
 </div>
-<div class="section" id="vertical-ec">
-<h3>VERTICAL.EC<a class="headerlink" href="#vertical-ec" title="Permalink to this headline">¶</a></h3>
-<p>This file contains information describing the vertical discretisation (model levels)
-in form of the <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> parameters which allow to calculate the actual pressure of a model level from the surface pressure.</p>
-</div>
 <div class="section" id="index-file">
 <h3>Index file<a class="headerlink" href="#index-file" title="Permalink to this headline">¶</a></h3>
 <p>This file is called <code class="docutils literal notranslate"><span class="pre">date_time_stepRange.idx</span></code>. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>#PS NEEDS MORE DESCRIPTION</p>
-</div>
 </div>
 <div class="section" id="flux-files">
 <h3>Flux files<a class="headerlink" href="#flux-files" title="Permalink to this headline">¶</a></h3>
@@ -404,8 +394,8 @@ in form of the <code class="docutils literal notranslate"><span class="pre">A</s
 <p>where <code class="docutils literal notranslate"><span class="pre">xx</span></code> is a number which defines the meteorological fields stored in these files.
 They are generated by the Python code in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> by splitting the meteorological fields for a unique time stamp from the <code class="docutils literal notranslate"><span class="pre">*.grb</span></code> files, storing them under the names <code class="docutils literal notranslate"><span class="pre">fort.&lt;XX&gt;</span></code> where &lt;XX&gt; represents some number.
 The following table defines the numbers and the corresponding content:</p>
-<table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">Content of fort - files</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id1">
+<caption><span class="caption-text">Content of fort - files</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />
@@ -450,8 +440,8 @@ The following table defines the numbers and the corresponding content:</p>
 </table>
 <p>Some of the fields are solely retrieved with specific settings, e. g., the eta-coordinate vertical velocity is not available in ERA-Interim datasets, and the total cloud-water content is an optional field which is useful for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span> <span class="pre">v10</span></code> and newer.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> program saves its results in file <code class="docutils literal notranslate"><span class="pre">fort.15</span></code> which typically contains:</p>
-<table class="colwidths-given docutils align-default" id="id3">
-<caption><span class="caption-text">Output file of the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">Output file of the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20%" />
 <col style="width: 80%" />

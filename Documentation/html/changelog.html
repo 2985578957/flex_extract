@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Changelog &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Changelog &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -96,27 +96,31 @@
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#release-v7-1-2">Release v7.1.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-1-1">Release v7.1.1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-1">Release v7.1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-4">Release v7.0.4</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Bug fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Bug fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-3">Release v7.0.3</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">New Features</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v7-0-2">Release v7.0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#release-v0-1-v6-0">Release v0.1 - v6.0</a></li>
@@ -193,6 +197,26 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<div class="section" id="release-v7-1-2">
+<span id="ref-v712"></span><h2>Release v7.1.2<a class="headerlink" href="#release-v7-1-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="changes">
+<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>changed naming of template files</p></li>
+<li><p>separate loading of Python3 module in remote mode is no longer necessary</p></li>
+<li><p>updated module versions for ECMWF servers</p></li>
+<li><p>changed names of working directories on ECMWF servers</p></li>
+<li><p>select makefile automatically regarding application mode if it was not set in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></p></li>
+<li><p>updated online documentation</p></li>
+<li><p>converted most important Fortran code documentation from German to English</p></li>
+<li><p>deactivate writing of VERTICAL.EC file by Fortran code</p></li>
+<li><p>adapt and improve Fortran regression test scripts</p></li>
+<li><p>remove jasper lib from Fortran makefiles</p></li>
+</ul>
+</div></blockquote>
+</div>
+</div>
 <div class="section" id="release-v7-1-1">
 <span id="ref-v711"></span><h2>Release v7.1.1<a class="headerlink" href="#release-v7-1-1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="bug-fixes">
@@ -221,8 +245,8 @@
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="changes">
-<h3>Changes<a class="headerlink" href="#changes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h3>Changes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>upgraded to Python3</p></li>
@@ -239,16 +263,16 @@
 </div>
 <div class="section" id="release-v7-0-4">
 <span id="ref-v704"></span><h2>Release v7.0.4<a class="headerlink" href="#release-v7-0-4" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>New Features<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>New Features<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>Ensemble retrieval for ENFO and ELDA stream (ZAMG specific with extra synthesized ensembles for ELDA stream)</p></li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id2">
-<h3>Bug fixes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Bug fixes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>various problems with ERA 5 retrieval</p></li>
@@ -263,8 +287,8 @@ with <code class="docutils literal notranslate"><span class="pre">field=0.</span
 </div>
 <div class="section" id="release-v7-0-3">
 <span id="ref-v703"></span><h2>Release v7.0.3<a class="headerlink" href="#release-v7-0-3" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>New Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>New Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>output of MARS requests to an extra file (debugging and documentation)</p></li>
@@ -278,16 +302,16 @@ with <code class="docutils literal notranslate"><span class="pre">field=0.</span
 </div>
 <div class="section" id="release-v7-0-2">
 <span id="ref-v702"></span><h2>Release v7.0.2<a class="headerlink" href="#release-v7-0-2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>New Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>New Features<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>Python-based version</p></li>
 </ul>
 </div></blockquote>
 </div>
-<div class="section" id="id5">
-<h3>Changes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
 <li><p>korn shell scripts substituted by Python scripts</p></li>

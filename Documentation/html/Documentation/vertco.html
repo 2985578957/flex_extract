@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vertical wind &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Vertical wind &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -184,13 +184,11 @@
 <h1>Vertical wind<a class="headerlink" href="#vertical-wind" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="calculation-of-vertical-velocity-and-preparation-of-output-files">
 <h2>Calculation of vertical velocity and preparation of output files<a class="headerlink" href="#calculation-of-vertical-velocity-and-preparation-of-output-files" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>Two methods are provided in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> for the calculation of the vertical velocity for <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>:</dt><dd><ol class="lowerroman simple">
+<p>Two methods are provided in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> for the calculation of the vertical velocity for <code class="docutils literal notranslate"><span class="pre">FLEXTRA</span></code>/<code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>:</p>
+<ol class="lowerroman simple">
 <li><p>from the horizontal wind field,</p></li>
 <li><p>from the MARS parameter 77, which is available for operational forecasts and analyses since September 2008 and for reanalysis datasets <strong>ERA5</strong> and <strong>CERA-20C</strong>, which contains the vertical velocity directly in the eta coordinate system of the ECMWF model.</p></li>
 </ol>
-</dd>
-</dl>
 <p>Especially for high resolution data, use of the <code class="docutils literal notranslate"><span class="pre">MARS</span></code> parameter 77 is recommended,
 since the computational cost (measured in ECMWF HPC units) is reduced by 90-95% at
 T799. The extraction time, which depends heavily also on the performance of <code class="docutils literal notranslate"><span class="pre">MARS</span></code>, is
@@ -207,18 +205,18 @@ V40_update_protocol.pdf. The computational demand and accuracy of <code class="d
 dependent on the specification of parameters <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> and <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code>. The
 following guidance can be given for choosing the right parameters:</p>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p>For very fine output grids (0.25 degree or finer), the full resolution T799 or even T1279 of the operational model is required (<code class="docutils literal notranslate"><span class="pre">RESOL=799</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code>). The highest available resolution (and the calculation of vertical velocity on the Gaussian grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>) is, however, rather demanding and feasible only for resolutions up to T799. Higher resolutions are achievable on the HPC. If data retrieval at T1279  needs to be performed on <em>ecgate</em>, the computation of the vertical velocity is feasible only on the lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>), which also yields very good results. Please read document v20_update_protocol.pdf-v60_update_protocol.pdf to see if the errors incurred are acceptable for the planned application.</p></li>
-<li><dl class="simple">
-<dt>For lower resolution (often global) output grids, calculation of vertical velocities with lower than operational spectral resolution is recommended. For global grids the following settings appear optimal:</dt><dd><ul>
+<li><p>For lower resolution (often global) output grids, calculation of vertical velocities with lower than operational spectral resolution is recommended. For global grids the following settings appear optimal:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>For 1.0 degree grids: <code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL=255</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=179</span></code></p></li>
 <li><p>For 0.5 degree grids: <code class="docutils literal notranslate"><span class="pre">GAUSS=1</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL=399</span></code>, <code class="docutils literal notranslate"><span class="pre">SMOOTH=359</span></code></p></li>
 <li><p>Calculation on the lat/lon grid is not recommended for less than the operational (T1279) resolution.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">GAUSS</span></code> is set to 1, only the following choices are possible for <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> on <em>ecgate</em>: 159,255,319,399,511,799, (on the HPC also 1279; 2047 in future model versions). This choice is restricted because a reduced Gaussian grid is defined in the ECMWF EMOSLIB only for these spectral resolutions. For <code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>, <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> can be any value below the operational resolution.</p></li>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code>, any resolution lower than <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> is possible. If no smoothing is desired, <code class="docutils literal notranslate"><span class="pre">SMOOTH=0</span></code> should be chosen. <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> has no effect if the vertical velocity is calculated on a lat/lon grid (<code class="docutils literal notranslate"><span class="pre">GAUSS=0</span></code>).</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 <li><p>The on-demand scripts send an error message for settings where <code class="docutils literal notranslate"><span class="pre">SMOOTH</span></code> (if set) and <code class="docutils literal notranslate"><span class="pre">RESOL</span></code> are larger than 360./<code class="docutils literal notranslate"><span class="pre">GRID</span></code>/2, since in this case, the output grid cannot resolve the highest wave numbers. The scripts continue operations, however.</p></li>
 <li><p>Regional grids are not cyclic in zonal directions, but global grids are. The software assumes a cyclic grid if <code class="docutils literal notranslate"><span class="pre">RIGHT</span></code>-<code class="docutils literal notranslate"><span class="pre">LEFT</span></code> is equal to <code class="docutils literal notranslate"><span class="pre">GRID</span></code> or is equal to <code class="docutils literal notranslate"><span class="pre">GRID</span></code>-360.</p></li>

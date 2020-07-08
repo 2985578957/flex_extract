@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The executable script - run.sh &mdash; flex_extract 7.1.1 documentation</title>
+  <title>The executable script - run.sh &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -205,16 +205,16 @@ the command line parameters, and the so-called <code class="docutils literal not
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Parameters for submission</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 12%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 9%" />
-<col style="width: 27%" />
-<col style="width: 33%" />
+<col style="width: 13%" />
+<col style="width: 13%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 26%" />
+<col style="width: 32%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>PARAMETER</p></th>
-<th class="head"><p>Datatype</p></th>
+<th class="head"><p>Format</p></th>
 <th class="head"><p>Possible values</p></th>
 <th class="head"><p>Default</p></th>
 <th class="head"><p>Description</p></th>
@@ -223,14 +223,14 @@ the command line parameters, and the so-called <code class="docutils literal not
 </thead>
 <tbody>
 <tr class="row-even"><td><p>START_DATE</p></td>
-<td><p>String YYYYMMDD</p></td>
+<td><p>String (YYYYMMDD)</p></td>
 <td><p>depends on dataset</p></td>
 <td><p>None</p></td>
 <td><p>The first day of the retrieval period.</p></td>
-<td><p>If END_DATE is set, START_DATE must be greater than END_DATE.</p></td>
+<td><p>If END_DATE is set, START_DATE must be earlier or equal than END_DATE.</p></td>
 </tr>
 <tr class="row-odd"><td><p>END_DATE</p></td>
-<td><p>String YYYYMMDD</p></td>
+<td><p>String (YYYYMMDD)</p></td>
 <td><p>depends on dataset</p></td>
 <td><p>None</p></td>
 <td><p>The last day of the retrieval period. For a one day retrieval it has to be the same date as START_DATE. If not set, it is automatically equal to START_DATE. </p></td>
@@ -259,63 +259,66 @@ the command line parameters, and the so-called <code class="docutils literal not
 </tr>
 <tr class="row-odd"><td><p>BASETIME</p></td>
 <td><p>Integer</p></td>
-<td><p>[0; 12]</p></td>
+<td><p>0; 12</p></td>
 <td><p>None</p></td>
 <td><p>This parameter is intended for half-day retrievals. Only half a day will be retrieved starting from BASETIME going back 12 hours. E.g. 20180510 with a BASETIME = 00 would lead to a data retrieval of 20180509 12h until 20180510 00h.</p></td>
 <td><p>Can be set to 00 or 12 only.</p></td>
 </tr>
 <tr class="row-even"><td><p>STEP</p></td>
-<td><p>list of String [xx xx … xx] or as String [x/to/x]</p></td>
-<td><p>[00 - max available STEP in data set]</p></td>
+<td><p>blank seperated list of Integers (ii ii … ii) or as String (start/to/end)</p></td>
+<td><p>00 - max available STEP in data set</p></td>
 <td><p>None</p></td>
 <td><p>This is the forecast time step in hours for each corresponding field type (TYPE). Counting of the steps starts from the forecast times.  E.g. In Era-Interim, for forecasts at 3, 6, 9 UTC the STEPS 3,6 and 9 are used and the forecast TIME 00 UTC. </p></td>
 <td><p>Has to have the same amount of values as in TYPE and TIME! For analysis (AN) fields the STEP has to be 00 always! It is more easily set in the CONTROL file. For pure forecast modes it might be set here as e.g. 0/to/36</p></td>
 </tr>
 <tr class="row-odd"><td><p>LEVELIST</p></td>
-<td><p>String [start/to/end]</p></td>
+<td><p>String (start/to/end)</p></td>
 <td><p>1/to/137; depends on dataset</p></td>
 <td><p>None</p></td>
 <td><p>List of vertical levels for MARS request. It can be a subset of levels but it has to include the maximum level (end).</p></td>
 <td><p>If full list of levels is needed and parameter LEVEL is set, the LEVELIST parameter is not needed. “end” has to be the maximum number of possible levels and has to be the same as in LEVEL, if specified.</p></td>
 </tr>
 <tr class="row-even"><td><p>AREA</p></td>
-<td><p>Double [f/f/f/f]</p></td>
+<td><p>Double (f/f/f/f)</p></td>
 <td><p>any float within lat and lon boundaries</p></td>
-<td><p>‘’</p></td>
+<td><p>None</p></td>
 <td><p>Area defined as north/west/south/east</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p>DEBUG</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Debug mode - leave temporary files intact</p></td>
 <td><p>Usually only the final FLEXPART inputfiles are saved.</p></td>
 </tr>
 <tr class="row-even"><td><p>OPER</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Operational mode - prepares dates with            environment variables</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p>REQUEST</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1,2]</p></td>
+<td><p>0;1;2</p></td>
 <td><p>0</p></td>
-<td><p>List all mars requests with its specifc values in file mars_requests.dat</p></td>
+<td><p>List all mars requests with its specifc values in file mars_requests.dat
+0 – no file
+1 – only mars_requests.csv 
+2 – file and extraction</p></td>
 <td><p>Very useful for documentation or debugging reasons.</p></td>
 </tr>
 <tr class="row-even"><td><p>PUBLIC</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Public mode - retrieves the public datasets</p></td>
 <td><p>IMPORTANT: This is necessary to select for each PUBLIC user!</p></td>
 </tr>
 <tr class="row-odd"><td><p>RRINT</p></td>
 <td><p>Integer</p></td>
-<td><p>[0,1]</p></td>
+<td><p>0;1</p></td>
 <td><p>0</p></td>
 <td><p>Selection of old or new precipitation interpolation ; 
                         0 - old method;
@@ -345,8 +348,8 @@ the command line parameters, and the so-called <code class="docutils literal not
 </tr>
 <tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
 <td><p>String</p></td>
-<td><p>job.temp</p></td>
-<td><p>job.temp</p></td>
+<td><p>jobscript.template</p></td>
+<td><p>jobscript.template</p></td>
 <td><p>The job template file which are adapted to be submitted to the batch system on ECMWF server.</p></td>
 <td><p></p></td>
 </tr>

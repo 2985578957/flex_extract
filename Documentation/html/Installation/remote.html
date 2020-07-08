@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Remote mode installation &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Remote mode installation &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -286,7 +286,7 @@ described in <a class="reference internal" href="../Documentation/Input/setup.ht
 <span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;&lt;gatewayname&gt;&#39;</span>
 <span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;@genericSftp&#39;</span>
 <span class="nv">INSTALLDIR</span><span class="o">=</span>None
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;installscript.template&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
 ...
 </pre></div>
@@ -305,7 +305,7 @@ described in <a class="reference internal" href="../Documentation/Input/setup.ht
 <span class="nv">GATEWAY</span><span class="o">=</span><span class="s1">&#39;&lt;gatewayname&gt;&#39;</span>
 <span class="nv">DESTINATION</span><span class="o">=</span><span class="s1">&#39;&lt;username&gt;@genericSftp&#39;</span>
 <span class="nv">INSTALLDIR</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.template&#39;</span>
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;installscript.template&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
 ...
 </pre></div>
@@ -321,8 +321,7 @@ with your own ones (look at any of your files with ``ls -l’’ to see uid and 
 <p>If a local gateway server is available, files can be transferred with <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> commands. In that case, a valid <em>GATEWAY</em> and <em>DESTINATION</em> have to be present in the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> file (even if not used, the lines must not be deleted).</p>
 </div>
 <p>Afterwards, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load python3
-./setup.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./setup.sh
 </pre></div>
 </div>
 <p>to start the installation. You should see the following on standard output.</p>

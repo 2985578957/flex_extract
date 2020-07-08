@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The job script job.ksh &mdash; flex_extract 7.1.1 documentation</title>
+  <title>The job script job.ksh &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -101,7 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="run.html">The executable script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#what-does-the-job-script-do">What does the job script do?</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#example-jobscript-ksh">Example <code class="docutils literal notranslate"><span class="pre">jobscript.ksh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-job-ksh">Example <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
@@ -195,11 +195,11 @@
   <div class="section" id="the-job-script-job-ksh">
 <h1>The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code><a class="headerlink" href="#the-job-script-job-ksh" title="Permalink to this headline">¶</a></h1>
 <p>The job script is a Korn-shell script which will be created at runtime for each <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> execution in the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
-<p>It is based on the <code class="docutils literal notranslate"><span class="pre">job.temp</span></code> template file stored in the <code class="docutils literal notranslate"><span class="pre">Templates</span></code> directory.
-This template is generated in the installation process from a <code class="docutils literal notranslate"><span class="pre">job.template</span></code> template file.</p>
+<p>It is based on the <code class="docutils literal notranslate"><span class="pre">submitscript.template</span></code> template file stored in the <code class="docutils literal notranslate"><span class="pre">Templates</span></code> directory.
+This template is generated in the installation process from a <code class="docutils literal notranslate"><span class="pre">jobscript.template</span></code> template file.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the Python package <a class="reference external" href="https://genshi.edgewall.org/">genshi</a> to generate
 the Korn-shell script from the template files by substituting the individual parameters.
-These individual parameters are marked by <code class="docutils literal notranslate"><span class="pre">$$</span></code> in <code class="docutils literal notranslate"><span class="pre">job.temp</span></code>.</p>
+These individual parameters are marked by <code class="docutils literal notranslate"><span class="pre">$$</span></code> in <code class="docutils literal notranslate"><span class="pre">jobscript.template</span></code>.</p>
 <p>The job script has a number of settings for the batch system which are fixed, and differentiates between the <em>ecgate</em> and the <em>cca/ccb</em>
 server system to load the necessary modules for the environment when submitted to the batch queue.</p>
 <p>The submission is done by the <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> tool from within <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the command <code class="docutils literal notranslate"><span class="pre">ecaccess-job-submit</span></code>.</p>
@@ -211,14 +211,14 @@ server system to load the necessary modules for the environment when submitted t
 <li><p>It prepares the job environment at the ECMWF servers by loading the necessary library modules.</p></li>
 <li><p>It sets some environment variables for the single session.</p></li>
 <li><p>It creates the directory structure in the user’s <code class="docutils literal notranslate"><span class="pre">$SCRATCH</span></code> file system.</p></li>
-<li><p>It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the <code class="docutils literal notranslate"><span class="pre">jobscript.ksh</span></code>. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a set of parameters which are passed to the job script with their default or the user-defined values. It also sets <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> as an environment variable.</p></li>
+<li><p>It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code>. <code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a set of parameters which are passed to the job script with their default or the user-defined values. It also sets <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> as an environment variable.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is started from within the <code class="docutils literal notranslate"><span class="pre">work</span></code> directory of the new directory structure by calling the <code class="docutils literal notranslate"><span class="pre">submit.py</span></code> script. It sets new paths for input and output directories and the recently generated <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.</p></li>
 <li><p>At the end, it checks whether the script has returned an error or not, and emails the log file to the user.</p></li>
 </ol>
 </div></blockquote>
 </div>
-<div class="section" id="example-jobscript-ksh">
-<h2>Example <code class="docutils literal notranslate"><span class="pre">jobscript.ksh</span></code><a class="headerlink" href="#example-jobscript-ksh" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="example-job-ksh">
+<h2>Example <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code><a class="headerlink" href="#example-job-ksh" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/ksh</span>
 
 <span class="c1"># ON ECGB:</span>
@@ -249,20 +249,17 @@ server system to load the necessary modules for the environment when submitted t
 <span class="k">case</span> <span class="si">${</span><span class="nv">HOST</span><span class="si">}</span> in
   *ecg*<span class="o">)</span>
   module unload grib_api
-  module unload eccodes
-  module unload python
   module unload emos
   module load python3
-  module load eccodes/2.12.0
+  module load eccodes
   module load emos/455-r64
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
-  module unload python
   module switch PrgEnv-cray PrgEnv-intel
   module load python3
-  module load eccodes/2.12.0
-  module load emos
+  module load eccodes
+  module load emos/455-r64
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span>
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
@@ -288,7 +285,7 @@ cat &gt;<span class="si">${</span><span class="nv">CONTROL</span><span class="si
 <span class="s">dataset None</span>
 <span class="s">date_chunk 3</span>
 <span class="s">debug 1</span>
-<span class="s">destination annep@genericSftp</span>
+<span class="s">destination &lt;specificname&gt;@genericSftp</span>
 <span class="s">doubleelda 0</span>
 <span class="s">dpdeta 1</span>
 <span class="s">dtime 3</span>
@@ -309,7 +306,7 @@ cat &gt;<span class="si">${</span><span class="nv">CONTROL</span><span class="si
 <span class="s">gaussian</span>
 <span class="s">grib2flexpart 0</span>
 <span class="s">grid 1.0/1.0</span>
-<span class="s">inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace</span>
+<span class="s">inputdir &lt;path-to-flex_extract&gt;/flex_extract_v7.1/run/workspace</span>
 <span class="s">install_target None</span>
 <span class="s">job_chunk 1</span>
 <span class="s">job_template job.temp</span>
@@ -326,7 +323,7 @@ cat &gt;<span class="si">${</span><span class="nv">CONTROL</span><span class="si
 <span class="s">omega 0</span>
 <span class="s">omegadiff 0</span>
 <span class="s">oper 0</span>
-<span class="s">outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace</span>
+<span class="s">outputdir &lt;path-to-flex_extract&gt;/flex_extract_v7.1/run/workspace</span>
 <span class="s">prefix CE</span>
 <span class="s">public 0</span>
 <span class="s">purefc 0</span>

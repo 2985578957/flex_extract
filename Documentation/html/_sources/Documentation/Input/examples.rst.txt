@@ -35,9 +35,9 @@ CONTROL.documentation
 	CONTROL_OD.OPER.FC.twicedaily.1hourly
 	CONTROL_OD.OPER.FC.twicedaily.3hourly
 
-.. todo::
+.. note::
 
-   #PS some information to be added.
+   Further information will follow.
  
 .. toctree::
     :hidden:

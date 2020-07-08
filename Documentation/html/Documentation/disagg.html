@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Disaggregation of flux data &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Disaggregation of flux data &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -200,39 +200,39 @@ pre-processing has to be applied.</p>
 <tr class="row-odd"><th class="head"><p>Short Name</p></th>
 <th class="head"><p>Name</p></th>
 <th class="head"><p>Units</p></th>
-<th class="head"><p>Interpolation Type</p></th>
+<th class="head"><p>Disaggregation</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>LSP</p></td>
 <td><p>large-scale precipitation</p></td>
 <td><p>m</p></td>
-<td><p>modified linear interpolation</p></td>
+<td><p>precipitation</p></td>
 </tr>
 <tr class="row-odd"><td><p>CP</p></td>
 <td><p>convective precipitation</p></td>
 <td><p>m</p></td>
-<td><p>modified linear interpolation</p></td>
+<td><p>precipitation</p></td>
 </tr>
 <tr class="row-even"><td><p>SSHF</p></td>
 <td><p>surface sensible heat flux</p></td>
-<td><p>J m:math:<cite>^{-2}</cite></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>J m <span class="math notranslate nohighlight">\(^{-2}\)</span></p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-odd"><td><p>EWSS</p></td>
 <td><p>eastward turbulent surface stress</p></td>
-<td><p>N m:math:<cite>^{-2}</cite> s</p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>N m <span class="math notranslate nohighlight">\(^{-2}\)</span> s</p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-even"><td><p>NSSS</p></td>
 <td><p>northward turbulent surface stress</p></td>
-<td><p>N m:math:<cite>^{-2}</cite> s</p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>N m <span class="math notranslate nohighlight">\(^{-2}\)</span> s</p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-odd"><td><p>SSR</p></td>
 <td><p>surface net solar radiation</p></td>
-<td><p>J m:math:<cite>^{-2}</cite></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>J m <span class="math notranslate nohighlight">\(^{-2}\)</span></p></td>
+<td><p>flux</p></td>
 </tr>
 </tbody>
 </table>
@@ -249,7 +249,7 @@ They are retrieved automatically. Thus, data for flux computation will be reques
 <h2>Disaggregation for precipitation in older versions<a class="headerlink" href="#disaggregation-for-precipitation-in-older-versions" title="Permalink to this headline">¶</a></h2>
 <p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> up to version 5, the disaggregation was done with a Fortran program (FLXACC2). In version 6, this part was recoded in Python.</p>
 <p>In the old versions (below 7.1), a relatively simple method processes the precipitation fields in a way that is consistent with the linear interpolation between times where input fields are available that is applied in <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> for all variables.
-This scheme (from Paul James) at first divides the accumulated values by the number of hours (i.e., 3 or 6). ???
+This scheme (from Paul James) at first divides the accumulated values by the number of hours (i.e., 3 or 6).
 The best option for disaggregation, which was realised, is conservation within the interval under consideration plus the two adjacent ones.
 Unfortunately, this leads to undesired temporal smoothing of the precipitation time series – maxima are damped and minima are raised.
 It is even possible to produce non-zero precipitation in dry intervals bordering a precipitation period as shown in Fig. 1.
@@ -311,16 +311,11 @@ The height is thereby determined by the condition of conservation of the integra
 <div class="section" id="disaggregation-for-the-other-flux-fields">
 <h2>Disaggregation for the other flux fields<a class="headerlink" href="#disaggregation-for-the-other-flux-fields" title="Permalink to this headline">¶</a></h2>
 <p>The accumulated values for the other variables are first divided by the number of hours and
-then interpolated to the exact times using a bicubic interpolation which conserves the integrals of the fluxes within each timespan.
-Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(p_a, p_b, p_c, p_d\)</span>) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.</p>
+then disaggregates to the exact times and conserves the integrals of the fluxes within each timespan.
+Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(F_0, F_1, F_2, F_3\)</span>) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.
+This new point <span class="math notranslate nohighlight">\(F\)</span> is used for linear interpolation of the complete timeseries afterwards.</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}p_a &amp;= (a_3 - a_0 + 3. * (a_1 - a_2)) / 6. \\
-p_b &amp;= (a_2 + a_0) / 2. - a_1 - 9. * p_a / 2. \\
-p_c &amp;= a_1 - a_0 - 7. * p_a / 2. - 2. * p_b \\
-p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
-<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards.</p>
-<div class="math notranslate nohighlight">
-\[p = 8. * p_a + 4. * p_b + 2. * p_c + p_d\]</div>
+\[F = -\frac{1}{12}F_0 + \frac{7}{12}F_1 + \frac{7}{12}F_2 -\frac{1}{12}F_3\]</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>

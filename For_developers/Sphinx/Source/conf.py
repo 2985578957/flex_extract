@@ -31,9 +31,9 @@ copyright = u'2020, Anne Philipp, Leopold Haimberger and Petra Seibert'
 author = u'Anne Philipp, Leopold Haimberger and Petra Seibert'
 
 # The short X.Y version
-version = u'7.1.1'
+version = u'7.1.2'
 # The full version, including alpha/beta/rc tags
-release = u'7.1.1'
+release = u'7.1.2'
 
 
 # -- General configuration ---------------------------------------------------

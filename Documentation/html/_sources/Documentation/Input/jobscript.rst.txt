@@ -4,12 +4,12 @@ The job script ``job.ksh``
 
 The job script is a Korn-shell script which will be created at runtime for each ``flex_extract`` execution in the application modes **remote** and **gateway**.
 
-It is based on the ``job.temp`` template file stored in the ``Templates`` directory.
-This template is generated in the installation process from a ``job.template`` template file.
+It is based on the ``submitscript.template`` template file stored in the ``Templates`` directory.
+This template is generated in the installation process from a ``jobscript.template`` template file.
 
 ``Flex_extract`` uses the Python package `genshi <https://genshi.edgewall.org/>`_ to generate
 the Korn-shell script from the template files by substituting the individual parameters. 
-These individual parameters are marked by ``$$`` in ``job.temp``. 
+These individual parameters are marked by ``$$`` in ``jobscript.template``. 
 
 The job script has a number of settings for the batch system which are fixed, and differentiates between the *ecgate* and the *cca/ccb* 
 server system to load the necessary modules for the environment when submitted to the batch queue.
@@ -25,14 +25,14 @@ What does the job script do?
  #. It prepares the job environment at the ECMWF servers by loading the necessary library modules.
  #. It sets some environment variables for the single session.
  #. It creates the directory structure in the user's ``$SCRATCH`` file system.
- #. It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the ``jobscript.ksh``. ``Flex_extract`` has a set of parameters which are passed to the job script with their default or the user-defined values. It also sets ``CONTROL`` as an environment variable.
+ #. It creates a CONTROL file on the ECMWF servers whith the parameters set before creating the ``job.ksh``. ``Flex_extract`` has a set of parameters which are passed to the job script with their default or the user-defined values. It also sets ``CONTROL`` as an environment variable.
  #. ``Flex_extract`` is started from within the ``work`` directory of the new directory structure by calling the ``submit.py`` script. It sets new paths for input and output directories and the recently generated ``CONTROL`` file.
  #. At the end, it checks whether the script has returned an error or not, and emails the log file to the user.
 
 
 
 
-Example ``jobscript.ksh``
+Example ``job.ksh``
 -------------------------
   
 .. code-block::  bash
@@ -67,20 +67,17 @@ Example ``jobscript.ksh``
     case ${HOST} in
       *ecg*)
       module unload grib_api
-      module unload eccodes
-      module unload python
       module unload emos
       module load python3
-      module load eccodes/2.12.0
+      module load eccodes
       module load emos/455-r64
       export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
       ;;
       *cca*)
-      module unload python
       module switch PrgEnv-cray PrgEnv-intel
       module load python3
-      module load eccodes/2.12.0
-      module load emos
+      module load eccodes
+      module load emos/455-r64
       export SCRATCH=${TMPDIR}
       export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
       ;;
@@ -106,7 +103,7 @@ Example ``jobscript.ksh``
     dataset None
     date_chunk 3
     debug 1
-    destination annep@genericSftp
+    destination <specificname>@genericSftp
     doubleelda 0
     dpdeta 1
     dtime 3
@@ -127,7 +124,7 @@ Example ``jobscript.ksh``
     gaussian 
     grib2flexpart 0
     grid 1.0/1.0
-    inputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+    inputdir <path-to-flex_extract>/flex_extract_v7.1/run/workspace
     install_target None
     job_chunk 1
     job_template job.temp
@@ -144,7 +141,7 @@ Example ``jobscript.ksh``
     omega 0
     omegadiff 0
     oper 0
-    outputdir /raid60/nas/tmc/Anne/Interpolation/flexextract/flex_extract_v7.1/run/workspace
+    outputdir <path-to-flex_extract>/flex_extract_v7.1/run/workspace
     prefix CE
     public 0
     purefc 0

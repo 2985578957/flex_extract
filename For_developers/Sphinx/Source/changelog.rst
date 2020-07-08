@@ -10,6 +10,25 @@ Changelog
 .. _new algorithm: https://www.geosci-model-dev.net/11/2503/2018/
 
 
+.. _ref-v712:
+
+Release v7.1.2
+--------------
+
+Changes
+#########
+   * changed naming of template files
+   * separate loading of Python3 module in remote mode is no longer necessary
+   * updated module versions for ECMWF servers
+   * changed names of working directories on ECMWF servers
+   * select makefile automatically regarding application mode if it was not set in ``setup.sh``
+   * updated online documentation
+   * converted most important Fortran code documentation from German to English 
+   * deactivate writing of VERTICAL.EC file by Fortran code
+   * adapt and improve Fortran regression test scripts
+   * remove jasper lib from Fortran makefiles
+   
+   
 .. _ref-v711:
 
 Release v7.1.1

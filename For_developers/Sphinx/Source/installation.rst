@@ -139,7 +139,7 @@ The software required to run ``flex_extract`` depends on the :doc:`Documentation
 Generally speaking, ``flex_extract`` requires `Python 3`_ and Fortran together with certain modules / libraries.
 We tested ``flex_extract`` with the Python3 package from the the GNU/Linux distribution and Anaconda Python. The required Python3 modules should prefarably be installed as distribution packages, or alternatively using Python's own package manager ``pip`` (this may mess up some aspects of your python installation, especially if you use ``pip`` as root. Think about using virtual environments.).
 
-Before installing the system packages check the availability with (Debian-based system) ``dpkg -s <package-name> |  grep Status`` or (Redhat-based system)``rpm -q <package_name>``. For example: 
+Before installing the system packages check the availability with (Debian-based system) ``dpkg -s <package-name> |  grep Status`` or (Redhat-based system) ``rpm -q <package_name>``. For example: 
 
 .. code-block:: sh
 
@@ -197,14 +197,14 @@ Fortran program test
 
 To check whether the Fortran program ``calc_etadot`` has been compiled and runs properly, it can be applied to a prepared minimal dataset.
 
-For this, go from the ``flex_extract`` root directory to the ``Testing/Installation/Convert/`` directory and execute the Fortran program.
+For this, go from the ``flex_extract`` root directory to the ``Testing/Installation/Calc_etadot/`` directory and execute the Fortran program.
 
 .. note:: 
    Remember that you might have to log in at the ECMWF server if you used the installation for the **remote** or **gateway** mode. There you find the ``flex_extract`` root directory in your ``$HOME`` directory.
 
 .. code-block:: bash
    
-   cd Testing/Installation/Convert
+   cd Testing/Installation/Calc_etadot
    # execute the Fortran progam without arguments
    ../../../Source/Fortran/calc_etadot
 

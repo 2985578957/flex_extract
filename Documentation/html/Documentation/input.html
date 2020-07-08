@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Control &amp; input data &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Control &amp; input data &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -218,10 +218,7 @@ python3 Source/Python/install.py --help
 python3 Source/Python/submit.py --help
 </pre></div>
 </div>
-<dl class="simple">
-<dt>With version 7.1, we provide also wrapper shell scripts <a class="reference external" href="Input/setup.html">setup</a> and <a class="reference external" href="Input/run.html">run</a> which set the command-line parameters, do some checks, and execute the corresponing Python scripts <code class="docutils literal notranslate"><span class="pre">install.py</span></code> and <code class="docutils literal notranslate"><span class="pre">submit.py</span></code>, respectively.</dt><dd><p>It might be faster and easier for beginners if they are used. See <a class="reference internal" href="../quick_start.html"><span class="doc">Usage</span></a> for information on how to use them.</p>
-</dd>
-</dl>
+<p>With version 7.1, we provide also wrapper shell scripts <a class="reference external" href="Input/setup.html">setup</a> and <a class="reference external" href="Input/run.html">run</a> which set the command-line parameters, do some checks, and execute the corresponing Python scripts <code class="docutils literal notranslate"><span class="pre">install.py</span></code> and <code class="docutils literal notranslate"><span class="pre">submit.py</span></code>, respectively. It might be faster and easier for beginners if they are used. See <a class="reference internal" href="../quick_start.html"><span class="doc">Usage</span></a> for information on how to use them.</p>
 <p><code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> also creates the Korn shell scripts <a class="reference internal" href="Input/compilejob.html"><span class="doc">The compilation job script compilejob.ksh</span></a> and <a class="reference internal" href="Input/jobscript.html"><span class="doc">The job script job.ksh</span></a> which will be sent to the ECMWF servers in the <strong>remote mode</strong> and the <strong>gateway mode</strong> for starting batch jobs.</p>
 <p>The Fortran program is compiled during the installation process using the <a class="reference internal" href="Input/fortran_makefile.html"><span class="doc">The Fortran makefile for calc_etadot</span></a>.</p>
 <p>To sum up, the following scripts control <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>:</p>

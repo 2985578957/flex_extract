@@ -16,8 +16,8 @@ Local mode installation
 .. _ecmwf-api-client: https://confluence.ecmwf.int/display/WEBAPI/ECMWF+Web+API+Home
 .. _cdsapi: https://cds.climate.copernicus.eu/api-how-to
 .. _genshi: https://genshi.edgewall.org/
-.. _eccodes for python: https://pypi.org/project/eccodes-python/
-.. _eccodes for conda: https://anaconda.org/conda-forge/eccodes
+.. _eccodes for python: https://pypi.org/project/eccodes/ 
+.. _eccodes for conda: https://anaconda.org/conda-forge/python-eccodes
 .. _gfortran: https://gcc.gnu.org/wiki/GFortran
 .. _fftw3: http://www.fftw.org
 .. _eccodes: https://software.ecmwf.int/wiki/display/ECC
@@ -119,6 +119,7 @@ Testing the local environment
 =============================
 
 Check the availability of the python packages by typing ``python3`` in a terminal window and run the ``import`` commands in the python shell:
+
 .. code-block:: python
     
    # check in python3 console
@@ -286,12 +287,13 @@ with an editor and adapt the installation parameters in the section labelled wit
    # THE USER HAS TO SPECIFY THESE PARAMETER
    #
    TARGET='local'
+   MAKEFILE=<name_of_your_makefile>
    ECUID=None
    ECGID=None
    GATEWAY=None
    DESTINATION=None
    INSTALLDIR=None
-   JOB_TEMPLATE='job.template'
+   JOB_TEMPLATE=''
    CONTROLFILE='CONTROL_EA5'
    ...
 

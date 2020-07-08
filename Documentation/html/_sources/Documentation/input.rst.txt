@@ -35,8 +35,8 @@ Controlling
        python3 Source/Python/install.py --help
        python3 Source/Python/submit.py --help
    
-    With version 7.1, we provide also wrapper shell scripts setup_ and run_ which set the command-line parameters, do some checks, and execute the corresponing Python scripts ``install.py`` and ``submit.py``, respectively. 
-     It might be faster and easier for beginners if they are used. See :doc:`../quick_start` for information on how to use them.
+    
+    With version 7.1, we provide also wrapper shell scripts setup_ and run_ which set the command-line parameters, do some checks, and execute the corresponing Python scripts ``install.py`` and ``submit.py``, respectively. It might be faster and easier for beginners if they are used. See :doc:`../quick_start` for information on how to use them.
 
     ``flex_extract`` also creates the Korn shell scripts :doc:`Input/compilejob` and :doc:`Input/jobscript` which will be sent to the ECMWF servers in the **remote mode** and the **gateway mode** for starting batch jobs.
 

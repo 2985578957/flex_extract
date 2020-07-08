@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Templates &mdash; flex_extract 7.1.1 documentation</title>
+  <title>Templates &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -106,11 +106,11 @@
 <li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF user credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Templates</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#convert-nl">convert.nl</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ecmwf-env-template">ecmwf_env.template</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#compilejob-template">compilejob.template</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#job-temp">job.temp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#job-template">job.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calc-etadot-nml-template">calc_etadot_nml.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ecmwf-env-template">ECMWF_ENV.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#installscript-template">installscript.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submitscript-template">submitscript.template</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#jobscript-template">jobscript.template</a></li>
 </ul>
 </li>
 </ul>
@@ -202,10 +202,10 @@
 <p class="admonition-title">Note</p>
 <p>Do not change anything in these files unless you understand the effects!</p>
 </div>
-<p>Each template file has its content framework and keeps so-called placeholder variables in the positions where the values need to be substituted at run time. These placeholders are marked by a leading <code class="docutils literal notranslate"><span class="pre">$</span></code> sign. In case of the Kornshell job scripts, where (environment) variables are used, the <code class="docutils literal notranslate"><span class="pre">$</span></code> sign needs to be doubled for <cite>escaping</cite>.</p>
+<p>Each template file has its content framework and keeps so-called placeholder variables in the positions where the values need to be substituted at run time. These placeholders are marked by a leading <code class="docutils literal notranslate"><span class="pre">$</span></code> sign. In case of the Korn shell job scripts, where (environment) variables are used, the <code class="docutils literal notranslate"><span class="pre">$</span></code> sign needs to be doubled for <cite>escaping</cite>.</p>
 <p>The following templates are used; they can be found in the directory <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Templates</span></code>:</p>
-<div class="section" id="convert-nl">
-<h2>convert.nl<a class="headerlink" href="#convert-nl" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="calc-etadot-nml-template">
+<h2>calc_etadot_nml.template<a class="headerlink" href="#calc-etadot-nml-template" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This is the template for a Fortran namelist file called <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> read by <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>.
 It contains all the parameters <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> needs.</p>
@@ -233,7 +233,7 @@ It contains all the parameters <code class="docutils literal notranslate"><span 
 </div></blockquote>
 </div>
 <div class="section" id="ecmwf-env-template">
-<h2>ecmwf_env.template<a class="headerlink" href="#ecmwf-env-template" title="Permalink to this headline">¶</a></h2>
+<h2>ECMWF_ENV.template<a class="headerlink" href="#ecmwf-env-template" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This template is used to create the <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> file in the application modes <strong>gateway</strong> and <strong>remote</strong>. It contains the user credentials and gateway server settings for the file transfers.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ECUID <span class="nv">$user_name</span>
@@ -244,8 +244,8 @@ DESTINATION <span class="nv">$destination_name</span>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="compilejob-template">
-<h2>compilejob.template<a class="headerlink" href="#compilejob-template" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installscript-template">
+<h2>installscript.template<a class="headerlink" href="#installscript-template" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This template is used to create the job script file called <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code> during the installation process for the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
 <p>At the beginning, some directives for the batch system are set.
@@ -283,21 +283,18 @@ For the high-performance computers <strong>cca</strong> and <strong>ccb</strong>
 <span class="k">case</span> <span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span> in
   *ecg*<span class="o">)</span>
   module unload grib_api
-  module unload eccodes
-  module unload python
   module unload emos
   module load python3
-  module load eccodes/2.12.0
+  module load eccodes
   module load emos/455-r64
   <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="nv">$fp_root_scripts</span>
   <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span><span class="nv">$makefile</span>
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
-  module unload python
   module switch PrgEnv-cray PrgEnv-intel
   module load python3
-  module load eccodes/2.12.0
-  module load emos
+  module load eccodes
+  module load emos/455-r64
   <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>GROUP<span class="o">}</span>
   <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>
   <span class="nb">echo</span> <span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span> <span class="p">|</span> awk -F / <span class="s1">&#39;{print $1, $2, $3, $4}&#39;</span>
@@ -328,8 +325,8 @@ ls -l <span class="nv">$fortran_program</span> &gt;&gt;flexcompile
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="job-temp">
-<h2>job.temp<a class="headerlink" href="#job-temp" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="submitscript-template">
+<h2>submitscript.template<a class="headerlink" href="#submitscript-template" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>This template is used to create the actual job script file called <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code> for the execution of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> in the application modes <strong>remote</strong> and <strong>gateway</strong>.</p>
 <p>At the beginning, some directives for the batch system are set.
@@ -367,23 +364,20 @@ for details see <a class="reference external" href="https://confluence.ecmwf.int
 <span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="m">7</span>.1
 <span class="k">case</span> <span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span> in
   *ecg*<span class="o">)</span>
-  module unload grib_api
-  module unload eccodes
-  module unload python
-  module unload emos
-  module load python3
-  module load eccodes/2.12.0
-  module load emos/455-r64
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/Source/Python
-  <span class="p">;;</span>
-  *cca*<span class="o">)</span>
-  module unload python
-  module switch PrgEnv-cray PrgEnv-intel
-  module load python3
-  module load eccodes/2.12.0
-  module load emos
-  <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
-  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$$</span><span class="o">{</span>HOME<span class="o">}</span>/flex_extract_v7.1/Source/Python
+          module unload grib_api
+          module unload emos
+          module load python3
+          module load eccodes
+          module load emos/455-r64
+          <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
+          <span class="p">;;</span>
+          *cca*<span class="o">)</span>
+          module switch PrgEnv-cray PrgEnv-intel
+          module load python3
+          module load eccodes
+          module load emos/455-r64
+          <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span>
+          <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
 <span class="k">esac</span>
 
@@ -421,10 +415,10 @@ submit.py --controlfile<span class="o">=</span><span class="nv">$$</span><span c
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="job-template">
-<h2>job.template<a class="headerlink" href="#job-template" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="jobscript-template">
+<h2>jobscript.template<a class="headerlink" href="#jobscript-template" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>This template is used to create the template for the execution job script <code class="docutils literal notranslate"><span class="pre">job.temp</span></code> for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> in the installation process. A description of the file can be found under <code class="docutils literal notranslate"><span class="pre">job.temp</span></code>. Several parameters are set in this process, such as the user credentials and the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> version number.</p>
+<div><p>This template is used to create the template for the execution job script <code class="docutils literal notranslate"><span class="pre">submitscript.template</span></code> for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> in the installation process. A description of the file can be found under <code class="docutils literal notranslate"><span class="pre">submitscript.template</span></code>. Several parameters are set in this process, such as the user credentials and the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> version number.</p>
 <div class="highlight-ksh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/ksh</span>
 
 <span class="c1"># ON ECGB:</span>
@@ -454,21 +448,18 @@ submit.py --controlfile<span class="o">=</span><span class="nv">$$</span><span c
 <span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="nv">$version_number</span>
 <span class="k">case</span> <span class="nv">$$$$</span><span class="o">{</span>HOST<span class="o">}</span> in
   *ecg*<span class="o">)</span>
-  module unload grib_api
-  module unload eccodes
-  module unload python
-  module unload emos
-  module load python3
-  module load eccodes/2.12.0
-  module load emos/455-r64
+          module unload grib_api
+          module unload emos
+          module load python3
+          module load eccodes
+          module load emos/455-r64
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
-  module unload python
-  module switch PrgEnv-cray PrgEnv-intel
-  module load python3
-  module load eccodes/2.12.0
-  module load emos
+          module switch PrgEnv-cray PrgEnv-intel
+          module load python3
+          module load eccodes
+          module load emos/455-r64
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
   <span class="p">;;</span>

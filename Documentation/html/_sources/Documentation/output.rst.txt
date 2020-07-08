@@ -80,10 +80,10 @@ Here is an example output which lists the meteorological fields in a single file
         35 of 35 messages in CE00010800
 
 
-Output files for pure forecast
+Output files for long forecast
 ------------------------------
 
-``Flex_extract`` is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in pure forecast mode is introduced:
+``Flex_extract`` is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in long forecast mode is introduced:
 
 .. code-block:: bash
 
@@ -193,21 +193,11 @@ Example output of a one-day retrieval of CERA-20C data:
     4, 24, 40.0/-5.0/30.0/5.0, None, 20000108/to/20000108, 1, , 1.0/1.0, 1, SFC, EP, 000, 141.128/151.128/164.128/165.128/166.128/167.128/168.128/129.128/172.128/027.128/028.128/186.128/187.128/188.128/235.128/139.128/039.128/173.128, , 159, 00, ENDA, /mnt/nas/Anne/Interpolation/flexextract/flex_extract_v7.1/run/./workspace/CERA_testgrid_local_cds/ANOG__SL.20000108.23903.23904.grb, 00/03/06/09/12/15/18/21, AN
 
 
-VERTICAL.EC
------------
-
-This file contains information describing the vertical discretisation (model levels) 
-in form of the ``A`` and ``B`` parameters which allow to calculate the actual pressure of a model level from the surface pressure.
-
 
 Index file
 ----------
 
 This file is called ``date_time_stepRange.idx``. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords. 
-
-.. todo::
-
-	#PS NEEDS MORE DESCRIPTION
 
 
 Flux files

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The compilation job script compilejob.ksh &mdash; flex_extract 7.1.1 documentation</title>
+  <title>The compilation job script compilejob.ksh &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1.1
+                7.1.2
               </div>
             
           
@@ -194,11 +194,11 @@
             
   <div class="section" id="the-compilation-job-script-compilejob-ksh">
 <h1>The compilation job script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code><a class="headerlink" href="#the-compilation-job-script-compilejob-ksh" title="Permalink to this headline">¶</a></h1>
-<p>The compile job is a Korn-shell script which will be created during the installation process for the application modes <strong>remote</strong> and <strong>gateway</strong> from a template called <code class="docutils literal notranslate"><span class="pre">compilejob.template</span></code> in the template directory.</p>
+<p>The compile job is a Korn-shell script which will be created during the installation process for the application modes <strong>remote</strong> and <strong>gateway</strong> from a template called <code class="docutils literal notranslate"><span class="pre">installscript.template</span></code> in the template directory.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> uses the Python package <a class="reference external" href="https://genshi.edgewall.org/">genshi</a> to generate
 the Korn-shell script from the template files by substituting the individual parameters.
-These individual parameters are marked by a doubled <code class="docutils literal notranslate"><span class="pre">$</span></code> sign in <code class="docutils literal notranslate"><span class="pre">job.temp</span></code>.</p>
-<p>The job script has a number of settings for the batch system which are fixed, and it differentiates between the <em>ecgate</em> and the <em>cca/ccb</em>
+These individual parameters are marked by a doubled <code class="docutils literal notranslate"><span class="pre">$</span></code> sign in <code class="docutils literal notranslate"><span class="pre">installscript.template</span></code>.</p>
+<p>The compilation script has a number of settings for the batch system which are fixed, and it differentiates between the <em>ecgate</em> and the <em>cca/ccb</em>
 server system to load the necessary modules for the environment when submitted to the batch queue.</p>
 <p>The submission is done by the <code class="docutils literal notranslate"><span class="pre">ECaccess</span></code> tool from within <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the command <code class="docutils literal notranslate"><span class="pre">ecaccess-job-submit</span></code>.</p>
 <div class="section" id="what-does-the-compilation-script-do">
@@ -210,7 +210,7 @@ server system to load the necessary modules for the environment when submitted t
 <li><p>It sets some environment variables for the single session</p></li>
 <li><p>It creates the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in the <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> path of the user</p></li>
 <li><p>It untars the tarball into the root directory.</p></li>
-<li><p>It compiles the Fortran program using <code class="docutils literal notranslate"><span class="pre">Makefile</span></code>.</p></li>
+<li><p>It compiles the Fortran program using <code class="docutils literal notranslate"><span class="pre">makefile</span></code>.</p></li>
 <li><p>At the end, it checks whether the script has returned an error or not, and emails the log file to the user.</p></li>
 </ol>
 </div></blockquote>
@@ -247,21 +247,18 @@ server system to load the necessary modules for the environment when submitted t
 <span class="k">case</span> <span class="si">${</span><span class="nv">HOST</span><span class="si">}</span> in
   *ecg*<span class="o">)</span>
   module unload grib_api
-  module unload eccodes
-  module unload python
   module unload emos
   module load python3
-  module load eccodes/2.12.0
+  module load eccodes
   module load emos/455-r64
   <span class="nb">export</span> <span class="nv">FLEXPART_ROOT_SCRIPTS</span><span class="o">=</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>
   <span class="nb">export</span> <span class="nv">MAKEFILE</span><span class="o">=</span>makefile_ecgate
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
-  module unload python
   module switch PrgEnv-cray PrgEnv-intel
   module load python3
-  module load eccodes/2.12.0
-  module load emos
+  module load eccodes
+  module load emos/455-r64
   <span class="nb">echo</span> <span class="si">${</span><span class="nv">GROUP</span><span class="si">}</span>
   <span class="nb">echo</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>
   <span class="nb">echo</span> <span class="si">${</span><span class="nv">HOME</span><span class="si">}</span> <span class="p">|</span> awk -F / <span class="s1">&#39;{print $1, $2, $3, $4}&#39;</span>

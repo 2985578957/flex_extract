@@ -7,12 +7,12 @@ In ``flex_extract``, the Python package `genshi <https://genshi.edgewall.org/>`_
 .. note::
    Do not change anything in these files unless you understand the effects!
    
-Each template file has its content framework and keeps so-called placeholder variables in the positions where the values need to be substituted at run time. These placeholders are marked by a leading ``$`` sign. In case of the Kornshell job scripts, where (environment) variables are used, the ``$`` sign needs to be doubled for `escaping`.
+Each template file has its content framework and keeps so-called placeholder variables in the positions where the values need to be substituted at run time. These placeholders are marked by a leading ``$`` sign. In case of the Korn shell job scripts, where (environment) variables are used, the ``$`` sign needs to be doubled for `escaping`.
    
 The following templates are used; they can be found in the directory ``flex_extract_vX.X/Templates``:
 
-convert.nl
-----------
+calc_etadot_nml.template
+-------------------------
 
     This is the template for a Fortran namelist file called ``fort.4`` read by ``calc_etadot``.
     It contains all the parameters ``calc_etadot`` needs. 
@@ -39,7 +39,7 @@ convert.nl
           mdpdeta = $mdpdeta
         /
 
-ecmwf_env.template
+ECMWF_ENV.template
 ------------------
 
     This template is used to create the ``ECMWF_ENV`` file in the application modes **gateway** and **remote**. It contains the user credentials and gateway server settings for the file transfers.
@@ -51,8 +51,8 @@ ecmwf_env.template
         GATEWAY $gateway_name
         DESTINATION $destination_name
 
-compilejob.template
--------------------
+installscript.template
+----------------------
 
     This template is used to create the job script file called ``compilejob.ksh`` during the installation process for the application modes **remote** and **gateway**. 
 
@@ -96,21 +96,18 @@ compilejob.template
         case $${HOST} in
           *ecg*)
           module unload grib_api
-          module unload eccodes
-          module unload python
           module unload emos
           module load python3
-          module load eccodes/2.12.0
+          module load eccodes
           module load emos/455-r64
           export FLEXPART_ROOT_SCRIPTS=$fp_root_scripts
           export MAKEFILE=$makefile
           ;;
           *cca*)
-          module unload python
           module switch PrgEnv-cray PrgEnv-intel
           module load python3
-          module load eccodes/2.12.0
-          module load emos
+          module load eccodes
+          module load emos/455-r64
           echo $${GROUP}
           echo $${HOME}
           echo $${HOME} | awk -F / '{print $1, $2, $3, $4}'
@@ -139,8 +136,8 @@ compilejob.template
         fi
 
 
-job.temp
---------
+submitscript.template
+---------------------
 
     This template is used to create the actual job script file called ``job.ksh`` for the execution of ``flex_extract`` in the application modes **remote** and **gateway**. 
 
@@ -184,23 +181,20 @@ job.temp
         export VERSION=7.1
         case $${HOST} in
           *ecg*)
-          module unload grib_api
-          module unload eccodes
-          module unload python
-          module unload emos
-          module load python3
-          module load eccodes/2.12.0
-          module load emos/455-r64
-          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/Source/Python
-          ;;
-          *cca*)
-          module unload python
-          module switch PrgEnv-cray PrgEnv-intel
-          module load python3
-          module load eccodes/2.12.0
-          module load emos
-          export SCRATCH=$${TMPDIR}
-          export PATH=$${PATH}:$${HOME}/flex_extract_v7.1/Source/Python
+		  module unload grib_api
+		  module unload emos
+		  module load python3
+		  module load eccodes
+		  module load emos/455-r64
+		  export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
+		  ;;
+		  *cca*)
+		  module switch PrgEnv-cray PrgEnv-intel
+		  module load python3
+		  module load eccodes
+		  module load emos/455-r64
+		  export SCRATCH=${TMPDIR}
+		  export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
           ;;
         esac
 
@@ -236,10 +230,10 @@ job.temp
         fi
         
 
-job.template
-------------
+jobscript.template
+------------------
 
-    This template is used to create the template for the execution job script ``job.temp`` for ``flex_extract`` in the installation process. A description of the file can be found under ``job.temp``. Several parameters are set in this process, such as the user credentials and the ``flex_extract`` version number.
+    This template is used to create the template for the execution job script ``submitscript.template`` for ``flex_extract`` in the installation process. A description of the file can be found under ``submitscript.template``. Several parameters are set in this process, such as the user credentials and the ``flex_extract`` version number.
         
     .. code-block:: ksh
     
@@ -272,21 +266,18 @@ job.template
         export VERSION=$version_number
         case $$$${HOST} in
           *ecg*)
-          module unload grib_api
-          module unload eccodes
-          module unload python
-          module unload emos
-          module load python3
-          module load eccodes/2.12.0
-          module load emos/455-r64
+		  module unload grib_api
+		  module unload emos
+		  module load python3
+		  module load eccodes
+		  module load emos/455-r64
           export PATH=$$$${PATH}:$fp_root_path
           ;;
           *cca*)
-          module unload python
-          module switch PrgEnv-cray PrgEnv-intel
-          module load python3
-          module load eccodes/2.12.0
-          module load emos
+		  module switch PrgEnv-cray PrgEnv-intel
+		  module load python3
+		  module load eccodes
+		  module load emos/455-r64
           export SCRATCH=$$$${TMPDIR}
           export PATH=$$$${PATH}:$fp_root_path
           ;;

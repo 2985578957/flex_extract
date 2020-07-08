@@ -64,7 +64,6 @@ Remote mode
     .. code-block:: bash
     
         # On ECMWF server
-        [<ecuid>@ecgb11 ~]$ module load python3
         [<ecuid>@ecgb11 ~]$ cd flex_extract_vX.X/Run
         
 
@@ -103,7 +102,7 @@ Therefore open the ``run.sh`` file and modify the parameter block marked in the 
     INPUTDIR=None
     OUTPUTDIR=None
     PP_ID=None
-    JOB_TEMPLATE='job.temp' 
+    JOB_TEMPLATE='jobscript.template' 
     CONTROLFILE='CONTROL_CERA' 
     DEBUG=0
     REQUEST=2
@@ -137,12 +136,12 @@ In case the job fails you will receive an email with the subject ``ERROR!`` and 
     cd $SCRATCH
     ls -rthl
 
-The last command lists the most recent logs and temporary retrieval directories (usually ``pythonXXXXX``, where XXXXX is the process id). Under ``pythonXXXXX`` a copy of the ``CONTROL`` file is stored under the name ``CONTROL``, the protocol is stored in the file ``prot`` and the temporary files as well as the resulting files are stored in a directory ``work``. The original name of the ``CONTROL`` file is stored in this new file under parameter ``controlfile``.
+The last command lists the most recent logs and temporary retrieval directories (usually ``extractXXXXX``, where XXXXX is the process id). Under ``extractXXXXX`` a copy of the ``CONTROL`` file is stored under the name ``CONTROL``, the protocol is stored in the file ``prot`` and the temporary files as well as the resulting files are stored in a directory ``work``. The original name of the ``CONTROL`` file is stored in this new file under parameter ``controlfile``.
 
 .. code-block:: bash
     :caption: "Example structure of ``flex_extract`` output directory on ECMWF servers."
         
-    pythonXXXXX
+    extractXXXXX
     ├── CONTROL
     ├── prot
     ├── work
@@ -357,8 +356,8 @@ These files defines the minimum number of parameters necessary to retrieve a dai
      Please see `Information about MARS retrievement <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Retrievalefficiency>`_ for hints about retrieval efficiency and troubleshooting. 
     
 
-Pure forecast
-    It is possible to retrieve pure forecasts exceeding one day. The forecast period available depends on the date and forecast field type. Please use MARS catalogue to check the availability. Below are some examples for 36 hour forecasts of *Forecast (FC)*, *Control forecast (CF)* and *Calibration/Validation forecast (CV)*. 
+Long forecast
+    It is possible to retrieve long forecasts exceeding one day. The forecast period available depends on the date and forecast field type. Please use MARS catalogue to check the availability. Below are some examples for 36 hour forecasts of *Forecast (FC)*, *Control forecast (CF)* and *Calibration/Validation forecast (CV)*. 
     The *CV* field type was only available 3-hourly from 2006 up to 2016. It is recommended to use the *CF* type since this is available from 1992 (3-hourly) on up to today (1-hourly). *CV* and *CF* field types belong to the *Ensemble prediction system (ENFO)* which currently works with 50 ensemble members. 
     Please be aware that in this case it is necessary to set the type for flux fields explicitly, otherwise a default value might be selected, different from what you expect!
     
@@ -417,10 +416,6 @@ Field type and time
     The time declaration for analysis (AN) fields uses the times of the specific analysis while the (forecast time) step has to be ``0``. 
     The forecast field types (e.g. FC, CF, CV, PF) need to declare a combination of (forescast start) time and the (forecast) step. Together they define the actual time. It is important to know the forecast starting times for the dataset to be retrieved, since they are different. In general, it is sufficient to give information for the exact time steps, but it is also possible to have more time step combinations of ``TYPE``, ``TIME`` and ``STEP`` because the temporal (hourly) resolution with the ``DTIME`` parameter will select the correct combinations. 
     
-    .. todo::
-
-	    #PS needs to be rephrased
-
     .. code-block:: bash
        :caption: Example of a setting for the field types and temporal resolution. It will retrieve 3-hourly fields, with analyses at 00 and 12 UTC and the corresponding forecasts inbetween.
 
@@ -450,9 +445,6 @@ Grid resolution and domain
     The grid and domain parameters depends on each other. ``grid`` refers to the grid resolution. It can be given as decimal values (e.g., ``1.`` meaning 1.0°), or as in previous versions of flex_extract, as integer values refering to 1/1000 degrees (e.g., ``1000`` means also 1°). The code applies common sense to determine what format is to be assumed.
     After selecting grid, the ``domain`` has to be defined. The extension in longitude or latitude direction must be an integer multiple of ``grid``. 
     
-	.. todo:: 
-		
-		#PS shouldn't we explain how to define a domain??
 		
     The horizontal resolution for spectral fields is set by the parameter ``RESOL``. For information about how to select an appropriate value please read the explanation of the MARS keyword RESOL as found `in this entry of the ECMWF on-line documentation <https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol>`_ and  `this table (also ECMWF documentation) <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation>`_.
     
@@ -469,12 +461,8 @@ Grid resolution and domain
     
 
 Flux data
-    Flux fields are always forecast fields and contain values of the fluxes accumulated since the start of the respective forecast. As certain re-analysis dataset cover all time steps with analysis fields, it was necessary to define a new parameter set for the definition of the flux fields. The following parameters are used specifically for flux fields, if provided. ``ACCTYPE`` is the field type (must be a type of forecast), ``ACCTIME``  the forecast starting time, and  ``ACCMAXSTEP`` the maximum forecast step;``DTIME`` the temporal resolution. ACCTYPE is assumed to be the same during the whole period given by ACCTIME and ACCMAXSTEP. 
-    
-	.. todo::
-
-		#PS for which application would this be typical?
-	    
+    Flux fields are always forecast fields and contain values of the fluxes accumulated since the start of the respective forecast. As certain re-analysis dataset cover all time steps with analysis fields, it was necessary to define a new parameter set for the definition of the flux fields. The following parameters are used specifically for flux fields. ``ACCTYPE`` is the field type (must be a type of forecast), ``ACCTIME``  the forecast starting time, and  ``ACCMAXSTEP`` the maximum forecast step;``DTIME`` the temporal resolution. ACCTYPE is assumed to be the same during the whole period given by ACCTIME and ACCMAXSTEP. These values will be set automatically if not provided in a ``CONTROL`` file.
+    	    
     .. code-block:: bash
        :caption: Example setting for the definition of flux fields.
 
