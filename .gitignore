@@ -29,9 +29,8 @@ Source/Fortran/calc_etadot*
 Run/ECMWF_ENV
 Run/Workspace/*
 Run/Jobscripts/*sh
-Testing/Installation/Calc_etadot/VERTICAL.EC
 Testing/Installation/Calc_etadot/fort.15
-For_developers/Sphinx/build_temp
+For_developers/Sphinx/Build_temp
 
 # Temporary ignorance of files!!!!
 *anne.sh

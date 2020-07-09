@@ -12,10 +12,10 @@
 #        - job submission on ecgate and cca
 #        - job templates suitable for twice daily operational dissemination
 #        - dividing retrievals of longer periods into digestable chunks
-#        - retrieve also longer term forecasts, not only analyses and
-#          short term forecast data
+#        - retrieve also longer-term forecasts, not only analyses and
+#          short-term forecast data
 #        - conversion into GRIB2
-#        - conversion into .fp format for faster execution of FLEXPART
+#       
 #
 #    February 2018 - Anne Philipp (University of Vienna):
 #        - applied PEP8 style guide
@@ -44,9 +44,9 @@
 then used by FLEXPART.
 
 It converts the bunch of grib files extracted via get_mars_data before,
-by doing the necessary conversion to get consistent grids or the
+by doing the necessary conversion to obtain consistent grids or the
 disaggregation of flux data. Finally, the data fields are combined
-in files per available hour with the naming convention xxYYMMDDHH,
+in files per hour available with the naming convention xxYYMMDDHH,
 where xx should be 2 arbitrary letters (mostly xx is chosen to be "EN").
 
 This file can also be imported as a module which then contains the following
@@ -87,10 +87,10 @@ from Classes.EcFlexpart import EcFlexpart
 # FUNCTION
 # ------------------------------------------------------------------------------
 def main():
-    '''Controls the program to prepare flexpart input files from mars data.
+    '''Controls the program to prepare FLEXPART input files from MARS data.
 
-    This is done if it is called directly from command line.
-    Then it also takes program call arguments and control file input.
+    This is done if called directly from the command line.
+    Then, arguments and control file are taken as input.
 
     Parameters
     ----------
@@ -107,12 +107,11 @@ def main():
     return
 
 def prepare_flexpart(ppid, c):
-    '''Converts the mars data into flexpart ready input files.
+    '''Converts the MARS data into files ready as input for FLEXPART.
 
-    Specific data fields are converted to a different grid and the flux
-    data are going to be disaggregated. The data fields are collected by
-    hour and stored in a file with a specific FLEXPART relevant naming
-    convention.
+    Certain fields are converted to a different grid and the flux
+    data are disaggregated. Fields are collected by hour and stored in a file 
+    with a specific naming convention.
 
     Parameters
     ----------

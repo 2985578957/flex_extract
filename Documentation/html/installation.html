@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Installation &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Remote mode installation" href="Installation/remote.html" />
-    <link rel="prev" title="Welcome to flex_extract’s user documentation!" href="index.html" /> 
+    <link rel="prev" title="Link collection" href="Ecmwf/ec-links.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#registration-at-ecmwf">Registration at ECMWF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#accept-licences-for-public-datasets">Accept licences for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a><ul>
@@ -108,9 +109,8 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
@@ -186,21 +186,21 @@
 <div class="toctree-wrapper compound">
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> software package contains python and shell scripts as well as a Fortran program. These components rely on several libraries which need to be available before starting the installation process. Currently, the software is only tested for a GNU/Linux environment. Feel free to try it out on other platforms.</p>
-<p>At first, go to the <a class="reference external" href="Ecmwf/access.html">user group</a> section and decide which group you belong to and follow the instructions at <a class="reference internal" href="#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a> to obtain an account at ECMWF (if you don’t have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a>:</p>
+<p>At first, find out to which <a class="reference external" href="Ecmwf/access.html">user group</a> you belong and follow the instructions at <a class="reference internal" href="#ref-registration"><span class="std std-ref">Registration at ECMWF</span></a> to obtain an account at ECMWF (if you don’t have it already). Depending on the user group and the way to access the ECWMF MARS archive, there are four possible <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application modes</span></a>:</p>
 <ul class="simple">
 <li><p>Remote (member-state users only) <a class="reference internal" href="Installation/remote.html#ref-remote-mode"><span class="std std-ref">[installation]</span></a></p></li>
 <li><p>Gateway (member-state users only) <a class="reference internal" href="Installation/gateway.html#ref-gateway-mode"><span class="std std-ref">[installation]</span></a></p></li>
 <li><p>Local, member-state user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></p></li>
 <li><p>Local, public user <a class="reference internal" href="Installation/local.html#ref-local-mode"><span class="std std-ref">[installation]</span></a></p></li>
 </ul>
-<p>Please follow the link <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> to get a description of the modes.</p>
+<p>More information can be found in <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application modes</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you encounter any problems in the installation process, you can ask for <a class="reference internal" href="support.html"><span class="doc">Support</span></a>.</p>
 </div>
 <div class="section" id="registration-at-ecmwf">
 <span id="ref-registration"></span><h2>Registration at ECMWF<a class="headerlink" href="#registration-at-ecmwf" title="Permalink to this headline">¶</a></h2>
-<p>The registration depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and in case of the local mode also on the data set you’d like to retrieve. The following table gives an overview where you need to register.</p>
+<p>The registration depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application modes</span></a> and in case of the local mode also on the data set you’d like to retrieve. The following table gives an overview where you need to register.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 23%" />
@@ -258,9 +258,9 @@
 <p>3.) Access through the <a class="reference external" href="https://cds.climate.copernicus.eu/api-how-to">CDS API</a>. Extra registration for member-state users is required at <a class="reference external" href="https://cds.climate.copernicus.eu/user/register">Copernicus Climate Data Store</a> including the configurations of the CDS key as described. This mode is currently not available for public users. See the note at <a class="reference external" href="Ecmwf/access.html">user group</a> for information.</p>
 </div></blockquote>
 </div>
-<div class="section" id="licence-agreement-for-public-datasets">
-<span id="ref-licence"></span><h2>Licence agreement for public datasets<a class="headerlink" href="#licence-agreement-for-public-datasets" title="Permalink to this headline">¶</a></h2>
-<p>Each ECMWF public dataset has its own licence which has to be accepted, regardless of the user group.</p>
+<div class="section" id="accept-licences-for-public-datasets">
+<span id="ref-licence"></span><h2>Accept licences for public datasets<a class="headerlink" href="#accept-licences-for-public-datasets" title="Permalink to this headline">¶</a></h2>
+<p>Each ECMWF <span class="underline">public</span> dataset has its own licence whose acceptance requires user activity, regardless of the user group.</p>
 <p>For the <em>ERA-Interim</em> and <em>CERA-20C</em> datasets this can be done at the ECMWF website <a class="reference external" href="https://confluence.ecmwf.int/display/WEBAPI/Available+ECMWF+Public+Datasets">Available ECMWF Public Datasets</a>. Log in and follow the licence links on the right side for each dataset and accept it.</p>
 <p>For the <em>ERA5</em> dataset this has to be done at the <a class="reference external" href="https://cds.climate.copernicus.eu/cdsapp#!/search?type=dataset">Climate Data Store (CDS) website</a>. Log in and select, on the left panel, product type “Reanalysis” for finding <em>ERA5</em> datasets. Then follow any link with <em>ERA5</em> to the full dataset record, click on tab “Download data” and scroll down. There is a section “Terms of use” where you have to click the <span class="underline">Accept terms</span> button.</p>
 </div>
@@ -282,10 +282,10 @@
 </div>
 <div class="section" id="dependencies">
 <span id="ref-requirements"></span><h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>The software required for running <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application Modes</span></a> and therefore is described in the respective specific installation sections.</p>
+<p>The software required to run <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> depends on the <a class="reference internal" href="Documentation/Overview/app_modes.html"><span class="doc">Application modes</span></a> and therefore is described in the respective specific installation sections.</p>
 <p>Generally speaking, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> requires <a class="reference external" href="https://docs.python.org/3/">Python 3</a> and Fortran together with certain modules / libraries.
-We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the python3 package from the the GNU/Linux distribution and Anaconda Python. The required python3 modules should prefarably be installed as distribution packages, or alternatively using Python’s own package manager <code class="docutils literal notranslate"><span class="pre">pip</span></code> (this may mess up some aspects of your python installation, especially if you use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as root. Think about using virtual environments.).</p>
-<p>Before installing the system packages check the availability with <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>, depending on your system. For example:</p>
+We tested <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> with the Python3 package from the the GNU/Linux distribution and Anaconda Python. The required Python3 modules should prefarably be installed as distribution packages, or alternatively using Python’s own package manager <code class="docutils literal notranslate"><span class="pre">pip</span></code> (this may mess up some aspects of your python installation, especially if you use <code class="docutils literal notranslate"><span class="pre">pip</span></code> as root. Think about using virtual environments.).</p>
+<p>Before installing the system packages check the availability with (Debian-based system) <code class="docutils literal notranslate"><span class="pre">dpkg</span> <span class="pre">-s</span> <span class="pre">&lt;package-name&gt;</span> <span class="pre">|</span>&#160; <span class="pre">grep</span> <span class="pre">Status</span></code> or (Redhat-based system) <code class="docutils literal notranslate"><span class="pre">rpm</span> <span class="pre">-q</span> <span class="pre">&lt;package_name&gt;</span></code>. For example:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ dpkg -s libeccodes-dev <span class="p">|</span>  grep Status
 <span class="c1"># or</span>
 $ rpm -q libeccodes-dev
@@ -295,7 +295,7 @@ $ rpm -q libeccodes-dev
 <div class="section" id="installation-of-flex-extract">
 <span id="ref-install-fe"></span><h2>Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code><a class="headerlink" href="#installation-of-flex-extract" title="Permalink to this headline">¶</a></h2>
 <p>The actual installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by executing a shell script called <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.
-It defines some parameters and calls a Python script passing the parameters as command line arguments. For details, see <a class="reference internal" href="Documentation/Input/setup.html"><span class="doc">The Installation Script - setup.sh</span></a>.</p>
+It defines some parameters and calls a Python script passing the parameters as command line arguments. For details, see <a class="reference internal" href="Documentation/Input/setup.html"><span class="doc">The installation script - setup.sh</span></a>.</p>
 <p>For each application mode installation section we describe the requirements for the explicit
 environment and how it is installed, test if it works and how the actual <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>
 installation has to be done. At the users local side not all software has to be present for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
@@ -317,12 +317,12 @@ installation has to be done. At the users local side not all software has to be 
 <div class="section" id="fortran-program-test">
 <h3>Fortran program test<a class="headerlink" href="#fortran-program-test" title="Permalink to this headline">¶</a></h3>
 <p>To check whether the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> has been compiled and runs properly, it can be applied to a prepared minimal dataset.</p>
-<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Convert/</span></code> directory and execute the Fortran program.</p>
+<p>For this, go from the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory to the <code class="docutils literal notranslate"><span class="pre">Testing/Installation/Calc_etadot/</span></code> directory and execute the Fortran program.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember that you might have to log in at the ECMWF server if you used the installation for the <strong>remote</strong> or <strong>gateway</strong> mode. There you find the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> root directory in your <code class="docutils literal notranslate"><span class="pre">$HOME</span></code> directory.</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Convert
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> Testing/Installation/Calc_etadot
 <span class="c1"># execute the Fortran progam without arguments</span>
 ../../../Source/Fortran/calc_etadot
 </pre></div>
@@ -340,7 +340,7 @@ STOP SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS
 <div class="section" id="full-test">
 <h3>Full test<a class="headerlink" href="#full-test" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>see <a class="reference internal" href="quick_start.html"><span class="doc">Quick Start</span></a></p>
+<div><p>see <a class="reference internal" href="quick_start.html"><span class="doc">Usage</span></a></p>
 </div></blockquote>
 </div>
 </div>
@@ -357,7 +357,7 @@ STOP SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS
         <a href="Installation/remote.html" class="btn btn-neutral float-right" title="Remote mode installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to flex_extract’s user documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Ecmwf/ec-links.html" class="btn btn-neutral float-left" title="Link collection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -366,7 +366,7 @@ STOP SUCCESSFULLY FINISHED calc_etadot: CONGRATULATIONS
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

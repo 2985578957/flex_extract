@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The Installation Script - setup.sh &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>The installation script - setup.sh &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The Compilation Jobscript compilejob.ksh" href="compilejob.html" />
-    <link rel="prev" title="Control &amp; Input Data" href="../input.html" /> 
+    <link rel="next" title="The compilation job script compilejob.ksh" href="compilejob.html" />
+    <link rel="prev" title="Control &amp; input data" href="../input.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,34 +89,34 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#installation-parameter">Installation Parameter</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; input data</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#installation-parameters">Installation parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#content-of-setup-sh">Content of <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage-of-install-py-optional">Usage of <code class="docutils literal notranslate"><span class="pre">install.py</span></code> (optional)</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The compilation job script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fortran_makefile.html">The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="control_params.html">The CONTROL parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF user credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
@@ -170,11 +170,11 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
-          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+          <li><a href="../input.html">Control &amp; input data</a> &raquo;</li>
         
-      <li>The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></li>
+      <li>The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -194,39 +194,39 @@
            <div itemprop="articleBody">
             
   <div class="section" id="the-installation-script-setup-sh">
-<h1>The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code><a class="headerlink" href="#the-installation-script-setup-sh" title="Permalink to this headline">¶</a></h1>
-<p>The installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by the Shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> which is located in the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
-It calls the top-level Python script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> which does all necessary operations to prepare the selected application environment. This includes:</p>
+<h1>The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code><a class="headerlink" href="#the-installation-script-setup-sh" title="Permalink to this headline">¶</a></h1>
+<p>The installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> is done by the shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> located in the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.
+It calls the top-level Python script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> which does all the necessary operations to prepare the  application environment selected. This includes:</p>
 <ul class="simple">
-<li><p>preparing the file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> with the user credentials for member state access to ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
+<li><p>preparing the file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code> with the user credentials for member-state access to ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
 <li><p>preparation of a compilation Korn-shell script (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
 <li><p>preparation of a job template with user credentials (in <strong>remote</strong> and <strong>gateway</strong> mode)</p></li>
-<li><p>create a tar-ball of all necessary files</p></li>
-<li><p>copying tar-ball to target location (depending on application mode and installation path)</p></li>
-<li><p>submit compilation script to batch queue at ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode) or just untar tar-ball at target location (<strong>local mode</strong>)</p></li>
-<li><p>compilation of the FORTRAN90 program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></p></li>
+<li><p>create a tarball of all necessary files</p></li>
+<li><p>copying the tarball to the target location (depending on application mode and installation path)</p></li>
+<li><p>submit the compilation script to the batch queue at ECMWF servers (in <strong>remote</strong> and <strong>gateway</strong> mode) or just untar the tarball at target location (<strong>local mode</strong>)</p></li>
+<li><p>compilation of the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></p></li>
 </ul>
-<p>The Python installation script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> has a couple of command line arguments which are defined in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> in the section labelled with “<em>AVAILABLE COMMANDLINE ARGUMENTS TO SET</em>”. The user has to adapt these parameters for his personal use. The parameters are listed and described in <a class="reference internal" href="#ref-instparams"><span class="std std-ref">Installation Parameter</span></a>. The script also does some checks to guarantee necessary parameters were set.</p>
+<p>The Python installation script <code class="docutils literal notranslate"><span class="pre">install.py</span></code> has several command line arguments defined in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>, in the section labelled “<em>AVAILABLE COMMANDLINE ARGUMENTS TO SET</em>”. The user has to adapt these parameters according to his/her personal needs. The parameters are listed and described in <a class="reference internal" href="#ref-instparams"><span class="std std-ref">Installation parameters</span></a>. The script also does some checks to guarantee that the necessary parameters were set.</p>
 <p>After the installation process, some tests can be conducted. They are described in section <a class="reference internal" href="../../installation.html#ref-testinstallfe"><span class="std std-ref">Test installation</span></a>.</p>
-<p>The following diagram sketches the involved files and scripts in the installation process:</p>
+<p>The following diagram sketches the files and scripts involved in the installation process:</p>
 <div><img height="440" id="ref-install-blockdiag" src="../../_images/blockdiag-f0a58657deb31f0c134ffed39d9be96f0d278617.png" width="1600" /></div><div class="figure align-default" id="id1">
-<div><img height="120" src="../../_images/blockdiag-c5183a0da960384d172e76fcbb0cc6765f0b1945.png" width="832" /></div><p class="caption"><span class="caption-text">Diagram of data flow during the installation process. The trapezoids are input files with the light blue area being the template files. The edge-rounded, orange boxes are the executable files which start the installation process and reads the input files. The rectangular, green boxes are the output files. The light green files are files which are only needed in the remota and gateway mode.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<div><img height="120" src="../../_images/blockdiag-c5183a0da960384d172e76fcbb0cc6765f0b1945.png" width="832" /></div><p class="caption"><span class="caption-text">Diagram of data flow during the installation process. Trapezoids are input files with the light blue area being the template files. Round-edge orange boxes are executable files which start the installation process and read the input files. Rectangular green boxes are  output files. Light green files are  needed only in the remota and gateway mode.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<div class="section" id="installation-parameter">
-<span id="ref-instparams"></span><h2>Installation Parameter<a class="headerlink" href="#installation-parameter" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation-parameters">
+<span id="ref-instparams"></span><h2>Installation parameters<a class="headerlink" href="#installation-parameters" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="id2">
 <caption><span class="caption-text">Parameter for Installation</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col style="width: 10%" />
-<col style="width: 5%" />
+<col style="width: 9%" />
+<col style="width: 7%" />
 <col style="width: 15%" />
 <col style="width: 11%" />
-<col style="width: 58%" />
+<col style="width: 57%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
 <th class="head"><p>Format</p></th>
-<th class="head"><p>Possible value range</p></th>
+<th class="head"><p>Possible values</p></th>
 <th class="head"><p>Default</p></th>
 <th class="head"><p>Description</p></th>
 </tr>
@@ -234,27 +234,27 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <tbody>
 <tr class="row-even"><td><p>TARGET</p></td>
 <td><p>String</p></td>
-<td><p>local, ecgate, cca</p></td>
+<td><p>local, ecgate, cca, ccb</p></td>
 <td><p>None</p></td>
-<td><p>Defines which flex_extract application mode will be used.  Local = local mode; egate = Remote or Gateway mode, cca = Remote or Gateway mode. Wether the local mode is for public or member state users doesn’t matter during the installation process.</p></td>
+<td><p>Defines the flex_extract application mode to be used.  Local = local mode; ecgate = Remote or Gateway mode, cca or ccb = Remote or Gateway mode (HPC). Whether the local mode is for public or member state users doesn’t matter here.</p></td>
 </tr>
 <tr class="row-odd"><td><p>MAKEFILE</p></td>
 <td><p>String</p></td>
-<td><p>any Makefile present, according to environment</p></td>
-<td><p>Makefile.gfortran</p></td>
-<td><p>Name of the makefile in source/fortran directory to be used for compiling the Fortran program. “Makefile.gfortran” has the configuration for the ecgate environment. For local server versions there are templates “Makefile.local.gfortran” and “Makefile.local.ifort” which have to be adapted (pathes to the eccodes library) by the user.</p></td>
+<td><p>any makefile present in the Fortran source directory</p></td>
+<td><p>None</p></td>
+<td><p>Name of the makefile in Source/Fortran directory to be used for compiling the Fortran program. </p></td>
 </tr>
 <tr class="row-even"><td><p>ECUID</p></td>
 <td><p>String</p></td>
-<td><p>e.g. “ecname”</p></td>
+<td><p>e.g. “myecname”</p></td>
 <td><p>None</p></td>
-<td><p>The user id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)  </p></td>
+<td><p>The user name (not Linux uid!) at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)  </p></td>
 </tr>
 <tr class="row-odd"><td><p>ECGID</p></td>
 <td><p>String</p></td>
-<td><p>e.g. “groupname”</p></td>
+<td><p>e.g. “mygroupname”</p></td>
 <td><p>None</p></td>
-<td><p>The group id at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)</p></td>
+<td><p>The group name (not Linux gid!) at ECMWF. Necessary for access to ECMWF server. (Remote and Gateway mode)</p></td>
 </tr>
 <tr class="row-even"><td><p>GATEWAY</p></td>
 <td><p>String</p></td>
@@ -271,20 +271,20 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <tr class="row-even"><td><p>INSTALLDIR</p></td>
 <td><p>String</p></td>
 <td><p>a full path </p></td>
-<td><p>$HOME on ECMWF server and current flex_extract root path on local server</p></td>
-<td><p>Root path where flex_extract should be installed. If it is not set it will be set to $HOME on ECMWF server and set to the current flex_extract root path on local servers. </p></td>
+<td><p>$HOME on ECMWF server and current flex_extract root path on local machine</p></td>
+<td><p>Root path where flex_extract should be installed. It will always be $HOME on ECMWF servers and if not set for the local mode, it will be the current flex_extract root path on local servers. </p></td>
 </tr>
 <tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
 <td><p>String</p></td>
-<td><p>job.template</p></td>
-<td><p>job.template</p></td>
-<td><p>The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed since it is optimized for ECMWF server.  (Remote and Gateway mode)</p></td>
+<td><p>installscript.template</p></td>
+<td><p>installscript.template</p></td>
+<td><p>The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed because it is already optimised for ECMWF servers.  (Remote and Gateway mode)</p></td>
 </tr>
 <tr class="row-even"><td><p>CONTROLFILE</p></td>
 <td><p>String</p></td>
 <td><p>any CONTROL file</p></td>
 <td><p>CONTROL_EA5</p></td>
-<td><p>The file with all CONTROL parameters. It does not matter which CONTROL file is used. Due to interval process it is just necessary that there is a CONTROL file in place which can be opend. </p></td>
+<td><p>File containing all CONTROL parameters. Any CONTROL file may be used. Due to interval process it is just necessary that there is a CONTROL file in place which can be opend. </p></td>
 </tr>
 </tbody>
 </table>
@@ -387,9 +387,9 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 </div>
 <div class="section" id="usage-of-install-py-optional">
 <span id="ref-install-script"></span><h2>Usage of <code class="docutils literal notranslate"><span class="pre">install.py</span></code> (optional)<a class="headerlink" href="#usage-of-install-py-optional" title="Permalink to this headline">¶</a></h2>
-<p>It is also possible to start the installation process of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly from command line by using the <code class="docutils literal notranslate"><span class="pre">install.py</span></code> script instead of the wrapping Shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.  This top-level script is located in
-<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">help</span></code> parameter we see again all possible
-command line parameter.</p>
+<p>It is also possible to start the installation process of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> directly from the command line by using the <code class="docutils literal notranslate"><span class="pre">install.py</span></code> script instead of the wrapper shell script <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.  This top-level script is located in
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Python</span></code> and is executable. With the <code class="docutils literal notranslate"><span class="pre">--help</span></code> parameter,
+we see again all possible command line parameters.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>install.py --help
 
 usage: install.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--target INSTALL_TARGET<span class="o">]</span> <span class="o">[</span>--makefile MAKEFILE<span class="o">]</span>
@@ -404,11 +404,12 @@ optional arguments:
   --target INSTALL_TARGET
                         Valid targets: <span class="nb">local</span> <span class="p">|</span> ecgate <span class="p">|</span> cca , the latter two
                         are at ECMWF <span class="o">(</span>default: None<span class="o">)</span>
-  --makefile MAKEFILE   Name of Makefile to use <span class="k">for</span> compiling the Fortran
-                        program <span class="o">(</span>default: None<span class="o">)</span>
+  --makefile MAKEFILE   Name of makefile to compile the Fortran
+                        code. <span class="o">(</span>default depends on <span class="sb">`</span>target<span class="sb">`</span>: <span class="nb">local</span> - makefile_local_gfortran,
+                        ecgate - makefile_ecgate, cca - makefile_cray<span class="o">)</span>
   --ecuid ECUID         The user id at ECMWF. <span class="o">(</span>default: None<span class="o">)</span>
   --ecgid ECGID         The group id at ECMWF. <span class="o">(</span>default: None<span class="o">)</span>
-  --gateway GATEWAY     The name of the <span class="nb">local</span> gateway server. <span class="o">(</span>default: None<span class="o">)</span>
+  --gateway GATEWAY     The IP name <span class="o">(</span>or IP address<span class="o">)</span> of the <span class="nb">local</span> gateway server. <span class="o">(</span>default: None<span class="o">)</span>
   --destination DESTINATION
                         The ecaccess association, e.g. myUser@genericSftp
                         <span class="o">(</span>default: None<span class="o">)</span>
@@ -437,10 +438,10 @@ optional arguments:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="compilejob.html" class="btn btn-neutral float-right" title="The Compilation Jobscript compilejob.ksh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="compilejob.html" class="btn btn-neutral float-right" title="The compilation job script compilejob.ksh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../input.html" class="btn btn-neutral float-left" title="Control &amp; Input Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../input.html" class="btn btn-neutral float-left" title="Control &amp; input data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -449,7 +450,7 @@ optional arguments:
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

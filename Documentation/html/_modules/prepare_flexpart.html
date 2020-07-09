@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>prepare_flexpart &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>prepare_flexpart &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -87,10 +87,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -174,10 +174,10 @@
 <span class="c1">#        - job submission on ecgate and cca</span>
 <span class="c1">#        - job templates suitable for twice daily operational dissemination</span>
 <span class="c1">#        - dividing retrievals of longer periods into digestable chunks</span>
-<span class="c1">#        - retrieve also longer term forecasts, not only analyses and</span>
-<span class="c1">#          short term forecast data</span>
+<span class="c1">#        - retrieve also longer-term forecasts, not only analyses and</span>
+<span class="c1">#          short-term forecast data</span>
 <span class="c1">#        - conversion into GRIB2</span>
-<span class="c1">#        - conversion into .fp format for faster execution of FLEXPART</span>
+<span class="c1">#       </span>
 <span class="c1">#</span>
 <span class="c1">#    February 2018 - Anne Philipp (University of Vienna):</span>
 <span class="c1">#        - applied PEP8 style guide</span>
@@ -206,9 +206,9 @@
 <span class="sd">then used by FLEXPART.</span>
 
 <span class="sd">It converts the bunch of grib files extracted via get_mars_data before,</span>
-<span class="sd">by doing the necessary conversion to get consistent grids or the</span>
+<span class="sd">by doing the necessary conversion to obtain consistent grids or the</span>
 <span class="sd">disaggregation of flux data. Finally, the data fields are combined</span>
-<span class="sd">in files per available hour with the naming convention xxYYMMDDHH,</span>
+<span class="sd">in files per hour available with the naming convention xxYYMMDDHH,</span>
 <span class="sd">where xx should be 2 arbitrary letters (mostly xx is chosen to be &quot;EN&quot;).</span>
 
 <span class="sd">This file can also be imported as a module which then contains the following</span>
@@ -249,10 +249,10 @@
 <span class="c1"># FUNCTION</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../Documentation/Api/api_python.html#prepare_flexpart.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&#39;&#39;&#39;Controls the program to prepare flexpart input files from mars data.</span>
+    <span class="sd">&#39;&#39;&#39;Controls the program to prepare FLEXPART input files from MARS data.</span>
 
-<span class="sd">    This is done if it is called directly from command line.</span>
-<span class="sd">    Then it also takes program call arguments and control file input.</span>
+<span class="sd">    This is done if called directly from the command line.</span>
+<span class="sd">    Then, arguments and control file are taken as input.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -269,12 +269,11 @@
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="prepare_flexpart"><a class="viewcode-back" href="../Documentation/Api/api_python.html#prepare_flexpart.prepare_flexpart">[docs]</a><span class="k">def</span> <span class="nf">prepare_flexpart</span><span class="p">(</span><span class="n">ppid</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Converts the mars data into flexpart ready input files.</span>
+    <span class="sd">&#39;&#39;&#39;Converts the MARS data into files ready as input for FLEXPART.</span>
 
-<span class="sd">    Specific data fields are converted to a different grid and the flux</span>
-<span class="sd">    data are going to be disaggregated. The data fields are collected by</span>
-<span class="sd">    hour and stored in a file with a specific FLEXPART relevant naming</span>
-<span class="sd">    convention.</span>
+<span class="sd">    Certain fields are converted to a different grid and the flux</span>
+<span class="sd">    data are disaggregated. Fields are collected by hour and stored in a file </span>
+<span class="sd">    with a specific naming convention.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -357,7 +356,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The Fortran Makefile - calc_etadot &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>The Fortran makefile for calc_etadot &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="The executable Script - run.sh" href="run.html" />
-    <link rel="prev" title="The Compilation Jobscript compilejob.ksh" href="compilejob.html" /> 
+    <link rel="next" title="The executable script - run.sh" href="run.html" />
+    <link rel="prev" title="The compilation job script compilejob.ksh" href="compilejob.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,31 +89,31 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; Input Data</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="setup.html">The Installation Script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The Compilation Jobscript <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../input.html">Control &amp; input data</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="setup.html">The installation script - <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compilejob.html">The compilation job script <code class="docutils literal notranslate"><span class="pre">compilejob.ksh</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="run.html">The executable Script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The Jobscript <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="run.html">The executable script - <code class="docutils literal notranslate"><span class="pre">run.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="jobscript.html">The job script <code class="docutils literal notranslate"><span class="pre">job.ksh</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="control.html">The CONTROL file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="control_params.html">The CONTROL parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="examples.html">CONTROL file examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changes.html">CONTROL file changes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF User Credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ecmwf_env.html">ECMWF user credential file <code class="docutils literal notranslate"><span class="pre">ECMWF_ENV</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="templates.html">Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../evaluation.html">Evaluation</a></li>
@@ -167,11 +167,11 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
-          <li><a href="../input.html">Control &amp; Input Data</a> &raquo;</li>
+          <li><a href="../input.html">Control &amp; input data</a> &raquo;</li>
         
-      <li>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></li>
+      <li>The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -190,43 +190,68 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-fortran-makefile-calc-etadot">
-<h1>The Fortran Makefile - <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code><a class="headerlink" href="#the-fortran-makefile-calc-etadot" title="Permalink to this headline">¶</a></h1>
-<p id="ref-convert"><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code>’s Fortran program will be compiled during
-the installation process to get the executable named <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> has a couple of <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> prepared which can be found in the directory
-<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted with the current version number.
-A list of these <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> are shown below:</p>
+  <div class="section" id="the-fortran-makefile-for-calc-etadot">
+<h1>The Fortran makefile for <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code><a class="headerlink" href="#the-fortran-makefile-for-calc-etadot" title="Permalink to this headline">¶</a></h1>
+<p id="ref-convert">The Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> will be compiled during
+the installation process to produce the executable called <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> includes several <code class="docutils literal notranslate"><span class="pre">makefiles</span></code>  which can be found in the directory
+<code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted by the current flex_extract version number.
+A list of these <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> is shown below:</p>
 <div class="line-block">
 <div class="line"><strong>Remote/Gateway mode</strong>:</div>
 <div class="line">Files to be used as they are!</div>
 </div>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>makefile_ecgate</strong></div>
-<div class="line">For the use on ECMWF’s server <strong>ecgate</strong>.</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>makefile_cray</strong></div>
-<div class="line">For the use on ECMWF’s server <strong>cca/ccb</strong>.</div>
+<div class="line"><strong>makefile_ecgate</strong>: For  use on the ECMWF server <strong>ecgate</strong>.</div>
+<div class="line"><strong>makefile_cray</strong>:   For  use on the ECMWF servers <strong>cca/ccb</strong>.</div>
 </div>
 </div></blockquote>
 <div class="line-block">
 <div class="line"><strong>Local mode</strong></div>
-<div class="line">It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong></div>
+<div class="line">It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> if they don’t correspond to the standard paths pre-set in the makefiles.</div>
 </div>
 <blockquote>
 <div><div class="line-block">
-<div class="line"><strong>makefile_fast</strong></div>
-<div class="line">For the use with gfortran compiler and optimization mode.</div>
-</div>
-<div class="line-block">
-<div class="line"><strong>makefile_debug</strong></div>
-<div class="line">For the use with gfortran compiler in debugging mode.</div>
+<div class="line"><strong>makefile_fast</strong>:  For use with the gfortran compiler and optimisation mode.</div>
+<div class="line"><strong>makefile_debug</strong>: For use with the gfortran compiler and debugging mode. Primarily for developers.</div>
+<div class="line"><strong>makefile_local_gfortran</strong>: Linked to makefile_fast. Default value.</div>
 </div>
 </div></blockquote>
-<p>For instructions on how to adapt the <code class="docutils literal notranslate"><span class="pre">makefiles</span></code> for the local application mode
-please see <a class="reference internal" href="../../Installation/local.html#ref-install-local"><span class="std std-ref">Local installation</span></a>.</p>
+<p>They can be found at <code class="docutils literal notranslate"><span class="pre">flex_extract_vX.X/Source/Fortran/</span></code>, where <code class="docutils literal notranslate"><span class="pre">vX.X</span></code> should be substituted by the current flex_extract version number.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>It is necessary to adapt <strong>ECCODES_INCLUDE_DIR</strong> and <strong>ECCODES_LIB</strong> in these
+<code class="docutils literal notranslate"><span class="pre">makefiles</span></code> if other than standard paths are used.</p>
+</div>
+<p>Thus, go to the <code class="docutils literal notranslate"><span class="pre">Fortran</span></code> source directory and open the <code class="docutils literal notranslate"><span class="pre">makefile</span></code> of your
+choice, and check / modify with an editor of your choice:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flex_extract_vX.X/Source/Fortran
+nedit makefile_fast
+</pre></div>
+</div>
+<p>Set the paths to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library on your local machine, if necessary.</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>This can vary from system to system.
+It is suggested to use a command like</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># for the ECCODES_INCLUDE_DIR path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep eccodes.mod
+<span class="c1"># for the ECCODES_LIB path do:</span>
+$ dpkg -L libeccodes-dev <span class="p">|</span> grep libeccodes.so
+</pre></div>
+</div>
+<p>to find out the path to the <code class="docutils literal notranslate"><span class="pre">eccodes</span></code> library.</p>
+</div>
+<p>Assign these paths to the parameters <strong>ECCODES_INCLUDE_DIR</strong>
+and <strong>ECCODES_LIB</strong> in the makefile, and save it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># these are the paths on Debian Buster:</span>
+<span class="nv">ECCODES_INCLUDE_DIR</span><span class="o">=</span>/usr/lib/x86_64-linux-gnu/fortran/gfortran-mod-15/
+<span class="nv">ECCODES_LIB</span><span class="o">=</span> -L/usr/lib -leccodes_f90 -leccodes -lm
+</pre></div>
+</div>
+<p>If you want to use another compiler than gfortran locally, you can still take <code class="docutils literal notranslate"><span class="pre">makefile_fast</span></code>,
+and adapt everything that is compiler-specific in this file.</p>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -239,10 +264,10 @@ please see <a class="reference internal" href="../../Installation/local.html#ref
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="run.html" class="btn btn-neutral float-right" title="The executable Script - run.sh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="run.html" class="btn btn-neutral float-right" title="The executable script - run.sh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="compilejob.html" class="btn btn-neutral float-left" title="The Compilation Jobscript compilejob.ksh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="compilejob.html" class="btn btn-neutral float-left" title="The compilation job script compilejob.ksh" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -251,7 +276,7 @@ please see <a class="reference internal" href="../../Installation/local.html#ref
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

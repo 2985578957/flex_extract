@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Known Bugs and Issues &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Known Bugs and Issues &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -87,10 +87,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -174,18 +174,18 @@
 <div class="section" id="installation-problems-with-gateway-and-destination-parameters">
 <h3>Installation problems with <code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code> and <code class="docutils literal notranslate"><span class="pre">DESTINATION</span></code> parameters<a class="headerlink" href="#installation-problems-with-gateway-and-destination-parameters" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>See ticket <a class="reference external" href="https://www.flexpart.eu/ticket/263">#263</a>  on flexpart.eu for information.</p>
+<div><p>See ticket <a class="reference external" href="https://www.flexpart.eu/ticket/263">#263</a>  on flexpart.eu for information. Fixed in v7.1.1.</p>
 </div></blockquote>
 </div>
 <div class="section" id="installation-problems-with-the-fortran-program-calc-etadot">
 <h3>Installation problems with the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code><a class="headerlink" href="#installation-problems-with-the-fortran-program-calc-etadot" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>See ticket <a class="reference external" href="https://www.flexpart.eu/ticket/264">#264</a>  on flexpart.eu for information.</p>
+<div><p>See ticket <a class="reference external" href="https://www.flexpart.eu/ticket/264">#264</a>  on flexpart.eu for information. Fixed in v7.1.1.</p>
 </div></blockquote>
 </div>
 <div class="section" id="eccodes-error-code-250">
 <h3>ECCODES Error Code 250<a class="headerlink" href="#eccodes-error-code-250" title="Permalink to this headline">¶</a></h3>
-<p>If you get an error message from ECCODES with code 250, locking like this:</p>
+<p>If you get an error message from ECCODES with code 250, looking like this:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ECCODES ERROR   :   wrong size <span class="o">(</span><span class="m">184</span><span class="o">)</span> <span class="k">for</span> pv it contains <span class="m">276</span> values
 ECCODES ERROR   :  get: pv Passed array is too small
 ... ERROR CODE: <span class="m">250</span>
@@ -195,10 +195,12 @@ ECCODES ERROR   :  get: pv Passed array is too small
 </pre></div>
 </div>
 <p>then you have set a wrong maximum level in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file!
-It is important to properly select the maximum level depending on the data set you would like to retrieve. The following model level definitions (number of model levels available) are limited to [16, 19, 31, 40, 50, 60, 62, 91, 137]. The ERA-Interim data set uses 62 model levels and <em>ERA5</em> as well as <em>CERA-20C</em> uses 137. The operational data set uses different model levels depending on the date. For example, on the 25/06/2013 the operational system started to use 137 model levels. Therefore, everytime you extract data from a date later than 25/06/2013 you have to select LEVEL=137 in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file or define a LEVELLIST=1/to/137. Of course you can stop before the top of the atmosphere, such as 60/to/137, but you have to select the maximum level number as the last one. Table 2 in the <a class="reference external" href="https://www.geosci-model-dev-discuss.net/gmd-2019-358/">scientific model description paper</a> gives an overview of the level lists and the corresponding introducstion date.</p>
+It is important to properly select the maximum level depending on the data set you would like to retrieve. Only the following values of the number of model levels available are valid: 16, 19, 31, 40, 50, 60, 62, 91, 137.</p>
+<p>The ERA-Interim data set uses 62 model levels and <em>ERA5</em> as well as <em>CERA-20C</em> uses 137.</p>
+<p>The operational data sets use different numbers, depending on the date. For example, from 25/06/2013 on, 137 model levels were used in the operational system. Therefore, every time you extract data from a date later than 25/06/2013 you have to select LEVEL=137 in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file, or you have to define LEVELLIST=1/to/137. Of course, you can stop before the top of the atmosphere, such as 60/to/137, but you have to include the maximum level number (i. e., the lowest level, see note below!) number as the last one. Table 2 in the <a class="reference external" href="https://www.geosci-model-dev-discuss.net/gmd-2019-358/">scientific model description paper</a> gives an overview of the level lists and the corresponding date they were introduced.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Remember that model level 1 corresponds to the top of the atmosphere and then increases in the direction of the surface.</p>
+<p>Be aware that the ECMWF model counts the levels from the top of the atmosphere downward to the surface. Level 1 is the topmost level, and e.g. 137 would be the level closest to the ground.</p>
 </div>
 </div>
 </div>
@@ -215,7 +217,7 @@ It is important to properly select the maximum level depending on the data set y
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

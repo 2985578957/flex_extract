@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python’s Auto Generated Documentation &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Auto-generated documentation for the Python scripts &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Fortran’s Auto Generated Documentation" href="api_fortran.html" />
-    <link rel="prev" title="Auto Generated Documentation" href="../api.html" /> 
+    <link rel="next" title="Auto-generated documentation for the Fortran programme" href="api_fortran.html" />
+    <link rel="prev" title="Auto-generated documentation" href="../api.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,23 +89,23 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../input.html">Control &amp; Input Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../output.html">Output Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../api.html">Auto Generated Documentation</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Python’s Auto Generated Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../input.html">Control &amp; input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../output.html">Output data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vertco.html">Vertical wind</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html">Auto-generated documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Auto-generated documentation for the Python scripts</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#programs">Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#modules">Modules</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="api_fortran.html">Fortran’s Auto Generated Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api_fortran.html">Auto-generated documentation for the Fortran programme</a></li>
 </ul>
 </li>
 </ul>
@@ -161,11 +161,11 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
-          <li><a href="../api.html">Auto Generated Documentation</a> &raquo;</li>
+          <li><a href="../api.html">Auto-generated documentation</a> &raquo;</li>
         
-      <li>Python’s Auto Generated Documentation</li>
+      <li>Auto-generated documentation for the Python scripts</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -184,8 +184,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="python-s-auto-generated-documentation">
-<h1>Python’s Auto Generated Documentation<a class="headerlink" href="#python-s-auto-generated-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="auto-generated-documentation-for-the-python-scripts">
+<h1>Auto-generated documentation for the Python scripts<a class="headerlink" href="#auto-generated-documentation-for-the-python-scripts" title="Permalink to this headline">¶</a></h1>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#programs" id="id3">Programs</a></p>
@@ -220,14 +220,14 @@
 <span id="install"></span><h3><a class="toc-backref" href="#id4">install</a><a class="headerlink" href="#module-install" title="Permalink to this headline">¶</a></h3>
 <p>This script installs the flex_extract program.</p>
 <p>Depending on the selected installation environment (locally or on the
-ECMWF server ecgate or cca) the program extracts the commandline
+ECMWF server ecgate or cca) the program extracts the command line
 arguments and the CONTROL file parameter and prepares the corresponding
 environment.
-The necessary files are collected in a tar-ball and placed
-at the target location. There its untared, the environment variables will
-be set and the Fortran code will be compiled.
-If the ECMWF environment is selected a job script is prepared and submitted
-for the remaining configurations after putting the tar-ball to the
+The necessary files are collected in a tar ball and placed
+at the target location. There, is is untared, the environment variables are
+set, and the Fortran code is compiled.
+If the ECMWF environment is selected, a job script is prepared and submitted
+for the remaining configurations after putting the tar ball on the
 target ECMWF server.</p>
 <p>Type: install.py –help
 to get information about command line parameters.
@@ -235,8 +235,8 @@ Read the documentation for usage instructions.</p>
 <dl class="function">
 <dt id="install.check_install_conditions">
 <code class="sig-prename descclassname">install.</code><code class="sig-name descname">check_install_conditions</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#check_install_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.check_install_conditions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks a couple of necessary attributes and conditions
-for the installation such as if they exist and contain values.
+<dd><p>Checks necessary attributes and conditions
+for the installation, e.g. whether they exist and contain values.
 Otherwise set default values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -262,7 +262,7 @@ build files (e.g. *.o, *.mod and CONVERT2)</p>
 <dt id="install.get_install_cmdline_args">
 <code class="sig-prename descclassname">install.</code><code class="sig-name descname">get_install_cmdline_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#get_install_cmdline_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.get_install_cmdline_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decomposes the command line arguments and assigns them to variables.
-Apply default values for non mentioned arguments.</p>
+Apply default values for arguments not present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>args</strong> – Contains the commandline arguments from script/program call.</p>
@@ -288,8 +288,8 @@ command line.</p>
 <dl class="function">
 <dt id="install.install_via_gateway">
 <code class="sig-prename descclassname">install.</code><code class="sig-name descname">install_via_gateway</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#install_via_gateway"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.install_via_gateway" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prepare data transfer to remote gate and submit a job script which will
-install everything on the remote gate.</p>
+<dd><p>Prepare data transfer to remote gateway and submit a job script which will
+install everything on the remote gateway.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>c</strong> (<a class="reference internal" href="#ControlFile.ControlFile" title="ControlFile.ControlFile"><em>ControlFile</em></a>) – Contains all the parameters of CONTROL file and
@@ -314,8 +314,8 @@ is stored in a new file “job.temp” in the python directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>makefile</strong> (<em>str</em>) – Name of the makefile which should be used to compile FORTRAN
-CONVERT2 program.</p></li>
+<li><p><strong>makefile</strong> (<em>str</em>) – Name of the makefile which should be used to compile the Fortran
+program.</p></li>
 <li><p><strong>ecuid</strong> (<em>str</em>) – The user id on ECMWF server.</p></li>
 <li><p><strong>ecgid</strong> (<em>str</em>) – The group id on ECMWF server.</p></li>
 <li><p><strong>fp_root</strong> (<em>str</em>) – Path to the root directory of FLEXPART environment or flex_extract
@@ -381,8 +381,8 @@ environment.</p></li>
 <code class="sig-prename descclassname">install.</code><code class="sig-name descname">mk_tarball</code><span class="sig-paren">(</span><em class="sig-param">tarball_path</em>, <em class="sig-param">target</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#mk_tarball"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.mk_tarball" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a tarball with all necessary files which need to be sent to the
 installation directory.
-It does not matter if this is local or remote.
-Collects all python files, the Fortran source and makefiles,
+It does not matter whether this is local or remote.
+Collects all Python files, the Fortran source and makefiles,
 the ECMWF_ENV file, the CONTROL files as well as the
 template files.</p>
 <dl class="field-list simple">
@@ -2273,23 +2273,23 @@ they can be deleted.</p>
 <h2><a class="toc-backref" href="#id12">Modules</a><a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="module-get_mars_data">
 <span id="get-mars-data"></span><h3><a class="toc-backref" href="#id13">get_mars_data</a><a class="headerlink" href="#module-get_mars_data" title="Permalink to this headline">¶</a></h3>
-<p>This script extracts MARS data from ECMWF servers.</p>
+<p>This script extracts MARS data from ECMWF.</p>
 <p>At first, the necessary parameters from command line and CONTROL files are
 extracted. They define the data set to be extracted from MARS.</p>
 <p>This file can also be imported as a module and contains the following
 functions:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>main - the main function of the script</p></li>
-<li><p>get_mars_data - overall control of ECMWF data retrievment</p></li>
+<li><p>main            - the main function of the script</p></li>
+<li><p>get_mars_data   - overall control of ECMWF data retrievment</p></li>
 <li><p>write_reqheader - writes the header into the mars_request file</p></li>
-<li><p>mk_server - creates the server connection to ECMWF servers</p></li>
-<li><p>mk_dates - defines the start and end date</p></li>
-<li><p>remove_old - deletes old retrieved grib files</p></li>
-<li><p>do_retrievement - creates individual retrievals</p></li>
+<li><p>mk_server       - creates the server connection to ECMWF servers</p></li>
+<li><p>mk_dates        - defines the start and end date</p></li>
+<li><p>remove_old      - deletes old retrieved grib files</p></li>
+<li><p>do_retrieval    - creates individual retrievals</p></li>
 </ul>
 </div></blockquote>
-<p>Type: get_mars_data.py –help
+<p>Type get_mars_data.py –help
 to get information about command line parameters.
 Read the documentation for usage instructions.</p>
 <dl class="function">
@@ -2315,7 +2315,7 @@ Read the documentation for usage instructions.</p>
 <dl class="function">
 <dt id="get_mars_data.do_retrievement">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">do_retrievement</code><span class="sig-paren">(</span><em class="sig-param">c</em>, <em class="sig-param">server</em>, <em class="sig-param">start</em>, <em class="sig-param">end</em>, <em class="sig-param">delta_t</em>, <em class="sig-param">fluxes=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#do_retrievement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.do_retrievement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Divides the complete retrieval period in smaller chunks and
+<dd><p>Divides the total retrieval period into smaller chunks and
 retrieves the data from MARS.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2325,8 +2325,7 @@ command line.</p></li>
 <li><p><strong>server</strong> (<em>ECMWFService</em><em> or </em><em>ECMWFDataServer</em>) – The server connection to ECMWF.</p></li>
 <li><p><strong>start</strong> (<em>datetime</em>) – The start date of the retrieval.</p></li>
 <li><p><strong>end</strong> (<em>datetime</em>) – The end date of the retrieval.</p></li>
-<li><p><strong>delta_t</strong> (<em>datetime</em>) – Delta_t + 1 is the maximal time period of a single
-retrieval.</p></li>
+<li><p><strong>delta_t</strong> (<em>datetime</em>) – Delta_t + 1 is the maximum time period of a single retrieval.</p></li>
 <li><p><strong>fluxes</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Decides if the flux parameters are to be retrieved or
 the rest of the parameter list.
 Default value is False.</p></li>
@@ -2338,9 +2337,9 @@ Default value is False.</p></li>
 <dl class="function">
 <dt id="get_mars_data.get_mars_data">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">get_mars_data</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#get_mars_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.get_mars_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the EC data needed for a FLEXPART simulation.</p>
-<p>Start and end dates for retrieval period is set. Retrievals
-are divided into smaller periods if necessary and datechunk parameter
+<dd><p>Retrieves the ECMWF data required for a FLEXPART simulation.</p>
+<p>Start and end dates for retrieval period are set. Retrievals
+are divided into shorter periods if necessary and if datechunk parameter
 is set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2353,20 +2352,20 @@ command line.</p>
 <dl class="function">
 <dt id="get_mars_data.main">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Controls the program to get data out of mars.</p>
-<p>This is done if it is called directly from command line.
-Then it also takes program call arguments and control file input.</p>
+<dd><p>Controls the program to retrieve data from MARS.</p>
+<p>This is done if called directly from command line.
+Then, arguments and control file are taken as input.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="get_mars_data.mk_dates">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">mk_dates</code><span class="sig-paren">(</span><em class="sig-param">c</em>, <em class="sig-param">fluxes</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#mk_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.mk_dates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prepares start and end date depending on flux or non flux data.</p>
-<p>If forecast for maximum one day (upto 24h) are to be retrieved, then
+<dd><p>Prepares start and end date depending on flux or non-flux type of data.</p>
+<p>If forecasts for a maximum of one day (24 h) are to be retrieved, then
 collect accumulation data (flux data) with additional days in the
-beginning and at the end (used for complete disaggregation of
+beginning and at the end (needed for complete disaggregation of
 original period)</p>
-<p>If forecast data longer than 24h are to be retrieved, then
+<p>If forecast data for more than +24 h are to be retrieved, then
 collect accumulation data (flux data) with the exact start and end date
 (disaggregation will be done for the exact time period with
 boundary conditions)</p>
@@ -2396,10 +2395,11 @@ Default value is False.</p></li>
 <dl class="function">
 <dt id="get_mars_data.mk_server">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">mk_server</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#mk_server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.mk_server" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a server connection with available python API.</p>
-<p>Which API is used depends on availability and the dataset to be retrieved.
-The CDS API is used for ERA5 dataset no matter if the user is a member or
-a public user. ECMWF WebAPI is used for all other available datasets.</p>
+<dd><p>Creates a server connection with available Python API.</p>
+<p>The API selected depends on availability and the data set to be retrieved.
+The CDS API is used for ERA5 data, no matter whether the user is a
+member-state or a public user.
+ECMWF WebAPI is used for all other available datasets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>c</strong> (<a class="reference internal" href="#ControlFile.ControlFile" title="ControlFile.ControlFile"><em>ControlFile</em></a>) – Contains all the parameters of CONTROL file and
@@ -2422,8 +2422,8 @@ matching the pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern</strong> (<em>str</em>) – The sub string pattern which identifies the files to be deleted.</p></li>
-<li><p><strong>inputdir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the directory where the retrieved data is stored.</p></li>
+<li><p><strong>pattern</strong> (<em>str</em>) – The substring pattern which identifies the files to be deleted.</p></li>
+<li><p><strong>inputdir</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to the directory where the retrieved data are stored.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2432,10 +2432,10 @@ matching the pattern.</p>
 <dl class="function">
 <dt id="get_mars_data.write_reqheader">
 <code class="sig-prename descclassname">get_mars_data.</code><code class="sig-name descname">write_reqheader</code><span class="sig-paren">(</span><em class="sig-param">marsfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/get_mars_data.html#write_reqheader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#get_mars_data.write_reqheader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes header with column names into mars request file.</p>
+<dd><p>Writes header with column names into MARS request file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>marsfile</strong> (<em>str</em>) – Path to the mars request file.</p>
+<dd class="field-odd"><p><strong>marsfile</strong> (<em>str</em>) – Path to the MARS request file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2446,9 +2446,9 @@ matching the pattern.</p>
 <p>This script prepares the final version of the grib files which are
 then used by FLEXPART.</p>
 <p>It converts the bunch of grib files extracted via get_mars_data before,
-by doing the necessary conversion to get consistent grids or the
+by doing the necessary conversion to obtain consistent grids or the
 disaggregation of flux data. Finally, the data fields are combined
-in files per available hour with the naming convention xxYYMMDDHH,
+in files per hour available with the naming convention xxYYMMDDHH,
 where xx should be 2 arbitrary letters (mostly xx is chosen to be “EN”).</p>
 <p>This file can also be imported as a module which then contains the following
 functions:</p>
@@ -2464,19 +2464,18 @@ Read the documentation for usage instructions.</p>
 <dl class="function">
 <dt id="prepare_flexpart.main">
 <code class="sig-prename descclassname">prepare_flexpart.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/prepare_flexpart.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prepare_flexpart.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Controls the program to prepare flexpart input files from mars data.</p>
-<p>This is done if it is called directly from command line.
-Then it also takes program call arguments and control file input.</p>
+<dd><p>Controls the program to prepare FLEXPART input files from MARS data.</p>
+<p>This is done if called directly from the command line.
+Then, arguments and control file are taken as input.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="prepare_flexpart.prepare_flexpart">
 <code class="sig-prename descclassname">prepare_flexpart.</code><code class="sig-name descname">prepare_flexpart</code><span class="sig-paren">(</span><em class="sig-param">ppid</em>, <em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/prepare_flexpart.html#prepare_flexpart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prepare_flexpart.prepare_flexpart" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the mars data into flexpart ready input files.</p>
-<p>Specific data fields are converted to a different grid and the flux
-data are going to be disaggregated. The data fields are collected by
-hour and stored in a file with a specific FLEXPART relevant naming
-convention.</p>
+<dd><p>Converts the MARS data into files ready as input for FLEXPART.</p>
+<p>Certain fields are converted to a different grid and the flux
+data are disaggregated. Fields are collected by hour and stored in a file
+with a specific naming convention.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2498,7 +2497,7 @@ command line.</p></li>
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">clean_up</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#clean_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.clean_up" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove files from the intermediate directory (inputdir).</p>
 <p>It keeps the final FLEXPART input files if program runs without
-ECMWF Api and keywords “ectrans” or “ecstorage” are set to “1”.</p>
+ECMWF API and keywords “ectrans” or “ecstorage” are set to “1”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>c</strong> (<a class="reference internal" href="#ControlFile.ControlFile" title="ControlFile.ControlFile"><em>ControlFile</em></a>) – Contains all the parameters of CONTROL file and
@@ -2510,18 +2509,17 @@ command line.</p>
 <dl class="function">
 <dt id="tools.execute_subprocess">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">execute_subprocess</code><span class="sig-paren">(</span><em class="sig-param">cmd_list</em>, <em class="sig-param">error_msg='SUBPROCESS FAILED!'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#execute_subprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.execute_subprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes a command line instruction via a subprocess.</p>
+<dd><p>Executes a command via a subprocess.</p>
 <p>Error handling is done if an error occures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cmd_list</strong> (<em>list of str</em>) – A list of the components for the command line execution. Each
-list entry is a single part of the command which is seperated from
-the rest by a blank space.
-E.g. [‘mv’, file1, file2]</p>
+<dd class="field-odd"><p><strong>cmd_list</strong> (<em>list of str</em>) – A list of the components for the command line execution.
+They will be concatenated with blank space for the command
+to be submitted, like [‘mv’, file1, file2] for mv file1 file2.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>error_msg</strong> – The possible error message if the subprocess failed.
-By default it will just tell “SUBPROCESS FAILED!”.</p>
+<dd class="field-even"><p><strong>error_msg</strong> – Error message if the subprocess fails.
+By default it will just say “SUBPROCESS FAILED!”.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str, optional</p>
@@ -2554,10 +2552,10 @@ the temporary times which were used for processing reasons.</p></li>
 <dt id="tools.get_cmdline_args">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">get_cmdline_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#get_cmdline_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.get_cmdline_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decomposes the command line arguments and assigns them to variables.
-Apply default values for non mentioned arguments.</p>
+Apply default values for arguments not present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>args</strong> – Contains the commandline arguments from script/program call.</p>
+<dd class="field-odd"><p><strong>args</strong> – Contains the command line arguments from the script / program call.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Namespace</p>
@@ -2568,7 +2566,7 @@ Apply default values for non mentioned arguments.</p>
 <dl class="function">
 <dt id="tools.get_dimensions">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">get_dimensions</code><span class="sig-paren">(</span><em class="sig-param">info</em>, <em class="sig-param">purefc</em>, <em class="sig-param">dtime</em>, <em class="sig-param">index_vals</em>, <em class="sig-param">start_date</em>, <em class="sig-param">end_date</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#get_dimensions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.get_dimensions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function specifies the correct dimensions for x, y and t.</p>
+<dd><p>This function specifies the correct dimensions for x, y, and t.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2580,7 +2578,7 @@ Apply default values for non mentioned arguments.</p>
 <li><p><strong>purefc</strong> (<em>int</em>) – Switch for definition of pure forecast mode or not.</p></li>
 <li><p><strong>dtime</strong> (<em>str</em>) – Time step in hours.</p></li>
 <li><p><strong>index_vals</strong> (<em>list of list of str</em>) – Contains the values from the keys used for a distinct selection
-of grib messages in processing  the grib files.
+of GRIB messages in processing the grib files.
 Content looks like e.g.:
 index_vals[0]: (‘20171106’, ‘20171107’, ‘20171108’) ; date
 index_vals[1]: (‘0’, ‘1200’, ‘1800’, ‘600’) ; time
@@ -2601,9 +2599,9 @@ index_vals[2]: (‘0’, ‘12’, ‘3’, ‘6’, ‘9’) ; stepRange</p></l
 <dl class="function">
 <dt id="tools.get_informations">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">get_informations</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#get_informations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.get_informations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets basic information from an example grib file.</p>
-<p>These information are important for later use and the
-initialization of numpy arrays for data storing.</p>
+<dd><p>Extracts basic information from a sample grib file.</p>
+<p>This information is needed for later use and the
+initialization of numpy arrays where data are stored.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Name of the file which will be opened to extract basic information.</p>
@@ -2624,7 +2622,8 @@ initialization of numpy arrays for data storing.</p>
 <dl class="function">
 <dt id="tools.get_list_as_string">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">get_list_as_string</code><span class="sig-paren">(</span><em class="sig-param">list_obj</em>, <em class="sig-param">concatenate_sign='</em>, <em class="sig-param">'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#get_list_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.get_list_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a list of arbitrary content into a single string.</p>
+<dd><p>Converts a list of arbitrary content into a single string using a given
+concatenation character.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2665,8 +2664,8 @@ short name of the parameter.</p>
 <dt id="tools.make_dir">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">make_dir</code><span class="sig-paren">(</span><em class="sig-param">directory</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#make_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.make_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a directory.</p>
-<p>It gives a warning if the directory already exists and skips process.
-The program stops only if there is another problem.</p>
+<p>If the directory already exists, an information is printed and the creation
+skipped. The program stops only if there is another problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>directory</strong> (<em>str</em>) – The path to directory which should be created.</p>
@@ -2689,8 +2688,8 @@ before exiting the program.</p>
 <dl class="function">
 <dt id="tools.none_or_int">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">none_or_int</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#none_or_int"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.none_or_int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the input string into pythons None-type if the string
-contains string “None”. Otherwise it is converted to an integer value.</p>
+<dd><p>Converts the input string into Pythons None-type if it
+contains string “None”; otherwise it is converted to an integer value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – String to be checked for the “None” word.</p>
@@ -2709,15 +2708,15 @@ converted into an integer value.</p>
 <dl class="function">
 <dt id="tools.none_or_str">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">none_or_str</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#none_or_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.none_or_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the input string into pythons None-type if the string
-contains string “None”.</p>
+<dd><p>Converts the input string into Pythons None type if it
+contains the string “None”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>str</em>) – String to be checked for the “None” word.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Return depends on the content of the input value. If it was “None”,
-then the python type None is returned. Otherwise the string itself.</p>
+then the Python type None is returned, otherwise the string itself.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>None or value</p>
@@ -2741,7 +2740,7 @@ then the python type None is returned. Otherwise the string itself.</p>
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">product</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates combinations of all passed arguments.</p>
 <p>This method combines the single characters of the passed arguments
-with each other. So that each character of each argument value
+with each other in a way that each character of each argument value
 will be combined with each character of the other arguments as a tuple.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -2879,7 +2878,7 @@ is done in here.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>job_id</strong> – The id number of the job as a reference at the ecmwf server.</p>
+<dd class="field-even"><p><strong>job_id</strong> – The id number of the job as a reference at the ECMWF server.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
@@ -2895,9 +2894,8 @@ is done in here.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pars</strong> (<em>str</em>) – Addpar argument from CONTROL file in the format of
-parameter names instead of ids. The parameter short
-names are sepearted with “/” and they are passed as
-one single string.</p></li>
+parameter names instead of IDs. The parameter short
+names are separated by “/” and passed as one single string.</p></li>
 <li><p><strong>table</strong> (<em>dict</em>) – Contains the ECMWF grib table 128 information.
 The key is the parameter number and the value is the
 short name of the parameter.</p></li>
@@ -2916,15 +2914,14 @@ parameter ids in the format of integer.</p>
 <dl class="function">
 <dt id="tools.to_param_id_with_tablenumber">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">to_param_id_with_tablenumber</code><span class="sig-paren">(</span><em class="sig-param">pars</em>, <em class="sig-param">table</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#to_param_id_with_tablenumber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.to_param_id_with_tablenumber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform parameter names to parameter ids and add table id.</p>
+<dd><p>Transform parameter names to parameter IDs and add table ID.</p>
 <p>Conversion with ECMWF grib table 128.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pars</strong> (<em>str</em>) – Addpar argument from CONTROL file in the format of
-parameter names instead of ids. The parameter short
-names are sepearted with “/” and they are passed as
-one single string.</p></li>
+parameter names instead of ID. The parameter short
+names are separated by “/” and passed as one single string.</p></li>
 <li><p><strong>table</strong> (<em>dict</em>) – Contains the ECMWF grib table 128 information.
 The key is the parameter number and the value is the
 short name of the parameter.</p></li>
@@ -2932,7 +2929,7 @@ short name of the parameter.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>spar</strong> – List of addpar parameters from CONTROL file transformed to
-parameter ids in the format of integer.</p>
+parameter IDs in the format of integer.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -2947,7 +2944,7 @@ parameter ids in the format of integer.</p>
 <dl class="function">
 <dt id="checks.check_accmaxstep">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_accmaxstep</code><span class="sig-paren">(</span><em class="sig-param">accmaxstep</em>, <em class="sig-param">marsclass</em>, <em class="sig-param">purefc</em>, <em class="sig-param">maxstep</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_accmaxstep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_accmaxstep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Guarantees that the accumulation forecast step were set.</p>
+<dd><p>Guarantees that the accumulation forecast step was set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -2955,7 +2952,7 @@ parameter ids in the format of integer.</p>
 <li><p><strong>marsclass</strong> (<em>str</em>) – ECMWF data classification identifier.</p></li>
 <li><p><strong>purefc</strong> (<em>int</em>) – Switch for definition of pure forecast mode or not.</p></li>
 <li><p><strong>maxstep</strong> (<em>str</em>) – The maximum forecast time step in hours from the forecast base time.
-This is the maximum step for non flux (accumulated) forecast data.</p></li>
+This is the maximum step for non-flux (accumulated) forecast data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2971,18 +2968,18 @@ This is the maximum step for non flux (accumulated) forecast data.</p></li>
 <dt id="checks.check_acctime">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_acctime</code><span class="sig-paren">(</span><em class="sig-param">acctime</em>, <em class="sig-param">marsclass</em>, <em class="sig-param">purefc</em>, <em class="sig-param">time</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_acctime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_acctime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Guarantees that the accumulation forecast times were set.</p>
-<p>If it is not set, it tries to set the value for some of the
-most commonly used data sets. Otherwise it raises an error.</p>
+<p>If not set, setting the value to some of the most commonly used data sets
+is attempted. Otherwise, an eror is raised.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>acctime</strong> (<em>str</em>) – The starting time from the accumulated forecasts.</p></li>
+<li><p><strong>acctime</strong> (<em>str</em>) – The starting time for the accumulated forecasts.</p></li>
 <li><p><strong>marsclass</strong> (<em>str</em>) – ECMWF data classification identifier.</p></li>
 <li><p><strong>purefc</strong> (<em>int</em>) – Switch for definition of pure forecast mode or not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>acctime</strong> – The starting time from the accumulated forecasts.</p>
+<dd class="field-even"><p><strong>acctime</strong> – The starting time for the accumulated forecasts.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -2994,7 +2991,7 @@ most commonly used data sets. Otherwise it raises an error.</p>
 <dt id="checks.check_acctype">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_acctype</code><span class="sig-paren">(</span><em class="sig-param">acctype</em>, <em class="sig-param">ftype</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_acctype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_acctype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Guarantees that the accumulation field type is set.</p>
-<p>If not set, it is derivated as in the old method (TYPE[1]).</p>
+<p>If not set, it is derived with the old method (TYPE[1]).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3015,8 +3012,8 @@ most commonly used data sets. Otherwise it raises an error.</p>
 <dt id="checks.check_addpar">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_addpar</code><span class="sig-paren">(</span><em class="sig-param">addpar</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_addpar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_addpar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that addpar has correct format of additional parameters in
-a single string, so that it can be easily appended to the hard coded
-parameters that are retrieved in any case.</p>
+a single string, so that it can be easily appended to the hard-coded
+parameters retrieved in any case.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>addpar</strong> (<em>str</em><em> or </em><em>list of str</em>) – List of additional parameters to be retrieved.</p>
@@ -3034,9 +3031,10 @@ parameters that are retrieved in any case.</p>
 <dt id="checks.check_area">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_area</code><span class="sig-paren">(</span><em class="sig-param">grid</em>, <em class="sig-param">area</em>, <em class="sig-param">upper</em>, <em class="sig-param">lower</em>, <em class="sig-param">left</em>, <em class="sig-param">right</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the correct area string.</p>
-<p>Checks on the format of the four area components. Wether it is of
-the order of 1000 or 1. Also checks wether area was already set by command
-line, then the four components are overwritten.
+<p>Checks the format of the four area components wether it is on
+the order of 1000 or 1.
+Also checks wether area was already set on command line,
+then the four components are overwritten.
 Convert to correct format of the order of magnitude “1” and sets the
 area parameter (North/West/South/East).
 E.g.: -5./20./10./10.</p>
@@ -3045,14 +3043,14 @@ E.g.: -5./20./10./10.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>grid</strong> (<em>str</em>) – Contains grid information.</p></li>
 <li><p><strong>area</strong> (<em>str</em>) – Contains area informtion.</p></li>
-<li><p><strong>upper</strong> (<em>str</em>) – The northern most latitude.</p></li>
-<li><p><strong>lower</strong> (<em>str</em>) – The souther most latitude.</p></li>
-<li><p><strong>left</strong> (<em>str</em>) – The western most longitude.</p></li>
-<li><p><strong>right</strong> (<em>str</em>) – The eastern most longiude.</p></li>
+<li><p><strong>upper</strong> (<em>str</em>) – The northernmost latitude.</p></li>
+<li><p><strong>lower</strong> (<em>str</em>) – The southernmost latitude.</p></li>
+<li><p><strong>left</strong> (<em>str</em>) – The westernmost longitude.</p></li>
+<li><p><strong>right</strong> (<em>str</em>) – The easternmost longitude.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>grid</strong> – Contains grid in format Lat/lon. E.g. 0.1/0.1</p>
+<dd class="field-even"><p><strong>grid</strong> – Contains grid in format lat/lon. E.g. 0.1/0.1</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>str</p>
@@ -3083,7 +3081,7 @@ retrieved.</p>
 <dl class="function">
 <dt id="checks.check_dates">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_dates</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_dates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if there is at least a start date for a one day retrieval.</p>
+<dd><p>Checks if there is at least a start date for a one-day retrieval.</p>
 <p>Checks if end date lies after start date and end date is set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -3124,7 +3122,7 @@ Convert to correct grid format and substitute into “Lat/Lon” format string.<
 <dl class="function">
 <dt id="checks.check_job_chunk">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_job_chunk</code><span class="sig-paren">(</span><em class="sig-param">job_chunk</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_job_chunk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_job_chunk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks that if job chunk is set, the number is positive and non zero.</p>
+<dd><p>Checks that if job chunk is set, the number is positive and nonzero.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>job_chunk</strong> (<em>int</em>) – The number of days for a single job script.</p>
@@ -3150,7 +3148,7 @@ Convert to correct grid format and substitute into “Lat/Lon” format string.<
 <li><p><strong>steps</strong> (<em>str</em>) – Specifies the forecast time step from forecast base time.
 Valid values are hours (HH) from forecast base time.</p></li>
 <li><p><strong>maxstep</strong> (<em>int</em>) – The maximum forecast time step in hours from the forecast base time.
-This is the maximum step for non flux (accumulated) forecast data.</p></li>
+This is the maximum step for non-flux (not accumulated) forecast data.</p></li>
 <li><p><strong>purefc</strong> (<em>int</em>) – Switch for definition of pure forecast mode or not.</p></li>
 </ul>
 </dd>
@@ -3185,8 +3183,8 @@ Examples: model level: 1/to/137, pressure levels: 500/to/1000</p></li>
 correspondence to the selected levtype.
 Examples: model level: 1/to/137, pressure levels: 500/to/1000</p></li>
 <li><p><strong>level</strong> (<em>str</em>) – Specifies the maximum level. It has to be one of the
-available maximum level number as contained in the variable
-MAX_LEVEL_LIST in “_config”. E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]</p></li>
+available maximum level numbers as contained in the variable
+MAX_LEVEL_LIST in “_config”: [16, 19, 31, 40, 50, 60, 62, 91, 137]</p></li>
 </ul>
 </p>
 </dd>
@@ -3212,7 +3210,7 @@ program.</p></li>
 <dl class="function">
 <dt id="checks.check_mail">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_mail</code><span class="sig-paren">(</span><em class="sig-param">mail</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_mail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_mail" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check the string of mail addresses, seperate them and convert to a list.</p>
+<dd><p>Check the string of mail addresses, separate them and convert to list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>mail</strong> (<em>list of str</em><em> or </em><em>str</em>) – Contains email addresses for notifications.
@@ -3315,8 +3313,8 @@ of is None otherwise.</p></li>
 <dl class="function">
 <dt id="checks.check_public">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_public</code><span class="sig-paren">(</span><em class="sig-param">public</em>, <em class="sig-param">dataset</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_public" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check wether the dataset parameter is set for a
-public data set retrieval.</p>
+<dd><p>Check wether the dataset parameter is set to a
+public data set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3369,7 +3367,7 @@ transfer through ectrans. E.g. <a class="reference external" href="mailto:name&#
 <dl class="function">
 <dt id="checks.check_request">
 <code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_request</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">marsfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if there is an old mars request file and remove it.</p>
+<dd><p>Check if there is an old MARS request file; if so, remove it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -3588,10 +3586,10 @@ E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api_fortran.html" class="btn btn-neutral float-right" title="Fortran’s Auto Generated Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api_fortran.html" class="btn btn-neutral float-right" title="Auto-generated documentation for the Fortran programme" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../api.html" class="btn btn-neutral float-left" title="Auto Generated Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../api.html" class="btn btn-neutral float-left" title="Auto-generated documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -3600,7 +3598,7 @@ E.g. [[array_t1], [array_t2], [array_t3], [array_t4]]</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

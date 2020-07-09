@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to flex_extract’s user documentation! &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Welcome to the flex_extract Documentation! &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" /> 
+    <link rel="next" title="ECMWF Data" href="ecmwf_data.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -88,10 +88,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
@@ -143,7 +143,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s user documentation!</li>
+      <li>Welcome to the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> Documentation!</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,22 +162,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-flex-extract-s-user-documentation">
-<h1>Welcome to <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>’s user documentation!<a class="headerlink" href="#welcome-to-flex-extract-s-user-documentation" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is an open-source software to retrieve meteorological fields from the European Centre for Medium-Range Weather Forecasts (ECMWF) Mars archive to serve as input files for the FLEXTRA/FLEXPART Atmospheric Transport Modelling system.</p>
+  <div class="section" id="welcome-to-the-flex-extract-documentation">
+<h1>Welcome to the <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> Documentation!<a class="headerlink" href="#welcome-to-the-flex-extract-documentation" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is an open-source software to retrieve meteorological fields from the MARS archive of the European Centre for Medium-Range Weather Forecasts (ECMWF) to serve as input for the FLEXTRA/FLEXPART atmospheric transport modelling system.</p>
 <table style="width:100%;">
   <tr>
-    <td style="width:30%;height:150px;">
-      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
-      </div>
-      <h2><a href="installation.html">Installation</a></h2>
-      <ul>
-        <li><a href="installation.html#ref-requirements">Environment requirements</a></li>
-        <li><a href="installation.html#ref-download">Download flex_extract</a></li>
-        <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
-      </ul>
-    </td>
     <td style="width:30%;height:150px;">
       <div style="width:100%;height:60px;margin-left:20%;position:relative;">
         <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/ecmwf_icon.png">
@@ -185,32 +174,42 @@
       <h2><a href="ecmwf_data.html">ECMWF data</a></h2>
       <ul>
         <li><a href="ecmwf_data.html">Overview</a></li>
-        <li><a href="Ecmwf/access.html">Access Modes</a></li>
-        <li><a href="Ecmwf/ec-links.html">Link Collection</a></li>
+        <li><a href="Ecmwf/access.html">Access modes</a></li>
+        <li><a href="Ecmwf/ec-links.html">Link collection</a></li>
       </ul>
     </td>
     <td style="width:30%;height:150px;">
       <div style="width:100%;height:60px;margin-left:20%;position:relative;">
-        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/install_icon.png">
       </div>
-      <h2><a href="documentation.html">Documentation</a></h2>
+      <h2><a href="installation.html">Installation</a></h2>
       <ul>
-        <li><a href="Documentation/overview.html">Overview</a></li>
-        <li><a href="Documentation/input.html">Control & Input Data</a></li>
-        <li><a href="Documentation/output.html">Output Data</a></li>
+        <li><a href="installation.html#ref-requirements">Dependencies</a></li>
+        <li><a href="installation.html#ref-download">Download flex_extract</a></li>
+        <li><a href="installation.html#ref-install-fe">Install flex_extract</a></li>
       </ul>
     </td>
-  </tr>
-  <tr>
     <td style="width:30%;height:150px;">
       <div style="width:100%;height:60px;margin-left:20%;position:relative;">
         <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/guide_icon.png">
       </div>
-      <h2><a href="quick_start.html">Quick Start</a></h2>
+      <h2><a href="quick_start.html">Usage</a></h2>
       <ul>
         <li><a href="quick_start.html#job-preparation">Job preparation</a></li>
-        <li><a href="quick_start.html#selection-and-adjustment-of-control-files">Handling CONTROL files</a></li>
+        <li><a href="quick_start.html#selection-and-adjustment-of-control-files">CONTROL files</a></li>
         <li><a href="quick_start.html#hints-for-definition-of-some-parameter-combinations">Hints on parameter combinations</a></li>
+      </ul>
+    </td>        </tr>
+  <tr>
+    <td style="width:30%;height:150px;">
+      <div style="width:100%;height:60px;margin-left:20%;position:relative;">
+        <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/prog_icon.png">
+      </div>
+      <h2><a href="documentation.html">Code-level documentation</a></h2>
+      <ul>
+        <li><a href="Documentation/overview.html">Overview</a></li>
+        <li><a href="Documentation/input.html">Scripts, control & input data</a></li>
+        <li><a href="Documentation/output.html">Output data</a></li>
       </ul>
     </td>
     <td style="width:30%;height:150px;">
@@ -228,9 +227,9 @@
       <div style="width:100%;height:60px;margin-left:20%;position:relative;">
         <img style="position:absolute;height:90%;vertical-align:bottom;" src="_static/dev_icon.png">
       </div>
-      <h2><a href="dev_guide.html">Developer</a></h2>
+      <h2><a href="dev_guide.html">Developer guide</a></h2>
       <ul>
-        <li><a href="Developers/gen_docu.html">Update Documentation</a></li>
+        <li><a href="Developers/gen_docu.html">Updating the documentation</a></li>
         <li><a href=""></a><Placeholder></li>
         <li><a href=""></a><Placeholder></li>
       </ul>
@@ -282,9 +281,10 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#registration-at-ecmwf">Registration at ECMWF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#licence-agreement-for-public-datasets">Licence agreement for public datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#accept-licences-for-public-datasets">Accept licences for public datasets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#download-flex-extract">Download <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#installation-of-flex-extract">Installation of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code></a></li>
@@ -296,7 +296,7 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="quick_start.html#job-preparation">Job preparation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="quick_start.html#remote-and-gateway-modes">Remote and gateway modes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="quick_start.html#local-mode">Local mode</a></li>
@@ -309,37 +309,40 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
 <li class="toctree-l3"><a class="reference internal" href="quick_start.html#era-interim">ERA-Interim</a></li>
 <li class="toctree-l3"><a class="reference internal" href="quick_start.html#operational-data">Operational data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="quick_start.html#specific-features">Specific features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="quick_start.html#hints-for-definition-of-some-parameter-combinations">Hints for definition of some parameter combinations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="quick_start.html#hints-for-proper-definition-of-certain-parameter-combinations">Hints for proper definition of certain parameter combinations</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-1-2">Release v7.1.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#changes">Changes</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-1-1">Release v7.1.1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#bug-fixes">Bug fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-1">Release v7.1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#new-features">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#changes">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-4">Release v7.0.4</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id1">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">Bug fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id2">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">Bug fixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-3">Release v7.0.3</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id3">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">New Features</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v7-0-2">Release v7.0.2</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id4">New Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id5">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#id6">Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#release-v0-1-v6-0">Release v0.1 - v6.0</a></li>
@@ -354,7 +357,7 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Support/faq.html">FAQ - Frequently asked questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Support/faq.html#what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages">What can I do if I can’t install the third party libraries from distribution packages?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Support/faq.html#what-can-i-do-if-i-can-t-install-the-third-party-libraries-from-distribution-packages">What can I do if I can’t install the third-party libraries from distribution packages?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Developer Team</a></li>
@@ -370,7 +373,7 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ecmwf_data.html" class="btn btn-neutral float-right" title="ECMWF Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -380,7 +383,7 @@ Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

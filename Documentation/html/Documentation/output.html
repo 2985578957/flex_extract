@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Output Data &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Output data &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Disaggregation of Flux Data" href="disagg.html" />
+    <link rel="next" title="Disaggregation of flux data" href="disagg.html" />
     <link rel="prev" title="Templates" href="Input/templates.html" /> 
 </head>
 
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,16 +89,16 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; Input Data</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Output Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; input data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Output data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#flexpart-input-files"><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#standard-output-files">Standard output files</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#output-files-for-pure-forecast">Output files for pure forecast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#output-files-for-long-forecast">Output files for long forecast</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#output-files-for-ensemble-predictions">Output files for ensemble predictions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#additional-fields-with-new-precipitation-disaggregation">Additional fields with new precipitation disaggregation</a></li>
 </ul>
@@ -106,17 +106,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#temporary-files">Temporary files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#mars-grib-files">MARS grib files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mars-request-file">MARS request file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#vertical-ec">VERTICAL.EC</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#index-file">Index file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#flux-files">flux files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flux-files">Flux files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#fort-files">fort files</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="disagg.html">Disaggregation of Flux Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="disagg.html">Disaggregation of flux data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
@@ -170,9 +169,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
-      <li>Output Data</li>
+      <li>Output data</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -192,8 +191,8 @@
            <div itemprop="articleBody">
             
   <div class="section" id="output-data">
-<h1>Output Data<a class="headerlink" href="#output-data" title="Permalink to this headline">¶</a></h1>
-<p>The output data of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are separated mainly into temporary files and the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files:</p>
+<h1>Output data<a class="headerlink" href="#output-data" title="Permalink to this headline">¶</a></h1>
+<p>The output data of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> can be divided into the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files and  temporary files:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 51%" />
@@ -204,14 +203,14 @@
 <td><p>Temporary files (saved in debug mode)</p></td>
 </tr>
 <tr class="row-even"><td><ul class="simple">
-<li><p>Standard output filenames</p></li>
+<li><p>Standard output file names</p></li>
 <li><p>Output for pure forecast</p></li>
 <li><p>Output for ensemble members</p></li>
 <li><p>Output for new precip. disaggregation</p></li>
 </ul>
 </td>
 <td><ul class="simple">
-<li><p>MARS request file (opt)</p></li>
+<li><p>MARS request file (optional)</p></li>
 <li><p>flux files</p></li>
 <li><p>VERTICAL.EC</p></li>
 <li><p>index file</p></li>
@@ -224,17 +223,17 @@
 </table>
 <div class="section" id="flexpart-input-files">
 <h2><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files<a class="headerlink" href="#flexpart-input-files" title="Permalink to this headline">¶</a></h2>
-<p>The final output files of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are also the meteorological <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files.
-The naming of these files depend on the kind of data extracted by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
+<p>The final output files of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> are the meteorological input files for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>.
+The naming convention for these files depends on the kind of data extracted by <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>.</p>
 <div class="section" id="standard-output-files">
 <h3>Standard output files<a class="headerlink" href="#standard-output-files" title="Permalink to this headline">¶</a></h3>
-<p>In general, there is a file for each time step with the filename format:</p>
+<p>In general, there is one file for each time named:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;prefix&gt;YYMMDDHH
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">prefix</span></code> is by default defined as <code class="docutils literal notranslate"><span class="pre">EN</span></code> and can be re-defined in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.
-Each file contains all meteorological fields needed by <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> for all selected model levels for a specific time step.</p>
-<p>Here is an example output which lists the meteorological fields in a single file called <code class="docutils literal notranslate"><span class="pre">CE00010800</span></code> where we extracted only the lowest model level for demonstration reasons:</p>
+<p>where YY are the last two digits of the year, MM is the month, DD the day, and HH the hour (UTC). &lt;prefix&gt; is by default defined as EN, and can be re-defined in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file.
+Each file contains all meteorological fields at all levels as needed by <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>, valid for the time indicated in the file name.</p>
+<p>Here is an example output which lists the meteorological fields in a single file called <code class="docutils literal notranslate"><span class="pre">CE00010800</span></code> (where we extracted only the lowest model level for demonstration purposes):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ grib_ls CE00010800
 
 edition      centre       date         dataType     gridType     stepRange    typeOfLevel  level        shortName    packingType
@@ -277,27 +276,28 @@ edition      centre       date         dataType     gridType     stepRange    ty
 </pre></div>
 </div>
 </div>
-<div class="section" id="output-files-for-pure-forecast">
-<h3>Output files for pure forecast<a class="headerlink" href="#output-files-for-pure-forecast" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> can retrieve forecasts which can be longer than 23 hours. To avoid collisions of time steps for forecasts of more than one day a new scheme for filenames in pure forecast mode is introduced:</p>
+<div class="section" id="output-files-for-long-forecast">
+<h3>Output files for long forecast<a class="headerlink" href="#output-files-for-long-forecast" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is able to retrieve forecasts with a lead time of more than 23 hours. In order to avoid collisions of time steps names, a new scheme for filenames in long forecast mode is introduced:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;prefix&gt;YYMMDD.HH.&lt;FORECAST_STEP&gt;
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code> is, as in the standard output, by default <code class="docutils literal notranslate"><span class="pre">EN</span></code> and can be re-defined in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file. <code class="docutils literal notranslate"><span class="pre">YYMMDD</span></code> is the date format and <code class="docutils literal notranslate"><span class="pre">HH</span></code> the forecast time which is the starting time for the forecasts. The <code class="docutils literal notranslate"><span class="pre">FORECAST_STEP</span></code> is a 3 digit number which represents the forecast step in hours.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;</span></code> is, as in the standard output, by default <code class="docutils literal notranslate"><span class="pre">EN</span></code> and can be re-defined in the <code class="docutils literal notranslate"><span class="pre">CONTROL</span></code> file. <code class="docutils literal notranslate"><span class="pre">YYMMDD</span></code> is the date format and <code class="docutils literal notranslate"><span class="pre">HH</span></code> the forecast time which is the starting time for the forecasts. The <code class="docutils literal notranslate"><span class="pre">FORECAST_STEP</span></code> is a 3-digit number which represents the forecast step in hours.</p>
 </div>
 <div class="section" id="output-files-for-ensemble-predictions">
 <h3>Output files for ensemble predictions<a class="headerlink" href="#output-files-for-ensemble-predictions" title="Permalink to this headline">¶</a></h3>
-<p>Ensembles can be retrieved and are addressed by the grib message parameter <code class="docutils literal notranslate"><span class="pre">number</span></code>. The ensembles are saved per file and standard filenames are supplemented by the letter <code class="docutils literal notranslate"><span class="pre">N</span></code> and the ensemble member number in a 3 digit format.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> is able to retrieve ensembles data; they are labelled by the grib message parameter <code class="docutils literal notranslate"><span class="pre">number</span></code>. Each ensemble member is saved in a separate file, and standard filenames are supplemented by the letter <code class="docutils literal notranslate"><span class="pre">N</span></code> and the ensemble member number in a 3-digit format.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;prefix&gt;YYMMDDHH.N&lt;ENSEMBLE_MEMBER&gt;
 </pre></div>
 </div>
 </div>
 <div class="section" id="additional-fields-with-new-precipitation-disaggregation">
 <h3>Additional fields with new precipitation disaggregation<a class="headerlink" href="#additional-fields-with-new-precipitation-disaggregation" title="Permalink to this headline">¶</a></h3>
-<p>The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type. They serve as sub-grid points in the original time interval. For details of the method see <a class="reference internal" href="disagg.html"><span class="doc">Disaggregation of Flux Data</span></a>.
-The two additional fields are marked with the <code class="docutils literal notranslate"><span class="pre">step</span></code> parameter in the Grib messages and are set to “1” and “2” for sub-grid point 1 and 2 respectively.
-The output filenames do not change in this case.
-Below is an example list of precipitation fields in an output file generated with the new disaggregation method:</p>
+<p>The new disaggregation method for precipitation fields produces two additional precipitation fields for each time step and precipitation type (large-scale and convective). They serve as sub-grid points in the original time interval. For details of the method see <a class="reference internal" href="disagg.html"><span class="doc">Disaggregation of flux data</span></a>.
+The two additional fields are addressed using the <code class="docutils literal notranslate"><span class="pre">step</span></code> parameter in the GRIB messages, which
+is set to “1” or “2”, for sub-grid points 1 and 2, respectively.
+The output file names are not altered.
+An example of the list of precipitation fields in an output file generated with the new disaggregation method is found below:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ grib_ls
 
 edition      centre       date         dataType     gridType     stepRange    typeOfLevel  level        shortName    packingType
@@ -313,11 +313,14 @@ edition      centre       date         dataType     gridType     stepRange    ty
 </div>
 <div class="section" id="temporary-files">
 <h2>Temporary files<a class="headerlink" href="#temporary-files" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> works with a number of temporary data files which are usually deleted after a successful data extraction. They are only stored if the <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> mode is switched on (see <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> creates a number of temporary data files which are usually deleted at the end of a successful run. They are preserved only if the <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> mode is switched on (see <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a>).</p>
 <div class="section" id="mars-grib-files">
 <h3>MARS grib files<a class="headerlink" href="#mars-grib-files" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Flex_extract</span></code> retrieves all meteorological fields from MARS and stores them in files ending with <code class="docutils literal notranslate"><span class="pre">.grb</span></code>.
-Since the request times and data transfer of MARS access are limited and ECMWF asks for efficiency in requesting data from MARS, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> splits the overall data request in several smaller requests. Each request is stored in an extra <code class="docutils literal notranslate"><span class="pre">.grb</span></code> file and the file names are put together by several pieces of information:</p>
+Since there are limits implemented by ECMWF for the time per request and data transfer from MARS,
+and as ECMWF asks for efficient MARS retrievals, <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> splits the overall data request
+into several smaller requests. Each request is stored in its own <code class="docutils literal notranslate"><span class="pre">.grb</span></code> file, and the file
+names are composed of several pieces of information:</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;field_type&gt;&lt;grid_type&gt;&lt;temporal_property&gt;&lt;level_type&gt;.&lt;date&gt;.&lt;ppid&gt;.&lt;pid&gt;.grb
 </pre></div>
@@ -325,21 +328,20 @@ Since the request times and data transfer of MARS access are limited and ECMWF a
 </div></blockquote>
 <p>Description:</p>
 <dl class="simple">
-<dt>Field type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">AN</span></code> - Analysis, <code class="docutils literal notranslate"><span class="pre">FC</span></code> - Forecast, <code class="docutils literal notranslate"><span class="pre">4V</span></code> - 4d variational analysis, <code class="docutils literal notranslate"><span class="pre">CV</span></code> - Validation forecast, <code class="docutils literal notranslate"><span class="pre">CF</span></code> - Control forecast, <code class="docutils literal notranslate"><span class="pre">PF</span></code> - Perturbed forecast</p>
+<dt>Field type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">AN</span></code> - Analysis, <code class="docutils literal notranslate"><span class="pre">FC</span></code> - Forecast, <code class="docutils literal notranslate"><span class="pre">4V</span></code> - 4D variational analysis, <code class="docutils literal notranslate"><span class="pre">CV</span></code> - Validation forecast, <code class="docutils literal notranslate"><span class="pre">CF</span></code> - Control forecast, <code class="docutils literal notranslate"><span class="pre">PF</span></code> - Perturbed forecast</p>
 </dd>
-<dt>Grid type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">SH</span></code> - Spherical Harmonics, <code class="docutils literal notranslate"><span class="pre">GG</span></code> - Gaussian Grid, <code class="docutils literal notranslate"><span class="pre">OG</span></code> - Output Grid (typically lat/lon), <code class="docutils literal notranslate"><span class="pre">_OROLSM</span></code> - Orography parameter</p>
+<dt>Grid type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">SH</span></code> - Spherical Harmonics, <code class="docutils literal notranslate"><span class="pre">GG</span></code> - Gaussian Grid, <code class="docutils literal notranslate"><span class="pre">OG</span></code> - Output Grid (typically lat / lon), <code class="docutils literal notranslate"><span class="pre">_OROLSM</span></code> - Orography parameter</p>
 </dd>
 <dt>Temporal property:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">__</span></code> - instantaneous fields, <code class="docutils literal notranslate"><span class="pre">_acc</span></code> - accumulated fields</p>
 </dd>
-<dt>Level type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ML</span></code> - Model Level, <code class="docutils literal notranslate"><span class="pre">SL</span></code> - Surface Level</p>
+<dt>Level type:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">ML</span></code> - model level, <code class="docutils literal notranslate"><span class="pre">SL</span></code> - surface level</p>
 </dd>
-<dt>ppid:</dt><dd><p>The process number of the parent process of submitted script.</p>
+<dt>ppid:</dt><dd><p>The process number of the parent process of the script submitted.</p>
 </dd>
-<dt>pid:</dt><dd><p>The process number of the submitted script.</p>
+<dt>pid:</dt><dd><p>The process number of the script submitted.</p>
 </dd>
 </dl>
-<p>The process ids should avoid mixing of fields if several <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> jobs are performed in parallel (which is, however, not recommended). The date format is YYYYMMDDHH.</p>
-<p>Example <code class="docutils literal notranslate"><span class="pre">.grb</span></code> files for a day of CERA-20C data:</p>
+<p>Example <code class="docutils literal notranslate"><span class="pre">.grb</span></code> files for one day of CERA-20C data:</p>
 <blockquote>
 <div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ANOG__ML.20000908.71851.71852.grb
 FCOG_acc_SL.20000907.71851.71852.grb
@@ -352,10 +354,12 @@ ANSH__SL.20000908.71851.71852.grb
 </div>
 <div class="section" id="mars-request-file">
 <h3>MARS request file<a class="headerlink" href="#mars-request-file" title="Permalink to this headline">¶</a></h3>
-<p>This file is a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file called <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> with a list of the actual settings of MARS request parameters (one request per line) in a flex_extract job. It is used for documenting the data which were retrieved and for testing reasons.</p>
-<p>Each request consist of the following parameters, whose meaning mainly can be taken from <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a> or <a class="reference internal" href="Input/run.html"><span class="doc">The executable Script - run.sh</span></a>:
+<p>This file is a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file called <code class="docutils literal notranslate"><span class="pre">mars_requests.csv</span></code> listing the actual settings of the MARS
+request (one request per line) in a flex_extract job.
+It is used for documenting which data were retrieved, and for testing.</p>
+<p>Each request consists of the following parameters, whose meaning mostly can be taken from <a class="reference internal" href="Input/control_params.html"><span class="doc">The CONTROL parameters</span></a> or <a class="reference internal" href="Input/run.html"><span class="doc">The executable script - run.sh</span></a>:
 request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist, levtype, marsclass, number, param, repres, resol, step, stream, target, time, type</p>
-<p>Example output of a one day retrieval of CERA-20c data:</p>
+<p>Example output of a one-day retrieval of CERA-20C data:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist, levtype, marsclass, number, param, repres, resol, step, stream, target, time, <span class="nb">type</span>
 <span class="m">1</span>, <span class="m">24</span>, <span class="m">40</span>.0/-5.0/30.0/5.0, None, <span class="m">20000107</span>/to/20000109, <span class="m">1</span>, , <span class="m">1</span>.0/1.0, <span class="m">1</span>, SFC, EP, <span class="m">000</span>, <span class="m">142</span>.128/143.128/146.128/180.128/181.128/176.128, , <span class="m">159</span>, <span class="m">3</span>/to/24/by/3, ENDA, /mnt/nas/Anne/Interpolation/flexextract/flex_extract_v7.1/run/./workspace/CERA_testgrid_local_cds/FCOG_acc_SL.20000107.23903.23904.grb, <span class="m">18</span>, FC
 <span class="m">1</span>, <span class="m">24</span>, <span class="m">40</span>.0/-5.0/30.0/5.0, None, <span class="m">20000108</span>/to/20000108, <span class="m">1</span>, , <span class="m">1</span>.0/1.0, <span class="m">85</span>/to/91, ML, EP, <span class="m">000</span>, <span class="m">130</span>.128/133.128/131.128/132.128/077.128/246.128/247.128, , <span class="m">159</span>, <span class="m">00</span>, ENDA, /mnt/nas/Anne/Interpolation/flexextract/flex_extract_v7.1/run/./workspace/CERA_testgrid_local_cds/ANOG__ML.20000108.23903.23904.grb, <span class="m">00</span>/03/06/09/12/15/18/21, AN
@@ -365,24 +369,20 @@ request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist,
 </pre></div>
 </div>
 </div>
-<div class="section" id="vertical-ec">
-<h3>VERTICAL.EC<a class="headerlink" href="#vertical-ec" title="Permalink to this headline">¶</a></h3>
-<p>The vertical discretization of model levels. This file contains the <code class="docutils literal notranslate"><span class="pre">A</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> parameters to calculate the model level height in meters.</p>
-</div>
 <div class="section" id="index-file">
 <h3>Index file<a class="headerlink" href="#index-file" title="Permalink to this headline">¶</a></h3>
-<p>This file is usually called <code class="docutils literal notranslate"><span class="pre">date_time_stepRange.idx</span></code>. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords.</p>
+<p>This file is called <code class="docutils literal notranslate"><span class="pre">date_time_stepRange.idx</span></code>. It contains indices pointing to specific grib messages from one or more grib files. The messages are selected with a composition of grib message keywords.</p>
 </div>
 <div class="section" id="flux-files">
-<h3>flux files<a class="headerlink" href="#flux-files" title="Permalink to this headline">¶</a></h3>
-<p>The flux files contain the de-accumulated and dis-aggregated flux fields of large scale and convective precipitation, eastward turbulent surface stress, northward turbulent surface stress, surface sensible heat flux and the surface net solar radiation.</p>
+<h3>Flux files<a class="headerlink" href="#flux-files" title="Permalink to this headline">¶</a></h3>
+<p>The flux files contain the de-accumulated and dis-aggregated flux fields of large-scale and convective precipitation, east- and northward turbulent surface stresses, the surface sensible heat flux, and the surface net solar radiation.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>flux&lt;date&gt;<span class="o">[</span>.N&lt;xxx&gt;<span class="o">][</span>.&lt;xxx&gt;<span class="o">]</span>
 </pre></div>
 </div>
-<p>The date format is YYYYMMDDHH. The optional block <code class="docutils literal notranslate"><span class="pre">[.N&lt;xxx&gt;]</span></code> marks the ensemble forecast number, where <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> is the ensemble member number. The optional block <code class="docutils literal notranslate"><span class="pre">[.&lt;xxx&gt;]</span></code> marks a pure forecast with <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> being the forecast step.</p>
+<p>The date format is YYYYMMDDHH as explained before. The optional block <code class="docutils literal notranslate"><span class="pre">[.N&lt;xxx&gt;]</span></code> is used for the ensemble forecast date, where <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> is the ensemble member number. The optional block <code class="docutils literal notranslate"><span class="pre">[.&lt;xxx&gt;]</span></code> marks a pure forecast with <code class="docutils literal notranslate"><span class="pre">&lt;xxx&gt;</span></code> being the forecast step.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is <code class="docutils literal notranslate"><span class="pre">0</span></code> for the original time interval and <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code> for the two new intervals respectively.</p>
+<p>In the case of the new dis-aggregation method for precipitation, two new sub-intervals are added in between each time interval. They are identified by the forecast step parameter which is <code class="docutils literal notranslate"><span class="pre">0</span></code> for the original time interval, and <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>,  respectively, for the two new intervals.</p>
 </div>
 </div>
 <div class="section" id="fort-files">
@@ -391,9 +391,9 @@ request_number, accuracy, area, dataset, date, expver, gaussian, grid, levelist,
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fort.xx
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">xx</span></code> is the number which defines the meteorological fields stored in these files.
-They are generated by the Python part of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> by just splitting the meteorological fields for a unique time stamp from the <code class="docutils literal notranslate"><span class="pre">*.grb</span></code> files into the <code class="docutils literal notranslate"><span class="pre">fort</span></code> files.
-The following table defines the numbers with their corresponding content.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">xx</span></code> is a number which defines the meteorological fields stored in these files.
+They are generated by the Python code in <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> by splitting the meteorological fields for a unique time stamp from the <code class="docutils literal notranslate"><span class="pre">*.grb</span></code> files, storing them under the names <code class="docutils literal notranslate"><span class="pre">fort.&lt;XX&gt;</span></code> where &lt;XX&gt; represents some number.
+The following table defines the numbers and the corresponding content:</p>
 <table class="colwidths-given docutils align-default" id="id1">
 <caption><span class="caption-text">Content of fort - files</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
@@ -425,20 +425,20 @@ The following table defines the numbers with their corresponding content.</p>
 <td><p>specific humidity</p></td>
 </tr>
 <tr class="row-even"><td><p>18</p></td>
-<td><p>surface specific humidity (reduced gaussian)</p></td>
+<td><p>surface specific humidity (reduced Gaussian grid)</p></td>
 </tr>
 <tr class="row-odd"><td><p>19</p></td>
-<td><p>vertical velocity (pressure) (optional)</p></td>
+<td><p>omega (vertical velocity in pressure coordinates) (optional)</p></td>
 </tr>
 <tr class="row-even"><td><p>21</p></td>
 <td><p>eta-coordinate vertical velocity (optional)</p></td>
 </tr>
 <tr class="row-odd"><td><p>22</p></td>
-<td><p>total cloud water content (optional)</p></td>
+<td><p>total cloud-water content (optional)</p></td>
 </tr>
 </tbody>
 </table>
-<p>Some of the fields are solely retrieved with specific settings, e.g. the eta-coordinate vertical velocity is not available in ERA-Interim datasets and the total cloud water content is an optional field for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span> <span class="pre">v10</span></code> and newer.</p>
+<p>Some of the fields are solely retrieved with specific settings, e. g., the eta-coordinate vertical velocity is not available in ERA-Interim datasets, and the total cloud-water content is an optional field which is useful for <code class="docutils literal notranslate"><span class="pre">FLEXPART</span> <span class="pre">v10</span></code> and newer.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> program saves its results in file <code class="docutils literal notranslate"><span class="pre">fort.15</span></code> which typically contains:</p>
 <table class="colwidths-given docutils align-default" id="id2">
 <caption><span class="caption-text">Output file of the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
@@ -457,10 +457,10 @@ The following table defines the numbers with their corresponding content.</p>
 </tr>
 </tbody>
 </table>
-<p>More details about the content of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> can be found in <a class="reference internal" href="vertco.html"><span class="doc">Vertical Coordinate</span></a>.</p>
+<p>More details about the content of <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> can be found in <a class="reference internal" href="vertco.html"><span class="doc">Vertical wind</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> file is the namelist file to drive the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>. It is therefore also an input file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fort.4</span></code> file is the namelist file to control the Fortran program <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code>. It is therefore also an input file.</p>
 <p>Example of a namelist:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="p">&amp;</span>NAMGEN
   <span class="nv">maxl</span> <span class="o">=</span> <span class="m">11</span>,
@@ -498,7 +498,7 @@ The following table defines the numbers with their corresponding content.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="disagg.html" class="btn btn-neutral float-right" title="Disaggregation of Flux Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="disagg.html" class="btn btn-neutral float-right" title="Disaggregation of flux data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="Input/templates.html" class="btn btn-neutral float-left" title="Templates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -510,7 +510,7 @@ The following table defines the numbers with their corresponding content.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

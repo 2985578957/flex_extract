@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>checks &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>checks &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -87,10 +87,10 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../dev_guide.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
@@ -280,9 +280,10 @@
 <div class="viewcode-block" id="check_area"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_area">[docs]</a><span class="k">def</span> <span class="nf">check_area</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Defines the correct area string.</span>
 
-<span class="sd">    Checks on the format of the four area components. Wether it is of</span>
-<span class="sd">    the order of 1000 or 1. Also checks wether area was already set by command</span>
-<span class="sd">    line, then the four components are overwritten.</span>
+<span class="sd">    Checks the format of the four area components wether it is on</span>
+<span class="sd">    the order of 1000 or 1. </span>
+<span class="sd">    Also checks wether area was already set on command line, </span>
+<span class="sd">    then the four components are overwritten.</span>
 <span class="sd">    Convert to correct format of the order of magnitude &quot;1&quot; and sets the</span>
 <span class="sd">    area parameter (North/West/South/East).</span>
 <span class="sd">    E.g.: -5./20./10./10.</span>
@@ -296,21 +297,21 @@
 <span class="sd">        Contains area informtion.</span>
 
 <span class="sd">    upper : str</span>
-<span class="sd">        The northern most latitude.</span>
+<span class="sd">        The northernmost latitude.</span>
 
 <span class="sd">    lower : str</span>
-<span class="sd">        The souther most latitude.</span>
+<span class="sd">        The southernmost latitude.</span>
 
 <span class="sd">    left : str</span>
-<span class="sd">        The western most longitude.</span>
+<span class="sd">        The westernmost longitude.</span>
 
 <span class="sd">    right : str</span>
-<span class="sd">        The eastern most longiude.</span>
+<span class="sd">        The easternmost longitude.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
 <span class="sd">    grid : str</span>
-<span class="sd">        Contains grid in format Lat/lon. E.g. 0.1/0.1</span>
+<span class="sd">        Contains grid in format lat/lon. E.g. 0.1/0.1</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="s1">&#39;N&#39;</span> <span class="ow">in</span> <span class="n">grid</span><span class="p">:</span>  <span class="c1"># Gaussian output grid</span>
         <span class="n">area</span> <span class="o">=</span> <span class="s1">&#39;G&#39;</span>
@@ -341,7 +342,7 @@
                                     <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
                                     <span class="nb">float</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The area components have different &#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Area components have inconsisten or unrecognised &#39;</span>
                          <span class="s1">&#39;formats (upper, lower, left, right): &#39;</span>
                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">upper</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">lower</span><span class="p">),</span>
                                               <span class="nb">str</span><span class="p">(</span><span class="n">left</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">right</span><span class="p">)))</span>
@@ -370,8 +371,8 @@
 
 <span class="sd">    level : str</span>
 <span class="sd">        Specifies the maximum level. It has to be one of the</span>
-<span class="sd">        available maximum level number as contained in the variable</span>
-<span class="sd">        MAX_LEVEL_LIST in &quot;_config&quot;. E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]</span>
+<span class="sd">        available maximum level numbers as contained in the variable</span>
+<span class="sd">        MAX_LEVEL_LIST in &quot;_config&quot;: [16, 19, 31, 40, 50, 60, 62, 91, 137]</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="c1"># assure consistency of levelist and level</span>
@@ -507,7 +508,7 @@
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ftype</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">ftype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AN&#39;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">steps</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Analysis retrievals must have STEP = 0 (now set to 0)&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;For analysis data, STEP = 0 is needed. Setting to 0 now.)&#39;</span><span class="p">)</span>
             <span class="n">ftype</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">return</span> <span class="n">ftype</span></div>
@@ -547,7 +548,7 @@
 
 <span class="sd">    maxstep : int</span>
 <span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
-<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+<span class="sd">        This is the maximum step for non-flux (not accumulated) forecast data.</span>
 
 <span class="sd">    purefc : int</span>
 <span class="sd">        Switch for definition of pure forecast mode or not.</span>
@@ -566,7 +567,7 @@
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftype</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">ftime</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of field types, times and steps &#39;</span>
-                         <span class="s1">&#39;are not the same! Please check the setting in the &#39;</span>
+                         <span class="s1">&#39;are not the same! Please check the settings in the &#39;</span>
                          <span class="s1">&#39;CONTROL file!&#39;</span><span class="p">)</span>
 
     <span class="c1"># if pure forecast is selected and only one field type/time is set</span>
@@ -584,7 +585,7 @@
     <span class="k">return</span> <span class="n">ftype</span><span class="p">,</span> <span class="n">ftime</span><span class="p">,</span> <span class="n">steps</span></div>
 
 <div class="viewcode-block" id="check_mail"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_mail">[docs]</a><span class="k">def</span> <span class="nf">check_mail</span><span class="p">(</span><span class="n">mail</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Check the string of mail addresses, seperate them and convert to a list.</span>
+    <span class="sd">&#39;&#39;&#39;Check the string of mail addresses, separate them and convert to list.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -690,7 +691,7 @@
     <span class="k">return</span> <span class="n">odir</span><span class="p">,</span> <span class="n">fpdir</span></div>
 
 <div class="viewcode-block" id="check_dates"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_dates">[docs]</a><span class="k">def</span> <span class="nf">check_dates</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Checks if there is at least a start date for a one day retrieval.</span>
+    <span class="sd">&#39;&#39;&#39;Checks if there is at least a start date for a one-day retrieval.</span>
 
 <span class="sd">    Checks if end date lies after start date and end date is set.</span>
 
@@ -789,7 +790,7 @@
     <span class="k">return</span> <span class="n">basetime</span></div>
 
 <div class="viewcode-block" id="check_request"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_request">[docs]</a><span class="k">def</span> <span class="nf">check_request</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">marsfile</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Check if there is an old mars request file and remove it.</span>
+    <span class="sd">&#39;&#39;&#39;Check if there is an old MARS request file; if so, remove it.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -812,8 +813,8 @@
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="check_public"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_public">[docs]</a><span class="k">def</span> <span class="nf">check_public</span><span class="p">(</span><span class="n">public</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Check wether the dataset parameter is set for a</span>
-<span class="sd">    public data set retrieval.</span>
+    <span class="sd">&#39;&#39;&#39;Check wether the dataset parameter is set to a</span>
+<span class="sd">    public data set.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -828,14 +829,14 @@
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="n">public</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dataset</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: If public mars data wants to be retrieved, &#39;</span>
-                         <span class="s1">&#39;the &quot;dataset&quot;-parameter has to be set too!&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: If public MARS data are to be retrieved, &#39;</span>
+                         <span class="s1">&#39;the &quot;dataset&quot;-parameter has to be set, too!&#39;</span><span class="p">)</span>
     <span class="k">return</span></div>
 
 <div class="viewcode-block" id="check_acctype"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_acctype">[docs]</a><span class="k">def</span> <span class="nf">check_acctype</span><span class="p">(</span><span class="n">acctype</span><span class="p">,</span> <span class="n">ftype</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation field type is set.</span>
 
-<span class="sd">    If not set, it is derivated as in the old method (TYPE[1]).</span>
+<span class="sd">    If not set, it is derived with the old method (TYPE[1]).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -871,13 +872,13 @@
 <div class="viewcode-block" id="check_acctime"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_acctime">[docs]</a><span class="k">def</span> <span class="nf">check_acctime</span><span class="p">(</span><span class="n">acctime</span><span class="p">,</span> <span class="n">marsclass</span><span class="p">,</span> <span class="n">purefc</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation forecast times were set.</span>
 
-<span class="sd">    If it is not set, it tries to set the value for some of the</span>
-<span class="sd">    most commonly used data sets. Otherwise it raises an error.</span>
+<span class="sd">    If not set, setting the value to some of the most commonly used data sets</span>
+<span class="sd">    is attempted. Otherwise, an eror is raised.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    acctime : str</span>
-<span class="sd">        The starting time from the accumulated forecasts.</span>
+<span class="sd">        The starting time for the accumulated forecasts.</span>
 
 <span class="sd">    marsclass : str</span>
 <span class="sd">        ECMWF data classification identifier.</span>
@@ -888,11 +889,11 @@
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
 <span class="sd">    acctime : str</span>
-<span class="sd">        The starting time from the accumulated forecasts.</span>
+<span class="sd">        The starting time for the accumulated forecasts.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">acctime</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCTIME was not defined.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCTIME was not set.&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Value will be set depending on field type:</span><span class="se">\n</span><span class="s1"> &#39;</span>
               <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> EA=06/18</span><span class="se">\n\t\t</span><span class="s1"> EI/OD=00/12</span><span class="se">\n\t\t</span><span class="s1"> EP=18&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EA&#39;</span><span class="p">:</span> <span class="c1"># Era 5</span>
@@ -906,12 +907,12 @@
         <span class="k">elif</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;OD&#39;</span> <span class="ow">and</span> <span class="n">purefc</span><span class="p">:</span> <span class="c1"># On-demand</span>
             <span class="n">acctime</span> <span class="o">=</span> <span class="n">time</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast time can not &#39;</span>
-                             <span class="s1">&#39;automatically be derived!&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast time can not be&#39;</span>
+                             <span class="s1">&#39;derived automatically!&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">acctime</span></div>
 
 <div class="viewcode-block" id="check_accmaxstep"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_accmaxstep">[docs]</a><span class="k">def</span> <span class="nf">check_accmaxstep</span><span class="p">(</span><span class="n">accmaxstep</span><span class="p">,</span> <span class="n">marsclass</span><span class="p">,</span> <span class="n">purefc</span><span class="p">,</span> <span class="n">maxstep</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation forecast step were set.</span>
+    <span class="sd">&#39;&#39;&#39;Guarantees that the accumulation forecast step was set.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -926,7 +927,7 @@
 
 <span class="sd">    maxstep : str</span>
 <span class="sd">        The maximum forecast time step in hours from the forecast base time.</span>
-<span class="sd">        This is the maximum step for non flux (accumulated) forecast data.</span>
+<span class="sd">        This is the maximum step for non-flux (accumulated) forecast data.</span>
 
 <span class="sd">    Return</span>
 <span class="sd">    ------</span>
@@ -934,7 +935,7 @@
 <span class="sd">        The maximum forecast step for the accumulated forecast fields.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">accmaxstep</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCMAXSTEP was not defined.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Control parameter ACCMAXSTEP was not set.&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... Value will be set depending on field type/time: &#39;</span>
               <span class="s1">&#39;</span><span class="se">\n\t\t</span><span class="s1"> EA/EI/OD=12</span><span class="se">\n\t\t</span><span class="s1"> EP=24&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">marsclass</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;EA&#39;</span><span class="p">,</span> <span class="s1">&#39;EI&#39;</span><span class="p">,</span> <span class="s1">&#39;OD&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">purefc</span><span class="p">:</span>
@@ -946,22 +947,22 @@
             <span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">maxstep</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... For pure forecast mode, the accumulated forecast must &#39;</span>
                   <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
+                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> ACCMAXSTEP was set to MAXSTEP!&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast step can not &#39;</span>
-                             <span class="s1">&#39;automatically be derived!&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: Accumulation forecast step can not be&#39;</span>
+                             <span class="s1">&#39;derived automatically!&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">purefc</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">accmaxstep</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">maxstep</span><span class="p">):</span>
             <span class="n">accmaxstep</span> <span class="o">=</span> <span class="n">maxstep</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;... For pure forecast mode, the accumulated forecast must &#39;</span>
                   <span class="s1">&#39;have the same maxstep as the normal forecast fields!</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> Accmaxstep was set to maxstep!&#39;</span><span class="p">)</span>
+                  <span class="s1">&#39;</span><span class="se">\t\t</span><span class="s1"> ACCMAXSTEP was set to MAXSTEP!&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">accmaxstep</span></div>
 
 <div class="viewcode-block" id="check_addpar"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_addpar">[docs]</a><span class="k">def</span> <span class="nf">check_addpar</span><span class="p">(</span><span class="n">addpar</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Check that addpar has correct format of additional parameters in</span>
-<span class="sd">    a single string, so that it can be easily appended to the hard coded</span>
-<span class="sd">    parameters that are retrieved in any case.</span>
+<span class="sd">    a single string, so that it can be easily appended to the hard-coded</span>
+<span class="sd">    parameters retrieved in any case.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -987,7 +988,7 @@
 
 
 <div class="viewcode-block" id="check_job_chunk"><a class="viewcode-back" href="../Documentation/Api/api_python.html#checks.check_job_chunk">[docs]</a><span class="k">def</span> <span class="nf">check_job_chunk</span><span class="p">(</span><span class="n">job_chunk</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Checks that if job chunk is set, the number is positive and non zero.</span>
+    <span class="sd">&#39;&#39;&#39;Checks that if job chunk is set, the number is positive and nonzero.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1005,7 +1006,7 @@
         <span class="n">job_chunk</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">job_chunk</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">job_chunk</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of job chunk is negative!</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;ERROR: The number of job chunks is negative!</span><span class="se">\n</span><span class="s1">&#39;</span>
                          <span class="s1">&#39;It has to be a positive number!&#39;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">job_chunk</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">job_chunk</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1059,7 +1060,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

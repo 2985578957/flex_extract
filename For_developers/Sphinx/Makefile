@@ -2,10 +2,10 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    = -d build_temp
+SPHINXOPTS    = -d Build_temp
 SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = flex_extract
-SOURCEDIR     = source
+SOURCEDIR     = Source
 BUILDDIR      = ../../Documentation
 
 # Put it first so that "make" without argument is like "make help".

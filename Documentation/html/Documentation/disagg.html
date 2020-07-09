@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Disaggregation of Flux Data &mdash; flex_extract 7.1 alpha documentation</title>
+  <title>Disaggregation of flux data &mdash; flex_extract 7.1.2 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="../_static/css/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Vertical Coordinate" href="vertco.html" />
-    <link rel="prev" title="Output Data" href="output.html" /> 
+    <link rel="next" title="Vertical wind" href="vertco.html" />
+    <link rel="prev" title="Output data" href="output.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                7.1
+                7.1.2
               </div>
             
           
@@ -89,23 +89,23 @@
             
               <p class="caption"><span class="caption-text">Table of Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ecmwf_data.html">ECMWF Data</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Documentation</a><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../documentation.html">Code-Level Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; Input Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">Output Data</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Disaggregation of Flux Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Control &amp; input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Disaggregation of flux data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#disaggregation-for-precipitation-in-older-versions">Disaggregation for precipitation in older versions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#disaggregation-for-precipitation-in-version-7-1">Disaggregation for precipitation in version 7.1</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#disaggregation-for-the-rest-of-the-flux-fields">Disaggregation for the rest of the flux fields</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#disaggregation-for-the-other-flux-fields">Disaggregation for the other flux fields</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="vertco.html">Vertical Coordinate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">Auto Generated Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vertco.html">Vertical wind</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">Auto-generated documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../evaluation.html">Evaluation</a></li>
@@ -159,9 +159,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../documentation.html">Documentation</a> &raquo;</li>
+          <li><a href="../documentation.html">Code-Level Documentation</a> &raquo;</li>
         
-      <li>Disaggregation of Flux Data</li>
+      <li>Disaggregation of flux data</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -181,10 +181,15 @@
            <div itemprop="articleBody">
             
   <div class="section" id="disaggregation-of-flux-data">
-<h1>Disaggregation of Flux Data<a class="headerlink" href="#disaggregation-of-flux-data" title="Permalink to this headline">¶</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> interpolates meteorological input data linearly to the position of computational particles in time and space. This method requires point values in the discrete input fields. However, flux data (as listed in table <a class="reference internal" href="#ref-table-fluxpar"><span class="std std-ref">flux fields</span></a>) from the ECMWF represent cell averages or integrals and are accumulated over a specific time interval, depending on the dataset. Hence, to conserve the integral quantity with <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>’s linear interpolation a pre-processing scheme has to be applied.</p>
+<h1>Disaggregation of flux data<a class="headerlink" href="#disaggregation-of-flux-data" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> interpolates meteorological input data linearly to the position of computational
+particles in time and space. This method requires point values in the discrete input fields.
+However, flux data (as listed in table <a class="reference internal" href="#ref-table-fluxpar"><span class="std std-ref">Flux fields</span></a> below) from the ECMWF represent cell
+averages or integrals and are accumulated over a specific time interval, depending on the data
+set. Hence, to conserve the integral quantity with the linear interpolation used in <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code>,
+pre-processing has to be applied.</p>
 <span id="ref-table-fluxpar"></span><table class="colwidths-given docutils align-center" id="id1">
-<caption><span class="caption-text">flux fields</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Flux fields</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 14%" />
 <col style="width: 43%" />
@@ -195,55 +200,56 @@
 <tr class="row-odd"><th class="head"><p>Short Name</p></th>
 <th class="head"><p>Name</p></th>
 <th class="head"><p>Units</p></th>
-<th class="head"><p>Interpolation Type</p></th>
+<th class="head"><p>Disaggregation</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>LSP</p></td>
 <td><p>large-scale precipitation</p></td>
-<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
-<td><p>modified linear interpolation</p></td>
+<td><p>m</p></td>
+<td><p>precipitation</p></td>
 </tr>
 <tr class="row-odd"><td><p>CP</p></td>
 <td><p>convective precipitation</p></td>
-<td><p><span class="math notranslate nohighlight">\(m\)</span></p></td>
-<td><p>modified linear interpolation</p></td>
+<td><p>m</p></td>
+<td><p>precipitation</p></td>
 </tr>
 <tr class="row-even"><td><p>SSHF</p></td>
 <td><p>surface sensible heat flux</p></td>
-<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>J m <span class="math notranslate nohighlight">\(^{-2}\)</span></p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-odd"><td><p>EWSS</p></td>
 <td><p>eastward turbulent surface stress</p></td>
-<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>N m <span class="math notranslate nohighlight">\(^{-2}\)</span> s</p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-even"><td><p>NSSS</p></td>
 <td><p>northward turbulent surface stress</p></td>
-<td><p><span class="math notranslate nohighlight">\(N m^{-2} s\)</span></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>N m <span class="math notranslate nohighlight">\(^{-2}\)</span> s</p></td>
+<td><p>flux</p></td>
 </tr>
 <tr class="row-odd"><td><p>SSR</p></td>
 <td><p>surface net solar radiation</p></td>
-<td><p><span class="math notranslate nohighlight">\(J m^{-2}\)</span></p></td>
-<td><p>bicubic interpolation</p></td>
+<td><p>J m <span class="math notranslate nohighlight">\(^{-2}\)</span></p></td>
+<td><p>flux</p></td>
 </tr>
 </tbody>
 </table>
-<p>The first step is to <em>de-accumulate</em> the fields in time so that each value represents an integral in x, y, t space.
-Afterwards, a <em>disaggregation</em> scheme is applied which means to break down the integral value into point values.
-In order to be able to carry out the disaggregation procedure proposed by Paul James, additional flux data is retrieved automatically for one day at the beginning and one day at the end of the period specified. Thus, data for flux computation will be requested for the period START_DATE-1 to END_DATE+1. Note that these (additional) dates are used only for interpolation within <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and are not communicated to the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files.</p>
-<p>The flux disaggregation produces files named <code class="docutils literal notranslate"><span class="pre">fluxYYYYMMDDHH</span></code>, where <code class="docutils literal notranslate"><span class="pre">YYYYMMDDHH</span></code> is the date format. Note, that the first two and last two flux files do not contain any data.</p>
+<p>The first step is to <em>de-accumulate</em> the fields in time so that each value represents non-overlapping integrals in x-, y-, and t-space.
+Afterwards, a <em>disaggregation</em> scheme is applied which means to convert the integral value to corresponding point values to be used late for the interpolation.
+The disaggregation procedure as proposed by Paul James (currently, the standard) requires additional flux data for one day at the beginning and one day at the end of the period specified.
+They are retrieved automatically. Thus, data for flux computation will be requested for the period START_DATE-1 to END_DATE+1. Note that these (additional) dates are used only for interpolation within <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> and are not contained in the final <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> input files.</p>
+<p>The flux disaggregation produces files named <code class="docutils literal notranslate"><span class="pre">fluxYYYYMMDDHH</span></code>, where <code class="docutils literal notranslate"><span class="pre">YYYYMMDDHH</span></code> is the date format. Note that the first two and last two flux files do not contain any data.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note also that for operational retrievals (<code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> set to 00 or 12) forecast fluxes are only available until <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code>, so that no polynomial interpolation is possible in the last two time intervals. This is the reason why setting <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> is not recommended for on demand scripts.</p>
+<p>Note also that for operational retrievals (<code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> set to 00 or 12), forecast fluxes are only available until <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code>, so that no polynomial interpolation is possible in the last two time intervals. This is the reason why setting <code class="docutils literal notranslate"><span class="pre">BASETIME</span></code> is not recommended for on-demand scripts.</p>
 </div>
 <div class="section" id="disaggregation-for-precipitation-in-older-versions">
 <h2>Disaggregation for precipitation in older versions<a class="headerlink" href="#disaggregation-for-precipitation-in-older-versions" title="Permalink to this headline">¶</a></h2>
-<p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> up to version 5 the disaggregation was done with a Fortran program (FLXACC2). In version 6 this part was converted to Python.</p>
-<p>In the old versions (below 7.1) a relatively simple method processes the precipitation fields in a way that is consistent with the scheme applied in <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> for all variables: linear interpolation between times where input fields are available.
-At first the accumulated values are divided by the number of hours (i.e., 3 or 6).
+<p>In <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code> up to version 5, the disaggregation was done with a Fortran program (FLXACC2). In version 6, this part was recoded in Python.</p>
+<p>In the old versions (below 7.1), a relatively simple method processes the precipitation fields in a way that is consistent with the linear interpolation between times where input fields are available that is applied in <code class="docutils literal notranslate"><span class="pre">FLEXPART</span></code> for all variables.
+This scheme (from Paul James) at first divides the accumulated values by the number of hours (i.e., 3 or 6).
 The best option for disaggregation, which was realised, is conservation within the interval under consideration plus the two adjacent ones.
 Unfortunately, this leads to undesired temporal smoothing of the precipitation time series – maxima are damped and minima are raised.
 It is even possible to produce non-zero precipitation in dry intervals bordering a precipitation period as shown in Fig. 1.
@@ -253,25 +259,25 @@ Horizontally, the precipitation values are averages for a grid cell around the g
 However, the supporting points in space are not shifted between precipitation and other variables as is the case for the temporal dimension.</p>
 <div class="align-center figure align-default" id="id2">
 <span id="ref-fig-olddisagg"></span><img alt="../_images/old_disagg.png" src="../_images/old_disagg.png" />
-<p class="caption"><span class="caption-text">Fig. 1: Example of disaggregation scheme as implemented in older versions for an isolated precipitation event lasting one time interval (thick blue line). The amount of original precipitation after de-accumulation is given by the blue-shaded area. The green circles represent the discrete grid points after disaggregation and linearly interpolate in between them as indicated by the green line and the green-shaded area. Note that supporting points for the interpolation are shifted by a half-time interval compared to the times when other meteorological fields are available (Hittmeir et al. 2018).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">Fig. 1: Example of disaggregation scheme as implemented in older versions for an isolated precipitation event lasting one time interval (thick blue line). The amount of original precipitation after de-accumulation is given by the blue-shaded area. The green circles represent the discrete grid points after disaggregation and linearly interpolate in between them as indicated by the green line and the green-shaded area. Note that supporting points for the interpolation are shifted by half a time interval compared to the times when other meteorological fields are available (Hittmeir et al. 2018).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p>Disaggregation is done for 4 adjacent timespans (<span class="math notranslate nohighlight">\(a_0, a_1, a_2, a_3\)</span>) which generates a new, disaggregated value which is output at the central point of the 4 adjacent timespans.</p>
+<p>Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(a_0, a_1, a_2, a_3\)</span>) which generates a new, disaggregated value which is output at the central point of the four adjacent time intervals.</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}   p_{ac} &amp;= 0.5 * a_1\\
+\[\begin{split}   p_{ac} &amp;= 0.5  a_1\\
         m &amp;= a_0 + a_2 &gt; 0.\\
-p_{ac}(m) &amp;= a_1(m) * a_2(m) / (a_0(m) + a_2(m))\\
+p_{ac}(m) &amp;= a_1(m) a_2(m) / (a_0(m) + a_2(m))\\
    p_{bd} &amp;= 0.5 * a_2\\
         m &amp;= a_1 + a_3 &gt; 0.\\
-p_{bd}(m) &amp;= a_1(m) * a_2(m) / (a_1(m) + a_3(m))\\\end{split}\]</div>
-<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards. If one of the 4 original timespans has a value below 0 it is set to 0 prior to the calculation.</p>
+p_{bd}(m) &amp;= a_1(m)  a_2(m) / (a_1(m) + a_3(m))\\\end{split}\]</div>
+<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards. If one of the four original time intervals has a value below 0, it is set to 0 prior to the calculation.</p>
 <div class="math notranslate nohighlight">
 \[p = p_{ac} + p_{bd}\]</div>
 </div>
 <div class="section" id="disaggregation-for-precipitation-in-version-7-1">
 <h2>Disaggregation for precipitation in version 7.1<a class="headerlink" href="#disaggregation-for-precipitation-in-version-7-1" title="Permalink to this headline">¶</a></h2>
-<p>Due to the problems with generating precipitation in originally dry (or lower) intervals and the temporal smoothing a new algorithm was developed. The approach is based on a one dimensional piecewise linear function with two additional supporting grid points within each grid cell, dividing the interval into three pieces. It fulfils the desired requirements by preserving the integral precipitation in each time interval, guaranteeing continuity at interval boundaries, and maintaining non-negativity. An additional monotonicity filter helps to gain monotonicity.
-The more natural requirements of symmetry, reality, computational efficiency and easy implementation motivates the linear formulation.
-These requirements on the reconstruction algorithm imply that time intervals with no precipitation remain unchanged, i.e. the reconstructed values vanish throughout this whole time interval, too.
+<p>Due to the problems mentioned above, a new algorithm was developed. The approach is based on a one-dimensional, piecewise-linear function with two additional supporting grid points within each grid cell, dividing the interval into three pieces. It fulfils the desired requirements of preserving the integral precipitation in each time interval, guaranteeing continuity at interval boundaries, and maintaining non-negativity. An additional filter improves monotonicity.
+The more natural requirements of symmetry, reality, computational efficiency and easy implementation motivates the use of a linear formulation.
+These requirements for the reconstruction algorithm imply that time intervals with no precipitation remain unchanged, i. e., the reconstructed values vanish throughout this whole time interval, too.
 In the simplest scenario of an isolated precipitation event, where in the time interval before and after the data values are zero, the reconstruction algorithm therefore has to vanish at the boundaries of the interval, too.
 The additional conditions of continuity and conservation of the precipitation amount then require us to introduce sub-grid points if we want to keep a linear interpolation (Fig. 2).
 The height is thereby determined by the condition of conservation of the integral of the function over the time interval.</p>
@@ -295,26 +301,21 @@ The height is thereby determined by the condition of conservation of the integra
 \textbf{then}\end{split}\]</div>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}f_{i+1}^\diamond=&amp;\frac{18}{13}g_i-\frac{5}{13}f_i\\f_{i+1}^{\diamond\diamond}=&amp;\frac{18}{13}g_{i+1}-\frac{5}{13}f_{i+2}\\f_{i+1} =&amp; \min\left\{3 g_i,\, 3 g_{i+1},\, \sqrt{(f_{i+1}^\diamond\,f_{i+1}^{\diamond\diamond})_+}\right\}\\f_i^{(1)}=&amp; \frac32 g_i -\frac{1}{12}f_{i}-\frac{5}{12}f_{i+1}^{\textrm{mon}}\\f_i^{(2)}=&amp; \frac32 g_i -\frac{5}{12}f_{i}-\frac{1}{12}f_{i+1}^{\textrm{mon}}\\\textbf{endif}\end{aligned}\end{align} \]</div>
-<p>In the case of the new disaggregation method for precipitation, the two new sub grid points are added in the <code class="docutils literal notranslate"><span class="pre">flux</span></code> output files. They are identified by the forecast step parameter <code class="docutils literal notranslate"><span class="pre">step</span></code> which is 0 for the original time interval and 1 or 2 for the two new sub grid points respectively. The filenames do not change.</p>
+<p>In the case of the new disaggregation method for precipitation, the two new sub-grid points are added in the <code class="docutils literal notranslate"><span class="pre">flux</span></code> output files. They are identified by the forecast step parameter <code class="docutils literal notranslate"><span class="pre">step</span></code> which is 0 for the original time interval, and 1 or 2, respectively, for the two new sub-grid points. The filenames do not change.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The new method for disaggregation was published in the Geoscientific Model Development Journal in 2018:</p>
+<p>The new method for disaggregation was published in the journal Geoscientific Model Development in 2018:</p>
 <p>Hittmeir, S., Philipp, A., and Seibert, P.: A conservative reconstruction scheme for the interpolation of extensive quantities in the Lagrangian particle dispersion model FLEXPART, Geosci. Model Dev., 11, 2503-2523, <a class="reference external" href="https://doi.org/10.5194/gmd-11-2503-2018">https://doi.org/10.5194/gmd-11-2503-2018</a>, 2018.</p>
 </div>
 </div>
-<div class="section" id="disaggregation-for-the-rest-of-the-flux-fields">
-<h2>Disaggregation for the rest of the flux fields<a class="headerlink" href="#disaggregation-for-the-rest-of-the-flux-fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="disaggregation-for-the-other-flux-fields">
+<h2>Disaggregation for the other flux fields<a class="headerlink" href="#disaggregation-for-the-other-flux-fields" title="Permalink to this headline">¶</a></h2>
 <p>The accumulated values for the other variables are first divided by the number of hours and
-then interpolated to the exact times X using a bicubic interpolation which conserves the integrals of the fluxes within each timespan.
-Disaggregation is done for 4 adjacent timespans (<span class="math notranslate nohighlight">\(p_a, p_b, p_c, p_d\)</span>) which generates a new, disaggregated value which is output at the central point of the 4 adjacent timespans.</p>
+then disaggregates to the exact times and conserves the integrals of the fluxes within each timespan.
+Disaggregation is done for four adjacent time intervals (<span class="math notranslate nohighlight">\(F_0, F_1, F_2, F_3\)</span>) which produces a new, disaggregated value that is the output at the central point of the four adjacent time intervals.
+This new point <span class="math notranslate nohighlight">\(F\)</span> is used for linear interpolation of the complete timeseries afterwards.</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}p_a &amp;= (a_3 - a_0 + 3. * (a_1 - a_2)) / 6. \\
-p_b &amp;= (a_2 + a_0) / 2. - a_1 - 9. * p_a / 2. \\
-p_c &amp;= a_1 - a_0 - 7. * p_a / 2. - 2. * p_b \\
-p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
-<p>This new point <span class="math notranslate nohighlight">\(p\)</span> is used for linear interpolation of the complete timeseries afterwards.</p>
-<div class="math notranslate nohighlight">
-\[p = 8. * p_a + 4. * p_b + 2. * p_c + p_d\]</div>
+\[F = -\frac{1}{12}F_0 + \frac{7}{12}F_1 + \frac{7}{12}F_2 -\frac{1}{12}F_3\]</div>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -328,10 +329,10 @@ p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="vertco.html" class="btn btn-neutral float-right" title="Vertical Coordinate" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="vertco.html" class="btn btn-neutral float-right" title="Vertical wind" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="output.html" class="btn btn-neutral float-left" title="Output Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="output.html" class="btn btn-neutral float-left" title="Output data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -340,7 +341,7 @@ p_d &amp;= a_0 - p_a / 4. - p_b / 3. - p_c / 2.\end{split}\]</div>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, Anne Philipp and Leopold Haimberger
+        &copy; Copyright 2020, Anne Philipp, Leopold Haimberger and Petra Seibert
 
     </p>
   </div>

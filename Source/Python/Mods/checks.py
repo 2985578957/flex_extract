@@ -118,9 +118,10 @@ def check_grid(grid):
 def check_area(grid, area, upper, lower, left, right):
     '''Defines the correct area string.
 
-    Checks on the format of the four area components. Wether it is of
-    the order of 1000 or 1. Also checks wether area was already set by command
-    line, then the four components are overwritten.
+    Checks the format of the four area components wether it is on
+    the order of 1000 or 1. 
+    Also checks wether area was already set on command line, 
+    then the four components are overwritten.
     Convert to correct format of the order of magnitude "1" and sets the
     area parameter (North/West/South/East).
     E.g.: -5./20./10./10.
@@ -134,21 +135,21 @@ def check_area(grid, area, upper, lower, left, right):
         Contains area informtion.
 
     upper : str
-        The northern most latitude.
+        The northernmost latitude.
 
     lower : str
-        The souther most latitude.
+        The southernmost latitude.
 
     left : str
-        The western most longitude.
+        The westernmost longitude.
 
     right : str
-        The eastern most longiude.
+        The easternmost longitude.
 
     Return
     ------
     grid : str
-        Contains grid in format Lat/lon. E.g. 0.1/0.1
+        Contains grid in format lat/lon. E.g. 0.1/0.1
     '''
     if 'N' in grid:  # Gaussian output grid
         area = 'G'
@@ -179,7 +180,7 @@ def check_area(grid, area, upper, lower, left, right):
                                     float(lower),
                                     float(right))
     else:
-        raise ValueError('The area components have different '
+        raise ValueError('Area components have inconsisten or unrecognised '
                          'formats (upper, lower, left, right): '
                          '{}/{}/{}/{}'.format(str(upper), str(lower),
                                               str(left), str(right)))
@@ -208,8 +209,8 @@ def check_levels(levelist, level):
 
     level : str
         Specifies the maximum level. It has to be one of the
-        available maximum level number as contained in the variable
-        MAX_LEVEL_LIST in "_config". E.g. [16, 19, 31, 40, 50, 60, 62, 91, 137]
+        available maximum level numbers as contained in the variable
+        MAX_LEVEL_LIST in "_config": [16, 19, 31, 40, 50, 60, 62, 91, 137]
 
     '''
     # assure consistency of levelist and level
@@ -345,7 +346,7 @@ def check_type(ftype, steps):
 
     for i, val in enumerate(ftype):
         if ftype[i] == 'AN' and int(steps[i]) != 0:
-            print('Analysis retrievals must have STEP = 0 (now set to 0)')
+            print('For analysis data, STEP = 0 is needed. Setting to 0 now.)')
             ftype[i] = 0
 
     return ftype
@@ -385,7 +386,7 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
 
     maxstep : int
         The maximum forecast time step in hours from the forecast base time.
-        This is the maximum step for non flux (accumulated) forecast data.
+        This is the maximum step for non-flux (not accumulated) forecast data.
 
     purefc : int
         Switch for definition of pure forecast mode or not.
@@ -404,7 +405,7 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
     '''
     if not len(ftype) == len(ftime) == len(steps):
         raise ValueError('ERROR: The number of field types, times and steps '
-                         'are not the same! Please check the setting in the '
+                         'are not the same! Please check the settings in the '
                          'CONTROL file!')
 
     # if pure forecast is selected and only one field type/time is set
@@ -422,7 +423,7 @@ def check_len_type_time_step(ftype, ftime, steps, maxstep, purefc):
     return ftype, ftime, steps
 
 def check_mail(mail):
-    '''Check the string of mail addresses, seperate them and convert to a list.
+    '''Check the string of mail addresses, separate them and convert to list.
 
     Parameters
     ----------
@@ -528,7 +529,7 @@ def check_pathes(idir, odir, fpdir, fedir):
     return odir, fpdir
 
 def check_dates(start, end):
-    '''Checks if there is at least a start date for a one day retrieval.
+    '''Checks if there is at least a start date for a one-day retrieval.
 
     Checks if end date lies after start date and end date is set.
 
@@ -627,7 +628,7 @@ def check_basetime(basetime):
     return basetime
 
 def check_request(request, marsfile):
-    '''Check if there is an old mars request file and remove it.
+    '''Check if there is an old MARS request file; if so, remove it.
 
     Parameters
     ----------
@@ -650,8 +651,8 @@ def check_request(request, marsfile):
     return
 
 def check_public(public, dataset):
-    '''Check wether the dataset parameter is set for a
-    public data set retrieval.
+    '''Check wether the dataset parameter is set to a
+    public data set.
 
     Parameters
     ----------
@@ -666,14 +667,14 @@ def check_public(public, dataset):
 
     '''
     if public and not dataset:
-        raise ValueError('ERROR: If public mars data wants to be retrieved, '
-                         'the "dataset"-parameter has to be set too!')
+        raise ValueError('ERROR: If public MARS data are to be retrieved, '
+                         'the "dataset"-parameter has to be set, too!')
     return
 
 def check_acctype(acctype, ftype):
     '''Guarantees that the accumulation field type is set.
 
-    If not set, it is derivated as in the old method (TYPE[1]).
+    If not set, it is derived with the old method (TYPE[1]).
 
     Parameters
     ----------
@@ -709,13 +710,13 @@ def check_acctype(acctype, ftype):
 def check_acctime(acctime, marsclass, purefc, time):
     '''Guarantees that the accumulation forecast times were set.
 
-    If it is not set, it tries to set the value for some of the
-    most commonly used data sets. Otherwise it raises an error.
+    If not set, setting the value to some of the most commonly used data sets
+    is attempted. Otherwise, an eror is raised.
 
     Parameters
     ----------
     acctime : str
-        The starting time from the accumulated forecasts.
+        The starting time for the accumulated forecasts.
 
     marsclass : str
         ECMWF data classification identifier.
@@ -726,11 +727,11 @@ def check_acctime(acctime, marsclass, purefc, time):
     Return
     ------
     acctime : str
-        The starting time from the accumulated forecasts.
+        The starting time for the accumulated forecasts.
     '''
 
     if not acctime:
-        print('... Control parameter ACCTIME was not defined.')
+        print('... Control parameter ACCTIME was not set.')
         print('... Value will be set depending on field type:\n '
               '\t\t EA=06/18\n\t\t EI/OD=00/12\n\t\t EP=18')
         if marsclass.upper() == 'EA': # Era 5
@@ -744,12 +745,12 @@ def check_acctime(acctime, marsclass, purefc, time):
         elif marsclass.upper() == 'OD' and purefc: # On-demand
             acctime = time[0]
         else:
-            raise ValueError('ERROR: Accumulation forecast time can not '
-                             'automatically be derived!')
+            raise ValueError('ERROR: Accumulation forecast time can not be'
+                             'derived automatically!')
     return acctime
 
 def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
-    '''Guarantees that the accumulation forecast step were set.
+    '''Guarantees that the accumulation forecast step was set.
 
     Parameters
     ----------
@@ -764,7 +765,7 @@ def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
 
     maxstep : str
         The maximum forecast time step in hours from the forecast base time.
-        This is the maximum step for non flux (accumulated) forecast data.
+        This is the maximum step for non-flux (accumulated) forecast data.
 
     Return
     ------
@@ -772,7 +773,7 @@ def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
         The maximum forecast step for the accumulated forecast fields.
     '''
     if not accmaxstep:
-        print('... Control parameter ACCMAXSTEP was not defined.')
+        print('... Control parameter ACCMAXSTEP was not set.')
         print('... Value will be set depending on field type/time: '
               '\n\t\t EA/EI/OD=12\n\t\t EP=24')
         if marsclass.upper() in ['EA', 'EI', 'OD'] and not purefc:
@@ -784,22 +785,22 @@ def check_accmaxstep(accmaxstep, marsclass, purefc, maxstep):
             accmaxstep = maxstep
             print('... For pure forecast mode, the accumulated forecast must '
                   'have the same maxstep as the normal forecast fields!\n'
-                  '\t\t Accmaxstep was set to maxstep!')
+                  '\t\t ACCMAXSTEP was set to MAXSTEP!')
         else:
-            raise ValueError('ERROR: Accumulation forecast step can not '
-                             'automatically be derived!')
+            raise ValueError('ERROR: Accumulation forecast step can not be'
+                             'derived automatically!')
     else:
         if purefc and int(accmaxstep) != int(maxstep):
             accmaxstep = maxstep
             print('... For pure forecast mode, the accumulated forecast must '
                   'have the same maxstep as the normal forecast fields!\n'
-                  '\t\t Accmaxstep was set to maxstep!')
+                  '\t\t ACCMAXSTEP was set to MAXSTEP!')
     return accmaxstep
 
 def check_addpar(addpar):
     '''Check that addpar has correct format of additional parameters in
-    a single string, so that it can be easily appended to the hard coded
-    parameters that are retrieved in any case.
+    a single string, so that it can be easily appended to the hard-coded
+    parameters retrieved in any case.
 
     Parameters
     ----------
@@ -825,7 +826,7 @@ def check_addpar(addpar):
 
 
 def check_job_chunk(job_chunk):
-    '''Checks that if job chunk is set, the number is positive and non zero.
+    '''Checks that if job chunk is set, the number is positive and nonzero.
 
     Parameters
     ----------
@@ -843,7 +844,7 @@ def check_job_chunk(job_chunk):
         job_chunk = int(job_chunk)
 
     if job_chunk < 0:
-        raise ValueError('ERROR: The number of job chunk is negative!\n'
+        raise ValueError('ERROR: The number of job chunks is negative!\n'
                          'It has to be a positive number!')
     elif job_chunk == 0:
         job_chunk = None
