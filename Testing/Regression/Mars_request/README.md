@@ -18,13 +18,13 @@ Compare mars requests between version 7.0.4 and version 7.1 :
 ... CONTROL_OD.OPER.FC.36hours_mr ... OK!
 ... CONTROL_OD.OPER.4V.operational_mr ... OK!
 ... CONTROL_OD.ENFO.PF_mr ... FAILED!
-... 	Unconsistency happend to be in column: step
+...     Inconsistency happend to be in column: step
 
 ... CONTROL_OD.ENFO.CF_mr ... FAILED!
-... 	Unconsistency happend to be in column: step
+...     Inconsistency happend to be in column: step
 
 ... CONTROL_OD.ELDA.FC.eta.ens.double_mr ... FAILED!
-... 	Unconsistency happend to be in column: date
+...     Inconsistency happend to be in column: date
 
 ... CONTROL_EI_mr ... OK!
 ... CONTROL_EI.public_mr ... OK!
@@ -46,7 +46,7 @@ python test_cmp_mars_requests.py <previous-version> <version-to-be-tested>
 e.g. python test_cmp_mars_requests.py 7.0.4 7.1
 
 ## Author
- Anne Philipp
+    Anne Philipp
 
 
 ## License

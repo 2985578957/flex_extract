@@ -1,5 +1,8 @@
  MODULE RWGRIB2
 
+!! Read or write a field variable on a lat/lon grid from/to GRIB file, or 
+!! read a field in spectral representation from GRIB file
+
  CONTAINS
 
  SUBROUTINE READLATLON(FILENAME,FELD,MAXL,MAXB,MLEVEL,MPAR)
@@ -84,7 +87,7 @@
 
 !      print*,i
    END DO iloop
-!!   write(*,*) 'readlatlon: ',i-1,' records read'
+! !   write(*,*) 'readlatlon: ',i-1,' records read'
  
    DO i=1,n
      call grib_release(igrib(i))
@@ -168,7 +171,7 @@
 
    SUBROUTINE READSPECTRAL(FILENAME,CXMN,MNAUF,MLEVEL,MAXLEV,MPAR,A,B)
 
-!!  read a GRIB file in spherical harmonics
+!!  Read a GRIB file in spherical harmonics
 
    USE GRIB_API
 
@@ -248,7 +251,7 @@
 
    END DO iloop
 
-!!   write(*,*) 'readspectral: ',i-1,' records read'
+! !   write(*,*) 'readspectral: ',i-1,' records read'
  
    DO i=1,n
      call grib_release(igrib(i))

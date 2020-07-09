@@ -1,20 +1,17 @@
 MODULE FTRAFO
 
-!! Implementation of the spectral transformation using reduced the Gaussian grid
+!! Implementation of the spectral transformation using the reduced Gaussian grid
 
 CONTAINS
 
-! Implementierung der spektralen Transformationsmethode unter Verwendung
-! des reduzierten Gauss'schen Gitters
-
-
   SUBROUTINE VDTOUV(XMN,XLAM,XPHI,GWSAVE,IFAX,P,MLAT,MNAUF,NI,NJ,NK)
 
-!! Berechnung der scale winds aus Vorticity und Divergenz
-!! uebergibt man in XMN die Divergenz, so wird der divergente Anteil des
-!! Windes (XPHI=Ud,XPHI=Vd) zurueckgegeben, uebergibt man die Vorticity, so
-!! erhaelt man den rotationellen Wind (XLAM=Vrot,XPHI=-Urot).
-!! Summiert man beide, erhaelt man den gesamten Scale wind
+!! Calculates scale winds from vorticity and divergence.
+!! If in XMN the divergence is passed, then the divergent part of the wind
+!! (XPHI=Ud,XPHI=Vd) is returned. If vorticity is passed, then the 
+!! rotational part of the wind (XLAM=Vrot,XPHI=-Urot) is returned.
+!! Summing both, one obtains the whole scale wind.
+
 ! GWSAVE ist ein Hilfsfeld fuer die FFT
 ! P enthaelt die assoziierten Legendrepolynome, H deren Ableitung
 ! MLAT enthaelt die Anzahl der Gitterpunkte pro Breitenkreis
@@ -154,9 +151,10 @@ CONTAINS
 
   SUBROUTINE PHGRAD(XMN,XLAM,XPHI,GWSAVE,IFAX,P,H,MLAT,MNAUF,NI,NJ,NK)
 
-!! Berechnung des Gradienten eines Skalars aus dem Feld des
-!! Skalars XMN im Phasenraum. Zurueckgegeben werden die Felder der
-!! Komponenten des horizontalen Gradienten XLAM,XPHI auf dem Gauss'schen Gitter.
+!! Calculates the gradient of a scalar from the field of the scalar XMN
+!! in phase space. Returns fields of the componentens of the horizontal
+!! gradients XLAM,XPHI on the Gaussian grid.
+
 ! GWSAVE ist ein Hilfsfeld fuer die FFT
 ! P enthaelt die assoziierten Legendrepolynome, H deren Ableitung
 ! MLAT enthaelt die Anzahl der Gitterpunkte pro Breitenkreis
@@ -266,9 +264,10 @@ CONTAINS
 
   SUBROUTINE PHGRACUT(XMN,XLAM,XPHI,GWSAVE,IFAX,P,H,MAUF,MNAUF,NI,NJ,MANF,NK)
 
-!! Berechnung des Gradienten eines Skalars aus dem Feld des
-!! Skalars XMN im Phasenraum. Zurueckgegeben werden die Felder der
-!! Komponenten des horizontalen Gradienten XLAM,XPHI auf dem Gauss'schen Gitter.
+!! Calculated the gradient of a scalar from the field of the scalar XMN 
+!! in phase space. Returns the fields of the components of the horizontal
+!! gradient XLAM,XPHI on the Gaussian grid
+
 ! GWSAVE ist ein Hilfsfeld fuer die FFT
 ! P enthaelt die assoziierten Legendrepolynome, H deren Ableitung
 ! MLAT enthaelt die Anzahl der Gitterpunkte pro Breitenkreis
@@ -380,9 +379,10 @@ CONTAINS
 
   SUBROUTINE CONTGL(PS,DPSDL,DPSDM,DIV,U,V,BREITE,ETA,MLAT,A,B,NI,NJ,NK)
 
-!! Berechnung der Divergenz aus dem Windfeld (U,V)
-!! im Phasenraum. Zurueckgegeben werden die Felder der
-!! Komponenten des horizontalen Gradienten XLAM,XPHI auf dem Gauss'schen Gitter.
+!! Calculation of divergence from the wind field (U,V)
+!! in phase space. Returns fields of the componentens of the 
+!! horizontal gradients XLAM,XPHI on the Gaussian grid
+
 ! GWSAVE ist ein Hilfsfeld fuer die FFT
 ! P enthaelt die assoziierten Legendrepolynome, H deren Ableitung
 ! MLAT enthaelt die Anzahl der Gitterpunkte pro Breitenkreis
@@ -438,7 +438,7 @@ CONTAINS
 
   SUBROUTINE OMEGA(PS,DPSDL,DPSDM,DIV,U,V,BREITE,E,MLAT,A,B,NGI,NGJ,MKK)
 
-!! calculates $\omega$ in the hybrid ($\eta$-) coordinate system
+!! Calculates \(\omega\) in the hybrid (\(\eta\)-)coordinate system
 
 ! OMEGA berechnet omega im Hybridkoordinatensystem
 ! PS ist der Bodendruck,

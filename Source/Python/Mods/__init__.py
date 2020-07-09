@@ -6,9 +6,14 @@
 # @Date: September 2018
 #
 # @License:
-#    (C) Copyright 2015-2018.
+#    (C) Copyright 2014-2020.
+#    Anne Philipp, Leopold Haimberger
 #
-#    This software is licensed under the terms of the Apache Licence Version 2.0
-#    which can be obtained at http://www.apache.org/licenses/LICENSE-2.0.
+#    SPDX-License-Identifier: CC-BY-4.0
+#
+#    This work is licensed under the Creative Commons Attribution 4.0
+#    International License. To view a copy of this license, visit
+#    http://creativecommons.org/licenses/by/4.0/ or send a letter to
+#    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
 #*******************************************************************************

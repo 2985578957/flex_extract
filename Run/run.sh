@@ -11,7 +11,7 @@
 #    guarantee necessary parameters were set and consistent.
 #
 # @Licence:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #
 #    SPDX-License-Identifier: CC-BY-4.0
 #
@@ -37,7 +37,7 @@ AREA=None
 INPUTDIR=None
 OUTPUTDIR=None
 PP_ID=None
-JOB_TEMPLATE='job.temp' 
+JOB_TEMPLATE='submitscript.template' 
 CONTROLFILE='CONTROL_EA5' 
 DEBUG=0
 REQUEST=2
@@ -54,6 +54,12 @@ pyscript=../Source/Python/submit.py
 
 # INITIALIZE EMPTY PARAMETERLIST
 parameterlist=""
+
+# CHECK IF ON ECMWF SERVER; 
+if [[ $HOST == *"ecgb"* ]] || [[ $HOST == *"cca"* ]] || [[ $HOST == *"ccb"* ]]; then
+# LOAD PYTHON3 MODULE
+  module load python3
+fi 
 
 # CHECK FOR MORE PARAMETER 
 if [ -n "$START_DATE" ]; then

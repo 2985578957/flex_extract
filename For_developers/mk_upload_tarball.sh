@@ -17,8 +17,8 @@
 #    Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 #
 
-tarname='flex_extract_v7.1.tar.gz'
-tardir='flex_extract_v7.1'
+tarname='flex_extract_v7.1.2.tar.gz'
+tardir='flex_extract_v7.1.2'
 
 # go back to directory which is above flex_extract directory
 cd ../.. 

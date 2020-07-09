@@ -6,9 +6,11 @@
 # @Date: August 2018
 #
 # @Change History:
+#      June 2020 - Anne Philipp
+#         - changed template filenames to .template
 #
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
@@ -35,7 +37,7 @@ import platform
 # PARAMETERS
 # ------------------------------------------------------------------------------
 
-_VERSION_STR = '7.1.1'
+_VERSION_STR = '7.1.2'
 
 FLAG_ON_ECMWFSERVER = 'ecgb' in platform.node()
 
@@ -56,13 +58,13 @@ FILE_MARS_REQUESTS = 'mars_requests.csv'
 FORTRAN_EXECUTABLE = 'calc_etadot'
 TEMPFILE_USER_ENVVARS = 'ECMWF_ENV.template'
 FILE_USER_ENVVARS = 'ECMWF_ENV'
-TEMPFILE_INSTALL_COMPILEJOB = 'compilejob.template'
+TEMPFILE_INSTALL_COMPILEJOB = 'installscript.template'
 FILE_INSTALL_COMPILEJOB = 'compilejob.ksh'
-TEMPFILE_INSTALL_JOB = 'job.template'
-TEMPFILE_JOB = 'job.temp'
+TEMPFILE_INSTALL_JOB = 'jobscript.template'
+TEMPFILE_JOB = 'submitscript.template'
 FILE_JOB_OD = 'job.ksh'
 FILE_JOB_OP = 'jopoper.ksh'
-TEMPFILE_NAMELIST = 'convert.nl'
+TEMPFILE_NAMELIST = 'calc_etadot_nml.template'
 FILE_NAMELIST = 'fort.4'
 FILE_GRIB_INDEX = 'date_time_stepRange.idx'
 FILE_GRIBTABLE = 'ecmwf_grib1_table_128'

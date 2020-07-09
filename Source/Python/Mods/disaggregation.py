@@ -18,8 +18,11 @@
 #          to a new module named disaggregation
 #        - added the new disaggregation method for precipitation
 #
+#    June 2020 - Anne Philipp (University of Vienna):
+#        - reformulated formular for dapoly
+#
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
@@ -91,12 +94,11 @@ def dapoly(alist):
         Migration from Fortran to Python
 
     """
-
-    pya = (alist[3] - alist[0] + 3. * (alist[1] - alist[2])) / 6.
-    pyb = (alist[2] + alist[0]) / 2. - alist[1] - 9. * pya / 2.
-    pyc = alist[1] - alist[0] - 7. * pya / 2. - 2. * pyb
-    pyd = alist[0] - pya / 4. - pyb / 3. - pyc / 2.
-    nfield = 8. * pya + 4. * pyb + 2. * pyc + pyd
+    
+    nfield = -1./12.*alist[0] + \
+              7./12.*alist[1] + \
+              7./12.*alist[2] - \
+              1./12.*alist[3]
 
     return nfield
 

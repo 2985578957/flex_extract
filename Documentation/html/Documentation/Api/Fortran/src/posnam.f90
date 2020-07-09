@@ -1,7 +1,7 @@
   SUBROUTINE POSNAM(KULNAM,CDNAML)
 
- !! position in namelist file.
- ! author:  Mats Hamrud, ECMWF
+ !! Position in namelist file.
+ !! Author:  Mats Hamrud, ECMWF
 
     INTEGER, INTENT(IN)       :: KULNAM
     CHARACTER*(*), INTENT(IN) :: CDNAML

@@ -38,7 +38,7 @@
 #          duplication, easier testing)
 #
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
@@ -1415,7 +1415,7 @@ class EcFlexpart(object):
                               keynames=['perturbationNumber', 'date', 'time',
                                         'stepRange', 'values'],
                               keyvalues=[inumb, int(date.strftime('%Y%m%d')),
-                                         date.hour*100, 0, lsp_new_np[inumb, :, it]],
+                                         date.hour*100, 0, lsp_new_np[inumb, :, it]]
                              )
             fluxfile.set_keys(tmpfile, filemode='ab',
                               wherekeynames=['paramId'], wherekeyvalues=[143],
@@ -1478,12 +1478,9 @@ class EcFlexpart(object):
         '''
 
         gribfile = GribUtil(os.path.join(inputdir, 'rr_grib_dummy.grb'))
-
-        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                                keyvalues=[142], filemode='wb')
-
-        gribfile.copy_dummy_msg(ifile, keynames=['paramId'],
-                                keyvalues=[143], filemode='ab')
+        
+        gribfile.copy_dummy_msg(ifile, keynames=['paramId','paramId'],
+                                keyvalues=[142,143], filemode='wb')        
 
         return
 
@@ -1721,10 +1718,17 @@ class EcFlexpart(object):
             os.chdir(pwd)
 # ============================================================================================
             # create name of final output file, e.g. EN13040500 (ENYYMMDDHH)
+            # for CERA-20C we need all 4 digits for the year sinc 1900 - 2010
             if c.purefc:
-                suffix = cdate[2:8] + '.' + ctime + '.' + cstep
+                if c.marsclass == 'EP':
+                    suffix = cdate[0:8] + '.' + ctime + '.' + cstep
+                else:
+                    suffix = cdate[2:8] + '.' + ctime + '.' + cstep
             else:
-                suffix = cdate_hour[2:10]
+                if c.marsclass == 'EP':
+                    suffix = cdate_hour[0:10]
+                else:
+                    suffix = cdate_hour[2:10]
 
             # if necessary, add ensemble member number to filename suffix
             if 'number' in index_keys:
@@ -1747,7 +1751,10 @@ class EcFlexpart(object):
                                                 '/OG_OROLSM__SL.*.' +
                                                 c.ppid +
                                                 '*')[0])
-            fluxfile = 'flux' + cdate[0:2] + suffix
+            if c.marsclass == 'EP':
+                fluxfile = 'flux' + suffix
+            else:
+                fluxfile = 'flux' + cdate[0:2] + suffix
             if not c.cwc:
                 flist = ['fort.15', fluxfile, 'fort.16', orolsm]
             else:

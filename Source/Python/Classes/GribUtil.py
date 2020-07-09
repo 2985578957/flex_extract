@@ -12,7 +12,7 @@
 #        - changed some naming
 #
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
@@ -121,8 +121,8 @@ class GribUtil(object):
         return return_list
 
 
-    def set_keys(self, fromfile, keynames, keyvalues, wherekeynames,
-                 wherekeyvalues, filemode='wb'):
+    def set_keys(self, fromfile, filemode='wb', keynames=[], keyvalues=[], 
+                 wherekeynames=[], wherekeyvalues=[]):
         '''Opens the file to read the grib messages and then write
         the selected messages (with wherekeys) to a new output file.
         Also, the keyvalues of the passed list of keynames are set.
@@ -161,34 +161,37 @@ class GribUtil(object):
             raise Exception("Give a value for each keyname!")
 
         fout = open(self.filenames, filemode)
-
-        with open(fromfile, 'rb') as fin:
+       # print(fout)
+        fin = open(fromfile, 'rb')
+       # print(fin)
+        while True:
             gid = codes_grib_new_from_file(fin)
-
+           # print('test')
+            if gid is None:
+                break            
+            
             select = True
-            i = 0
-            for wherekey in wherekeynames:
+            #print(str(codes_get(gid,'paramId')))
+            for i, wherekey in enumerate(wherekeynames):
                 if not codes_is_defined(gid, wherekey):
                     raise Exception("wherekey was not defined")
 
                 select = (select and (str(wherekeyvalues[i]) ==
                                       str(codes_get(gid, wherekey))))
-                i += 1
 
             if select:
-                i = 0
-                for key in keynames:
+                for i, key in enumerate(keynames):
                     if key == 'values':
                         codes_set_values(gid, keyvalues[i])
                     else:
                         codes_set(gid, key, keyvalues[i])
-                    i += 1
 
                 codes_write(gid, fout)
 
             codes_release(gid)
 
         fout.close()
+        fin.close()
 
         return
 
@@ -228,21 +231,24 @@ class GribUtil(object):
         if len(keynames) != len(keyvalues):
             raise Exception("Give a value for each keyname!")
 
-
         fout = open(self.filenames, filemode)
-
+        fin = open(filename_in, 'rb')
+        
         fields = 0
-
-        with open(filename_in, 'rb') as fin:
-            if fields >= 1:
+        while True:
+            if fields >= len(keyvalues):
                 fout.close()
+                fin.close()
                 return
-
+                
             gid = codes_grib_new_from_file(fin)
+            if gid is None:
+                break            
 
-            select = True
-            i = 0
-            for key in keynames:
+            for i, key in enumerate(keynames):
+                
+                select = True
+                
                 if not codes_is_defined(gid, key):
                     raise Exception("Key was not defined")
 
@@ -252,15 +258,15 @@ class GribUtil(object):
                 else:
                     select = (select and (str(keyvalues[i]) !=
                                           str(codes_get(gid, key))))
-                i += 1
-
-            if select:
-                fields = fields + 1
-                codes_write(gid, fout)
-
+                
+                if select:
+                    fields = fields + 1
+                    codes_write(gid, fout)
+                    
             codes_release(gid)
 
         fout.close()
+        fin.close()
 
         return
 

@@ -12,13 +12,18 @@
 #        - added documentation
 #        - moved install_args_and_control in here
 #        - splitted code in smaller functions
-#        - delete convert build files in here instead of compile job script
+#        - delete fortran build files in here instead of compile job script
 #        - changed static path names to variables from config file
 #        - splitted install function into several smaller pieces
 #        - use of tarfile package in python
+#    June 2020 - Anne Philipp
+#        - renamed "convert" functions to "fortran" functions
+#        - reconfigured mk_tarball to select *.template files instead 
+#          of *.nl and *.temp
+#        - added check for makefile settings
 #
 # @License:
-#    (C) Copyright 2014-2019.
+#    (C) Copyright 2014-2020.
 #    Anne Philipp, Leopold Haimberger
 #
 #    SPDX-License-Identifier: CC-BY-4.0
@@ -38,8 +43,8 @@
 #    mk_env_vars
 #    mk_compilejob
 #    mk_job_template
-#    del_convert_build
-#    mk_convert_build
+#    del_fortran_build
+#    mk_fortran_build
 #
 #*******************************************************************************
 '''This script installs the flex_extract program.
@@ -242,13 +247,13 @@ def install_local(c):
                                   _config.FLEXEXTRACT_DIRNAME,
                                   _config.PATH_REL_FORTRAN_SRC))
 
-    # Create Fortran executable - CONVERT2
+    # Create Fortran executable
     print('Install ' +  _config.FLEXEXTRACT_DIRNAME + ' software at ' +
           c.install_target + ' in directory ' +
           os.path.abspath(c.installdir) + '\n')
 
-    del_convert_build('.')
-    mk_convert_build('.', c.makefile)
+    del_fortran_build('.')
+    mk_fortran_build('.', c.makefile)
 
     os.chdir(_config.PATH_FLEXEXTRACT_DIR)
     if os.path.isfile(tar_file):
@@ -303,6 +308,21 @@ def check_install_conditions(c):
         if not c.installdir:
             c.installdir = _config.PATH_FLEXEXTRACT_DIR
 
+    if not c.makefile:
+        print('WARNING: no makefile was specified.')
+        if c.install_target == 'local':
+            c.makefile = 'makefile_local_gfortran'
+            print('WARNING: default makefile selected: makefile_local_gfortan')
+        elif c.install_target == 'ecgate':
+            c.makefile = 'makefile_ecgate'
+            print('WARNING: default makefile selected: makefile_ecgate')
+        elif c.install_target == 'cca' or \
+             c.install_target == 'ccb':
+            c.makefile = 'makefile_cray'
+            print('WARNING: default makefile selected: makefile_cray')
+        else:
+            pass
+        
     return
 
 
@@ -357,9 +377,7 @@ def mk_tarball(tarball_path, target):
     testfiles = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEST, '*').files]
     tempfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.temp').files]
-    nlfiles = [os.path.relpath(x, ecd)
-               for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.nl').files]
+                 for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.template').files]
     gribtable = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEMPLATES, '*grib*').files]
     ffiles = [os.path.relpath(x, ecd)
@@ -371,7 +389,7 @@ def mk_tarball(tarball_path, target):
     jobdir = [_config.PATH_REL_JOBSCRIPTS]
 
     # concatenate single lists to one for a better looping
-    filelist = pyfiles + pytestfiles + controlfiles + tempfiles + nlfiles + \
+    filelist = pyfiles + pytestfiles + controlfiles + tempfiles + \
                ffiles + gribtable + hfiles + makefiles + ecmwf_env_file + \
                runfile + jobdir + testfiles +\
                ['CODE_OF_CONDUCT.md', 'LICENSE.md', 'README.md']
@@ -497,7 +515,7 @@ def mk_compilejob(makefile, ecuid, ecgid, fp_root):
     ----------
     makefile : str
         Name of the makefile which should be used to compile FORTRAN
-        CONVERT2 program.
+        program.
 
     ecuid : str
         The user id on ECMWF server.
@@ -632,9 +650,9 @@ def mk_job_template(ecuid, ecgid, fp_root):
 
     return
 
-def del_convert_build(src_path):
+def del_fortran_build(src_path):
     '''Clean up the Fortran source directory and remove all
-    build files (e.g. \*.o, \*.mod and CONVERT2)
+    build files (e.g. \*.o, \*.mod and FORTRAN EXECUTABLE)
 
     Parameters
     ----------
@@ -656,7 +674,7 @@ def del_convert_build(src_path):
 
     return
 
-def mk_convert_build(src_path, makefile):
+def mk_fortran_build(src_path, makefile):
     '''Compiles the Fortran code and generates the executable.
 
     Parameters
@@ -685,14 +703,14 @@ def mk_convert_build(src_path, makefile):
         if p.returncode != 0:
             print(perr.decode())
             print('Please edit ' + makefile +
-                  ' or try another Makefile in the src directory.')
-            print('Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '
+                  ' or try another makefile in the src directory.')
+            print('Most likely ECCODES_INCLUDE_DIR, ECCODES_LIB '
                   'and EMOSLIB must be adapted.')
-            print('Available Makefiles:')
-            print(UioFiles(src_path, 'Makefile*'))
+            print('Available makefiles:')
+            print(UioFiles(src_path, 'makefile*'))
             sys.exit('Compilation failed!')
     except ValueError as e:
-        print('ERROR: Makefile call failed:')
+        print('ERROR: makefile call failed:')
         print(e)
     else:
         execute_subprocess(['ls', '-l',

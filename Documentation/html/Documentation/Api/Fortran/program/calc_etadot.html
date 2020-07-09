@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
    
-   <meta name="description" content="Calculation of vertical velocity for FLEXPART">
+   <meta name="description" content="flex_extract calculates the vertical velocity for FLEXPART">
     
     <meta name="author" content="Leopold Haimberger<sup>1</sup>" >
     <link rel="icon" href="../favicon.png">
@@ -44,7 +44,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1</small></a>
+          <a class="navbar-brand" href="../index.html">Flex_extract: Calculation of etadot <small>7.1.2</small></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -126,7 +126,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title="100.0% of total for programs.">381 statements</a>
+    title="100.0% of total for programs.">365 statements</a>
      </li> 
      
      
@@ -624,20 +624,21 @@
 </li>
 <li>04-06/2019: Petra Seibert, 
             beautify code and add FORD documentation</li>
+<li>06/2020: Petra Seibert, translate some comments into English
+            comment out writing of VERTICAL.EC</li>
 </ul>
 <hr>
-<p>#                                                              </p>
 <h2>Input required:</h2>
 <div class="codehilite"><pre><span></span> UNIT  FILE      PARAMETER(S)    DATA REPRESENTATION
 
- 11    fort.11   T,U,V           regular lambda phi grid
- 12    fort.12   D               regular lambda phi grid   
+ 11    fort.11   T,U,V           regular lat-lon grid
+ 12    fort.12   D               regular lat-lon grid   
  13    fort.13   LNSP            spherical harmonics
  14    fort.14   SD,MSL,TCC,10U,                                
-                 10V,2T,2D       regular lambda phi grid     
+                 10V,2T,2D       regular lat-lon grid     
  16    fort.16   LSP,CP,SSHF,         
-                 SSR,EWSS,NSSS   regular lambda phi grid
- 17    fort.17   Q               regular lambda phi grid
+                 SSR,EWSS,NSSS   regular lat-lon grid
+ 17    fort.17   Q               regular lat-lon grid
 </pre></div>
 
 
@@ -647,7 +648,7 @@
 
 15    fort.15   `U,V,ETA,T,PS,                                  
                 `Q,SD,MSL,TCC,`                                  
-                `10U,10V,2T,2D,`  regular lambda phi grid         
+                `10U,10V,2T,2D,`  regular lat-lon grid         
                 `LSP,CP,SSHF,`                                   
                 `SSR,EWSS,NSSS`
 </pre></div>
@@ -655,31 +656,27 @@
 
 <hr>
 <p>ALLOCATE VARIABLES                       </p>
-<p>Initialisieren  Legendretransformation auf das LaT/LON Gitter  </p>
+<p>Initialise  Legendre transformation on the lat-lon grid</p>
 <p>Initialisation of fields for FFT and Legendre transformation
  to Gaussian grid and back to phase space
   read LNSP in SH
   read u,v in SH
-  Transformieren des Windes auf das Gaussgitter<br>
+  Transforming the wind to the Gaussian grid
   read DIV in SH
- Transformieren der horizontalen Divergenz auf das Gaussgitter<br>
- Berechnung des Gradienten des Logarithmus des Bodendrucks auf dem Gaussgitter<br>
- Berechnung der Vertikalgeschwindigkeit auf dem Gaussgitter<br>
- Berechnung von Omega auf dem Gaussgitter  </p>
+ Transform horizontal divergence to the Gaussian grid
+ Calculation of the gradient of LNSP (log of surface pressure) on Gaussian grid<br>
+ Calculation of the vertical velocity on the Gaussian grid<br>
+ Calculation of omega on the Gaussian grid  </p>
 <p>READING OF SURFACE PRESSURE                   </p>
 <p>READING OF U,V                     </p>
 <p>READING OF LNSP on grid               </p>
 <p>READING OF DIVERGENCE                      </p>
-<p>Initialisieren  Legendretransformation auf das LaT/LON Gitter
- Without Gaussian grid calculation Legendre Polynomials are calculated
- only for one latitude to save space</p>
-<p>CREATE FILE VERTICAL.EC NEEDED BY POP MODEL  </p>
+<p>Initialise Legendre transformation on the lat-lon grid.
+ Without Gaussian grid calculation, 
+ Legendre polynomials are calculated only for one latitude, to save space</p>
 <p>READING OF T                     </p>
 <p>READING OF SPECIFIC HUMIDITY               </p>
 <p>WRITE MODEL LEVEL DATA TO fort.15           </p>
-<div class="codehilite"><pre><span></span> Calculation of etadot in CONTGL needed scaled winds (ucosphi,vcosphi)
- Now we are transforming back to the usual winds.
-</pre></div>
     
     <br>
     <div class="panel panel-default">
@@ -2880,8 +2877,8 @@
     <footer>
       <div class="container">
       <div class="row">
-        <div class="col-xs-6 col-md-4"><p>&copy; 2019 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
-                                          <br /><small>dfa7dbd</small></p></div>
+        <div class="col-xs-6 col-md-4"><p>&copy; 2020 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>
+                                          </p></div>
         <div class="col-xs-6 col-md-4 col-md-push-4">
           <p class="text-right">
             Documentation generated by 
