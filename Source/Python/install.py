@@ -514,11 +514,7 @@ def mk_compilejob(makefile, ecuid, ecgid, fp_root):
     Parameters
     ----------
     makefile : str
-<<<<<<< HEAD
-        Name of the makefile which should be used to compile FORTRAN
-=======
         Name of the makefile which should be used to compile the Fortran
->>>>>>> origin/task/language-editing
         program.
 
     ecuid : str
@@ -708,21 +704,13 @@ def mk_fortran_build(src_path, makefile):
             print(perr.decode())
             print('Please edit ' + makefile +
                   ' or try another makefile in the src directory.')
-<<<<<<< HEAD
             print('Most likely ECCODES_INCLUDE_DIR, ECCODES_LIB '
-=======
-            print('Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB '
->>>>>>> origin/task/language-editing
                   'and EMOSLIB must be adapted.')
             print('Available makefiles:')
             print(UioFiles(src_path, 'makefile*'))
             sys.exit('Compilation failed!')
     except ValueError as e:
-<<<<<<< HEAD
         print('ERROR: makefile call failed:')
-=======
-        print('ERROR: make of Fortran code failed:')
->>>>>>> origin/task/language-editing
         print(e)
     else:
         execute_subprocess(['ls', '-l', 
