@@ -615,7 +615,7 @@ class ControlFile(object):
         check_request(self.request,
                       os.path.join(self.inputdir, _config.FILE_MARS_REQUESTS))
 
-        check_public(self.public, self.dataset)
+        check_public(self.public, self.dataset, self.marsclass)
 
         self.type = check_type(self.type, self.step)
 

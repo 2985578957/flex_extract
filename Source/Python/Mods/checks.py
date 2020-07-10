@@ -650,7 +650,7 @@ def check_request(request, marsfile):
             silent_remove(marsfile)
     return
 
-def check_public(public, dataset):
+def check_public(public, dataset, marsclass):
     '''Check wether the dataset parameter is set to a
     public data set.
 
@@ -666,7 +666,7 @@ def check_public(public, dataset):
     ------
 
     '''
-    if public and not dataset:
+    if public and not dataset and not (marsclass.upper() == 'EA'):
         raise ValueError('ERROR: If public MARS data are to be retrieved, '
                          'the "dataset"-parameter has to be set, too!')
     return

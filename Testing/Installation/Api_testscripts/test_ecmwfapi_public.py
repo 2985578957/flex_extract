@@ -16,5 +16,6 @@ server.retrieve({
 	'date'      : "2000-07-01/to/2000-07-31",
 	'type'      : "an",
 	'class'     : "ep",
+    'number'    : "0",
 	'target'    : "download_cera20c_ecmwfapi.grib"
 })

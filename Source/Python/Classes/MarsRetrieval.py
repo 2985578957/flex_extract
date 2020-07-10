@@ -445,6 +445,75 @@ class MarsRetrieval(object):
             f.write('\n')
 
         return
+    
+    def _convert_to_cdsera5_sfc_request(self, attrs):
+        '''
+        The keywords and values for the single level download
+        with CDS API is different from MARS. This function 
+        converts the old request keywords to the new ones.
+        
+        Example request for single level downloads in CDS API
+        
+        retrieve(
+            'reanalysis-era5-single-levels',
+            {
+                'product_type': 'reanalysis',
+                'variable': 'total_precipitation',
+                'year': '2019',
+                'month': '01',
+                'day': '01',
+                'time': '00:00',
+                'format': 'grib',
+                'grid':[1.0, 1.0],
+                'area': [
+                    45, 0, 43,
+                    12,
+                ],
+            },
+            'download.grib')
+            
+        Parameters
+        ----------
+        attrs : dict
+            Dictionary of the mars request parameters.
+
+        Return
+        ------
+
+        '''
+        from datetime import datetime, timedelta
+        newattrs = {}
+
+        if '/' in attrs['date']:
+            year = set()
+            month = set()
+            day = set()
+            start,end = attrs['date'].split('/')[::2]
+            sdate = datetime.strptime(start, '%Y%m%d')
+            edate = datetime.strptime(end, '%Y%m%d')
+            date = sdate
+            while date <= edate:
+                year.add(date.year)
+                month.add(date.month)
+                day.add(date.day)      
+                date = date + timedelta(days=1)
+            newattrs['year'] =list(year)
+            newattrs['month'] = list(month)
+            newattrs['day'] =  list(day)                       
+        else:
+            date = datetime.strptime(attrs['date'], '%Y%m%d')
+            newattrs['year'] = date.year
+            newattrs['month'] = date.month
+            newattrs['day'] =  date.day                  
+        
+        newattrs['product_type'] = 'reanalysis'
+        newattrs['area'] = attrs['area'].split('/')
+        newattrs['grid'] = list(map(float,attrs['grid'].split('/')))
+        newattrs['param'] = attrs['param'].split('/')        
+        newattrs['time'] = list(map(str,range(0,24,3)))
+        newattrs['format'] = 'grib'
+                
+        return newattrs
 
     def data_retrieve(self):
         '''Submits a MARS retrieval. Depending on the existence of
@@ -478,7 +547,7 @@ class MarsRetrieval(object):
         if not int(self.public):
             del attrs['target']
         print('target: ' + target)
-
+        
         # find all keys without a value and convert all other values to strings
         empty_keys = []
         for key, value in attrs.items():
@@ -497,8 +566,15 @@ class MarsRetrieval(object):
         if self.server:
             try:
                 if cds_api and isinstance(self.server, cdsapi.Client):
+                    # distinguish between model (ECMWF MARS access) 
+                    # and surface level (CS3 online access)
+                    if attrs['levtype'].lower() == 'ml':
+                        dataset = _config.CDS_DATASET_ML
+                    else:
+                        dataset = _config.CDS_DATASET_SFC
+                        attrs = self._convert_to_cdsera5_sfc_request(attrs)
                     print('RETRIEVE ERA5 WITH CDS API!')
-                    self.server.retrieve(_config.CDS_DATASET,
+                    self.server.retrieve(dataset,
                                          attrs, target)
                 elif ec_api and isinstance(self.server, ecmwfapi.ECMWFDataServer):
                     print('RETRIEVE PUBLIC DATA (NOT ERA5)!')
