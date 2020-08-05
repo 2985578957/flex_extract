@@ -1,0 +1,33 @@
+Compare mars requests between version 7.0.4 and version 7.1 : 
+... CONTROL_CERA.public_mr ... OK!
+... CONTROL_CERA_mr ... OK!
+... CONTROL_CF_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_CV_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_EA5.highres_mr ... OK!
+... CONTROL_EA5.public_mr ... OK!
+... CONTROL_EA5_mr ... OK!
+... CONTROL_EI.public_mr ... OK!
+... CONTROL_EI_mr ... OK!
+... CONTROL_OD.ELDA.FC.eta.ens.double_mr ... FAILED!
+...    Inconsistency in column: date
+
+... CONTROL_OD.ENFO.CF_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_OD.ENFO.PF_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_OD.OPER.4V.operational_mr ... OK!
+... CONTROL_OD.OPER.FC.36hours_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_OD.OPER.FC.twiceaday_mr ... FAILED!
+...    Inconsistency in column: step
+
+... CONTROL_OD.OPER.global.025_mr ... OK!
+... CONTROL_OD.OPER.highres.eta_mr ... OK!
+... CONTROL_OD.OPER.highres.gauss_mr ... OK!

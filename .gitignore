@@ -39,6 +39,12 @@ Source/Fortran/pycallgraph.png
 Source/Python/pylint_report_7.1.txt
 Source/.metrics
 
+# Testdata files: not for git storage
+Testdata
+Testing/Installation/Calc_etadot/VERTICAL.EC
+Testing/Regression/Compare_gribfiles/7.0.4/
+Testing/Regression/Compare_gribfiles/7.1/
+
 Emoslib
 Unused_input_files
 Unused_output
