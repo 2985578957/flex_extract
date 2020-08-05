@@ -24,23 +24,22 @@
 ##PBS -l EC_memory_per_task=3200MB
 
 set -x
-export VERSION=7.1
+export VERSION=7.1.2
 case ${HOST} in
   *ecg*)
   module unload grib_api
-  module unload eccodes
-  module load eccodes
-  module load python
   module unload emos
+  module load python3
+  module load eccodes
   module load emos/455-r64
   export FLEXPART_ROOT_SCRIPTS=fp_root_test_path
   export MAKEFILE=Makefile.TEST
   ;;
   *cca*)
   module switch PrgEnv-cray PrgEnv-intel
+  module load python3
   module load eccodes
-  module load emos
-  module load python
+  module load emos/455-r64
   echo ${GROUP}
   echo ${HOME}
   echo ${HOME} | awk -F / '{print $1, $2, $3, $4}'
@@ -54,11 +53,11 @@ esac
 mkdir -p ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}
 cd ${FLEXPART_ROOT_SCRIPTS}/flex_extract_v${VERSION}   # if FLEXPART_ROOT is not set this means cd to the home directory
 tar -xvf ${HOME}/flex_extract_v${VERSION}.tar
-cd source/fortran
-\rm *.o *.mod CONVERT2 
+cd Source/Fortran
+\rm *.o *.mod calc_etadot 
 make -f ${MAKEFILE} >flexcompile 2>flexcompile
 
-ls -l CONVERT2 >>flexcompile
+ls -l calc_etadot >>flexcompile
 if [ $? -eq 0 ]; then
   echo 'SUCCESS!' >>flexcompile
   mail -s flexcompile.${HOST}.$$ ${USER} <flexcompile

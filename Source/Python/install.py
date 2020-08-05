@@ -375,7 +375,7 @@ def mk_tarball(tarball_path, target):
                     for x in UioFiles(_config.PATH_REL_CONTROLFILES,
                                       'CONTROL*').files]
     testfiles = [os.path.relpath(x, ecd)
-                 for x in UioFiles(_config.PATH_REL_TEST, '*').files]
+                 for x in UioFiles(_config.PATH_REL_TEST+"/Installation", '*').files]
     tempfiles = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_TEMPLATES, '*.template').files]
     gribtable = [os.path.relpath(x, ecd)
@@ -386,7 +386,8 @@ def mk_tarball(tarball_path, target):
               for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, '*.h').files]
     makefiles = [os.path.relpath(x, ecd)
                  for x in UioFiles(_config.PATH_REL_FORTRAN_SRC, 'makefile*').files]
-    jobdir = [_config.PATH_REL_JOBSCRIPTS]
+    jobdir = [os.path.relpath(x, ecd)
+               for x in UioFiles(_config.PATH_REL_JOBSCRIPTS, '*.md').files]
 
     # concatenate single lists to one for a better looping
     filelist = pyfiles + pytestfiles + controlfiles + tempfiles + \

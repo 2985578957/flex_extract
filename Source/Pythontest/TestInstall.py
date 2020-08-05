@@ -18,6 +18,7 @@ except ImportError:
     import builtins
 import pytest
 from mock import patch
+import mock
 
 sys.path.append('../Python')
 import _config
@@ -52,15 +53,17 @@ class TestInstall():
 
 
 
-    @patch('tarfile.open', side_effect=[subprocess.CalledProcessError(1,'test'),
-                                        OSError(errno.EEXIST)])
+    @patch('tarfile.open', side_effect=[tarfile.TarError, OSError])
     def test_fail_mk_tarball_local(self, mock_open):
+        import tarfile
+       # mock_open.side_effekt = tarfile.TarError
         ecd = _config.PATH_FLEXEXTRACT_DIR + os.path.sep
         # create test tarball and list its content files
         tarballname = _config.FLEXEXTRACT_DIRNAME + '_localtest.tar'
 
         with pytest.raises(SystemExit):
             mk_tarball(ecd + tarballname, 'local')
+
 
     def test_success_mk_tarball_local(self):
         ecd = _config.PATH_FLEXEXTRACT_DIR + os.path.sep
@@ -118,20 +121,14 @@ class TestInstall():
 
         # list comparison files for tarball content
         tar_test_dir = os.path.join(self.testdir, 'InstallTar')
-        cmp_dir = _config.FLEXEXTRACT_DIRNAME + '_ecgate'
-        tar_test_fedir = os.path.join(tar_test_dir, cmp_dir)
-        comparison_list = []
-        for path, subdirs, files in os.walk(tar_test_fedir):
-            for name in files:
-                if 'tar' not in name:
-                    comparison_list.append(os.path.relpath(
-                        os.path.join(path, name), tar_test_fedir))
+        tarballname = _config.FLEXEXTRACT_DIRNAME + '_ecgate.tar'
+        with tarfile.open(os.path.join(tar_test_dir, tarballname), 'r') as tar_handle:
+            comparison_list = tar_handle.getnames()
 
         # untar in test directory
         test_dir = os.path.join(tar_test_dir, 'test_ecgate')
         make_dir(test_dir)
         os.chdir(test_dir)
-        tarballname = _config.FLEXEXTRACT_DIRNAME + '_ecgate.tar'
         un_tarball(os.path.join(tar_test_dir, tarballname))
         tarfiles_list = []
         for path, subdirs, files in os.walk(test_dir):
@@ -147,27 +144,21 @@ class TestInstall():
 
         # list comparison files for tarball content
         tar_test_dir = os.path.join(self.testdir, 'InstallTar')
-        cmp_dir = _config.FLEXEXTRACT_DIRNAME + '_local'
-        tar_test_fedir = os.path.join(tar_test_dir, cmp_dir)
-        comparison_list = []
-        for path, subdirs, files in os.walk(tar_test_fedir):
-            for name in files:
-                if 'tar' not in name:
-                    comparison_list.append(os.path.relpath(
-                        os.path.join(path, name), tar_test_fedir))
+        tarballname = _config.FLEXEXTRACT_DIRNAME + '_local.tar'
+        with tarfile.open(os.path.join(tar_test_dir, tarballname), 'r') as tar_handle:
+            comparison_list = tar_handle.getnames()
 
         # untar in test directory
         test_dir = os.path.join(tar_test_dir, 'test_local')
         make_dir(test_dir)
         os.chdir(test_dir)
-        tarballname = _config.FLEXEXTRACT_DIRNAME + '_local.tar'
         un_tarball(os.path.join(tar_test_dir, tarballname))
         tarfiles_list = []
         for path, subdirs, files in os.walk(test_dir):
             for name in files:
                 tarfiles_list.append(os.path.relpath(
                     os.path.join(path, name), test_dir))
-
+        		   
         # test for equality
         assert sorted(tarfiles_list) == sorted(comparison_list)
 
@@ -204,14 +195,6 @@ class TestInstall():
                             'gateway.test.ac.at',
                             'user@destination')
 
-    @patch('__builtin__.open', side_effect=[OSError(errno.EPERM)])
-    def test_fail_open_mk_env_vars(self, mock_open):
-        with pytest.raises(SystemExit):
-            mk_env_vars('testuser',
-                        'testgroup',
-                        'gateway.test.ac.at',
-                        'user@destination')
-
     @patch('_config.FILE_INSTALL_COMPILEJOB', _config_test.PATH_TESTFILES_DIR+'/compilejob_test.ksh')
     def test_success_mk_compilejob(self):
         import filecmp
@@ -220,7 +203,6 @@ class TestInstall():
                                 'compilejob.test')
 
         mk_compilejob('Makefile.TEST',
-                      '',
                       'testuser',
                       'testgroup',
                       'fp_root_test_path')
@@ -235,7 +217,6 @@ class TestInstall():
     def test_fail_load_mk_compilejob(self, mock_generate):
         with pytest.raises(SystemExit):
             mk_compilejob('Makefile.TEST',
-                          '',
                           'testuser',
                           'testgroup',
                           'fp_root_test_path')
@@ -245,31 +226,29 @@ class TestInstall():
             MockHelper.return_value.generate.side_effect = UndefinedError('undefined')
             with pytest.raises(SystemExit):
                 mk_compilejob('Makefile.TEST',
-                              '',
                               'testuser',
                               'testgroup',
                               'fp_root_test_path')
 
-    @patch('__builtin__.open', side_effect=[OSError(errno.EPERM)])
-    def test_fail_open_mk_compilejob(self, mock_open):
-        with pytest.raises(SystemExit):
-            mk_compilejob('Makefile.TEST',
-                          '',
-                          'testuser',
-                          'testgroup',
-                          'fp_root_test_path')
+#    @patch('builtins.open', side_effect=[OSError(errno.EPERM)])
+#    def test_fail_open_mk_compilejob(self, mock_open):
+#        with pytest.raises(SystemExit):
+#            mk_compilejob('Makefile.TEST',
+#                          'testuser',
+#                          'testgroup',
+#                          'fp_root_test_path')
 
-    @patch('_config.TEMPFILE_JOB', _config_test.PATH_TESTFILES_DIR+'/job_temp.test_test')
+    @patch('_config.TEMPFILE_JOB', _config_test.PATH_TESTFILES_DIR+'/submitscript.template.test.comp')
     def test_success_mk_job_template(self):
         import filecmp
 
         testfile = os.path.join(self.testfilesdir,
-                                'job.temp.test')
+                                'submitscript.template.test')
 
         mk_job_template('testuser',
                         'testgroup',
-                        'gateway.test.ac.at',
-                        'dest@generic',
+#                        'gateway.test.ac.at',
+#                        'dest@generic',
                         'fp_root_test_path')
 
         finalfile = os.path.join(_config.PATH_TEMPLATES,
@@ -283,8 +262,8 @@ class TestInstall():
         with pytest.raises(SystemExit):
             mk_job_template('testuser',
                             'testgroup',
-                            'gateway.test.ac.at',
-                            'dest@generic',
+#                            'gateway.test.ac.at',
+#                            'dest@generic',
                             'fp_root_test_path')
 
     def test_fail_generate_mk_job_template(self):
@@ -293,18 +272,18 @@ class TestInstall():
             with pytest.raises(SystemExit):
                 mk_job_template('testuser',
                                 'testgroup',
-                                'gateway.test.ac.at',
-                                'dest@generic',
+ #                               'gateway.test.ac.at',
+ #                               'dest@generic',
                                 'fp_root_test_path')
 
-    @patch('__builtin__.open', side_effect=[OSError(errno.EPERM)])
-    def test_fail_open_mk_job_template(self, mock_open):
-        with pytest.raises(SystemExit):
-            mk_job_template('testuser',
-                            'testgroup',
-                            'gateway.test.ac.at',
-                            'dest@generic',
-                            'fp_root_test_path')
+#    @patch('builtins.open', side_effect=[OSError(errno.EPERM)])
+#    def test_fail_open_mk_job_template(self, mock_open):
+#        with pytest.raises(SystemExit):
+#            mk_job_template('testuser',
+#                            'testgroup',
+#                            'gateway.test.ac.at',
+#                            'dest@generic',
+#                            'fp_root_test_path')
 
     @classmethod
     def teardown_class(self):

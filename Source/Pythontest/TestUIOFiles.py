@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os
@@ -50,10 +50,10 @@ class TestUioFiles():
 
     def test_str_(self):
         """Test if list of file is correctly converted to string."""
-        self.expected = "FCSH__SL.20160410.40429.16424.grb, "\
-                        "FCSH__ML.20160410.40429.16424.grb, "\
+        self.expected = "FCOG__ML.20160410.40429.16424.grb, "\
                         "FCOG__SL.20160410.40429.16424.grb, "\
-                        "FCOG__ML.20160410.40429.16424.grb, "\
+                        "FCSH__ML.20160410.40429.16424.grb, "\
+                        "FCSH__SL.20160410.40429.16424.grb, "\
                         "OG_OROLSM__SL.20160410.40429.16424.grb, "\
                         "FCGG__SL.20160410.40429.16424.grb, "\
                         "FCOG_acc_SL.20160409.40429.16424.grb"
