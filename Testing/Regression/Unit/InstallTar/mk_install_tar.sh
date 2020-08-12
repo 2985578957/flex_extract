@@ -26,14 +26,12 @@ tar -zcvf ../../Testing/Regression/Unit/InstallTar/$tarname  \
         ${path}Run/Jobscripts/*.md \
         ${path}*.md \
         ${path}Testing/Installation/*.sh \
-	${path}Testing/Installation/Api_testscripts/* \
-	${path}Testing/Installation/Calc_etadot/* \
-	${path}Testing/Installation/First_extraction/* \
+        ${path}Testing/Installation/Api_testscripts/* \
+        ${path}Testing/Installation/Calc_etadot/* \
+        ${path}Testing/Installation/First_extraction/* \
         --exclude=*.ksh  \
         --exclude=flex_extract_v7.1_*.tar
-                  
-                  
-                  
+
 tarname='flex_extract_v7.1.2_ecgate.tar'
 
 tar -zcvf ../../Testing/Regression/Unit/InstallTar/$tarname \
@@ -53,14 +51,8 @@ tar -zcvf ../../Testing/Regression/Unit/InstallTar/$tarname \
         ${path}CODE_OF_CONDUCT.md \
         ${path}README.md \
         ${path}Testing/Installation/*.sh \
-	${path}Testing/Installation/Api_testscripts/* \
-	${path}Testing/Installation/Calc_etadot/* \
-	${path}Testing/Installation/First_extraction/* \
+        ${path}Testing/Installation/Api_testscripts/* \
+        ${path}Testing/Installation/Calc_etadot/* \
+        ${path}Testing/Installation/First_extraction/* \
         --exclude=*.ksh  \
         --exclude=flex_extract_v7.1_*.tar
-                  
-                 
-                  
-                  
-                  
-                  
