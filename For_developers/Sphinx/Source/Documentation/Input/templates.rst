@@ -181,20 +181,20 @@ submitscript.template
         export VERSION=7.1
         case $${HOST} in
           *ecg*)
-		  module unload grib_api
-		  module unload emos
-		  module load python3
-		  module load eccodes
-		  module load emos/455-r64
-		  export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
-		  ;;
-		  *cca*)
-		  module switch PrgEnv-cray PrgEnv-intel
-		  module load python3
-		  module load eccodes
-		  module load emos/455-r64
-		  export SCRATCH=${TMPDIR}
-		  export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
+          module unload grib_api
+          module unload emos
+          module load python3
+          module load eccodes
+          module load emos/455-r64
+          export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
+          ;;
+          *cca*)
+          module switch PrgEnv-cray PrgEnv-intel
+          module load python3
+          module load eccodes
+          module load emos/455-r64
+          export SCRATCH=${TMPDIR}
+          export PATH=${PATH}:${HOME}/flex_extract_v7.1/Source/Python
           ;;
         esac
 
@@ -266,18 +266,18 @@ jobscript.template
         export VERSION=$version_number
         case $$$${HOST} in
           *ecg*)
-		  module unload grib_api
-		  module unload emos
-		  module load python3
-		  module load eccodes
-		  module load emos/455-r64
+          module unload grib_api
+          module unload emos
+          module load python3
+          module load eccodes
+          module load emos/455-r64
           export PATH=$$$${PATH}:$fp_root_path
           ;;
           *cca*)
-		  module switch PrgEnv-cray PrgEnv-intel
-		  module load python3
-		  module load eccodes
-		  module load emos/455-r64
+          module switch PrgEnv-cray PrgEnv-intel
+          module load python3
+          module load eccodes
+          module load emos/455-r64
           export SCRATCH=$$$${TMPDIR}
           export PATH=$$$${PATH}:$fp_root_path
           ;;

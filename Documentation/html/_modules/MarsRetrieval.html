@@ -181,7 +181,7 @@
 <span class="c1">#        - added writing of mars request attributes to a csv file</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
@@ -607,6 +607,75 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="k">return</span></div>
+    
+    <span class="k">def</span> <span class="nf">_convert_to_cdsera5_sfc_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        The keywords and values for the single level download</span>
+<span class="sd">        with CDS API is different from MARS. This function </span>
+<span class="sd">        converts the old request keywords to the new ones.</span>
+<span class="sd">        </span>
+<span class="sd">        Example request for single level downloads in CDS API</span>
+<span class="sd">        </span>
+<span class="sd">        retrieve(</span>
+<span class="sd">            &#39;reanalysis-era5-single-levels&#39;,</span>
+<span class="sd">            {</span>
+<span class="sd">                &#39;product_type&#39;: &#39;reanalysis&#39;,</span>
+<span class="sd">                &#39;variable&#39;: &#39;total_precipitation&#39;,</span>
+<span class="sd">                &#39;year&#39;: &#39;2019&#39;,</span>
+<span class="sd">                &#39;month&#39;: &#39;01&#39;,</span>
+<span class="sd">                &#39;day&#39;: &#39;01&#39;,</span>
+<span class="sd">                &#39;time&#39;: &#39;00:00&#39;,</span>
+<span class="sd">                &#39;format&#39;: &#39;grib&#39;,</span>
+<span class="sd">                &#39;grid&#39;:[1.0, 1.0],</span>
+<span class="sd">                &#39;area&#39;: [</span>
+<span class="sd">                    45, 0, 43,</span>
+<span class="sd">                    12,</span>
+<span class="sd">                ],</span>
+<span class="sd">            },</span>
+<span class="sd">            &#39;download.grib&#39;)</span>
+<span class="sd">            </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        attrs : dict</span>
+<span class="sd">            Dictionary of the mars request parameters.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+        <span class="n">newattrs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]:</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">month</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[::</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">sdate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">edate</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">sdate</span>
+            <span class="k">while</span> <span class="n">date</span> <span class="o">&lt;=</span> <span class="n">edate</span><span class="p">:</span>
+                <span class="n">year</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
+                <span class="n">month</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">)</span>
+                <span class="n">day</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>      
+                <span class="n">date</span> <span class="o">=</span> <span class="n">date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">month</span><span class="p">)</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="nb">list</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>                       
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">year</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span>
+            <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="n">date</span><span class="o">.</span><span class="n">day</span>                  
+        
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;product_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;reanalysis&#39;</span>
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;grid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)))</span>
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;param&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>        
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+        <span class="n">newattrs</span><span class="p">[</span><span class="s1">&#39;format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;grib&#39;</span>
+                
+        <span class="k">return</span> <span class="n">newattrs</span>
 
 <div class="viewcode-block" id="MarsRetrieval.data_retrieve"><a class="viewcode-back" href="../Documentation/Api/api_python.html#MarsRetrieval.MarsRetrieval.data_retrieve">[docs]</a>    <span class="k">def</span> <span class="nf">data_retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Submits a MARS retrieval. Depending on the existence of</span>
@@ -640,7 +709,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public</span><span class="p">):</span>
             <span class="k">del</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;target: &#39;</span> <span class="o">+</span> <span class="n">target</span><span class="p">)</span>
-
+        
         <span class="c1"># find all keys without a value and convert all other values to strings</span>
         <span class="n">empty_keys</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -659,8 +728,15 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">cds_api</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">,</span> <span class="n">cdsapi</span><span class="o">.</span><span class="n">Client</span><span class="p">):</span>
+                    <span class="c1"># distinguish between model (ECMWF MARS access) </span>
+                    <span class="c1"># and surface level (CS3 online access)</span>
+                    <span class="k">if</span> <span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;levtype&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;ml&#39;</span><span class="p">:</span>
+                        <span class="n">dataset</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">CDS_DATASET_ML</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">dataset</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">CDS_DATASET_SFC</span>
+                        <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_cdsera5_sfc_request</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RETRIEVE ERA5 WITH CDS API!&#39;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">CDS_DATASET</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span>
                                          <span class="n">attrs</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">ec_api</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">server</span><span class="p">,</span> <span class="n">ecmwfapi</span><span class="o">.</span><span class="n">ECMWFDataServer</span><span class="p">):</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;RETRIEVE PUBLIC DATA (NOT ERA5)!&#39;</span><span class="p">)</span>

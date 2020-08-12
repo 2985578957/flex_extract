@@ -427,7 +427,7 @@ Field type and time
  
 Vertical velocity           
     The vertical velocity for ``FLEXPART`` is not directly available from MARS and has to be calculated. 
-    There are several options for this, and the following parameters are responsible for the selection. 		See :doc:`Documentation/vertco` for a detailed explanation. Using ``ETADIFF 1``, ``OMEGA 1`` and ``OMEGADIFF 1`` is recommended for debugging and testing only. 
+    There are several options for this, and the following parameters are responsible for the selection. See :doc:`Documentation/vertco` for a detailed explanation. Using ``ETADIFF 1``, ``OMEGA 1`` and ``OMEGADIFF 1`` is recommended for debugging and testing only. 
     Usually, one has to decide between ``GAUSS 1`` and ``ETA 1``. ``GAUSS 1`` means that spectral fields of the horizontal wind fields and the divergence are retrieved and that the vertical velocity is calculate using the continuity equation. ``ETA 1`` means that horizontal wind fields etadot are retrieved on a regular lat-lon grid. It is recommended to use ``ETA 1`` where possible, as there is a substantial computational overhead for solving the continuity equation.
 
     .. code-block:: bash
@@ -444,8 +444,8 @@ Vertical velocity
 Grid resolution and domain
     The grid and domain parameters depends on each other. ``grid`` refers to the grid resolution. It can be given as decimal values (e.g., ``1.`` meaning 1.0°), or as in previous versions of flex_extract, as integer values refering to 1/1000 degrees (e.g., ``1000`` means also 1°). The code applies common sense to determine what format is to be assumed.
     After selecting grid, the ``domain`` has to be defined. The extension in longitude or latitude direction must be an integer multiple of ``grid``. 
-    
-		
+
+
     The horizontal resolution for spectral fields is set by the parameter ``RESOL``. For information about how to select an appropriate value please read the explanation of the MARS keyword RESOL as found `in this entry of the ECMWF on-line documentation <https://confluence.ecmwf.int/display/UDOC/Post-processing+keywords#Post-processingkeywords-resol>`_ and  `this table (also ECMWF documentation) <https://confluence.ecmwf.int/display/UDOC/Retrieve#Retrieve-Truncationbeforeinterpolation>`_.
     
     .. code-block:: bash
@@ -462,7 +462,7 @@ Grid resolution and domain
 
 Flux data
     Flux fields are always forecast fields and contain values of the fluxes accumulated since the start of the respective forecast. As certain re-analysis dataset cover all time steps with analysis fields, it was necessary to define a new parameter set for the definition of the flux fields. The following parameters are used specifically for flux fields. ``ACCTYPE`` is the field type (must be a type of forecast), ``ACCTIME``  the forecast starting time, and  ``ACCMAXSTEP`` the maximum forecast step;``DTIME`` the temporal resolution. ACCTYPE is assumed to be the same during the whole period given by ACCTIME and ACCMAXSTEP. These values will be set automatically if not provided in a ``CONTROL`` file.
-    	    
+
     .. code-block:: bash
        :caption: Example setting for the definition of flux fields.
 

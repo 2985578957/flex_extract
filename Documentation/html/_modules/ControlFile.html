@@ -180,9 +180,11 @@
 <span class="c1">#          conditional statements and set default values )</span>
 <span class="c1">#        - divided assignment of attributes and the check of conditions</span>
 <span class="c1">#        - outsourced the commandline argument assignments to control attributes</span>
+<span class="c1">#   June 2020 - Anne Philipp</span>
+<span class="c1">#        - update default makefile to None</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
@@ -428,7 +430,7 @@
 
 <span class="sd">    makefile : str</span>
 <span class="sd">        Name of the makefile to be used for the Fortran program.</span>
-<span class="sd">        Default value is &#39;Makefile.gfortran&#39;.</span>
+<span class="sd">        Default value is None.</span>
 
 <span class="sd">    destination : str</span>
 <span class="sd">        The remote destination which is used to transfer files</span>
@@ -563,7 +565,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">flexextractdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exedir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FORTRAN_SRC</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="s1">&#39;Makefile.gfortran&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gateway</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ecuid</span> <span class="o">=</span> <span class="kc">None</span>
@@ -775,7 +777,7 @@
         <span class="n">check_request</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
                       <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputdir</span><span class="p">,</span> <span class="n">_config</span><span class="o">.</span><span class="n">FILE_MARS_REQUESTS</span><span class="p">))</span>
 
-        <span class="n">check_public</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="n">check_public</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">public</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">marsclass</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">check_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
 

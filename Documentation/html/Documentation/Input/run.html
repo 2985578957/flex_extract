@@ -380,7 +380,7 @@ the command line parameters, and the so-called <code class="docutils literal not
 <span class="c1">#    guarantee necessary parameters were set and consistent.</span>
 <span class="c1">#</span>
 <span class="c1"># @Licence:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
 <span class="c1">#</span>
@@ -406,7 +406,7 @@ the command line parameters, and the so-called <code class="docutils literal not
 <span class="nv">INPUTDIR</span><span class="o">=</span>None
 <span class="nv">OUTPUTDIR</span><span class="o">=</span>None
 <span class="nv">PP_ID</span><span class="o">=</span>None
-<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;job.temp&#39;</span> 
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;submitscript.template&#39;</span> 
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span> 
 <span class="nv">DEBUG</span><span class="o">=</span><span class="m">0</span>
 <span class="nv">REQUEST</span><span class="o">=</span><span class="m">2</span>
@@ -423,6 +423,12 @@ the command line parameters, and the so-called <code class="docutils literal not
 
 <span class="c1"># INITIALIZE EMPTY PARAMETERLIST</span>
 <span class="nv">parameterlist</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+
+<span class="c1"># CHECK IF ON ECMWF SERVER; </span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$HOST</span> <span class="o">==</span> *<span class="s2">&quot;ecgb&quot;</span>* <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> <span class="nv">$HOST</span> <span class="o">==</span> *<span class="s2">&quot;cca&quot;</span>* <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> <span class="nv">$HOST</span> <span class="o">==</span> *<span class="s2">&quot;ccb&quot;</span>* <span class="o">]]</span><span class="p">;</span> <span class="k">then</span>
+<span class="c1"># LOAD PYTHON3 MODULE</span>
+  module load python3
+<span class="k">fi</span> 
 
 <span class="c1"># CHECK FOR MORE PARAMETER </span>
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$START_DATE</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>

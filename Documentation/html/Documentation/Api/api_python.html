@@ -247,10 +247,10 @@ command line.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="install.del_convert_build">
-<code class="sig-prename descclassname">install.</code><code class="sig-name descname">del_convert_build</code><span class="sig-paren">(</span><em class="sig-param">src_path</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#del_convert_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.del_convert_build" title="Permalink to this definition">¶</a></dt>
+<dt id="install.del_fortran_build">
+<code class="sig-prename descclassname">install.</code><code class="sig-name descname">del_fortran_build</code><span class="sig-paren">(</span><em class="sig-param">src_path</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#del_fortran_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.del_fortran_build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clean up the Fortran source directory and remove all
-build files (e.g. *.o, *.mod and CONVERT2)</p>
+build files (e.g. *.o, *.mod and FORTRAN EXECUTABLE)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>src_path</strong> (<em>str</em>) – Path to the fortran source directory.</p>
@@ -326,20 +326,6 @@ environment.</p></li>
 </dd></dl>
 
 <dl class="function">
-<dt id="install.mk_convert_build">
-<code class="sig-prename descclassname">install.</code><code class="sig-name descname">mk_convert_build</code><span class="sig-paren">(</span><em class="sig-param">src_path</em>, <em class="sig-param">makefile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#mk_convert_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.mk_convert_build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compiles the Fortran code and generates the executable.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>src_path</strong> (<em>str</em>) – Path to the fortran source directory.</p></li>
-<li><p><strong>makefile</strong> (<em>str</em>) – The name of the makefile which should be used.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="install.mk_env_vars">
 <code class="sig-prename descclassname">install.</code><code class="sig-name descname">mk_env_vars</code><span class="sig-paren">(</span><em class="sig-param">ecuid</em>, <em class="sig-param">ecgid</em>, <em class="sig-param">gateway</em>, <em class="sig-param">destination</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#mk_env_vars"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.mk_env_vars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a file named ECMWF_ENV which contains the
@@ -353,6 +339,20 @@ It is based on the template ECMWF_ENV.template.</p>
 <li><p><strong>gateway</strong> (<em>str</em>) – The gateway server the user is using.</p></li>
 <li><p><strong>destination</strong> (<em>str</em>) – The remote destination which is used to transfer files
 from ECMWF server to local gateway server.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="install.mk_fortran_build">
+<code class="sig-prename descclassname">install.</code><code class="sig-name descname">mk_fortran_build</code><span class="sig-paren">(</span><em class="sig-param">src_path</em>, <em class="sig-param">makefile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/install.html#mk_fortran_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#install.mk_fortran_build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compiles the Fortran code and generates the executable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_path</strong> (<em>str</em>) – Path to the fortran source directory.</p></li>
+<li><p><strong>makefile</strong> (<em>str</em>) – The name of the makefile which should be used.</p></li>
 </ul>
 </dd>
 </dl>
@@ -448,11 +448,11 @@ or “queue=cca”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>jtemplate</strong> (<em>str</em>) – Job template file from sub-directory “_templates” for
+<li><p><strong>jtemplate</strong> (<em>str</em>) – Job template file from sub-directory “Templates” for
 submission to ECMWF. It contains all necessary
 module and variable settings for the ECMWF environment as well as
 the job call and mail report instructions.
-Default is “job.temp”.</p></li>
+Default is _config.TEMPFILE_JOB.</p></li>
 <li><p><strong>job_file</strong> (<em>str</em>) – Path to the job script file.</p></li>
 <li><p><strong>clist</strong> (<em>list of str</em>) – Contains all necessary parameters for ECMWF CONTROL file.</p></li>
 </ul>
@@ -471,7 +471,7 @@ Default is “job.temp”.</p></li>
 submission to ECMWF. It contains all necessary
 module and variable settings for the ECMWF environment as well as
 the job call and mail report instructions.
-Default is “job.temp”.</p></li>
+Default is _config.TEMPFILE_JOB.</p></li>
 <li><p><strong>c</strong> (<a class="reference internal" href="#ControlFile.ControlFile" title="ControlFile.ControlFile"><em>ControlFile</em></a>) – Contains all the parameters of CONTROL file and
 command line.</p></li>
 <li><p><strong>queue</strong> (<em>str</em>) – Name of queue for submission to ECMWF (e.g. ecgate or cca )</p></li>
@@ -1111,7 +1111,7 @@ _config.PATH_FORTRAN_SRC.</p>
 <dt id="ControlFile.ControlFile.makefile">
 <code class="sig-name descname">makefile</code><a class="headerlink" href="#ControlFile.ControlFile.makefile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of the makefile to be used for the Fortran program.
-Default value is ‘Makefile.gfortran’.</p>
+Default value is None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>str</p>
@@ -1908,7 +1908,7 @@ Default is “my.idx”.</p></li>
 
 <dl class="method">
 <dt id="GribUtil.GribUtil.set_keys">
-<code class="sig-name descname">set_keys</code><span class="sig-paren">(</span><em class="sig-param">fromfile</em>, <em class="sig-param">keynames</em>, <em class="sig-param">keyvalues</em>, <em class="sig-param">wherekeynames</em>, <em class="sig-param">wherekeyvalues</em>, <em class="sig-param">filemode='wb'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.set_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.set_keys" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_keys</code><span class="sig-paren">(</span><em class="sig-param">fromfile</em>, <em class="sig-param">filemode='wb'</em>, <em class="sig-param">keynames=[]</em>, <em class="sig-param">keyvalues=[]</em>, <em class="sig-param">wherekeynames=[]</em>, <em class="sig-param">wherekeyvalues=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/GribUtil.html#GribUtil.set_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#GribUtil.GribUtil.set_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the file to read the grib messages and then write
 the selected messages (with wherekeys) to a new output file.
 Also, the keyvalues of the passed list of keynames are set.</p>
@@ -3312,7 +3312,7 @@ of is None otherwise.</p></li>
 
 <dl class="function">
 <dt id="checks.check_public">
-<code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_public</code><span class="sig-paren">(</span><em class="sig-param">public</em>, <em class="sig-param">dataset</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_public" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">checks.</code><code class="sig-name descname">check_public</code><span class="sig-paren">(</span><em class="sig-param">public</em>, <em class="sig-param">dataset</em>, <em class="sig-param">marsclass</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/checks.html#check_public"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#checks.check_public" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check wether the dataset parameter is set to a
 public data set.</p>
 <dl class="field-list simple">

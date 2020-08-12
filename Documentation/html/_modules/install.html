@@ -174,13 +174,18 @@
 <span class="c1">#        - added documentation</span>
 <span class="c1">#        - moved install_args_and_control in here</span>
 <span class="c1">#        - splitted code in smaller functions</span>
-<span class="c1">#        - delete convert build files in here instead of compile job script</span>
+<span class="c1">#        - delete fortran build files in here instead of compile job script</span>
 <span class="c1">#        - changed static path names to variables from config file</span>
 <span class="c1">#        - splitted install function into several smaller pieces</span>
 <span class="c1">#        - use of tarfile package in python</span>
+<span class="c1">#    June 2020 - Anne Philipp</span>
+<span class="c1">#        - renamed &quot;convert&quot; functions to &quot;fortran&quot; functions</span>
+<span class="c1">#        - reconfigured mk_tarball to select *.template files instead </span>
+<span class="c1">#          of *.nl and *.temp</span>
+<span class="c1">#        - added check for makefile settings</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
@@ -200,8 +205,8 @@
 <span class="c1">#    mk_env_vars</span>
 <span class="c1">#    mk_compilejob</span>
 <span class="c1">#    mk_job_template</span>
-<span class="c1">#    del_convert_build</span>
-<span class="c1">#    mk_convert_build</span>
+<span class="c1">#    del_fortran_build</span>
+<span class="c1">#    mk_fortran_build</span>
 <span class="c1">#</span>
 <span class="c1">#*******************************************************************************</span>
 <span class="sd">&#39;&#39;&#39;This script installs the flex_extract program.</span>
@@ -404,13 +409,13 @@
                                   <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span><span class="p">,</span>
                                   <span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">))</span>
 
-    <span class="c1"># Create Fortran executable - CONVERT2</span>
+    <span class="c1"># Create Fortran executable</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Install &#39;</span> <span class="o">+</span>  <span class="n">_config</span><span class="o">.</span><span class="n">FLEXEXTRACT_DIRNAME</span> <span class="o">+</span> <span class="s1">&#39; software at &#39;</span> <span class="o">+</span>
           <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">+</span> <span class="s1">&#39; in directory &#39;</span> <span class="o">+</span>
           <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">del_convert_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">mk_convert_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">makefile</span><span class="p">)</span>
+    <span class="n">del_fortran_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">mk_fortran_build</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">makefile</span><span class="p">)</span>
 
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">tar_file</span><span class="p">):</span>
@@ -465,6 +470,21 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">installdir</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">installdir</span> <span class="o">=</span> <span class="n">_config</span><span class="o">.</span><span class="n">PATH_FLEXEXTRACT_DIR</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">makefile</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: no makefile was specified.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="s1">&#39;makefile_local_gfortran&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: default makefile selected: makefile_local_gfortan&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">==</span> <span class="s1">&#39;ecgate&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="s1">&#39;makefile_ecgate&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: default makefile selected: makefile_ecgate&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">==</span> <span class="s1">&#39;cca&#39;</span> <span class="ow">or</span> \
+             <span class="n">c</span><span class="o">.</span><span class="n">install_target</span> <span class="o">==</span> <span class="s1">&#39;ccb&#39;</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">makefile</span> <span class="o">=</span> <span class="s1">&#39;makefile_cray&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;WARNING: default makefile selected: makefile_cray&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+        
     <span class="k">return</span></div>
 
 
@@ -517,11 +537,9 @@
                     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_CONTROLFILES</span><span class="p">,</span>
                                       <span class="s1">&#39;CONTROL*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
     <span class="n">testfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEST</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEST</span><span class="o">+</span><span class="s2">&quot;/Installation&quot;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
     <span class="n">tempfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*.temp&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
-    <span class="n">nlfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
-               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*.nl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
+                 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*.template&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
     <span class="n">gribtable</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
                  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_TEMPLATES</span><span class="p">,</span> <span class="s1">&#39;*grib*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
     <span class="n">ffiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
@@ -530,10 +548,11 @@
               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">,</span> <span class="s1">&#39;*.h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
     <span class="n">makefiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
                  <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_FORTRAN_SRC</span><span class="p">,</span> <span class="s1">&#39;makefile*&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
-    <span class="n">jobdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_JOBSCRIPTS</span><span class="p">]</span>
+    <span class="n">jobdir</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ecd</span><span class="p">)</span>
+               <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">UioFiles</span><span class="p">(</span><span class="n">_config</span><span class="o">.</span><span class="n">PATH_REL_JOBSCRIPTS</span><span class="p">,</span> <span class="s1">&#39;*.md&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">files</span><span class="p">]</span>
 
     <span class="c1"># concatenate single lists to one for a better looping</span>
-    <span class="n">filelist</span> <span class="o">=</span> <span class="n">pyfiles</span> <span class="o">+</span> <span class="n">pytestfiles</span> <span class="o">+</span> <span class="n">controlfiles</span> <span class="o">+</span> <span class="n">tempfiles</span> <span class="o">+</span> <span class="n">nlfiles</span> <span class="o">+</span> \
+    <span class="n">filelist</span> <span class="o">=</span> <span class="n">pyfiles</span> <span class="o">+</span> <span class="n">pytestfiles</span> <span class="o">+</span> <span class="n">controlfiles</span> <span class="o">+</span> <span class="n">tempfiles</span> <span class="o">+</span> \
                <span class="n">ffiles</span> <span class="o">+</span> <span class="n">gribtable</span> <span class="o">+</span> <span class="n">hfiles</span> <span class="o">+</span> <span class="n">makefiles</span> <span class="o">+</span> <span class="n">ecmwf_env_file</span> <span class="o">+</span> \
                <span class="n">runfile</span> <span class="o">+</span> <span class="n">jobdir</span> <span class="o">+</span> <span class="n">testfiles</span> <span class="o">+</span>\
                <span class="p">[</span><span class="s1">&#39;CODE_OF_CONDUCT.md&#39;</span><span class="p">,</span> <span class="s1">&#39;LICENSE.md&#39;</span><span class="p">,</span> <span class="s1">&#39;README.md&#39;</span><span class="p">]</span>
@@ -794,9 +813,9 @@
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="del_convert_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.del_convert_build">[docs]</a><span class="k">def</span> <span class="nf">del_convert_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">):</span>
+<div class="viewcode-block" id="del_fortran_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.del_fortran_build">[docs]</a><span class="k">def</span> <span class="nf">del_fortran_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Clean up the Fortran source directory and remove all</span>
-<span class="sd">    build files (e.g. \*.o, \*.mod and CONVERT2)</span>
+<span class="sd">    build files (e.g. \*.o, \*.mod and FORTRAN EXECUTABLE)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -818,7 +837,7 @@
 
     <span class="k">return</span></div>
 
-<div class="viewcode-block" id="mk_convert_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_convert_build">[docs]</a><span class="k">def</span> <span class="nf">mk_convert_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">makefile</span><span class="p">):</span>
+<div class="viewcode-block" id="mk_fortran_build"><a class="viewcode-back" href="../Documentation/Api/api_python.html#install.mk_fortran_build">[docs]</a><span class="k">def</span> <span class="nf">mk_fortran_build</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="n">makefile</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Compiles the Fortran code and generates the executable.</span>
 
 <span class="sd">    Parameters</span>
@@ -848,13 +867,13 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">perr</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Please edit &#39;</span> <span class="o">+</span> <span class="n">makefile</span> <span class="o">+</span>
                   <span class="s1">&#39; or try another makefile in the src directory.&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Most likely GRIB_API_INCLUDE_DIR, GRIB_API_LIB &#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Most likely ECCODES_INCLUDE_DIR, ECCODES_LIB &#39;</span>
                   <span class="s1">&#39;and EMOSLIB must be adapted.&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Available makefiles:&#39;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">UioFiles</span><span class="p">(</span><span class="n">src_path</span><span class="p">,</span> <span class="s1">&#39;makefile*&#39;</span><span class="p">))</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Compilation failed!&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: make of Fortran code failed:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: makefile call failed:&#39;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">execute_subprocess</span><span class="p">([</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> 

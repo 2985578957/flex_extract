@@ -180,8 +180,11 @@
 <span class="c1">#          to a new module named disaggregation</span>
 <span class="c1">#        - added the new disaggregation method for precipitation</span>
 <span class="c1">#</span>
+<span class="c1">#    June 2020 - Anne Philipp (University of Vienna):</span>
+<span class="c1">#        - reformulated formular for dapoly</span>
+<span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
@@ -253,12 +256,11 @@
 <span class="sd">        Migration from Fortran to Python</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">pya</span> <span class="o">=</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">3.</span> <span class="o">*</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="o">/</span> <span class="mf">6.</span>
-    <span class="n">pyb</span> <span class="o">=</span> <span class="p">(</span><span class="n">alist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">9.</span> <span class="o">*</span> <span class="n">pya</span> <span class="o">/</span> <span class="mf">2.</span>
-    <span class="n">pyc</span> <span class="o">=</span> <span class="n">alist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">7.</span> <span class="o">*</span> <span class="n">pya</span> <span class="o">/</span> <span class="mf">2.</span> <span class="o">-</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">pyb</span>
-    <span class="n">pyd</span> <span class="o">=</span> <span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">pya</span> <span class="o">/</span> <span class="mf">4.</span> <span class="o">-</span> <span class="n">pyb</span> <span class="o">/</span> <span class="mf">3.</span> <span class="o">-</span> <span class="n">pyc</span> <span class="o">/</span> <span class="mf">2.</span>
-    <span class="n">nfield</span> <span class="o">=</span> <span class="mf">8.</span> <span class="o">*</span> <span class="n">pya</span> <span class="o">+</span> <span class="mf">4.</span> <span class="o">*</span> <span class="n">pyb</span> <span class="o">+</span> <span class="mf">2.</span> <span class="o">*</span> <span class="n">pyc</span> <span class="o">+</span> <span class="n">pyd</span>
+    
+    <span class="n">nfield</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">alist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> \
+              <span class="mf">7.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">alist</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> \
+              <span class="mf">7.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">alist</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> \
+              <span class="mf">1.</span><span class="o">/</span><span class="mf">12.</span><span class="o">*</span><span class="n">alist</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">nfield</span></div>
 
