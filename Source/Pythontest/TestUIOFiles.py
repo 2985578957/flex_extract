@@ -43,9 +43,9 @@ class TestUioFiles():
         """Test if a file is deleted."""
         testfile = os.path.join(self.testpath, 'test.test')
         open(testfile, 'w').close()
-        iofile = UioFiles(testfile, 'test.test')
+        iofile = UioFiles(self.testpath, 'test.test')
         iofile.delete_files()
-        assert [] == UioFiles(testfile, 'test.test').files
+        assert [] == UioFiles(self.testpath, 'test.test').files
 
 
     def test_str_(self):
