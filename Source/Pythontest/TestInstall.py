@@ -158,7 +158,7 @@ class TestInstall():
             for name in files:
                 tarfiles_list.append(os.path.relpath(
                     os.path.join(path, name), test_dir))
-        		   
+
         # test for equality
         assert sorted(tarfiles_list) == sorted(comparison_list)
 
