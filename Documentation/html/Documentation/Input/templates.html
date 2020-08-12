@@ -364,20 +364,20 @@ for details see <a class="reference external" href="https://confluence.ecmwf.int
 <span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="m">7</span>.1
 <span class="k">case</span> <span class="nv">$$</span><span class="o">{</span>HOST<span class="o">}</span> in
   *ecg*<span class="o">)</span>
-          module unload grib_api
-          module unload emos
-          module load python3
-          module load eccodes
-          module load emos/455-r64
-          <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
-          <span class="p">;;</span>
-          *cca*<span class="o">)</span>
-          module switch PrgEnv-cray PrgEnv-intel
-          module load python3
-          module load eccodes
-          module load emos/455-r64
-          <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span>
-          <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
+  module unload grib_api
+  module unload emos
+  module load python3
+  module load eccodes
+  module load emos/455-r64
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
+  <span class="p">;;</span>
+  *cca*<span class="o">)</span>
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes
+  module load emos/455-r64
+  <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="si">${</span><span class="nv">TMPDIR</span><span class="si">}</span>
+  <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/flex_extract_v7.1/Source/Python
   <span class="p">;;</span>
 <span class="k">esac</span>
 
@@ -448,18 +448,18 @@ submit.py --controlfile<span class="o">=</span><span class="nv">$$</span><span c
 <span class="nb">export</span> <span class="nv">VERSION</span><span class="o">=</span><span class="nv">$version_number</span>
 <span class="k">case</span> <span class="nv">$$$$</span><span class="o">{</span>HOST<span class="o">}</span> in
   *ecg*<span class="o">)</span>
-          module unload grib_api
-          module unload emos
-          module load python3
-          module load eccodes
-          module load emos/455-r64
+  module unload grib_api
+  module unload emos
+  module load python3
+  module load eccodes
+  module load emos/455-r64
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
   <span class="p">;;</span>
   *cca*<span class="o">)</span>
-          module switch PrgEnv-cray PrgEnv-intel
-          module load python3
-          module load eccodes
-          module load emos/455-r64
+  module switch PrgEnv-cray PrgEnv-intel
+  module load python3
+  module load eccodes
+  module load emos/455-r64
   <span class="nb">export</span> <span class="nv">SCRATCH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>TMPDIR<span class="o">}</span>
   <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="nv">$$$$</span><span class="o">{</span>PATH<span class="o">}</span>:<span class="nv">$fp_root_path</span>
   <span class="p">;;</span>

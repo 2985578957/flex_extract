@@ -30,12 +30,12 @@ If you get an error message from ECCODES with code 250, looking like this:
 
 .. code-block:: bash
 
-	ECCODES ERROR   :   wrong size (184) for pv it contains 276 values 
-	ECCODES ERROR   :  get: pv Passed array is too small
-	... ERROR CODE: 250
-	... ERROR MESSAGE:
-	 	 Command '['<path-to-flex_extract>/flex_extract_v7.1/Source/Fortran/calc_etadot']' returned non-zero exit status 250.
-	... FORTRAN PROGRAM FAILED!
+    ECCODES ERROR   :   wrong size (184) for pv it contains 276 values 
+    ECCODES ERROR   :  get: pv Passed array is too small
+    ... ERROR CODE: 250
+    ... ERROR MESSAGE:
+          Command '['<path-to-flex_extract>/flex_extract_v7.1/Source/Fortran/calc_etadot']' returned non-zero exit status 250.
+    ... FORTRAN PROGRAM FAILED!
 
 then you have set a wrong maximum level in the :literal:`CONTROL` file! 
 It is important to properly select the maximum level depending on the data set you would like to retrieve. Only the following values of the number of model levels available are valid: 16, 19, 31, 40, 50, 60, 62, 91, 137. 
@@ -47,4 +47,4 @@ The operational data sets use different numbers, depending on the date. For exam
 
 .. note::
  
-	Be aware that the ECMWF model counts the levels from the top of the atmosphere downward to the surface. Level 1 is the topmost level, and e.g. 137 would be the level closest to the ground.
+     Be aware that the ECMWF model counts the levels from the top of the atmosphere downward to the surface. Level 1 is the topmost level, and e.g. 137 would be the level closest to the ground.

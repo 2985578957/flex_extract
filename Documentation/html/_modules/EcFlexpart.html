@@ -200,7 +200,7 @@
 <span class="c1">#          duplication, easier testing)</span>
 <span class="c1">#</span>
 <span class="c1"># @License:</span>
-<span class="c1">#    (C) Copyright 2014-2019.</span>
+<span class="c1">#    (C) Copyright 2014-2020.</span>
 <span class="c1">#    Anne Philipp, Leopold Haimberger</span>
 <span class="c1">#</span>
 <span class="c1">#    SPDX-License-Identifier: CC-BY-4.0</span>
@@ -1577,7 +1577,7 @@
                               <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;perturbationNumber&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
                                         <span class="s1">&#39;stepRange&#39;</span><span class="p">,</span> <span class="s1">&#39;values&#39;</span><span class="p">],</span>
                               <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)),</span>
-                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="p">]],</span>
+                                         <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">lsp_new_np</span><span class="p">[</span><span class="n">inumb</span><span class="p">,</span> <span class="p">:,</span> <span class="n">it</span><span class="p">]]</span>
                              <span class="p">)</span>
             <span class="n">fluxfile</span><span class="o">.</span><span class="n">set_keys</span><span class="p">(</span><span class="n">tmpfile</span><span class="p">,</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">,</span>
                               <span class="n">wherekeynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span> <span class="n">wherekeyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span>
@@ -1640,12 +1640,9 @@
 <span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">gribfile</span> <span class="o">=</span> <span class="n">GribUtil</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">inputdir</span><span class="p">,</span> <span class="s1">&#39;rr_grib_dummy.grb&#39;</span><span class="p">))</span>
-
-        <span class="n">gribfile</span><span class="o">.</span><span class="n">copy_dummy_msg</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span>
-                                <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-
-        <span class="n">gribfile</span><span class="o">.</span><span class="n">copy_dummy_msg</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span>
-                                <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">143</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;ab&#39;</span><span class="p">)</span>
+        
+        <span class="n">gribfile</span><span class="o">.</span><span class="n">copy_dummy_msg</span><span class="p">(</span><span class="n">ifile</span><span class="p">,</span> <span class="n">keynames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;paramId&#39;</span><span class="p">,</span><span class="s1">&#39;paramId&#39;</span><span class="p">],</span>
+                                <span class="n">keyvalues</span><span class="o">=</span><span class="p">[</span><span class="mi">142</span><span class="p">,</span><span class="mi">143</span><span class="p">],</span> <span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>        
 
         <span class="k">return</span>
 
@@ -1883,10 +1880,17 @@
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span>
 <span class="c1"># ============================================================================================</span>
             <span class="c1"># create name of final output file, e.g. EN13040500 (ENYYMMDDHH)</span>
+            <span class="c1"># for CERA-20C we need all 4 digits for the year sinc 1900 - 2010</span>
             <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">purefc</span><span class="p">:</span>
-                <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">ctime</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cstep</span>
+                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">marsclass</span> <span class="o">==</span> <span class="s1">&#39;EP&#39;</span><span class="p">:</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">ctime</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cstep</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">ctime</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">cstep</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate_hour</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">marsclass</span> <span class="o">==</span> <span class="s1">&#39;EP&#39;</span><span class="p">:</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate_hour</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">suffix</span> <span class="o">=</span> <span class="n">cdate_hour</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
 
             <span class="c1"># if necessary, add ensemble member number to filename suffix</span>
             <span class="k">if</span> <span class="s1">&#39;number&#39;</span> <span class="ow">in</span> <span class="n">index_keys</span><span class="p">:</span>
@@ -1909,7 +1913,10 @@
                                                 <span class="s1">&#39;/OG_OROLSM__SL.*.&#39;</span> <span class="o">+</span>
                                                 <span class="n">c</span><span class="o">.</span><span class="n">ppid</span> <span class="o">+</span>
                                                 <span class="s1">&#39;*&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">fluxfile</span> <span class="o">=</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">marsclass</span> <span class="o">==</span> <span class="s1">&#39;EP&#39;</span><span class="p">:</span>
+                <span class="n">fluxfile</span> <span class="o">=</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fluxfile</span> <span class="o">=</span> <span class="s1">&#39;flux&#39;</span> <span class="o">+</span> <span class="n">cdate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">cwc</span><span class="p">:</span>
                 <span class="n">flist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fort.15&#39;</span><span class="p">,</span> <span class="n">fluxfile</span><span class="p">,</span> <span class="s1">&#39;fort.16&#39;</span><span class="p">,</span> <span class="n">orolsm</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
