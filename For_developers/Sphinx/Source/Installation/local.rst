@@ -315,14 +315,14 @@ to start the installation. You should see the following standard output.
     Install flex_extract_v7.1 software at local in directory <path-to-flex_extract>/flex_extract_v7.1
 
     Using makefile: makefile_local_gfortran
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./rwgrib2.f90
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./phgrreal.f90
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./grphreal.f90
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./ftrafo.f90
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./calc_etadot.f90
-    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./posnam.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./rwgrib2.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./phgrreal.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./grphreal.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./ftrafo.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./calc_etadot.f90
+    gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./posnam.f90
     gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -fopenmp
     ln -sf calc_etadot_fast.out calc_etadot
 
-    lrwxrwxrwx. 1 <username> tmc 20 15. Mär 13:31 ./calc_etadot -> calc_etadot_fast.out
+    lrwxrwxrwx. 1 <username> tmc 20 Aug 12  10:59 ./calc_etadot -> calc_etadot_fast.out
 
