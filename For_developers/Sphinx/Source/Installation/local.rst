@@ -321,7 +321,7 @@ to start the installation. You should see the following standard output.
     gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./ftrafo.f90
     gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./calc_etadot.f90
     gfortran   -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -I. -I/usr/local/include -fdefault-real-8 -fopenmp -fconvert=big-endian   -c ./posnam.f90
-    gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -ljasper -lemosR64 -fopenmp
+    gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -Bstatic -leccodes_f90 -leccodes -Bdynamic -lm -lemosR64 -fopenmp
     ln -sf calc_etadot_fast.out calc_etadot
 
     lrwxrwxrwx. 1 <username> tmc 20 Aug 12  10:59 ./calc_etadot -> calc_etadot_fast.out
