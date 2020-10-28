@@ -164,6 +164,7 @@ we see again all possible command line parameters.
     usage: install.py [-h] [--target INSTALL_TARGET] [--makefile MAKEFILE]
                   [--ecuid ECUID] [--ecgid ECGID] [--gateway GATEWAY]
                   [--destination DESTINATION] [--installdir INSTALLDIR]
+                  [--sysinstalldir SYSINSTALLDIR]
                   [--job_template JOB_TEMPLATE] [--controlfile CONTROLFILE]
 
     Install flex_extract software locally or on ECMWF machines
@@ -171,7 +172,7 @@ we see again all possible command line parameters.
     optional arguments:
       -h, --help            show this help message and exit
       --target INSTALL_TARGET
-                            Valid targets: local | ecgate | cca , the latter two
+                            Valid targets: syslocal | local | ecgate | cca , the latter two
                             are at ECMWF (default: None)
       --makefile MAKEFILE   Name of makefile to compile the Fortran
                             code. (default depends on `target`: local - makefile_local_gfortran,
@@ -185,6 +186,9 @@ we see again all possible command line parameters.
       --installdir INSTALLDIR
                             Root directory where flex_extract will be installed
                             to. (default: None)
+      --sysinstalldir SYSINSTALLDIR
+                            System installation path; where executables are
+                            stored. (default: None)
       --job_template JOB_TEMPLATE
                             The rudimentary template file to create a batch job
                             template for submission to ECMWF servers. (default:
@@ -192,6 +196,7 @@ we see again all possible command line parameters.
       --controlfile CONTROLFILE
                             The file with all CONTROL parameters. (default:
                             CONTROL_EA5)
+
 
 
 

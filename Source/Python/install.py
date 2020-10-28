@@ -18,7 +18,7 @@
 #        - use of tarfile package in python
 #    June 2020 - Anne Philipp
 #        - renamed "convert" functions to "fortran" functions
-#        - reconfigured mk_tarball to select *.template files instead 
+#        - reconfigured mk_tarball to select *.template files instead
 #          of *.nl and *.temp
 #        - added check for makefile settings
 #
@@ -74,6 +74,7 @@ import os
 import sys
 import subprocess
 import tarfile
+import shutil
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 # software specific classes and modules from flex_extract
@@ -81,7 +82,8 @@ import _config
 from Classes.ControlFile import ControlFile
 from Classes.UioFiles import UioFiles
 from Mods.tools import (make_dir, put_file_to_ecserver, submit_job_to_ecserver,
-                        silent_remove, execute_subprocess, none_or_str)
+                        silent_remove, execute_subprocess, none_or_str,
+                        overwrite_lines_in_file, check_for_string_in_file)
 
 # ------------------------------------------------------------------------------
 # FUNCTIONS
@@ -102,10 +104,12 @@ def main():
     c.assign_args_to_control(args)
     check_install_conditions(c)
 
-    if c.install_target.lower() != 'local': # ecgate or cca
+    if c.install_target.lower() not in ['local', 'syslocal']: # ecgate or cca
         install_via_gateway(c)
     else: # local
         install_local(c)
+
+    print("SUCCESS: INSTALLATION FINISHED!")
 
     return
 
@@ -127,7 +131,7 @@ def get_install_cmdline_args():
 
     parser.add_argument('--target', dest='install_target',
                         type=none_or_str, default=None,
-                        help="Valid targets: local | ecgate | cca , \
+                        help="Valid targets: syslocal | local | ecgate | cca , \
                         the latter two are at ECMWF")
     parser.add_argument("--makefile", dest="makefile",
                         type=none_or_str, default=None,
@@ -149,8 +153,12 @@ def get_install_cmdline_args():
 
     parser.add_argument("--installdir", dest="installdir",
                         type=none_or_str, default=None,
-                        help='Root directory of the '
+                        help='Root (user) directory of the '
                         'flex_extract installation')
+    parser.add_argument("--sysinstalldir", dest="sysinstalldir",
+                        type=none_or_str, default=None,
+                        help='System installation path; where '
+                        'executables are stored.')
 
     # arguments for job submission to ECMWF, only needed by submit.py
     parser.add_argument("--job_template", dest='job_template',
@@ -227,16 +235,24 @@ def install_local(c):
     tar_file = os.path.join(_config.PATH_FLEXEXTRACT_DIR,
                             _config.FLEXEXTRACT_DIRNAME + '.tar')
 
-    if c.installdir == _config.PATH_FLEXEXTRACT_DIR:
-        print('WARNING: installdir has not been specified')
-        print('flex_extract will be installed in here by compiling the ' +
-              'Fortran source in ' + _config.PATH_FORTRAN_SRC)
-        os.chdir(_config.PATH_FORTRAN_SRC)
-    else: # creates the target working directory for flex_extract
-        c.installdir = os.path.expandvars(os.path.expanduser(
-            c.installdir))
-        if os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) != \
-           os.path.abspath(c.installdir):
+    c.installdir = os.path.abspath(os.path.expandvars(os.path.expanduser(
+                c.installdir)))
+    c.sysinstalldir = os.path.abspath(os.path.expandvars(os.path.expanduser(
+        c.sysinstalldir)))
+
+    # this is standard installation into a single directory
+    if c.install_target == 'local':
+
+        # installation into the current directory
+        if os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) == c.installdir:
+            print('WARNING: installdir has not been specified')
+            print('flex_extract will be installed in current dir by compiling the ' +
+                  'Fortran source in ' + _config.PATH_FORTRAN_SRC)
+            os.chdir(_config.PATH_FORTRAN_SRC)
+        # installation into a different path
+        elif os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) != c.installdir :
+
+            # creates the target working directory for flex_extract
             mk_tarball(tar_file, c.install_target)
             make_dir(os.path.join(c.installdir,
                                   _config.FLEXEXTRACT_DIRNAME))
@@ -247,13 +263,92 @@ def install_local(c):
                                   _config.FLEXEXTRACT_DIRNAME,
                                   _config.PATH_REL_FORTRAN_SRC))
 
-    # Create Fortran executable
-    print('Install ' +  _config.FLEXEXTRACT_DIRNAME + ' software at ' +
-          c.install_target + ' in directory ' +
-          os.path.abspath(c.installdir) + '\n')
+        # Create Fortran executable
+        print('Install ' +  _config.FLEXEXTRACT_DIRNAME + ' software at ' +
+              c.install_target + ' in directory ' + c.installdir + '\n')
 
-    del_fortran_build('.')
-    mk_fortran_build('.', c.makefile)
+        del_fortran_build('.')
+        mk_fortran_build('.', c.makefile)
+        os.chdir('../../')
+        # make sure that the correct calling of submit.py script is in run_local.sh
+        overwrite_lines_in_file('Run/run_local.sh',
+                                'pyscript=', 'pyscript=../Source/Python/submit.py\n')
+
+    # this is system installation were executables and user files are separated
+    elif c.install_target == 'syslocal':
+        if os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) == c.sysinstalldir :
+            sys.exit('ERROR: System installation path is equal to user '
+                     'installation path.\n Please change either the system '
+                     'installation path or use installation target "local".')
+        if os.path.abspath(_config.PATH_FLEXEXTRACT_DIR) == c.installdir :
+            print('Flex_extract will be installed in current directory!')
+        else: # install user part in different dir
+            print('Flex_extract will be installed in ' + c.installdir )
+
+            c.installdir = os.path.join(c.installdir,_config.FLEXEXTRACT_DIRNAME)
+            if os.path.isdir(c.installdir):
+                shutil.rmtree(c.installdir)
+
+            # copy all files except Python and Fortranfiles to this dir
+            shutil.copytree(_config.PATH_FLEXEXTRACT_DIR,
+                            c.installdir, symlinks=True)
+            shutil.rmtree(os.path.join(c.installdir,'Source'))
+            shutil.rmtree(os.path.join(c.installdir,'.git'))
+            for x in UioFiles(c.installdir, '*~').files:
+                silent_remove(x)
+
+            os.remove(os.path.join(c.installdir,'setup.sh'))
+            os.remove(os.path.join(c.installdir,'setup_local.sh'))
+
+        # configure run_local script correctly
+        # check if source of system config file is already in run_local.sh,
+        # if not, add it
+        if not check_for_string_in_file(os.path.join(c.installdir,'Run/run_local.sh'),
+                                 'source .setup.rc'):
+            overwrite_lines_in_file(os.path.join(c.installdir,'Run/run_local.sh'),
+                                    '# PATH TO SUBMISSION SCRIPT',
+                                    '# PATH TO SUBMISSION SCRIPT\nsource '+_config.FILE_SYS_CONFIG+'\n')
+        # make sure that the correct calling of submit.py script is in run_local.sh
+        overwrite_lines_in_file(os.path.join(c.installdir,'Run/run_local.sh'),
+                                'pyscript=', 'pyscript=submit.py\n')
+
+        # change permission for file to executable
+        execute_subprocess(['chmod', '0775',
+                            os.path.join(os.path.abspath(c.installdir),'Run/run_local.sh')])
+
+
+        # create systemdir
+        c.sysinstalldir = os.path.join(c.sysinstalldir,_config.FLEXEXTRACT_DIRNAME)
+        if os.path.isdir(c.sysinstalldir):
+            shutil.rmtree(c.sysinstalldir)
+
+        # create setup file for running flex_extract with system installation
+        with open(os.path.join(os.path.abspath(c.installdir),'Run/.setup.rc'),'w') as fio:
+            fio.write('#!/bin/bash \n')
+            fio.write('export FLEXEXTRACT_USER_DIR='+os.path.abspath(c.installdir)+'\n')
+            fio.write('export PATH='+os.path.abspath(c.sysinstalldir)+'/Python:${PATH}\n')
+            fio.write('export PATH='+os.path.abspath(c.sysinstalldir)+':${PATH}\n')
+
+        # copy all Python and Fortranfiles to this dir
+        shutil.copytree(_config.PATH_SOURCES, c.sysinstalldir, symlinks=True)
+
+        os.chdir(os.path.join(c.sysinstalldir,'Fortran'))
+        # Create Fortran executable
+        print('Install ' +  _config.FLEXEXTRACT_DIRNAME + ' software as ' +
+              c.install_target + ' in directory ' +
+              os.path.abspath(c.sysinstalldir) + '\n')
+
+        del_fortran_build('.')
+        mk_fortran_build('.', c.makefile)
+
+        outfile = [x for x in UioFiles('.','*.out').files]
+        test=os.path.join(c.sysinstalldir,'calc_etadot')
+        if len(outfile) != 1:
+            print('WARNING: Multiple executables for Fortran code are available!')
+        # move executable one dir up and delete Fortran dir
+        os.chdir('..')
+        shutil.move(outfile[0], os.path.join(c.sysinstalldir,'calc_etadot'))
+        shutil.rmtree(os.path.join(os.path.abspath(c.sysinstalldir),'Fortran'))
 
     os.chdir(_config.PATH_FLEXEXTRACT_DIR)
     if os.path.isfile(tar_file):
@@ -288,7 +383,7 @@ def check_install_conditions(c):
         print('use -h or --help for help')
         sys.exit(1)
 
-    if c.install_target and c.install_target != 'local':
+    if c.install_target and c.install_target not in ['local', 'syslocal']:
         if not c.ecgid or not c.ecuid:
             print('Please enter your ECMWF user id and group id '
                   ' with command line options --ecuid --ecgid')
@@ -304,9 +399,16 @@ def check_install_conditions(c):
                   'local gateway server possible!')
         if not c.installdir:
             c.installdir = '${HOME}'
-    else: # local
+    elif c.install_target == 'local':
         if not c.installdir:
             c.installdir = _config.PATH_FLEXEXTRACT_DIR
+    elif c.install_target == 'syslocal':
+        if not c.installdir:
+            c.installdir = _config.PATH_FLEXEXTRACT_DIR
+        if not c.sysinstalldir:
+            print('ERROR: System installation was selected but '
+                  'no system installation path was defined.')
+            sys.exit()
 
     if not c.makefile:
         print('WARNING: no makefile was specified.')
@@ -322,7 +424,7 @@ def check_install_conditions(c):
             print('WARNING: default makefile selected: makefile_cray')
         else:
             pass
-        
+
     return
 
 
@@ -714,7 +816,7 @@ def mk_fortran_build(src_path, makefile):
         print('ERROR: makefile call failed:')
         print(e)
     else:
-        execute_subprocess(['ls', '-l', 
+        execute_subprocess(['ls', '-l',
                             os.path.join(src_path, _config.FORTRAN_EXECUTABLE)],
                            error_msg='FORTRAN EXECUTABLE COULD NOT BE FOUND!')
 

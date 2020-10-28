@@ -37,13 +37,13 @@ import platform
 # PARAMETERS
 # ------------------------------------------------------------------------------
 
-_VERSION_STR = '7.1.2'
+_VERSION_STR = '7.1.2_ctbto'
 
 FLAG_ON_ECMWFSERVER = 'ecgb' in platform.node()
 
 QUEUES_LIST = ['ecgate', 'cca', 'ccb']
 
-INSTALL_TARGETS = ['local', 'ecgate', 'cca', 'ccb']
+INSTALL_TARGETS = ['local', 'syslocal', 'ecgate', 'cca', 'ccb']
 
 CDS_DATASET_ML = 'reanalysis-era5-complete'
 CDS_DATASET_SFC = 'reanalysis-era5-single-levels'
@@ -69,6 +69,7 @@ TEMPFILE_NAMELIST = 'calc_etadot_nml.template'
 FILE_NAMELIST = 'fort.4'
 FILE_GRIB_INDEX = 'date_time_stepRange.idx'
 FILE_GRIBTABLE = 'ecmwf_grib1_table_128'
+FILE_SYS_CONFIG = '.setup.rc'
 
 # ------------------------------------------------------------------------------
 # DIRECTORY NAMES
@@ -78,7 +79,7 @@ FLEXEXTRACT_DIRNAME = 'flex_extract_v' + _VERSION_STR
 INPUT_DIRNAME_DEFAULT = 'Workspace'
 
 # ------------------------------------------------------------------------------
-#  PATHES
+#  LOAD ENVIRONMENT VARIABLES FOR SYS VERSION; IF NECESSARRY
 # ------------------------------------------------------------------------------
 
 # path to the local python source files
@@ -88,15 +89,33 @@ PATH_LOCAL_PYTHON = os.path.dirname(os.path.abspath(
 # add path to pythonpath
 if PATH_LOCAL_PYTHON not in sys.path:
     sys.path.append(PATH_LOCAL_PYTHON)
+
+# ------------------------------------------------------------------------------
+#  PATHES
+# ------------------------------------------------------------------------------
+
 PATH_FLEXEXTRACT_DIR = os.path.normpath(os.path.dirname(os.path.abspath(
     inspect.getfile(inspect.currentframe()))) + '/../../')
+if not os.path.isdir(os.path.join(PATH_FLEXEXTRACT_DIR,'Run')):
+    # if it does not exist, we have a system installation in place
+    # we need to have a sys and user path
+    # configure correct system path
+    PATH_SYSTEM_DIR = os.path.join(PATH_FLEXEXTRACT_DIR, FLEXEXTRACT_DIRNAME)
+    # configure correct user path
+    PATH_FLEXEXTRACT_DIR = os.environ.get('FLEXEXTRACT_USER_DIR')
+else:
+    PATH_SYSTEM_DIR = PATH_FLEXEXTRACT_DIR
+
 PATH_RUN_DIR = os.path.join(PATH_FLEXEXTRACT_DIR, 'Run')
-PATH_SOURCES = os.path.join(PATH_FLEXEXTRACT_DIR, 'Source')
+PATH_SOURCES = os.path.join(PATH_SYSTEM_DIR, 'Source')
 PATH_TEMPLATES = os.path.join(PATH_FLEXEXTRACT_DIR, 'Templates')
 PATH_ECMWF_ENV = os.path.join(PATH_RUN_DIR, FILE_USER_ENVVARS)
 PATH_GRIBTABLE = os.path.join(PATH_TEMPLATES, FILE_GRIBTABLE)
 PATH_JOBSCRIPTS = os.path.join(PATH_RUN_DIR, 'Jobscripts')
-PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'Fortran')
+if os.path.isdir(os.path.join(PATH_SYSTEM_DIR,'Fortran')):
+    PATH_FORTRAN_SRC = PATH_SYSTEM_DIR
+else:
+    PATH_FORTRAN_SRC = os.path.join(PATH_SOURCES, 'Fortran')
 PATH_PYTHONTEST_SRC = os.path.join(PATH_SOURCES, 'Pythontest')
 PATH_INPUT_DIR = os.path.join(PATH_RUN_DIR, INPUT_DIRNAME_DEFAULT)
 PATH_TEST = os.path.join(PATH_FLEXEXTRACT_DIR, 'Testing')

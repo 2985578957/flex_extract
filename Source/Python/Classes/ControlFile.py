@@ -403,6 +403,7 @@ class ControlFile(object):
         self.flexextractdir = _config.PATH_FLEXEXTRACT_DIR
         self.exedir = _config.PATH_FORTRAN_SRC
         self.installdir = None
+        self.sysinstalldir = None
         self.makefile = None
         self.destination = None
         self.gateway = None

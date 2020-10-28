@@ -113,7 +113,7 @@ def main():
     # send files to ECMWF server
     else:
         submit(job_template, c, queue)
-        exit_message = 'FLEX_EXTRACT JOB SCRIPT IS SUBMITED!'
+        exit_message = 'FLEX_EXTRACT JOB SCRIPT IS SUBMITTED!'
 
     normal_exit(exit_message)
 

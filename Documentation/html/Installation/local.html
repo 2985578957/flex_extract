@@ -103,6 +103,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#preparing-the-local-environment">Preparing the local environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#testing-the-local-environment">Testing the local environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#local-installation">Local installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#local-system-installation">Local system installation</a></li>
 </ul>
 </li>
 </ul>
@@ -394,14 +395,14 @@ and then install the <code class="docutils literal notranslate"><span class="pre
 <span id="ref-install-local"></span><h2>Local installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
 <p>The Fortran program called <code class="docutils literal notranslate"><span class="pre">calc_etadot</span></code> will be compiled during the
 installation process. A suitable makefile (<code class="docutils literal notranslate"><span class="pre">makefile_local_gfortran</span></code>) for the compilation is set by default.
-This may be overwritten by the <code class="docutils literal notranslate"><span class="pre">MAKEFILE</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>.</p>
-<p>However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code>
+This may be overwritten by the <code class="docutils literal notranslate"><span class="pre">MAKEFILE</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">setup_local.sh</span></code>.</p>
+<p>However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into <code class="docutils literal notranslate"><span class="pre">setup_local.sh</span></code>
 For details on the makefile and how to adapt them, see <a class="reference internal" href="../Documentation/Input/fortran_makefile.html#ref-convert"><span class="std std-ref">Fortran Makefile</span></a>.</p>
-<p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup.sh</span></code> script
+<p>In the root directory of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, open the <code class="docutils literal notranslate"><span class="pre">setup_local.sh</span></code> script
 with an editor and adapt the installation parameters in the section labelled with
 “AVAILABLE COMMANDLINE ARGUMENTS TO SET” as shown below:</p>
-<div class="literal-block-wrapper docutils container" id="setup-sh">
-<div class="code-block-caption"><span class="caption-text">‘Example settings for a local installation.’</span><a class="headerlink" href="#setup-sh" title="Permalink to this code">¶</a></div>
+<div class="literal-block-wrapper docutils container" id="setup-local-sh">
+<div class="code-block-caption"><span class="caption-text">‘Example settings for a local installation.’</span><a class="headerlink" href="#setup-local-sh" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
 <span class="c1"># -----------------------------------------------------------------</span>
 <span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
@@ -415,6 +416,7 @@ with an editor and adapt the installation parameters in the section labelled wit
 <span class="nv">GATEWAY</span><span class="o">=</span>None
 <span class="nv">DESTINATION</span><span class="o">=</span>None
 <span class="nv">INSTALLDIR</span><span class="o">=</span>None
+<span class="nv">SYSINSTALLDIR</span><span class="o">=</span>None
 <span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
 <span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
 ...
@@ -422,11 +424,11 @@ with an editor and adapt the installation parameters in the section labelled wit
 </div>
 </div>
 <p>Afterwards, type:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ ./setup_local.sh
 </pre></div>
 </div>
 <p>to start the installation. You should see the following standard output.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup.sh</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Output of setup_local.sh</span>
 WARNING: installdir has not been specified
 flex_extract will be installed in here by compiling the Fortran <span class="nb">source</span> in &lt;path-to-flex_extract&gt;/flex_extract_v7.1/Source/Fortran
 Install flex_extract_v7.1 software at <span class="nb">local</span> in directory &lt;path-to-flex_extract&gt;/flex_extract_v7.1
@@ -444,6 +446,58 @@ ln -sf calc_etadot_fast.out calc_etadot
 lrwxrwxrwx. <span class="m">1</span> &lt;username&gt; tmc <span class="m">20</span> Aug <span class="m">12</span>  <span class="m">10</span>:59 ./calc_etadot -&gt; calc_etadot_fast.out
 </pre></div>
 </div>
+</div>
+<div class="section" id="local-system-installation">
+<h2>Local system installation<a class="headerlink" href="#local-system-installation" title="Permalink to this headline">¶</a></h2>
+<p>There is also the possibility to seperate the software executables from the user application files. For doing so, the <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> parameter can be set to “syslocal” and the additional parameter <code class="docutils literal notranslate"><span class="pre">SYSINSTALLDIR</span></code> in the <code class="docutils literal notranslate"><span class="pre">setup_local.sh</span></code> has to be specified. This new path will contain the Fortran and Python executables of <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>. If you chose to set a system path for this, please start the script as root.
+The user directory for <code class="docutils literal notranslate"><span class="pre">flex_extract</span></code>, which basically consists of everything except the <code class="docutils literal notranslate"><span class="pre">Source</span></code> directory, will be installed into <code class="docutils literal notranslate"><span class="pre">INSTALLDIR</span></code>.
+In this installation mode, an extra (hidden) <code class="docutils literal notranslate"><span class="pre">.setup.rc</span></code> file will be generated in the <code class="docutils literal notranslate"><span class="pre">Run</span></code> directory. It contains the necessary settings for running the local system mode.</p>
+<p>Despite the change in the <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> parameter, the meaning of <code class="docutils literal notranslate"><span class="pre">INSTALLDIR</span></code> and the additional <code class="docutils literal notranslate"><span class="pre">SYSINSTALLDIR</span></code>, the steps for installation are the same as in the local installation mentioned above. For example, modify the <code class="docutils literal notranslate"><span class="pre">setup_local.sh</span></code> file as follows:</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">‘Example settings for a local system installation.’</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...
+<span class="c1"># -----------------------------------------------------------------</span>
+<span class="c1"># AVAILABLE COMMANDLINE ARGUMENTS TO SET</span>
+<span class="c1">#</span>
+<span class="c1"># THE USER HAS TO SPECIFY THESE PARAMETER</span>
+<span class="c1">#</span>
+<span class="nv">TARGET</span><span class="o">=</span><span class="s1">&#39;syslocal&#39;</span>
+<span class="nv">MAKEFILE</span><span class="o">=</span>&lt;name_of_your_makefile&gt;
+<span class="nv">ECUID</span><span class="o">=</span>None
+<span class="nv">ECGID</span><span class="o">=</span>None
+<span class="nv">GATEWAY</span><span class="o">=</span>None
+<span class="nv">DESTINATION</span><span class="o">=</span>None
+<span class="nv">INSTALLDIR</span><span class="o">=</span><span class="nv">$HOME</span>
+<span class="nv">SYSINSTALLDIR</span><span class="o">=</span>/usr/bin/
+<span class="nv">JOB_TEMPLATE</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+<span class="nv">CONTROLFILE</span><span class="o">=</span><span class="s1">&#39;CONTROL_EA5&#39;</span>
+...
+</pre></div>
+</div>
+</div>
+<p>Afterwards, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ sudo ./setup_local.sh
+</pre></div>
+</div>
+<p>to start the installation. You should see the following standard output.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Flex_extract will be installed in &lt;<span class="nv">$HOME</span>&gt;
+Install flex_extract_v7.1.2 software as syslocal in directory /usr/bin/flex_extract_v7.1.2
+
+Using makefile: makefile_local_gfortran
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./rwgrib2.f90
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./phgrreal.f90
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./grphreal.f90
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./ftrafo.f90
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./calc_etadot.f90
+/usr/local/bin/gfortran   -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert<span class="o">=</span>big-endian   -c     ./posnam.f90
+/usr/local/bin/gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march<span class="o">=</span>native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -fopenmp
+ln -sf calc_etadot_fast.out calc_etadot
+
+lrwxrwxrwx. <span class="m">1</span> &lt;username&gt; tmc <span class="m">20</span> <span class="m">27</span>. Okt <span class="m">23</span>:25 ./calc_etadot -&gt; calc_etadot_fast.out
+SUCCESS: INSTALLATION FINISHED!
+</pre></div>
+</div>
+<p>You can now change into the user directory specified in <code class="docutils literal notranslate"><span class="pre">INSTALLDIR</span></code> and find a flex_extract_vX.X directory there.</p>
 </div>
 </div>
 

@@ -234,9 +234,9 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <tbody>
 <tr class="row-even"><td><p>TARGET</p></td>
 <td><p>String</p></td>
-<td><p>local, ecgate, cca, ccb</p></td>
+<td><p>local, syslocal, ecgate, cca, ccb</p></td>
 <td><p>None</p></td>
-<td><p>Defines the flex_extract application mode to be used.  Local = local mode; ecgate = Remote or Gateway mode, cca or ccb = Remote or Gateway mode (HPC). Whether the local mode is for public or member state users doesn’t matter here.</p></td>
+<td><p>Defines the flex_extract application mode to be used.  Local = local mode; ecgate = Remote or Gateway mode, cca or ccb = Remote or Gateway mode (HPC). Whether the local mode is for public or member state users doesn’t matter here. Syslocal = seperates the executables and user application files during installation. Paths are selectable through INSTALLDIR and SYSINSTALLDIR</p></td>
 </tr>
 <tr class="row-odd"><td><p>MAKEFILE</p></td>
 <td><p>String</p></td>
@@ -274,13 +274,19 @@ It calls the top-level Python script <code class="docutils literal notranslate">
 <td><p>$HOME on ECMWF server and current flex_extract root path on local machine</p></td>
 <td><p>Root path where flex_extract should be installed. It will always be $HOME on ECMWF servers and if not set for the local mode, it will be the current flex_extract root path on local servers. </p></td>
 </tr>
-<tr class="row-odd"><td><p>JOB_TEMPLATE</p></td>
+<tr class="row-odd"><td><p>SYSINSTALLDIR</p></td>
+<td><p>String</p></td>
+<td><p>a full path </p></td>
+<td><p>None</p></td>
+<td><p>This will be the same as INSTALLDIR if TARGET=local. Otherwise, the executable files are stored in this path. If it is choosen to be in a system path, don’t forget to start the script with admin rights. </p></td>
+</tr>
+<tr class="row-even"><td><p>JOB_TEMPLATE</p></td>
 <td><p>String</p></td>
 <td><p>installscript.template</p></td>
 <td><p>installscript.template</p></td>
 <td><p>The rudimentary template file to create a batch job template for submission to ECMWF servers. Should not be changed because it is already optimised for ECMWF servers.  (Remote and Gateway mode)</p></td>
 </tr>
-<tr class="row-even"><td><p>CONTROLFILE</p></td>
+<tr class="row-odd"><td><p>CONTROLFILE</p></td>
 <td><p>String</p></td>
 <td><p>any CONTROL file</p></td>
 <td><p>CONTROL_EA5</p></td>
@@ -401,6 +407,7 @@ we see again all possible command line parameters.</p>
 usage: install.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>--target INSTALL_TARGET<span class="o">]</span> <span class="o">[</span>--makefile MAKEFILE<span class="o">]</span>
               <span class="o">[</span>--ecuid ECUID<span class="o">]</span> <span class="o">[</span>--ecgid ECGID<span class="o">]</span> <span class="o">[</span>--gateway GATEWAY<span class="o">]</span>
               <span class="o">[</span>--destination DESTINATION<span class="o">]</span> <span class="o">[</span>--installdir INSTALLDIR<span class="o">]</span>
+              <span class="o">[</span>--sysinstalldir SYSINSTALLDIR<span class="o">]</span>
               <span class="o">[</span>--job_template JOB_TEMPLATE<span class="o">]</span> <span class="o">[</span>--controlfile CONTROLFILE<span class="o">]</span>
 
 Install flex_extract software locally or on ECMWF machines
@@ -408,7 +415,7 @@ Install flex_extract software locally or on ECMWF machines
 optional arguments:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
   --target INSTALL_TARGET
-                        Valid targets: <span class="nb">local</span> <span class="p">|</span> ecgate <span class="p">|</span> cca , the latter two
+                        Valid targets: syslocal <span class="p">|</span> <span class="nb">local</span> <span class="p">|</span> ecgate <span class="p">|</span> cca , the latter two
                         are at ECMWF <span class="o">(</span>default: None<span class="o">)</span>
   --makefile MAKEFILE   Name of makefile to compile the Fortran
                         code. <span class="o">(</span>default depends on <span class="sb">`</span>target<span class="sb">`</span>: <span class="nb">local</span> - makefile_local_gfortran,
@@ -422,6 +429,9 @@ optional arguments:
   --installdir INSTALLDIR
                         Root directory where flex_extract will be installed
                         to. <span class="o">(</span>default: None<span class="o">)</span>
+  --sysinstalldir SYSINSTALLDIR
+                        System installation path<span class="p">;</span> where executables are
+                        stored. <span class="o">(</span>default: None<span class="o">)</span>
   --job_template JOB_TEMPLATE
                         The rudimentary template file to create a batch job
                         template <span class="k">for</span> submission to ECMWF servers. <span class="o">(</span>default:

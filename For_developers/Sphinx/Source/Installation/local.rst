@@ -265,20 +265,20 @@ Local installation
    
 The Fortran program called ``calc_etadot`` will be compiled during the 
 installation process. A suitable makefile (``makefile_local_gfortran``) for the compilation is set by default.
-This may be overwritten by the ``MAKEFILE`` parameter in ``setup.sh``.
+This may be overwritten by the ``MAKEFILE`` parameter in ``setup_local.sh``.
 
-However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into ``setup.sh``
+However, you may have to adapt the makefile for your environment (the current default makefile works on Debian stretch and similar GNU/Linux distributions). If you use a new name for it, you will have to insert it into ``setup_local.sh``
 For details on the makefile and how to adapt them, see :ref:`Fortran Makefile <ref-convert>`.
 
  
-In the root directory of ``flex_extract``, open the ``setup.sh`` script 
+In the root directory of ``flex_extract``, open the ``setup_local.sh`` script 
 with an editor and adapt the installation parameters in the section labelled with 
 "AVAILABLE COMMANDLINE ARGUMENTS TO SET" as shown below:
 
 
 .. code-block:: bash
    :caption: 'Example settings for a local installation.'
-   :name: setup.sh
+   :name: setup_local.sh
    
    ...
    # -----------------------------------------------------------------
@@ -293,6 +293,7 @@ with an editor and adapt the installation parameters in the section labelled wit
    GATEWAY=None
    DESTINATION=None
    INSTALLDIR=None
+   SYSINSTALLDIR=None
    JOB_TEMPLATE=''
    CONTROLFILE='CONTROL_EA5'
    ...
@@ -302,14 +303,14 @@ Afterwards, type:
 
 .. code-block:: bash
 
-   $ ./setup.sh
+   $ ./setup_local.sh
    
 to start the installation. You should see the following standard output. 
     
     
 .. code-block:: bash
 
-    # Output of setup.sh   
+    # Output of setup_local.sh   
     WARNING: installdir has not been specified
     flex_extract will be installed in here by compiling the Fortran source in <path-to-flex_extract>/flex_extract_v7.1/Source/Fortran
     Install flex_extract_v7.1 software at local in directory <path-to-flex_extract>/flex_extract_v7.1
@@ -326,3 +327,65 @@ to start the installation. You should see the following standard output.
 
     lrwxrwxrwx. 1 <username> tmc 20 Aug 12  10:59 ./calc_etadot -> calc_etadot_fast.out
 
+
+Local system installation
+=========================
+
+There is also the possibility to seperate the software executables from the user application files. For doing so, the ``TARGET`` parameter can be set to "syslocal" and the additional parameter ``SYSINSTALLDIR`` in the ``setup_local.sh`` has to be specified. This new path will contain the Fortran and Python executables of ``flex_extract``. If you chose to set a system path for this, please start the script as root. 
+The user directory for ``flex_extract``, which basically consists of everything except the ``Source`` directory, will be installed into ``INSTALLDIR``. 
+In this installation mode, an extra (hidden) ``.setup.rc`` file will be generated in the ``Run`` directory. It contains the necessary settings for running the local system mode.
+
+Despite the change in the ``TARGET`` parameter, the meaning of ``INSTALLDIR`` and the additional ``SYSINSTALLDIR``, the steps for installation are the same as in the local installation mentioned above. For example, modify the ``setup_local.sh`` file as follows: 
+
+
+.. code-block:: bash
+   :caption: 'Example settings for a local system installation.'
+   :name: setup_local.sh
+   
+   ...
+   # -----------------------------------------------------------------
+   # AVAILABLE COMMANDLINE ARGUMENTS TO SET
+   #
+   # THE USER HAS TO SPECIFY THESE PARAMETER
+   #
+   TARGET='syslocal'
+   MAKEFILE=<name_of_your_makefile>
+   ECUID=None
+   ECGID=None
+   GATEWAY=None
+   DESTINATION=None
+   INSTALLDIR=$HOME
+   SYSINSTALLDIR=/usr/bin/
+   JOB_TEMPLATE=''
+   CONTROLFILE='CONTROL_EA5'
+   ...
+
+
+Afterwards, type:
+
+.. code-block:: bash
+
+   $ sudo ./setup_local.sh
+   
+to start the installation. You should see the following standard output. 
+
+.. code-block:: bash
+
+	Flex_extract will be installed in <$HOME>
+	Install flex_extract_v7.1.2 software as syslocal in directory /usr/bin/flex_extract_v7.1.2
+
+	Using makefile: makefile_local_gfortran
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./rwgrib2.f90
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./phgrreal.f90
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./grphreal.f90
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./ftrafo.f90
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./calc_etadot.f90
+	/usr/local/bin/gfortran   -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -I. -I/usr/local/include/ -fdefault-real-8 -fopenmp -fconvert=big-endian   -c	./posnam.f90
+	/usr/local/bin/gfortran  rwgrib2.o calc_etadot.o ftrafo.o grphreal.o posnam.o phgrreal.o -o calc_etadot_fast.out  -O3 -march=native -L/usr/local/lib64/ -leccodes_f90 -leccodes -lm -lemosR64 -fopenmp
+	ln -sf calc_etadot_fast.out calc_etadot
+
+	lrwxrwxrwx. 1 <username> tmc 20 27. Okt 23:25 ./calc_etadot -> calc_etadot_fast.out
+	SUCCESS: INSTALLATION FINISHED!
+
+
+You can now change into the user directory specified in ``INSTALLDIR`` and find a ``flex_extract_vX.X`` directory there. 

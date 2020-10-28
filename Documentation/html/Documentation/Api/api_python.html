@@ -2493,6 +2493,28 @@ command line.</p></li>
 <span id="tools"></span><h3><a class="toc-backref" href="#id15">tools</a><a class="headerlink" href="#module-tools" title="Permalink to this headline">¶</a></h3>
 <p>This module contains a collection of diverse tasks within flex_extract.</p>
 <dl class="function">
+<dt id="tools.check_for_string_in_file">
+<code class="sig-prename descclassname">tools.</code><code class="sig-name descname">check_for_string_in_file</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">search_string</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#check_for_string_in_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.check_for_string_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a specific string in a file and return True if
+the string was found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – The full file path which is to be examined.</p></li>
+<li><p><strong>search_string</strong> (<em>str</em>) – The string which is looked up for in the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True : String was found
+False : String was not found</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Boolean</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="tools.clean_up">
 <code class="sig-prename descclassname">tools.</code><code class="sig-name descname">clean_up</code><span class="sig-paren">(</span><em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#clean_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.clean_up" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove files from the intermediate directory (inputdir).</p>
@@ -2731,6 +2753,21 @@ then the Python type None is returned, otherwise the string itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>message</strong> (<em>str</em><em>, </em><em>optional</em>) – Message for exiting program. Default value is “Done!”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tools.overwrite_lines_in_file">
+<code class="sig-prename descclassname">tools.</code><code class="sig-name descname">overwrite_lines_in_file</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">search_string</em>, <em class="sig-param">sub_string</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/tools.html#overwrite_lines_in_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tools.overwrite_lines_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites lines which contain the given search string with the
+substitution string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>search_string</strong> (<em>str</em>) – The string which is looked up for in the file.</p></li>
+<li><p><strong>sub_string</strong> (<em>str</em>) – The string which overwrites the search string.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -248,7 +248,7 @@ def get_cmdline_args():
     parser.add_argument("--queue", dest="queue",
                         type=none_or_str, default=None,
                         help='The name of the ECMWF server name where the'
-                        'job script is to be submitted ' 
+                        'job script is to be submitted '
                         '(e.g. ecgate | cca | ccb)')
 
     args = parser.parse_args()
@@ -623,7 +623,7 @@ def get_list_as_string(list_obj, concatenate_sign=', '):
 def make_dir(directory):
     '''Creates a directory.
 
-    If the directory already exists, an information is printed and the creation 
+    If the directory already exists, an information is printed and the creation
     skipped. The program stops only if there is another problem.
 
     Parameters
@@ -855,8 +855,8 @@ def execute_subprocess(cmd_list, error_msg='SUBPROCESS FAILED!'):
     Parameters
     ----------
     cmd_list : list of str
-        A list of the components for the command line execution. 
-        They will be concatenated with blank space for the command 
+        A list of the components for the command line execution.
+        They will be concatenated with blank space for the command
         to be submitted, like ['mv', file1, file2] for mv file1 file2.
 
     Return
@@ -909,3 +909,59 @@ def generate_retrieval_period_boundary(c):
 
 
     return start_period, end_period
+
+
+def check_for_string_in_file(filepath, search_string):
+    """
+    Search for a specific string in a file and return True if
+    the string was found.
+
+    Parameters
+    ----------
+    filepath : str
+        The full file path which is to be examined.
+
+    search_string : str
+        The string which is looked up for in the file.
+
+    Return
+    ------
+    Boolean :
+        True : String was found
+        False : String was not found
+    """
+    with open(filepath, 'r') as fio:
+        for line in fio:
+            if search_string in line:
+                return True
+    return False
+
+
+def overwrite_lines_in_file(filepath, search_string, sub_string):
+    """
+    Overwrites lines which contain the given search string with the
+    substitution string.
+
+    Parameters
+    ----------
+    search_string : str
+        The string which is looked up for in the file.
+
+    sub_string : str
+        The string which overwrites the search string.
+
+    Return
+    ------
+    """
+    with open(filepath, 'r') as fio:
+        data = fio.readlines()
+
+    with open(filepath, 'w') as fio:
+        for line in data:
+            if search_string in line:
+                fio.write(sub_string)
+            else:
+                fio.write(line)
+
+    return
+
