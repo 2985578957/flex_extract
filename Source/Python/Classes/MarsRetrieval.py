@@ -510,7 +510,11 @@ class MarsRetrieval(object):
         newattrs['area'] = attrs['area'].split('/')
         newattrs['grid'] = list(map(float,attrs['grid'].split('/')))
         newattrs['param'] = attrs['param'].split('/')        
-        newattrs['time'] = list(map(str,range(0,24,3)))
+        if '/' in attrs['step']:
+            sstep = int(attrs['step'].split('/')[4])
+            newattrs['time'] = list(map(str,range(0,24,sstep)))              
+        elif '160.128' in attrs['param']: 
+            newattrs['time'] = attrs['time']
         newattrs['format'] = 'grib'
                 
         return newattrs
