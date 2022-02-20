@@ -504,7 +504,18 @@ class MarsRetrieval(object):
             date = datetime.strptime(attrs['date'], '%Y%m%d')
             newattrs['year'] = date.year
             newattrs['month'] = date.month
-            newattrs['day'] =  date.day                  
+            newattrs['day'] =  date.day          
+  
+        # need to correct the time apperance for CDS surface field retrievals 
+        if attrs['type'] == 'FC': # for EA5 only flux fields are retrieved as FC type
+            # need to convert fc start times 06/18 to usual AN times
+            # since the surface fields can only be access through their validity time
+            start, end, step = map(int,attrs['step'].split('/')[::2])
+            newattrs['time'] = [ "{0:0=2d}".format(s) for s in range(0,24,step) ]
+        elif '/' in attrs['time']: # we expect a list of times separated by /
+            newattrs['time'] = attrs['time'].split('/')
+        elif isinstance(attrs['time'], str): # we expect a single time in here
+            newattrs['time'] = [ attrs['time'] ]
         
         newattrs['product_type'] = 'reanalysis'
         newattrs['area'] = attrs['area'].split('/')
